@@ -1,4 +1,15 @@
 <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
@@ -48,12 +59,17 @@
     #welcomeScreen h1 { color: white; font-size: 36px; text-align: center; font-weight: 700; }
     @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
     
-    #authScreen, #profilePanel, #walletPanel, #roomPanel, #shopPanel, #inventoryPanel, #cashOutPanel {
+    #authScreen, #profilePanel, #walletPanel, #roomPanel, #shopPanel, #cashOutPanel, #chatSearchPanel, #chatListPanel, #adminPanel {
         position: fixed; top: 0; left: 0;
         width: 100%; height: 100%;
         background: rgba(0,0,0,0.95);
         display: none; align-items: center; justify-content: center;
         flex-direction: column; z-index: 100;
+    }
+    #chatPanel {
+        position: fixed; bottom: 0; left: 0;
+        width: 100%; height: 60vh;
+        display: none; z-index: 101;
     }
     #gameScreen { display: none; }
     
@@ -86,7 +102,7 @@
     }
     button:hover { transform: translateY(-2px); }
     
-    #loginBtn, #signupBtn {
+    #loginBtn, #signupBtn, #saveProfileBtn {
         background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%);
         color: #000;
     }
@@ -102,13 +118,18 @@
         z-index: 50; border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     #rightIcons { display: flex; align-items: center; gap: 10px; }
-    #shopIcon, #supportIcon {
+    #shopIcon, #supportIcon, #historyIcon, #adminPanelBtn {
         font-size: 20px; cursor: pointer;
         width: 44px; height: 44px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
     }
     #shopIcon { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
     #supportIcon { background: linear-gradient(135deg, #1877F2 0%, #0d65d9 100%); }
+    #historyIcon { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    
+    #adminPanelBtn { 
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); 
+    }
     
     #userInfo {
         background: rgba(102,126,234,0.2);
@@ -164,14 +185,84 @@
         background: linear-gradient(180deg, #4c1d95 0%, #1e1b4b 50%, #0f172a 100%);
         padding: 30px 15px 20px; text-align: center; position: relative;
     }
+    #profileAvatar { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; }
+    #profileAvatar img {
+        width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
+        position: absolute; top: 15px; left: 15px; z-index: 2;
+        border: 3px solid #fbbf24;
+    }
+    #profileName { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
     #profileID {
         display: inline-block; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
         color: #000; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
     }
     
+    .menuItem {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #1e293b;
+    }
+    .menuItem:hover { background: #1e293b; }
+    .menuItemRight { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; }
+    
+    .logoutBtnFull { 
+        background: linear-gradient(135deg, #ff4757 0%, #e84118 100%);
+        margin: 20px; width: calc(100% - 40px); color: white;
+    }
+    
+    .walletBox { background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+    .walletAmount { font-size: 28px; font-weight: bold; color: #fbbf24; margin: 10px 0; }
+    .rechargeBox { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+    
     .shopGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
     .shopItem { background: #1e293b; padding: 12px; border-radius: 12px; text-align: center; border: 2px solid #334155; }
     .shopItem.price { color: #ffd700; font-weight: bold; }
+    
+    #chatPanel .authBox {
+        background: #0f172a; border-radius: 20px 20px 0 0;
+        width: 100%; max-width: 100%; height: 100%; margin: 0; border: none;
+    }
+    #chatPanel .panelHeader {
+        background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
+        border-radius: 20px 20px 0 0; padding: 15px;
+        text-align: left; display: flex; align-items: center; gap: 10px;
+    }
+    #chatPanel .panelHeader h2 { font-size: 18px; margin: 0; }
+    #chatPanel .closePanelBtn { position: static; background: rgba(0,0,0,0.3); width: 35px; height: 35px; }
+    #chatMessages { background: #0f172a; padding: 15px; }
+    
+    .chatMsg {
+        padding: 10px 14px; border-radius: 12px; max-width: 75%;
+        word-wrap: break-word; display: inline-block;
+    }
+    .chatMsg.me { background: #6d28d9; color: white; align-self: flex-end; }
+    .chatMsg.other { background: #1e293b; color: white; align-self: flex-start; }
+    .chatMsgTime { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+    
+    #chatInput {
+        background: #1e293b !important; border: 1px solid #334155 !important;
+        border-radius: 12px !important; flex: 1; margin: 0;
+    }
+    #sendMsgBtn {
+        background: #00ff88 !important; color: #000 !important;
+        border-radius: 12px !important; padding: 0 25px !important;
+        margin: 0 !important; width: auto !important;
+    }
+    
+    .searchUserCard { background: #1e293b; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
+    .searchUserCard img { width: 45px; height: 45px; border-radius: 50%; }
+    
+    .chatListItem {
+        background: #1e293b; padding: 12px; border-radius: 12px;
+        display: flex; align-items: center; gap: 10px;
+        cursor: pointer; margin-bottom: 10px;
+    }
+    .chatListItem img { width: 50px; height: 50px; border-radius: 50%; }
+    .chatListInfo { flex: 1; }
+    .chatListName { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .onlineDot { width: 8px; height: 8px; background: #00ff88; border-radius: 50%; display: inline-block; }
+    .chatListLastMsg { font-size: 13px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+    .chatListTime { font-size: 12px; color: #64748b; }
+    .unreadBadge { background: #00ff88; color: #000; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
 </style>
 </head>
 <body>
@@ -205,6 +296,8 @@
   <div id="topBar">
     <div id="rightIcons">
       <div id="userInfo" onclick="openProfile()"></div>
+      <div id="adminPanelBtn" onclick="openAdminPanel()" style="display:none;">👑</div>
+      <div id="historyIcon" onclick="openChatList()">💬</div>
       <div id="shopIcon" onclick="openShop()">🛒</div>
       <div id="supportIcon" onclick="openFacebook()">📞</div>
     </div>
@@ -213,6 +306,19 @@
     <div id="player">🐰</div>
     <div class="multiplier" style="left:100px; bottom:90px;" data-mult="1.5">1.5x</div>
     <div class="multiplier" style="left:180px; bottom:90px;" data-mult="2.0">2.0x</div>
+    <div class="multiplier" style="left:260px; bottom:90px;" data-mult="2.8">2.8x</div>
+    <div class="multiplier" style="left:340px; bottom:90px;" data-mult="3.5">3.5x</div>
+    <div class="multiplier" style="left:420px; bottom:90px;" data-mult="4.5">4.5x</div>
+    <div class="multiplier" style="left:500px; bottom:90px;" data-mult="5.8">5.8x</div>
+    <div class="multiplier" style="left:580px; bottom:90px;" data-mult="7.2">7.2x</div>
+    <div class="multiplier" style="left:660px; bottom:90px;" data-mult="9.0">9.0x</div>
+    <div class="multiplier" style="left:740px; bottom:90px;" data-mult="11.5">11.5x</div>
+    <div class="multiplier" style="left:820px; bottom:90px;" data-mult="14.0">14.0x</div>
+    <div class="multiplier" style="left:900px; bottom:90px;" data-mult="18.0">18.0x</div>
+    <div class="multiplier" style="left:980px; bottom:90px;" data-mult="23.0">23.0x</div>
+    <div class="multiplier" style="left:1060px; bottom:90px;" data-mult="30.0">30.0x</div>
+    <div class="multiplier" style="left:1140px; bottom:90px;" data-mult="40.0">40.0x</div>
+    <div class="multiplier" style="left:1220px; bottom:90px;" data-mult="60.0">60.0x</div>
     <div class="multiplier gate" style="left:1300px; bottom:90px;">🏆</div>
   </div>
   <div id="panel">
@@ -222,6 +328,12 @@
         <option value="10">10 كوينز</option>
         <option value="50">50 كوينز</option>
         <option value="100">100 كوينز</option>
+        <option value="200">200 كوينز</option>
+        <option value="500">500 كوينز</option>
+      </select>
+      <select id="difficulty">
+        <option value="15">متوسط</option>
+        <option value="30">صعب - المضاعفات x2</option>
       </select>
     </div>
     <div style="margin-top:15px;">
@@ -236,31 +348,176 @@
   <div class="authBox">
     <div id="profileHeader">
       <button class="closePanelBtn" onclick="closePanel('profilePanel')">×</button>
+      <div id="profileAvatar">
+        <img src="https://ui-avatars.com/api/?name=Player&background=667eea&color=fff" id="profileImg">
+      </div>
       <h2 id="profileName">لاعب</h2>
-      <div id="profileID">ID: <span id="userID">------</span></div>
+      <div id="profileID">ID: <span id="userID">12345</span></div>
     </div>
     <div class="panelContent">
-      <div class="menuItem" onclick="openShop()">🛒 المتجر</div>
+      <div id="profileMenu">
+        <div class="menuItem" onclick="openWallet()"><div class="menuItemRight"><span>💳</span><span>المحفظة</span></div></div>
+        <div class="menuItem" onclick="openRoom()"><div class="menuItemRight"><span>⚙️</span><span>الإعدادات</span></div></div>
+        <div class="menuItem" onclick="openShop()"><div class="menuItemRight"><span>🛒</span><span>المتجر</span></div></div>
+        <div class="menuItem" onclick="openCashOut()"><div class="menuItemRight"><span>💵</span><span>سحب لفودافون كاش</span></div></div>
+        <div class="menuItem" onclick="openChatSearch()"><div class="menuItemRight"><span>🔍</span><span>بحث عن لاعب</span></div></div>
+        <div class="menuItem" onclick="openChatList()"><div class="menuItemRight"><span>📩</span><span>المحادثات</span></div></div>
+      </div>
+      
+      <div class="rechargeBox" id="profileSendBox" style="display:none;">
+        <h3>💸 إرسال كوينز</h3>
+        <input id="profileSendID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
+        <input id="profileSendAmount" type="number" placeholder="المبلغ" min="1">
+        <button onclick="sendCoinsFromProfile()">إرسال</button>
+        <div id="profileSendStatus"></div>
+      </div>
+      
       <button class="logoutBtnFull" onclick="logout()">🚪 تسجيل الخروج</button>
+    </div>
+  </div>
+</div>
+
+<div id="walletPanel">
+  <div class="authBox">
+    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('walletPanel')">×</button><h2>💳 المحفظة</h2></div>
+    <div class="panelContent">
+      <div class="walletBox"><div>رصيدك الحالي</div><div class="walletAmount" id="walletCoins">0 كوينز</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="cashOutPanel">
+  <div class="authBox">
+    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('cashOutPanel')">×</button><h2>💵 سحب لفودافون كاش</h2></div>
+    <div class="panelContent">
+      <div class="rechargeBox">
+        <h3>رقم فودافون كاش</h3>
+        <input id="vodafoneNumber" type="text" placeholder="01xxxxxxxxx" maxlength="11">
+        <h3 style="margin-top:15px;">المبلغ بالكوينز</h3>
+        <input id="cashOutAmount" type="number" placeholder="الحد الأدنى 1000 كوينز" min="1000">
+        <button id="cashOutBtn" style="background:#00d4aa;">طلب سحب</button>
+        <div id="cashOutStatus" style="margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="roomPanel">
+  <div class="authBox">
+    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('roomPanel')">×</button><h2>⚙️ الإعدادات</h2></div>
+    <div class="panelContent">
+      <input id="editName" type="text" placeholder="الاسم الجديد">
+      <input id="editPhoto" type="file" accept="image/*">
+      <input id="editPass" type="password" placeholder="كلمة السر الجديدة">
+      
+      <hr style="margin:20px 0; border-color:#334155;">
+      <h4 style="color:#f59e0b; margin-bottom:10px;">تغيير الـ ID</h4>
+      <input id="editID" type="text" placeholder="الـ ID الجديد" maxlength="10" style="text-transform:uppercase;">
+      <button id="saveIDBtn" style="background:#f59e0b;">حفظ الـ ID الجديد</button>
+      
+      <button id="saveProfileBtn">حفظ التعديلات</button>
     </div>
   </div>
 </div>
 
 <div id="shopPanel">
   <div class="authBox">
-    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('shopPanel')">×</button><h2>🛒 IDs مميزة</h2></div>
+    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('shopPanel')">×</button><h2>🛒 المتجر</h2></div>
     <div class="panelContent">
       <div id="shopBalance" style="color:#ffd700; font-size:18px; margin-bottom:15px;">كوينز: 0</div>
-      <div class="shopGrid" id="idShop"></div>
+      <div style="margin-top: 20px;">
+        <h3>⭐ IDs مميزة</h3>
+        <div class="shopGrid" id="idShop"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="chatSearchPanel">
+  <div class="authBox">
+    <div class="panelHeader">
+      <button class="closePanelBtn" onclick="closePanel('chatSearchPanel')">×</button>
+      <h2>💬 ابحث عن لاعب</h2>
+    </div>
+    <div class="panelContent">
+      <input id="searchUID" type="text" placeholder="اكتب ID اللاعب هنا" style="text-transform:uppercase;">
+      <button id="searchUserBtn" style="background:#667eea;">بحث</button>
+      <div id="searchResult" style="margin-top:15px;"></div>
+    </div>
+  </div>
+</div>
+
+<div id="chatListPanel">
+  <div class="authBox">
+    <div class="panelHeader">
+      <button class="closePanelBtn" onclick="closePanel('chatListPanel')">×</button>
+      <h2>💬 المحادثات</h2>
+      <button onclick="openChatSearch()" style="position:absolute; top:15px; right:15px; width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); font-size:20px;">🔍</button>
+    </div>
+    <div class="panelContent" id="chatListContent">
+      <div style="text-align:center; color:#94a3b8;">مفيش محادثات لسه</div>
+    </div>
+  </div>
+</div>
+
+<div id="chatPanel">
+  <div class="authBox">
+    <div class="panelHeader">
+      <button class="closePanelBtn" onclick="closePanel('chatPanel')">×</button>
+      <div style="width:30px; height:30px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;">💬</div>
+      <h2 id="chatWithName">محادثة</h2>
+    </div>
+    <div class="panelContent" id="chatMessages" style="height:calc(60vh - 140px); display:flex; flex-direction:column; gap:10px;">
+    </div>
+    <div style="padding:15px; display:flex; gap:10px; border-top:1px solid #1e293b; background:#0f172a;">
+      <input id="chatInput" type="text" placeholder="اهلاً">
+      <button id="sendMsgBtn">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<div id="adminPanel">
+  <div class="authBox">
+    <div class="panelHeader">
+      <button class="closePanelBtn" onclick="closePanel('adminPanel')">×</button>
+      <h2>👑 لوحة التحكم</h2>
+    </div>
+    <div class="panelContent">
+      <div class="rechargeBox">
+        <h3>💸 إرسال كوينز</h3>
+        <input id="adminSendID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
+        <input id="adminSendAmount" type="number" placeholder="المبلغ" min="1">
+        <button onclick="adminSendCoins()">إرسال</button>
+        <div id="adminSendStatus"></div>
+      </div>
+
+      <div class="rechargeBox">
+        <h3>🔨 باند مستخدم</h3>
+        <input id="banUserID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
+        <select id="banDuration">
+          <option value="60">ساعة</option>
+          <option value="1440">يوم</option>
+          <option value="10080">أسبوع</option>
+          <option value="forever">للأبد</option>
+        </select>
+        <button onclick="banUser()" style="background:#ff4757;">باند</button>
+        <div id="banStatus"></div>
+      </div>
+
+      <div class="rechargeBox">
+        <h3>✅ فك الباند</h3>
+        <input id="unbanUserID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
+        <button onclick="unbanUser()" style="background:#00ff88; color:#000;">فك الباند</button>
+        <div id="unbanStatus"></div>
+      </div>
     </div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithRedirect, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, query, where, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithRedirect, getRedirectResult, updatePassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, query, where, getDocs, runTransaction, addDoc, orderBy, limit, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
   authDomain: "game-af286.firebaseapp.com",
@@ -276,16 +533,33 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
+const ADMIN_UID = "sPQ9h5s5pQYONHz0eTuhet8jKq82";
+
 const specialIDs = [
   {id: "VIP001", price: 1000},
   {id: "VIP002", price: 1500},
   {id: "11111", price: 2000},
   {id: "BOSS1", price: 3000},
-  {id: "KING1", price: 8500}
+  {id: "22222", price: 4000},
+  {id: "33333", price: 5000},
+  {id: "100", price: 6000},
+  {id: "BOSS2", price: 7000},
+  {id: "KING1", price: 8500},
+  {id: "100", price: 10000},
+  {id: "200", price: 10000},
+  {id: "10", price: 100000}
 ];
 
 let currentUser = null;
-let userData = { coins: 0, shortID: '' };
+let userData = { coins: 0, email: '', shortID: '', lastSeen: null, bannedUntil: null };
+
+let bet = 0, multiplier = 1, running = false, currentStep = 0;
+let gameSteps = [];
+let multiplierBoost = 1;
+
+let chatWithUID = null;
+let chatUnsubscribe = null;
+let chatListUnsubscribe = null;
 
 function generateShortID() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -296,17 +570,76 @@ function generateShortID() {
   return result;
 }
 
+const baseSteps = [
+  {left: 100, mult: 1.5}, {left: 180, mult: 2.0},
+  {left: 260, mult: 2.8}, {left: 340, mult: 3.5},
+  {left: 420, mult: 4.5}, {left: 500, mult: 5.8},
+  {left: 580, mult: 7.2}, {left: 660, mult: 9.0},
+    {left: 740, mult: 11.5}, {left: 820, mult: 14.0},
+  {left: 900, mult: 18.0}, {left: 980, mult: 23.0},
+  {left: 1060, mult: 30.0}, {left: 1140, mult: 40.0},
+  {left: 1220, mult: 60.0}
+];
+
+getRedirectResult(auth).then(async (result) => {
+  if (result && result.user) {
+    const user = result.user;
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (!userDoc.exists()) {
+      let shortID;
+      let exists = true;
+      while (exists) {
+        shortID = generateShortID();
+        const q = query(collection(db, "users"), where("shortID", "==", shortID));
+        const snap = await getDocs(q);
+        exists =!snap.empty;
+      }
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        coins: 0,
+        shortID: shortID,
+        lastSeen: serverTimestamp(),
+        bannedUntil: null
+      });
+    }
+  }
+});
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists() && userDoc.data().bannedUntil) {
+      const banTime = userDoc.data().bannedUntil.toDate();
+      if (banTime > new Date()) {
+        alert(`انت مبند لحد ${banTime.toLocaleString('ar-EG')}`);
+        await signOut(auth);
+        return;
+      }
+    }
     currentUser = user;
     document.getElementById('authScreen').style.display = 'none';
     document.getElementById('gameScreen').style.display = 'block';
-    await loadUserData();
+    await updateDoc(doc(db, "users", user.uid), { lastSeen: serverTimestamp() });
+    loadUserData();
+    setupPresence();
+    if (user.uid === ADMIN_UID) {
+      document.getElementById('adminPanelBtn').style.display = 'flex';
+      document.getElementById('profileSendBox').style.display = 'block';
+    }
   } else {
+    currentUser = null;
     document.getElementById('authScreen').style.display = 'flex';
     document.getElementById('gameScreen').style.display = 'none';
   }
 });
+
+function setupPresence() {
+  setInterval(async () => {
+    if (currentUser) {
+      await updateDoc(doc(db, "users", currentUser.uid), { lastSeen: serverTimestamp() });
+    }
+  }, 30000);
+}
 
 function toggleForm() {
   const loginForm = document.getElementById('loginForm');
@@ -340,12 +673,20 @@ async function signup() {
   try {
     const userCred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(userCred.user, { displayName: name });
-    let shortID = generateShortID();
+    let shortID;
+    let exists = true;
+    while (exists) {
+      shortID = generateShortID();
+      const q = query(collection(db, "users"), where("shortID", "==", shortID));
+      const snap = await getDocs(q);
+      exists =!snap.empty;
+    }
     await setDoc(doc(db, "users", userCred.user.uid), {
       email: email,
-      coins: 1000,
+      coins: 0,
       shortID: shortID,
-      ownedIDs: []
+      lastSeen: serverTimestamp(),
+      bannedUntil: null
     });
     alert("تم إنشاء الحساب. ID بتاعك: " + shortID);
   } catch (e) {
@@ -363,7 +704,10 @@ async function signInWithGoogle() {
 
 async function forgotPassword() {
   const email = document.getElementById('loginEmail').value.trim();
-  if (!email) return alert("اكتب الإيميل الأول");
+  if (!email) {
+    alert("اكتب الإيميل الأول");
+    return;
+  }
   try {
     await sendPasswordResetEmail(auth, email);
     alert("بعتلك لينك إعادة تعيين الباسورد على الإيميل");
@@ -372,21 +716,138 @@ async function forgotPassword() {
   }
 }
 
+function startGame() {
+  if (running) {
+    moveChicken();
+    return;
+  }
+  const difficulty = parseInt(document.getElementById('difficulty').value);
+  multiplierBoost = difficulty === 30? 2 : 1;
+  gameSteps = baseSteps.map(step => ({
+    left: step.left,
+    mult: step.mult * multiplierBoost
+  }));
+  document.querySelectorAll('.multiplier').forEach(el => {
+    const baseMult = parseFloat(el.dataset.mult);
+    if (baseMult) {
+      const newMult = (baseMult * multiplierBoost).toFixed(1);
+      el.innerText = newMult + 'x';
+    }
+  });
+  bet = parseInt(document.getElementById('bet').value);
+  if (bet > userData.coins) {
+    document.getElementById('status').innerText = "معكش كوينز كفاية!";
+    return;
+  }
+  userData.coins -= bet;
+  updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins });
+  document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
+  running = true;
+  currentStep = 0;
+  multiplier = 1;
+  document.getElementById('cashBtn').disabled = false;
+  document.getElementById('status').innerText = difficulty === 30? "صعب! المضاعفات اتضاعفت 2x 🔥" : "اضغط للحركة التالية!";
+  document.getElementById('cashAmount').innerText = Math.floor(bet * multiplier);
+}
+
+function moveChicken() {
+  if (!running) return;
+  const difficulty = parseInt(document.getElementById('difficulty').value);
+  const failChance = difficulty / 100;
+  if (currentStep >= gameSteps.length) {
+    running = false;
+    const winAmount = Math.floor(bet * multiplier);
+    userData.coins += winAmount;
+    updateDoc(doc(db, "users", currentUser.uid), { coins: increment(winAmount) });
+    document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
+    document.getElementById('status').innerText = `وصلت للبوابة! كسبت ${winAmount} كوينز 🎉`;
+    document.getElementById('goBtn').disabled = false;
+    document.getElementById('cashBtn').disabled = true;
+    document.getElementById('player').style.left = "1300px";
+    resetMultipliers();
+    return;
+  }
+  if (Math.random() < failChance) {
+    running = false;
+    document.getElementById('status').innerText = "خسرت!";
+    document.getElementById('goBtn').disabled = false;
+    document.getElementById('cashBtn').disabled = true;
+    document.getElementById('player').style.left = "50px";
+    resetMultipliers();
+    return;
+  }
+  const step = gameSteps[currentStep];
+  multiplier = step.mult;
+  document.getElementById('player').style.left = step.left + "px";
+  document.getElementById('cashAmount').innerText = Math.floor(bet * multiplier);
+  document.querySelectorAll('.multiplier').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.multiplier')[currentStep].classList.add('active');
+  currentStep++;
+  if (currentStep >= gameSteps.length) {
+    setTimeout(() => cashOut(), 500);
+  }
+}
+
+function resetMultipliers() {
+  document.querySelectorAll('.multiplier').forEach(el => {
+    const baseMult = parseFloat(el.dataset.mult);
+    if (baseMult) {
+      el.innerText = baseMult.toFixed(1) + 'x';
+    }
+  });
+  multiplierBoost = 1;
+}
+
+function cashOut() {
+  if (!running) return;
+  running = false;
+  const winAmount = Math.floor(bet * multiplier);
+  userData.coins += winAmount;
+  updateDoc(doc(db, "users", currentUser.uid), { coins: increment(winAmount) });
+  document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
+  document.getElementById('status').innerText = `كسبت ${winAmount} كوينز!`;
+  document.getElementById('goBtn').disabled = false;
+  document.getElementById('cashBtn').disabled = true;
+  resetMultipliers();
+}
+
 async function loadUserData() {
   if (!currentUser) return;
   const userDoc = await getDoc(doc(db, "users", currentUser.uid));
   if (userDoc.exists()) {
     userData = userDoc.data();
     document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
-    document.getElementById('userInfo').innerText = `${currentUser.displayName || 'لاعب'} | ${userData.coins}`;
-    document.getElementById('userID').innerText = userData.shortID || '------';
-    document.getElementById('profileName').innerText = currentUser.displayName || 'لاعب';
+    document.getElementById('userInfo').innerText = `${userData.email.split('@')[0]} | ${userData.coins}`;
+    if (userData.photo) {
+      document.getElementById('profileImg').src = userData.photo;
+    }
   }
 }
 
 window.openProfile = function() {
   if (!currentUser) return;
   document.getElementById('profilePanel').style.display = 'flex';
+  document.getElementById('profileName').innerText = currentUser.displayName || 'لاعب';
+  document.getElementById('profileImg').src = userData.photo || `https://ui-avatars.com/api/?name=${currentUser.displayName || 'Player'}&background=667eea&color=fff`;
+  document.getElementById('userID').innerText = userData.shortID || '------';
+}
+
+window.openWallet = function() {
+  document.getElementById('walletPanel').style.display = 'flex';
+  document.getElementById('walletCoins').innerText = userData.coins + ' كوينز';
+}
+
+window.openRoom = function() {
+  document.getElementById('roomPanel').style.display = 'flex';
+  const userRef = doc(db, "users", currentUser.uid);
+  getDoc(userRef).then(userSnap => {
+    const userData = userSnap.data();
+    if(userData.idChanged) {
+      document.getElementById('editID').style.display = 'none';
+      document.getElementById('saveIDBtn').style.display = 'none';
+      document.getElementById('editID').placeholder = "غيرت الـ ID خلاص";
+    }
+  });
 }
 
 window.openShop = function() {
@@ -395,44 +856,93 @@ window.openShop = function() {
   loadSpecialIDs();
 }
 
+window.openCashOut = function() {
+  document.getElementById('cashOutPanel').style.display = 'flex';
+  document.getElementById('cashOutStatus').innerText = `رصيدك: ${userData.coins} كوينز`;
+}
+
+window.openChatSearch = function() {
+  document.getElementById('chatSearchPanel').style.display = 'flex';
+}
+
+window.openChatList = function() {
+  document.getElementById('chatListPanel').style.display = 'flex';
+  loadChatList();
+}
+
+window.openChat = async function(uid, name) {
+  chatWithUID = uid;
+  document.getElementById('chatWithName').innerHTML = `💬 ${name} <span id="onlineStatus"></span>`;
+  document.getElementById('chatPanel').style.display = 'flex';
+  document.getElementById('chatListPanel').style.display = 'none';
+  document.getElementById('chatSearchPanel').style.display = 'none';
+  await updateDoc(doc(db, "chats", getChatID(currentUser.uid, uid)), {
+    [`read.${currentUser.uid}`]: serverTimestamp()
+  });
+  loadMessages(uid);
+  checkOnlineStatus(uid);
+}
+
+window.closePanel = function(id) {
+  if (id === 'chatPanel' && chatUnsubscribe) {
+    chatUnsubscribe();
+    chatUnsubscribe = null;
+    chatWithUID = null;
+  }
+  document.getElementById(id).style.display = 'none';
+}
+
+window.openFacebook = function() { window.open('https://www.facebook.com/share/14bpwBXGNAm/'); }
+
+window.logout = async function() {
+  await updateDoc(doc(db, "users", currentUser.uid), { lastSeen: serverTimestamp() });
+  await signOut(auth);
+  closePanel('profilePanel');
+}
+
 function loadSpecialIDs() {
   const idShop = document.getElementById('idShop');
   idShop.innerHTML = '';
   specialIDs.forEach(item => {
-    const owned = userData.ownedIDs?.includes(item.id);
-    idShop.innerHTML += `
-      <div class="shopItem">
-        <div style="font-size:20px; font-weight:bold; color:#f59e0b;">${item.id}</div>
-        <div class="shopItem price">${item.price} كوينز</div>
-        <button onclick="buySpecialID('${item.id}', ${item.price})" ${owned ? 'disabled' : ''}>
-          ${owned ? 'تم الشراء' : 'شراء'}
-        </button>
-      </div>
+    const div = document.createElement('div');
+    div.className = 'shopItem';
+    div.innerHTML = `
+      <div style="font-size:20px; font-weight:bold; color:#f59e0b;">${item.id}</div>
+      <div class="shopItem price">${item.price} كوينز</div>
+      <button onclick="buySpecialID('${item.id}', ${item.price})">شراء</button>
     `;
+    idShop.appendChild(div);
   });
 }
 
 window.buySpecialID = async function(id, price) {
-  if(userData.coins < price) return alert("معكش كوينز كفاية");
-  if(userData.ownedIDs?.includes(id)) return alert("اشتريته خلاص");
-
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if(!snap.empty) return alert("الـ ID ده اتباع خلاص");
-
+  if(userData.coins < price) {
+    alert("معكش كوينز كفاية");
+    return;
+  }
+  if(userData.idChanged) {
+    alert("أنت غيرت الـ ID قبل كده، مينفعش تغيره تاني");
+    return;
+  }
+  const idQuery = query(collection(db, "users"), where("shortID", "==", id));
+  const idSnap = await getDocs(idQuery);
+  if(!idSnap.empty) {
+    alert("الـ ID ده اتباع خلاص");
+    return;
+  }
   try {
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(-price),
+    const userRef = doc(db, "users", currentUser.uid);
+    await updateDoc(userRef, {
       shortID: id,
-      ownedIDs: [...(userData.ownedIDs || []), id]
+      coins: increment(-price),
+      idChanged: true
     });
     userData.coins -= price;
     userData.shortID = id;
-    userData.ownedIDs = userData.ownedIDs || [];
-    userData.ownedIDs.push(id);
-    document.getElementById('shopBalance').textContent = `كوينز: ${userData.coins}`;
+    userData.idChanged = true;
     document.getElementById('userID').textContent = id;
-    loadSpecialIDs();
+    document.getElementById('profileID').innerHTML = `ID: <span>${id}</span>`;
+    document.getElementById('shopBalance').textContent = `كوينز: ${userData.coins}`;
     alert(`مبروك! بقى الـ ID بتاعك ${id}`);
     closePanel('shopPanel');
   } catch(err) {
@@ -440,17 +950,395 @@ window.buySpecialID = async function(id, price) {
   }
 }
 
-window.logout = async function() {
-  await signOut(auth);
-  closePanel('profilePanel');
+document.getElementById('saveProfileBtn').onclick = async function() {
+  const newName = document.getElementById('editName').value.trim();
+  const newPass = document.getElementById('editPass').value.trim();
+  const file = document.getElementById('editPhoto').files[0];
+  const btn = document.getElementById('saveProfileBtn');
+  try {
+    btn.disabled = true;
+    btn.innerText = "جاري الحفظ...";
+    if (newName) {
+      await updateProfile(currentUser, { displayName: newName });
+    }
+    if (newPass) {
+      await updatePassword(currentUser, newPass);
+    }
+    if (file) {
+      if (file.size > 200000) {
+        alert("الصورة كبيرة أوي، اختار صورة أقل من 200KB");
+        btn.disabled = false;
+        btn.innerText = "حفظ التعديلات";
+        return;
+      }
+      const base64 = await fileToBase64(file);
+      await updateDoc(doc(db, "users", currentUser.uid), { photo: base64 });
+    }
+    alert("تم الحفظ بنجاح");
+    closePanel('roomPanel');
+    loadUserData();
+  } catch (e) {
+    alert("خطأ: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "حفظ التعديلات";
+  }
 }
 
-window.closePanel = function(id) {
-  document.getElementById(id).style.display = 'none';
+window.saveNewID = async function() {
+  const newID = document.getElementById('editID').value.trim().toUpperCase();
+  if(!newID) {
+    alert("اكتب ID جديد");
+    return;
+  }
+  if(newID.length < 4) {
+    alert("الـ ID لازم يكون 4 حروف على الأقل");
+    return;
+  }
+  const userRef = doc(db, "users", currentUser.uid);
+  const userSnap = await getDoc(userRef);
+  const userData = userSnap.data();
+  if(userData.idChanged) {
+    alert("أنت غيرت الـ ID قبل كده، مينفعش تغيره تاني");
+    return;
+  }
+  const idQuery = query(collection(db, "users"), where("shortID", "==", newID));
+  const idSnap = await getDocs(idQuery);
+  if(!idSnap.empty) {
+    alert("الـ ID ده مستخدم خلاص، اختار واحد تاني");
+    return;
+  }
+  try {
+    await updateDoc(userRef, {
+      shortID: newID,
+      idChanged: true,
+      idChangedAt: serverTimestamp()
+    });
+    document.getElementById('userID').textContent = newID;
+    document.getElementById('profileID').innerHTML = `ID: <span>${newID}</span>`;
+    alert("تم تغيير الـ ID بنجاح! مش هتقدر تغيره تاني");
+    closePanel('roomPanel');
+    document.getElementById('editID').style.display = 'none';
+    document.getElementById('saveIDBtn').style.display = 'none';
+  } catch(err) {
+    alert("حصل خطأ: " + err.message);
+  }
 }
 
-window.openFacebook = function() { 
-  window.open('https://www.facebook.com/share/14bpwBXGNAm/'); 
+document.getElementById('saveIDBtn').onclick = saveNewID;
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+async function sendCoinsFromProfile() {
+  if (currentUser.uid!== ADMIN_UID) {
+    alert("ممنوع، الأدمن بس");
+    return;
+  }
+  const shortID = document.getElementById('profileSendID').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('profileSendAmount').value);
+  const status = document.getElementById('profileSendStatus');
+  if (!shortID ||!amount || amount < 1) {
+    status.innerText = "❌ دخل ID ومبلغ صح";
+    return;
+  }
+  try {
+    await runTransaction(db, async (transaction) => {
+      const q = query(collection(db, "users"), where("shortID", "==", shortID));
+      const snap = await getDocs(q);
+      if (snap.empty) throw new Error("الـ ID مش موجود");
+      const receiverDoc = snap.docs[0];
+      const senderRef = doc(db, "users", currentUser.uid);
+      const receiverRef = doc(db, "users", receiverDoc.id);
+      transaction.update(senderRef, { coins: increment(-amount) });
+      transaction.update(receiverRef, { coins: increment(amount) });
+    });
+    status.innerText = "✅ تم التحويل بنجاح";
+    document.getElementById('profileSendID').value = '';
+    document.getElementById('profileSendAmount').value = '';
+    loadUserData();
+  } catch (e) {
+    status.innerText = "❌ " + e.message;
+  }
+}
+
+window.openAdminPanel = function() {
+  if (currentUser.uid!== ADMIN_UID) return;
+  document.getElementById('adminPanel').style.display = 'flex';
+}
+
+window.banUser = async function() {
+  const shortID = document.getElementById('banUserID').value.trim().toUpperCase();
+  const duration = document.getElementById('banDuration').value;
+  const status = document.getElementById('banStatus');
+  if (!shortID) {
+    status.innerText = "❌ دخل ID المستخدم";
+    return;
+  }
+  try {
+    const q = query(collection(db, "users"), where("shortID", "==", shortID));
+    const snap = await getDocs(q);
+    if (snap.empty) throw new Error("الـ ID مش موجود");
+    const userId = snap.docs[0].id;
+    let banTime;
+    if (duration === "forever") {
+      banTime = new Date(2099, 11, 31);
+    } else {
+      banTime = new Date(Date.now() + parseInt(duration) * 60 * 1000);
+    }
+    await updateDoc(doc(db, "users", userId), {
+      bannedUntil: banTime
+    });
+    status.innerText = `✅ تم الباند لحد ${banTime.toLocaleString('ar-EG')}`;
+  } catch (e) {
+    status.innerText = "❌ " + e.message;
+  }
+}
+
+window.unbanUser = async function() {
+  const shortID = document.getElementById('unbanUserID').value.trim().toUpperCase();
+  const status = document.getElementById('unbanStatus');
+  try {
+    const q = query(collection(db, "users"), where("shortID", "==", shortID));
+    const snap = await getDocs(q);
+    if (snap.empty) throw new Error("الـ ID مش موجود");
+    await updateDoc(doc(db, "users", snap.docs[0].id), {
+      bannedUntil: null
+    });
+    status.innerText = "✅ تم فك الباند";
+  } catch (e) {
+    status.innerText = "❌ " + e.message;
+  }
+}
+
+document.getElementById('cashOutBtn').onclick = async function() {
+  const number = document.getElementById('vodafoneNumber').value.trim();
+  const amount = parseInt(document.getElementById('cashOutAmount').value);
+  const status = document.getElementById('cashOutStatus');
+  if (!/^01[0-9]{9}$/.test(number)) {
+    status.innerText = "❌ رقم فودافون كاش غلط";
+    return;
+  }
+  if (!amount || amount < 1000) {
+    status.innerText = "❌ الحد الأدنى للسحب 1000 كوينز";
+    return;
+  }
+  if (amount > userData.coins) {
+    status.innerText = "❌ رصيدك مش كفاية";
+    return;
+  }
+  try {
+    await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(-amount) });
+    await addDoc(collection(db, "cashOutRequests"), {
+      uid: currentUser.uid,
+      email: currentUser.email,
+      vodafoneNumber: number,
+      coins: amount,
+      egp: amount / 30,
+      status: "pending",
+      time: serverTimestamp()
+    });
+    userData.coins -= amount;
+    status.innerText = "✅ تم إرسال طلب السحب. هيتم التحويل خلال 24 ساعة";
+    loadUserData();
+    document.getElementById('vodafoneNumber').value = '';
+    document.getElementById('cashOutAmount').value = '';
+  } catch (e) {
+    status.innerText = "❌ حصل خطأ: " + e.message;
+  }
+}
+
+async function searchUserByUID() {
+  const shortID = document.getElementById('searchUID').value.trim().toUpperCase();
+  const resultDiv = document.getElementById('searchResult');
+  if (!shortID) {
+    resultDiv.innerHTML = 'اكتب ID صح';
+    return;
+  }
+  const q = query(collection(db, "users"), where("shortID", "==", shortID));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    resultDiv.innerHTML = 'اللاعب مش موجود';
+    return;
+  }
+  const userDoc = snap.docs[0];
+  const user = userDoc.data();
+  if (userDoc.id === currentUser.uid) {
+    resultDiv.innerHTML = 'ده انت 😅';
+    return;
+  }
+  resultDiv.innerHTML = `
+    <div class="searchUserCard">
+      <img src="${user.photo || `https://ui-avatars.com/api/?name=${user.email}&background=667eea&color=fff`}">
+      <div style="flex:1;">
+        <div style="font-weight:600;">${user.email.split('@')[0]}</div>
+        <div style="font-size:12px; color:#94a3b8;">ID: ${user.shortID}</div>
+      </div>
+      <button onclick="openChat('${userDoc.id}', '${user.email.split('@')[0]}')" style="width:auto; padding:8px 15px; background:#00ff88; color:#000;">دردشة</button>
+    </div>
+  `;
+}
+
+window.adminSendCoins = async function() {
+  const shortID = document.getElementById('adminSendID').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('adminSendAmount').value);
+  const status = document.getElementById('adminSendStatus');
+  if (!shortID ||!amount || amount < 1) {
+    status.innerText = "❌ دخل ID ومبلغ صح";
+    return;
+  }
+  try {
+    const q = query(collection(db, "users"), where("shortID", "==", shortID));
+    const snap = await getDocs(q);
+    if (snap.empty) throw new Error("الـ ID مش موجود");
+    await updateDoc(doc(db, "users", snap.docs[0].id), {
+      coins: increment(amount)
+    });
+    status.innerText = "✅ تم الإرسال بنجاح";
+    document.getElementById('adminSendID').value = '';
+    document.getElementById('adminSendAmount').value = '';
+  } catch (e) {
+    status.innerText = "❌ " + e.message;
+  }
+}
+
+async function loadChatList() {
+  if (chatListUnsubscribe) chatListUnsubscribe();
+  const chatListContent = document.getElementById('chatListContent');
+  chatListContent.innerHTML = 'جاري التحميل...';
+  const q = query(collection(db, "chats"), where("users", "array-contains", currentUser.uid));
+  chatListUnsubscribe = onSnapshot(q, async (snapshot) => {
+    let chatHTML = '';
+    let foundChats = false;
+    for (const docSnap of snapshot.docs) {
+      const chatData = docSnap.data();
+      const chatID = docSnap.id;
+      const otherUID = chatData.users.find(uid => uid!== currentUser.uid);
+      if (!otherUID) continue;
+      foundChats = true;
+      const userDoc = await getDoc(doc(db, "users", otherUID));
+      if (!userDoc.exists()) continue;
+      const user = userDoc.data();
+      const msgSnap = await getDocs(query(
+        collection(db, "chats", chatID, "messages"),
+        orderBy("time", "desc"),
+        limit(1)
+      ));
+      let lastMsg = "ابدأ المحادثة";
+      let lastTime = "";
+      let unreadCount = 0;
+      let isOnline = false;
+      if (!msgSnap.empty) {
+        const msg = msgSnap.docs[0].data();
+        lastMsg = msg.text;
+        lastTime = msg.time?.toDate().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}) || '';
+        const lastRead = chatData.read?.[currentUser.uid]?.toDate() || new Date(0);
+        const lastMsgTime = msg.time?.toDate() || new Date(0);
+        if (msg.from!== currentUser.uid && lastMsgTime > lastRead) {
+          unreadCount = 1;
+        }
+      }
+      if (user.lastSeen) {
+        const lastSeen = user.lastSeen.toDate();
+        const diff = Date.now() - lastSeen.getTime();
+        isOnline = diff < 60000;
+      }
+      chatHTML += `
+        <div class="chatListItem" onclick="openChat('${otherUID}', '${user.email.split('@')[0]}')">
+          <img src="${user.photo || `https://ui-avatars.com/api/?name=${user.email}&background=667eea&color=fff`}">
+          <div class="chatListInfo">
+            <div class="chatListName">
+              ${user.email.split('@')[0]}
+              ${isOnline? '<span class="onlineDot"></span>' : ''}
+            </div>
+            <div class="chatListLastMsg">${lastMsg}</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:end; gap:5px;">
+            <div class="chatListTime">${lastTime}</div>
+            ${unreadCount > 0? `<div class="unreadBadge">${unreadCount}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }
+    chatListContent.innerHTML = foundChats? chatHTML : '<div style="text-align:center; color:#94a3b8;">مفيش محادثات لسه</div>';
+  });
+}
+
+function loadMessages(otherUID) {
+  if (chatUnsubscribe) chatUnsubscribe();
+  const chatID = getChatID(currentUser.uid, otherUID);
+  const messagesRef = collection(db, "chats", chatID, "messages");
+  const q = query(messagesRef, limit(50));
+  chatUnsubscribe = onSnapshot(q,
+    (snapshot) => {
+      const chatDiv = document.getElementById('chatMessages');
+      chatDiv.innerHTML = '';
+      let messages = [];
+      snapshot.forEach(doc => {
+        messages.push(doc.data());
+      });
+      messages.sort((a, b) => {
+        let timeA = a.time?.toDate() || new Date(0);
+        let timeB = b.time?.toDate() || new Date(0);
+        return timeA - timeB;
+      });
+      messages.forEach(msg => {
+        const isMe = msg.from === currentUser.uid;
+        const time = msg.time?.toDate().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}) || '';
+        chatDiv.innerHTML += `
+          <div class="chatMsg ${isMe? 'me' : 'other'}">
+            ${msg.text}
+            <div class="chatMsgTime">${time}</div>
+          </div>
+        `;
+      });
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    },
+    (error) => {
+      console.error("خطأ في تحميل الرسايل:", error);
+    }
+  );
+}
+
+async function sendMessage() {
+  const text = document.getElementById('chatInput').value.trim();
+  if (!text ||!chatWithUID) return;
+  const chatID = getChatID(currentUser.uid, chatWithUID);
+  const messagesRef = collection(db, "chats", chatID, "messages");
+  await addDoc(messagesRef, {
+    text: text,
+    from: currentUser.uid,
+    time: serverTimestamp()
+  });
+  await setDoc(doc(db, "chats", chatID), {
+    users: [currentUser.uid, chatWithUID],
+    [`read.${chatWithUID}`]: serverTimestamp()
+  }, { merge: true });
+  document.getElementById('chatInput').value = '';
+}
+
+function getChatID(uid1, uid2) {
+  return uid1 < uid2? uid1 + '_' + uid2 : uid2 + '_' + uid1;
+}
+
+async function checkOnlineStatus(uid) {
+  const userDoc = await getDoc(doc(db, "users", uid));
+  if (userDoc.exists()) {
+    const user = userDoc.data();
+    const statusSpan = document.getElementById('onlineStatus');
+    if (user.lastSeen) {
+      const lastSeen = user.lastSeen.toDate();
+      const diff = Date.now() - lastSeen.getTime();
+      const isOnline = diff < 60000;
+      statusSpan.innerHTML = isOnline? '<span style="color:#00ff88; font-size:12px;">● متصل</span>' : '';
+    }
+  }
 }
 
 // Event Listeners
@@ -461,6 +1349,22 @@ document.getElementById('googleBtnSignup').onclick = signInWithGoogle;
 document.getElementById('forgotPassBtn').onclick = forgotPassword;
 document.getElementById('toggleLink').onclick = toggleForm;
 document.getElementById('toggleLink2').onclick = toggleForm;
+document.getElementById('goBtn').onclick = startGame;
+document.getElementById('cashBtn').onclick = cashOut;
+document.getElementById('sendMsgBtn').onclick = sendMessage;
+document.getElementById('searchUserBtn').onclick = searchUserByUID;
+
+document.getElementById('chatInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    sendMessage();
+  }
+});
+
+document.getElementById('goBtn').disabled = false;
 </script>
 </body>
+</html>
+    
+  </body>
+  
 </html>
