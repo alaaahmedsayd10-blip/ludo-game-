@@ -1,252 +1,256 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1xbox</title>
+<title>طريق الدجاج - أونلاين</title>
 <style>
-* { box-sizing: border-box; margin:0; padding:0; font-family: 'Tahoma', Arial, sans-serif; }
-body { 
-  background:#0f172a; 
-  min-height:100vh;
-  background-image: 
-    linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px);
-  background-size:50px 50px;
-}
-
-#authScreen {
-  min-height:100vh;
-  display:flex; 
-  align-items:center; 
-  justify-content:center;
-}
-
-.authBox {
-  background:rgba(30,41,59,0.9);
-  padding:35px 30px;
-  border-radius:18px;
-  width:90%; 
-  max-width:400px;
-  border:2px solid transparent;
-  background-clip:padding-box;
-  box-shadow:0 0 40px rgba(59,130,246,0.4);
-  position:relative;
-}
-.authBox::before {
-  content:'';
-  position:absolute;
-  top:-2px; left:-2px; right:-2px; bottom:-2px;
-  background:linear-gradient(45deg, #3b82f6, #facc15, #3b82f6);
-  border-radius:18px;
-  z-index:-1;
-  animation:borderGlow 3s linear infinite;
-}
-@keyframes borderGlow {
- 0%,100%{opacity:1} 50%{opacity:0.5}
-.authBox h2 { 
-  text-align:center; 
-  margin-bottom:30px; 
-  font-size:28px; 
-  color:#fff;
-}
-
-.authBox input {
-  width:100%; 
-  padding:16px; 
-  margin:12px 0;
-  border-radius:12px; 
-  border:1px solid #475569;
-  background:#1e293b; 
-  color:#fff; 
-  font-size:16px;
-  text-align:right;
-  outline:none;
-}
-.authBox input:focus { 
-  border-color:#3b82f6; 
-  box-shadow:0 0 0 3px rgba(59,130,246,0.2); 
-}
-.authBox input::placeholder { color:#94a3b8; }
-
-.authBox button {
-  width:100%; 
-  padding:16px; 
-  margin:10px 0;
-  border-radius:12px; 
-  border:none;
-  background:linear-gradient(90deg,#facc15,#fbbf24);
-  color:#000; 
-  font-weight:bold; 
-  font-size:18px;
-  cursor:pointer; 
-  transition:0.3s;
-}
-.authBox button:hover { 
-  transform:translateY(-2px); 
-  box-shadow:0 5px 20px rgba(250,204,21,0.5); 
-}
-
-#gameScreen { 
-  display:none; 
-  width:100%;
-  min-height:100vh;
-  padding:20px;
-  color:#fff;
-}
-.topBar {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:30px;
-  background:rgba(15,23,42,0.8);
-  padding:15px;
-  border-radius:12px;
-}
-.balanceBox {
-  background:#334155; 
-  padding:12px 20px; 
-  border-radius:20px;
-  display:flex; 
-  align-items:center; 
-  gap:8px;
-  font-weight:bold; 
-  color:#facc15;
-  font-size:18px;
-}
-.userIDBox {
-  background:linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color:#000;
-  padding:8px 16px;
-  border-radius:20px;
-  font-weight:bold;
-  font-size:14px;
-}
-.shopBtn {
-  background:#f59e0b;
-  width:50px;
-  height:50px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:24px;
-  cursor:pointer;
-}
-.gameContent {
-  text-align:center;
-  padding:50px 20px;
-}
-.gameContent h1 {
-  font-size:32px;
-  margin-bottom:20px;
-  color:#facc15;
-}
-
-.panel {
-  position:fixed; 
-  top:0; left:0; 
-  width:100%; 
-  height:100%;
-  background:rgba(0,0,0,0.95);
-  display:none; 
-  align-items:center; 
-  justify-content:center;
-  z-index:100;
-}
-.panelBox {
-  background:#1e293b;
-  border-radius:16px;
-  width:90%; 
-  max-width:500px;
-  max-height:90vh;
-  overflow-y:auto;
-}
-.panelHeader {
-  background:linear-gradient(180deg,#4c1d95,#1e1b4b);
-  padding:20px;
-  text-align:center;
-  position:relative;
-}
-.closeBtn {
-  position:absolute; 
-  top:15px; left:15px;
-  background:rgba(255,255,255,0.1);
-  width:40px; height:40px; 
-  border-radius:50%;
-  border:none; 
-  color:#fff; 
-  font-size:20px; 
-  cursor:pointer;
-}
-.panelContent { padding:20px; }
-.shopGrid {
-  display:grid; 
-  grid-template-columns:repeat(2,1fr); 
-  gap:12px;
-}
-.shopItem {
-  background:#334155; 
-  padding:15px; 
-  border-radius:12px;
-  text-align:center;
-}
-.shopItem h4 { 
-  color:#facc15; 
-  margin:5px 0; 
-  font-size:18px;
-}
-.shopItem button {
-  width:100%; 
-  padding:10px; 
-  margin-top:10px;
-  background:#22c55e; 
-  border:none; 
-  border-radius:8px;
-  color:#fff; 
-  font-weight:bold; 
-  cursor:pointer;
-}
-.shopItem button:disabled { 
-  background:#475569; 
-  cursor:not-allowed; 
-}
-.hidden { display:none !important; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+        min-height: 100vh;
+        background: #0f172a;
+        background-image: linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(30,41,59,0.4) 100%),
+        url('https://images.unsplash.com/photo-1534796636912-3b95efc44106?q=80&w=1920');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: white;
+        font-family: 'Segoe UI', 'Arial', sans-serif;
+    }
+    
+    #road {
+        background: rgba(60,60,60,0.85); 
+        height: 320px; 
+        position: relative;
+        overflow-x: auto; 
+        overflow-y: hidden; 
+        border-bottom: 4px solid #777;
+        margin-top: 70px;
+        background-image:
+        repeating-linear-gradient(90deg, transparent, transparent 45px, rgba(255,255,255,1) 45px, rgba(255,255,255,1) 55px),
+        linear-gradient(180deg, rgba(80,80,80,0.95) 0%, rgba(65,65,65,0.95) 100%);
+    }
+    
+    #player {
+        position: absolute; left: 50px; bottom: 60px;
+        font-size: 50px; transition: all 0.5s; z-index: 10;
+        filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+    }
+    
+    #welcomeScreen {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: #0f172a;
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999;
+        animation: fadeOut 1s ease 3s forwards;
+    }
+    #welcomeScreen h1 { color: white; font-size: 36px; text-align: center; font-weight: 700; }
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+    
+    #authScreen, #profilePanel, #walletPanel, #roomPanel, #shopPanel, #inventoryPanel, #cashOutPanel {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        display: none; align-items: center; justify-content: center;
+        flex-direction: column; z-index: 100;
+    }
+    #gameScreen { display: none; }
+    
+    .authBox {
+        background: rgba(30,41,59,0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        width: 90%; max-width: 550px;
+        margin: 20px 0;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .panelContent { overflow-y: auto; padding: 20px; flex: 1; }
+    
+    input, select {
+        width: 100%; padding: 14px; margin: 10px 0;
+        border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); font-size: 15px;
+        background: #1e293b; color: white; outline: none;
+    }
+    input:focus, select:focus { border-color: #00ff88; box-shadow: 0 0 0 3px rgba(0,255,136,0.1); }
+    
+    button {
+        padding: 14px 25px; border-radius: 12px; border: none;
+        font-size: 15px; font-weight: 600; cursor: pointer;
+        width: 100%; margin-top: 10px;
+        transition: all 0.3s;
+    }
+    button:hover { transform: translateY(-2px); }
+    
+    #loginBtn, #signupBtn {
+        background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%);
+        color: #000;
+    }
+    #googleBtn, #googleBtnSignup { background: #fff; color: #000; margin-top: 10px; }
+    .toggleLink { font-size: 14px; color: #94a3b8; cursor: pointer; text-align: center; width: 100%; margin-top: 8px; }
+    .forgotLink { font-size: 13px; color: #00ff88; cursor: pointer; text-align: right; margin-top: 5px; }
+    
+    #topBar {
+        position: fixed; top: 0; left: 0; width: 100%;
+        padding: 12px 15px; background: rgba(0,0,0,0.8);
+        backdrop-filter: blur(10px);
+        display: flex; justify-content: flex-end; align-items: center;
+        z-index: 50; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    #rightIcons { display: flex; align-items: center; gap: 10px; }
+    #shopIcon, #supportIcon {
+        font-size: 20px; cursor: pointer;
+        width: 44px; height: 44px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+    }
+    #shopIcon { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    #supportIcon { background: linear-gradient(135deg, #1877F2 0%, #0d65d9 100%); }
+    
+    #userInfo {
+        background: rgba(102,126,234,0.2);
+        backdrop-filter: blur(10px);
+        padding: 8px 16px; border-radius: 25px;
+        font-size: 14px; cursor: pointer;
+        border: 1px solid rgba(102,126,234,0.3);
+        font-weight: 600;
+    }
+    
+    .multiplier {
+        position: absolute; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%; width: 70px; height: 70px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold; border: 3px solid #fff; font-size: 14px;
+    }
+    .multiplier.active {
+        background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%);
+        box-shadow: 0 0 30px #00ff88; transform: scale(1.1);
+    }
+    .multiplier.gate {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        border: 3px solid #fff; box-shadow: 0 0 25px #ffd700; font-size: 35px;
+    }
+    
+    #panel {
+        background: rgba(0,0,0,0.95); padding: 20px;
+        position: fixed; bottom: 0; width: 100%;
+        border-top: 3px solid #667eea; backdrop-filter: blur(10px);
+    }
+    #balance { font-size: 22px; margin-bottom: 15px; color: #ffd700; font-weight: bold; }
+    #bet, #difficulty {
+        padding: 12px; margin: 5px; border-radius: 10px;
+        border: none; font-size: 16px; background: #333; color: white;
+    }
+    #cashBtn { background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #000; width: 60%; }
+    #goBtn { background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%); color: #000; width: 35%; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    #status { margin-top: 10px; text-align: center; font-weight: bold; }
+    
+    .panelHeader {
+        background: linear-gradient(180deg, #4c1d95 0%, #1e1b4b 50%, #0f172a 100%);
+        padding: 20px 15px; text-align: center; position: relative; flex-shrink: 0;
+    }
+    .closePanelBtn {
+        position: absolute; top: 15px; left: 15px;
+        background: rgba(255, 255, 255, 0.1); color: white;
+        width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+        font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    
+    #profileHeader {
+        background: linear-gradient(180deg, #4c1d95 0%, #1e1b4b 50%, #0f172a 100%);
+        padding: 30px 15px 20px; text-align: center; position: relative;
+    }
+    #profileID {
+        display: inline-block; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: #000; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
+    }
+    
+    .shopGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
+    .shopItem { background: #1e293b; padding: 12px; border-radius: 12px; text-align: center; border: 2px solid #334155; }
+    .shopItem.price { color: #ffd700; font-weight: bold; }
 </style>
 </head>
 <body>
+<div id="welcomeScreen"><h1>أهلاً في 1xbox</h1></div>
 
 <div id="authScreen">
   <div class="authBox">
-    <h2>تسجيل / دخول 🎮</h2>
-    <input type="email" id="email" placeholder="الإيميل">
-    <input type="password" id="password" placeholder="الباسورد">
-    <button onclick="signIn()">دخول</button>
-    <button onclick="signUp()">إنشاء حساب</button>
+    <div class="panelContent">
+      <h2 id="authTitle" style="text-align:center; margin-bottom:15px;">تسجيل دخول</h2>
+      <div id="loginForm">
+        <input id="loginEmail" type="email" placeholder="الإيميل">
+        <input id="loginPass" type="password" placeholder="كلمة السر">
+        <div class="forgotLink" id="forgotPassBtn">نسيت كلمة السر؟</div>
+        <button id="loginBtn">دخول</button>
+        <button id="googleBtn">الدخول بجوجل</button>
+        <span class="toggleLink" id="toggleLink">معندكش حساب؟ سجل جديد</span>
+      </div>
+      <div id="signupForm" style="display:none;">
+        <input id="signupName" type="text" placeholder="الاسم">
+        <input id="signupEmail" type="email" placeholder="الإيميل">
+        <input id="signupPass" type="password" placeholder="كلمة السر">
+        <button id="signupBtn">إنشاء حساب</button>
+        <button id="googleBtnSignup">التسجيل بجوجل</button>
+        <span class="toggleLink" id="toggleLink2">عندك حساب؟ سجل دخول</span>
+      </div>
+    </div>
   </div>
 </div>
 
 <div id="gameScreen">
-  <div class="topBar">
-    <div class="userIDBox">ID: <span id="userID">------</span></div>
-    <div class="balanceBox">
-      <span id="balance">0</span> 💰
+  <div id="topBar">
+    <div id="rightIcons">
+      <div id="userInfo" onclick="openProfile()"></div>
+      <div id="shopIcon" onclick="openShop()">🛒</div>
+      <div id="supportIcon" onclick="openFacebook()">📞</div>
     </div>
-    <div class="shopBtn" onclick="openShop()">🛒</div>
   </div>
-  <div class="gameContent">
-    <h1>أهلاً بك في 1xbox</h1>
-    <p>اشتري ID مميز من المتجر</p>
+  <div id="road">
+    <div id="player">🐰</div>
+    <div class="multiplier" style="left:100px; bottom:90px;" data-mult="1.5">1.5x</div>
+    <div class="multiplier" style="left:180px; bottom:90px;" data-mult="2.0">2.0x</div>
+    <div class="multiplier gate" style="left:1300px; bottom:90px;">🏆</div>
+  </div>
+  <div id="panel">
+    <div id="balance">الكوينز: 0</div>
+    <div>
+      <select id="bet">
+        <option value="10">10 كوينز</option>
+        <option value="50">50 كوينز</option>
+        <option value="100">100 كوينز</option>
+      </select>
+    </div>
+    <div style="margin-top:15px;">
+      <button id="cashBtn" disabled>سحب<br><span id="cashAmount">0</span></button>
+      <button id="goBtn">يلا نلعب</button>
+    </div>
+    <div id="status"></div>
   </div>
 </div>
 
-<div class="panel" id="shopPanel">
-  <div class="panelBox">
-    <div class="panelHeader">
-      <button class="closeBtn" onclick="closePanel('shopPanel')">×</button>
-      <h2>🛒 IDs مميزة</h2>
+<div id="profilePanel">
+  <div class="authBox">
+    <div id="profileHeader">
+      <button class="closePanelBtn" onclick="closePanel('profilePanel')">×</button>
+      <h2 id="profileName">لاعب</h2>
+      <div id="profileID">ID: <span id="userID">------</span></div>
     </div>
     <div class="panelContent">
+      <div class="menuItem" onclick="openShop()">🛒 المتجر</div>
+      <button class="logoutBtnFull" onclick="logout()">🚪 تسجيل الخروج</button>
+    </div>
+  </div>
+</div>
+
+<div id="shopPanel">
+  <div class="authBox">
+    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('shopPanel')">×</button><h2>🛒 IDs مميزة</h2></div>
+    <div class="panelContent">
+      <div id="shopBalance" style="color:#ffd700; font-size:18px; margin-bottom:15px;">كوينز: 0</div>
       <div class="shopGrid" id="idShop"></div>
     </div>
   </div>
@@ -254,7 +258,7 @@ body {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithRedirect, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, query, where, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -270,54 +274,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
 const specialIDs = [
   {id: "VIP001", price: 1000},
   {id: "VIP002", price: 1500},
   {id: "11111", price: 2000},
   {id: "BOSS1", price: 3000},
-  {id: "22222", price: 4000},
-  {id: "33333", price: 5000},
-  {id: "KING1", price: 8500},
-  {id: "100", price: 10000}
+  {id: "KING1", price: 8500}
 ];
 
 let currentUser = null;
-let userData = { coins: 0, shortID: '', ownedIDs: [] };
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById('authScreen').classList.add('hidden');
-    document.getElementById('gameScreen').style.display = 'block';
-    await loadUser();
-  }
-});
-
-window.signUp = async () => {
-  const email = document.getElementById('email').value;
-  const pass = document.getElementById('password').value;
-  if(!email || !pass) return alert("املأ البيانات");
-  try {
-    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-    let shortID = generateShortID();
-    await setDoc(doc(db, "users", userCred.user.uid), {
-      coins: 1000,
-      shortID: shortID,
-      ownedIDs: []
-    });
-    alert("تم إنشاء الحساب. ID بتاعك: " + shortID);
-  } catch(e) { alert(e.message); }
-}
-
-window.signIn = async () => {
-  const email = document.getElementById('email').value;
-  const pass = document.getElementById('password').value;
-  if(!email || !pass) return alert("املأ البيانات");
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-  } catch(e) { alert(e.message); }
-}
+let userData = { coins: 0, shortID: '' };
 
 function generateShortID() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -328,41 +296,129 @@ function generateShortID() {
   return result;
 }
 
-async function loadUser() {
-  const ref = doc(db, "users", currentUser.uid);
-  const snap = await getDoc(ref);
-  if (snap.exists()) {
-    userData = snap.data();
-    document.getElementById('userID').innerText = userData.shortID || '------';
-    document.getElementById('balance').innerText = userData.coins.toLocaleString();
-    loadSpecialIDs();
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('gameScreen').style.display = 'block';
+    await loadUserData();
+  } else {
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('gameScreen').style.display = 'none';
+  }
+});
+
+function toggleForm() {
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+  const title = document.getElementById('authTitle');
+  if (loginForm.style.display === 'none') {
+    loginForm.style.display = 'block';
+    signupForm.style.display = 'none';
+    title.innerText = 'تسجيل دخول';
+  } else {
+    loginForm.style.display = 'none';
+    signupForm.style.display = 'block';
+    title.innerText = 'إنشاء حساب جديد';
   }
 }
 
+async function login() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (e) {
+    alert("خطأ: " + e.message);
+  }
+}
+
+async function signup() {
+  const name = document.getElementById('signupName').value;
+  const email = document.getElementById('signupEmail').value;
+  const pass = document.getElementById('signupPass').value;
+  try {
+    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(userCred.user, { displayName: name });
+    let shortID = generateShortID();
+    await setDoc(doc(db, "users", userCred.user.uid), {
+      email: email,
+      coins: 1000,
+      shortID: shortID,
+      ownedIDs: []
+    });
+    alert("تم إنشاء الحساب. ID بتاعك: " + shortID);
+  } catch (e) {
+    alert("حصل خطأ: " + e.message);
+  }
+}
+
+async function signInWithGoogle() {
+  try {
+    await signInWithRedirect(auth, provider);
+  } catch (e) {
+    alert("خطأ في الدخول بجوجل: " + e.message);
+  }
+}
+
+async function forgotPassword() {
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email) return alert("اكتب الإيميل الأول");
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("بعتلك لينك إعادة تعيين الباسورد على الإيميل");
+  } catch (e) {
+    alert("خطأ: " + e.message);
+  }
+}
+
+async function loadUserData() {
+  if (!currentUser) return;
+  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+  if (userDoc.exists()) {
+    userData = userDoc.data();
+    document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
+    document.getElementById('userInfo').innerText = `${currentUser.displayName || 'لاعب'} | ${userData.coins}`;
+    document.getElementById('userID').innerText = userData.shortID || '------';
+    document.getElementById('profileName').innerText = currentUser.displayName || 'لاعب';
+  }
+}
+
+window.openProfile = function() {
+  if (!currentUser) return;
+  document.getElementById('profilePanel').style.display = 'flex';
+}
+
+window.openShop = function() {
+  document.getElementById('shopPanel').style.display = 'flex';
+  document.getElementById('shopBalance').innerText = `كوينز: ${userData.coins}`;
+  loadSpecialIDs();
+}
+
 function loadSpecialIDs() {
-  const shop = document.getElementById('idShop');
-  shop.innerHTML = '';
+  const idShop = document.getElementById('idShop');
+  idShop.innerHTML = '';
   specialIDs.forEach(item => {
     const owned = userData.ownedIDs?.includes(item.id);
-    shop.innerHTML += `
+    idShop.innerHTML += `
       <div class="shopItem">
-        <h4>${item.id}</h4>
-        <div style="color:#94a3b8;">${item.price} كوينز</div>
-        <button onclick="buyID('${item.id}',${item.price})" ${owned? 'disabled' : ''}>
-          ${owned? 'تم الشراء' : 'شراء'}
+        <div style="font-size:20px; font-weight:bold; color:#f59e0b;">${item.id}</div>
+        <div class="shopItem price">${item.price} كوينز</div>
+        <button onclick="buySpecialID('${item.id}', ${item.price})" ${owned ? 'disabled' : ''}>
+          ${owned ? 'تم الشراء' : 'شراء'}
         </button>
       </div>
     `;
   });
 }
 
-window.buyID = async (id, price) => {
+window.buySpecialID = async function(id, price) {
   if(userData.coins < price) return alert("معكش كوينز كفاية");
   if(userData.ownedIDs?.includes(id)) return alert("اشتريته خلاص");
 
   const q = query(collection(db, "users"), where("shortID", "==", id));
   const snap = await getDocs(q);
-  if(!snap.empty) return alert("الـ ID ده متاخد");
+  if(!snap.empty) return alert("الـ ID ده اتباع خلاص");
 
   try {
     await updateDoc(doc(db, "users", currentUser.uid), {
@@ -372,16 +428,39 @@ window.buyID = async (id, price) => {
     });
     userData.coins -= price;
     userData.shortID = id;
+    userData.ownedIDs = userData.ownedIDs || [];
     userData.ownedIDs.push(id);
-    document.getElementById('balance').innerText = userData.coins.toLocaleString();
-    document.getElementById('userID').innerText = id;
+    document.getElementById('shopBalance').textContent = `كوينز: ${userData.coins}`;
+    document.getElementById('userID').textContent = id;
     loadSpecialIDs();
-    alert("مبروك! بقى الـ ID بتاعك " + id);
-  } catch(e) { alert(e.message); }
+    alert(`مبروك! بقى الـ ID بتاعك ${id}`);
+    closePanel('shopPanel');
+  } catch(err) {
+    alert("حصل خطأ: " + err.message);
+  }
 }
 
-window.openShop = () => document.getElementById('shopPanel').style.display = 'flex';
-window.closePanel = (id) => document.getElementById(id).style.display = 'none';
+window.logout = async function() {
+  await signOut(auth);
+  closePanel('profilePanel');
+}
+
+window.closePanel = function(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+window.openFacebook = function() { 
+  window.open('https://www.facebook.com/share/14bpwBXGNAm/'); 
+}
+
+// Event Listeners
+document.getElementById('loginBtn').onclick = login;
+document.getElementById('signupBtn').onclick = signup;
+document.getElementById('googleBtn').onclick = signInWithGoogle;
+document.getElementById('googleBtnSignup').onclick = signInWithGoogle;
+document.getElementById('forgotPassBtn').onclick = forgotPassword;
+document.getElementById('toggleLink').onclick = toggleForm;
+document.getElementById('toggleLink2').onclick = toggleForm;
 </script>
 </body>
 </html>
