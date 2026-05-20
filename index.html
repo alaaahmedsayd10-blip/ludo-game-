@@ -10,2592 +10,383 @@
     
   <body>
   <!DOCTYPE html>
-
-<html lang="ar">
-
+<html lang="ar" dir="rtl">
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>طريق الدجاج - أونلاين</title>
-
+<title>لعبة الأرنب</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-
-        min-height: 100vh;
-
-        background: #0f172a;
-
-        background-image: linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(30,41,59,0.4) 100%),
-
-        url('https://images.unsplash.com/photo-1534796636912-3b95efc44106?q=80&w=1920');
-
-        background-size: cover;
-
-        background-position: center;
-
-        background-attachment: fixed;
-
-        color: white;
-
-        font-family: 'Segoe UI', 'Arial', sans-serif;
-
-    }
-
-    
-
-    #road {
-
-        background: rgba(60,60,60,0.85); 
-
-        height: 320px; 
-
-        position: relative;
-
-        overflow-x: auto; 
-
-        overflow-y: hidden; 
-
-        border-bottom: 4px solid #777;
-
-        margin-top: 70px;
-
-        background-image:
-
-        repeating-linear-gradient(90deg, transparent, transparent 45px, rgba(255,255,255,1) 45px, rgba(255,255,255,1) 55px),
-
-        linear-gradient(180deg, rgba(80,80,80,0.95) 0%, rgba(65,65,65,0.95) 100%);
-
-    }
-
-    
-
-    #player {
-
-        position: absolute; left: 50px; bottom: 60px;
-
-        font-size: 50px; transition: all 0.5s; z-index: 10;
-
-        filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
-
-    }
-
-    
-
-    #welcomeScreen {
-
-        position: fixed; top: 0; left: 0;
-
-        width: 100%; height: 100%;
-
-        background: #0f172a;
-
-        display: flex; justify-content: center; align-items: center;
-
-        z-index: 9999;
-
-        animation: fadeOut 1s ease 3s forwards;
-
-    }
-
-    #welcomeScreen h1 { color: white; font-size: 36px; text-align: center; font-weight: 700; }
-
-    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
-
-    
-
-    #authScreen, #profilePanel, #walletPanel, #roomPanel, #shopPanel, #inventoryPanel, #cashOutPanel, #chatSearchPanel, #chatListPanel, #adminPanel {
-
-        position: fixed; top: 0; left: 0;
-
-        width: 100%; height: 100%;
-
-        background: rgba(0,0,0,0.95);
-
-        display: none; align-items: center; justify-content: center;
-
-        flex-direction: column; z-index: 100;
-
-    }
-
-    #chatPanel {
-
-        position: fixed; bottom: 0; left: 0;
-
-        width: 100%; height: 60vh;
-
-        display: none; z-index: 101;
-
-    }
-
-    #gameScreen { display: none; }
-
-    
-
-    .authBox {
-
-        background: rgba(30,41,59,0.95);
-
-        backdrop-filter: blur(10px);
-
-        border-radius: 20px;
-
-        width: 90%; max-width: 550px;
-
-        margin: 20px 0;
-
-        max-height: 90vh;
-
-        display: flex;
-
-        flex-direction: column;
-
-        overflow: hidden;
-
-        border: 1px solid rgba(255,255,255,0.1);
-
-    }
-
-    .panelContent { overflow-y: auto; padding: 20px; flex: 1; }
-
-    
-
-    input, select {
-
-        width: 100%; padding: 14px; margin: 10px 0;
-
-        border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); font-size: 15px;
-
-        background: #1e293b; color: white; outline: none;
-
-    }
-
-    input:focus, select:focus { border-color: #00ff88; box-shadow: 0 0 0 3px rgba(0,255,136,0.1); }
-
-    
-
-    button {
-
-        padding: 14px 25px; border-radius: 12px; border: none;
-
-        font-size: 15px; font-weight: 600; cursor: pointer;
-
-        width: 100%; margin-top: 10px;
-
-        transition: all 0.3s;
-
-    }
-
-    button:hover { transform: translateY(-2px); }
-
-    
-
-    #loginBtn, #signupBtn, #saveProfileBtn {
-
-        background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%);
-
-        color: #000;
-
-    }
-
-    #googleBtn, #googleBtnSignup { background: #fff; color: #000; margin-top: 10px; }
-
-    .toggleLink { font-size: 14px; color: #94a3b8; cursor: pointer; text-align: center; width: 100%; margin-top: 8px; }
-
-    .forgotLink { font-size: 13px; color: #00ff88; cursor: pointer; text-align: right; margin-top: 5px; }
-
-    
-
-    #topBar {
-
-        position: fixed; top: 0; left: 0; width: 100%;
-
-        padding: 12px 15px; background: rgba(0,0,0,0.8);
-
-        backdrop-filter: blur(10px);
-
-        display: flex; justify-content: flex-end; align-items: center;
-
-        z-index: 50; border-bottom: 1px solid rgba(255,255,255,0.1);
-
-    }
-
-    #rightIcons { display: flex; align-items: center; gap: 10px; }
-
-    #shopIcon, #supportIcon, #historyIcon, #adminPanelBtn {
-
-        font-size: 20px; cursor: pointer;
-
-        width: 44px; height: 44px; border-radius: 50%;
-
-        display: flex; align-items: center; justify-content: center;
-
-    }
-
-    #shopIcon { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-
-    #supportIcon { background: linear-gradient(135deg, #1877F2 0%, #0d65d9 100%); }
-
-    #historyIcon { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-
-    
-
-    #adminPanelBtn { 
-
-        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); 
-
-    }
-
-    
-
-    #userInfo {
-
-        background: rgba(102,126,234,0.2);
-
-        backdrop-filter: blur(10px);
-
-        padding: 8px 16px; border-radius: 25px;
-
-        font-size: 14px; cursor: pointer;
-
-        border: 1px solid rgba(102,126,234,0.3);
-
-        font-weight: 600;
-
-    }
-
-    
-
-    .multiplier {
-
-        position: absolute; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-        border-radius: 50%; width: 70px; height: 70px;
-
-        display: flex; align-items: center; justify-content: center;
-
-        font-weight: bold; border: 3px solid #fff; font-size: 14px;
-
-    }
-
-    .multiplier.active {
-
-        background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%);
-
-        box-shadow: 0 0 30px #00ff88; transform: scale(1.1);
-
-    }
-
-    .multiplier.gate {
-
-        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-
-        border: 3px solid #fff; box-shadow: 0 0 25px #ffd700; font-size: 35px;
-
-    }
-
-    
-
-    #panel {
-
-        background: rgba(0,0,0,0.95); padding: 20px;
-
-        position: fixed; bottom: 0; width: 100%;
-
-        border-top: 3px solid #667eea; backdrop-filter: blur(10px);
-
-    }
-
-    #balance { font-size: 22px; margin-bottom: 15px; color: #ffd700; font-weight: bold; }
-
-    #bet, #difficulty {
-
-        padding: 12px; margin: 5px; border-radius: 10px;
-
-        border: none; font-size: 16px; background: #333; color: white;
-
-    }
-
-    #cashBtn { background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #000; width: 60%; }
-
-    #goBtn { background: linear-gradient(135deg, #00ff88 0%, #00d4aa 100%); color: #000; width: 35%; }
-
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    #status { margin-top: 10px; text-align: center; font-weight: bold; }
-
-    
-
-    .panelHeader {
-
-        background: linear-gradient(180deg, #4c1d95 0%, #1e1b4b 50%, #0f172a 100%);
-
-        padding: 20px 15px; text-align: center; position: relative; flex-shrink: 0;
-
-    }
-
-    .closePanelBtn {
-
-        position: absolute; top: 15px; left: 15px;
-
-        background: rgba(255, 255, 255, 0.1); color: white;
-
-        width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
-
-        font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-
-    }
-
-    
-
-    #profileHeader {
-
-        background: linear-gradient(180deg, #4c1d95 0%, #1e1b4b 50%, #0f172a 100%);
-
-        padding: 30px 15px 20px; text-align: center; position: relative;
-
-    }
-
-    #profileAvatar { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; }
-
-    #profileAvatar img {
-
-        width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-
-        position: absolute; top: 15px; left: 15px; z-index: 2;
-
-        border: 3px solid #fbbf24;
-
-    }
-
-    #profileFrame {
-
-        position: absolute; top: 0; left: 0;
-
-        width: 120px; height: 120px; background-size: cover; background-position: center; z-index: 1;
-
-    }
-
-    #profileFrame.hidden { display: none; }
-
-    #profileName { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-
-    #profileID {
-
-        display: inline-block; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-
-        color: #000; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
-
-    }
-
-    
-
-    .menuItem {
-
-        display: flex; align-items: center; justify-content: space-between;
-
-        padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #1e293b;
-
-    }
-
-    .menuItem:hover { background: #1e293b; }
-
-    .menuItemRight { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; }
-
-    
-
-    .logoutBtnFull { 
-
-        background: linear-gradient(135deg, #ff4757 0%, #e84118 100%);
-
-        margin: 20px; width: calc(100% - 40px); color: white;
-
-    }
-
-    
-
-    .walletBox { background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-
-    .walletAmount { font-size: 28px; font-weight: bold; color: #fbbf24; margin: 10px 0; }
-
-    .rechargeBox { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-
-    
-
-    .shopGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
-
-    .shopItem { background: #1e293b; padding: 12px; border-radius: 12px; text-align: center; border: 2px solid #334155; }
-
-    .shopItem.emoji { font-size: 35px; margin-bottom: 6px; }
-
-    .shopItem.price { color: #ffd700; font-weight: bold; }
-
-    .shopItem.owned { border-color: #00ff88; }
-
-    .shopItem.equipped { border-color: #8b5cf6; box-shadow: 0 0 15px #8b5cf6; }
-
-    .framePreview { width: 50px; height: 50px; margin: 0 auto 6px; background-size: cover; border-radius: 8px; }
-
-    
-
-    #chatPanel .authBox {
-
-        background: #0f172a; border-radius: 20px 20px 0 0;
-
-        width: 100%; max-width: 100%; height: 100%; margin: 0; border: none;
-
-    }
-
-    #chatPanel .panelHeader {
-
-        background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
-
-        border-radius: 20px 20px 0 0; padding: 15px;
-
-        text-align: left; display: flex; align-items: center; gap: 10px;
-
-    }
-
-    #chatPanel .panelHeader h2 { font-size: 18px; margin: 0; }
-
-    #chatPanel .closePanelBtn { position: static; background: rgba(0,0,0,0.3); width: 35px; height: 35px; }
-
-    #chatMessages { background: #0f172a; padding: 15px; }
-
-    
-
-    .chatMsg {
-
-        padding: 10px 14px; border-radius: 12px; max-width: 75%;
-
-        word-wrap: break-word; display: inline-block;
-
-    }
-
-    .chatMsg.me { background: #6d28d9; color: white; align-self: flex-end; }
-
-    .chatMsg.other { background: #1e293b; color: white; align-self: flex-start; }
-
-    .chatMsgTime { font-size: 11px; color: #94a3b8; margin-top: 4px; }
-
-    
-
-    #chatInput {
-
-        background: #1e293b !important; border: 1px solid #334155 !important;
-
-        border-radius: 12px !important; flex: 1; margin: 0;
-
-    }
-
-    #sendMsgBtn {
-
-        background: #00ff88 !important; color: #000 !important;
-
-        border-radius: 12px !important; padding: 0 25px !important;
-
-        margin: 0 !important; width: auto !important;
-
-    }
-
-    
-
-    .searchUserCard { background: #1e293b; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
-
-    .searchUserCard img { width: 45px; height: 45px; border-radius: 50%; }
-
-    
-
-    .chatListItem {
-
-        background: #1e293b; padding: 12px; border-radius: 12px;
-
-        display: flex; align-items: center; gap: 10px;
-
-        cursor: pointer; margin-bottom: 10px;
-
-    }
-
-    .chatListItem img { width: 50px; height: 50px; border-radius: 50%; }
-
-    .chatListInfo { flex: 1; }
-
-    .chatListName { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-
-    .onlineDot { width: 8px; height: 8px; background: #00ff88; border-radius: 50%; display: inline-block; }
-
-    .chatListLastMsg { font-size: 13px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-
-    .chatListTime { font-size: 12px; color: #64748b; }
-
-    .unreadBadge { background: #00ff88; color: #000; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
-
+    * { box-sizing: border-box; }
+  body {
+    background:#0a0e1a;
+    color:#fff;
+    font-family: Tahoma, Arial;
+    text-align:center;
+    padding:20px;
+    margin:0;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* خلفية متحركة */
+  body::before {
+    content:'';
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: linear-gradient(45deg, #1e293b, #0f172a, #1e40af, #0f172a);
+    background-size:400% 400%;
+    animation: gradientShift 15s ease infinite;
+    z-index:-2;
+  }
+  body::after {
+    content:'';
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px);
+    background-size:50px 50px;
+    animation: gridMove 20s linear infinite;
+    z-index:-1;
+  }
+  @keyframes gradientShift {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+  @keyframes gridMove {
+    0%{transform:translate(0,0)}
+    100%{transform:translate(50px,50px)}
+  }
+
+.card {
+    background:rgba(30,41,59,0.8);
+    padding:20px;
+    border-radius:16px;
+    max-width:450px;
+    margin:20px auto;
+    position:relative;
+    border:2px solid transparent;
+    background-clip:padding-box;
+    box-shadow:0 0 30px rgba(59,130,246,0.3);
+  }
+.card::before {
+    content:'';
+    position:absolute;
+    top:-2px; left:-2px; right:-2px; bottom:-2px;
+    background:linear-gradient(45deg, #3b82f6, #facc15, #3b82f6);
+    border-radius:16px;
+    z-index:-1;
+    animation:borderGlow 3s linear infinite;
+  }
+  @keyframes borderGlow {
+    0%,100%{opacity:1}
+    50%{opacity:0.5}
+  }
+
+  input, button {
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #475569;
+    font-size:16px;
+    background:#334155;
+    color:#fff;
+  }
+  input:focus {
+    outline:none;
+    border-color:#3b82f6;
+    box-shadow:0 0 10px rgba(59,130,246,0.5);
+  }
+  button {
+    background:linear-gradient(90deg,#facc15,#fbbf24);
+    color:#000;
+    font-weight:bold;
+    cursor:pointer;
+    border:none;
+    transition:0.3s;
+  }
+  button:hover {
+    transform:translateY(-2px);
+    box-shadow:0 5px 20px rgba(250,204,21,0.4);
+  }
+  button:disabled {
+    background:#475569;
+    color:#94a3b8;
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+  }
+.hidden { display:none; }
+
+.diff {
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin:15px 0;
+    flex-wrap:wrap;
+  }
+.diff label {
+    background:#334155;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    flex:1;
+    min-width:80px;
+    border:1px solid #475569;
+    transition:0.3s;
+  }
+.diff input { display:none; }
+.diff input:checked + span {
+    background:linear-gradient(90deg,#3b82f6,#60a5fa);
+    color:#fff;
+    padding:10px 16px;
+    border-radius:10px;
+    display:block;
+    box-shadow:0 0 15px rgba(59,130,246,0.6);
+  }
+
+.game-area {
+    background:rgba(15,23,42,0.9);
+    padding:25px;
+    border-radius:12px;
+    margin:15px 0;
+    min-height:180px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    border:1px solid #334155;
+    position:relative;
+    overflow:hidden;
+  }
+.game-area::before {
+    content:'🐰';
+    font-size:60px;
+    position:absolute;
+    animation:rabbitRun 2s linear infinite;
+    opacity:0.3;
+  }
+  @keyframes rabbitRun {
+    0%{left:-80px}
+    100%{left:110%}
+  }
+
+.multiplier {
+    font-size:52px;
+    font-weight:bold;
+    color:#facc15;
+    margin:10px 0;
+    text-shadow:0 0 20px rgba(250,204,21,0.6);
+    animation:pulse 1s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.05)}
+  }
+
+.status {
+    font-size:18px;
+    margin:10px 0;
+    color:#94a3b8;
+  }
+.balance {
+    font-size:22px;
+    color:#22c55e;
+    margin:10px 0;
+    font-weight:bold;
+    text-shadow:0 0 10px rgba(34,197,94,0.5);
+  }
+.userid {
+    background:#0f172a;
+    padding:8px 12px;
+    border-radius:8px;
+    font-family:monospace;
+    color:#60a5fa;
+    border:1px solid #334155;
+    display:inline-block;
+    margin:5px 0;
+  }
 </style>
-
 </head>
-
 <body>
 
-<div id="welcomeScreen"><h1>أهلاً في 1xbox</h1></div>
-
-<div id="authScreen">
-
-  <div class="authBox">
-
-    <div class="panelContent">
-
-      <h2 id="authTitle" style="text-align:center; margin-bottom:15px;">تسجيل دخول</h2>
-
-      <div id="loginForm">
-
-        <input id="loginEmail" type="email" placeholder="الإيميل">
-
-        <input id="loginPass" type="password" placeholder="كلمة السر">
-
-        <div class="forgotLink" id="forgotPassBtn">نسيت كلمة السر؟</div>
-
-        <button id="loginBtn">دخول</button>
-
-        <button id="googleBtn">الدخول بجوجل</button>
-
-        <span class="toggleLink" id="toggleLink">معندكش حساب؟ سجل جديد</span>
-
-      </div>
-
-      <div id="signupForm" style="display:none;">
-
-        <input id="signupName" type="text" placeholder="الاسم">
-
-        <input id="signupEmail" type="email" placeholder="الإيميل">
-
-        <input id="signupPass" type="password" placeholder="كلمة السر">
-
-        <button id="signupBtn">إنشاء حساب</button>
-
-        <button id="googleBtnSignup">التسجيل بجوجل</button>
-
-        <span class="toggleLink" id="toggleLink2">انشاء حساب</span>
-
-      </div>
-
-    </div>
-
-  </div>
-
+<div id="auth" class="card">
+  <h2>🎮 تسجيل / دخول</h2>
+  <input type="email" id="email" placeholder="الإيميل">
+  <input type="password" id="password" placeholder="الباسورد">
+  <button onclick="signUp()">إنشاء حساب</button>
+  <button onclick="signIn()">دخول</button>
 </div>
 
-<div id="gameScreen">
+<div id="game" class="card hidden">
+  <h3>مرحباً <span id="username"></span></h3>
+  <p>المعرف المميز:</p>
+  <div class="userid" id="userid"></div>
+  <div class="balance">💰 الرصيد: <span id="balance">0</span> ج</div>
 
-  <div id="topBar">
-
-    <div id="rightIcons">
-
-      <div id="userInfo" onclick="openProfile()"></div>
-
-      <div id="adminPanelBtn" onclick="openAdminPanel()" style="display:none;">👑</div>
-
-      <div id="historyIcon" onclick="openChatList()">💬</div>
-
-      <div id="shopIcon" onclick="openShop()">🛒</div>
-
-      <div id="supportIcon" onclick="openFacebook()">📞</div>
-
-    </div>
-
+  <div class="diff">
+    <label><input type="radio" name="diff" value="easy"><span>سهل</span></label>
+    <label><input type="radio" name="diff" value="medium" checked><span>متوسط</span></label>
+    <label><input type="radio" name="diff" value="hard"><span>صعب</span></label>
   </div>
 
-  <div id="road">
-
-    <div id="player">🐰</div>
-
-    <div class="multiplier" style="left:100px; bottom:90px;" data-mult="1.5">1.5x</div>
-
-    <div class="multiplier" style="left:180px; bottom:90px;" data-mult="2.0">2.0x</div>
-
-    <div class="multiplier" style="left:260px; bottom:90px;" data-mult="2.8">2.8x</div>
-
-    <div class="multiplier" style="left:340px; bottom:90px;" data-mult="3.5">3.5x</div>
-
-    <div class="multiplier" style="left:420px; bottom:90px;" data-mult="4.5">4.5x</div>
-
-    <div class="multiplier" style="left:500px; bottom:90px;" data-mult="5.8">5.8x</div>
-
-    <div class="multiplier" style="left:580px; bottom:90px;" data-mult="7.2">7.2x</div>
-
-    <div class="multiplier" style="left:660px; bottom:90px;" data-mult="9.0">9.0x</div>
-
-    <div class="multiplier" style="left:740px; bottom:90px;" data-mult="11.5">11.5x</div>
-
-    <div class="multiplier" style="left:820px; bottom:90px;" data-mult="14.0">14.0x</div>
-
-    <div class="multiplier" style="left:900px; bottom:90px;" data-mult="18.0">18.0x</div>
-
-    <div class="multiplier" style="left:980px; bottom:90px;" data-mult="23.0">23.0x</div>
-
-    <div class="multiplier" style="left:1060px; bottom:90px;" data-mult="30.0">30.0x</div>
-
-    <div class="multiplier" style="left:1140px; bottom:90px;" data-mult="40.0">40.0x</div>
-
-    <div class="multiplier" style="left:1220px; bottom:90px;" data-mult="60.0">60.0x</div>
-
-    <div class="multiplier gate" style="left:1300px; bottom:90px;">🏆</div>
-
+  <div class="game-area">
+    <div class="status" id="status">جاهز للعب</div>
+    <div class="multiplier" id="multiplier">1.00x</div>
   </div>
 
-  <div id="panel">
-
-    <div id="balance">الكوينز: 0</div>
-
-    <div>
-
-      <select id="bet">
-
-        <option value="10">10 كوينز</option>
-
-        <option value="50">50 كوينز</option>
-
-        <option value="100">100 كوينز</option>
-
-        <option value="200">200 كوينز</option>
-
-        <option value="500">500 كوينز</option>
-
-      </select>
-
-      <select id="difficulty">
-
-        <option value="15">متوسط</option>
-
-        <option value="30">صعب - المضاعفات x2</option>
-
-      </select>
-
-    </div>
-
-    <div style="margin-top:15px;">
-
-      <button id="cashBtn" disabled>سحب<br><span id="cashAmount">0</span></button>
-
-      <button id="goBtn">يلا نلعب</button>
-
-    </div>
-
-    <div id="status"></div>
-
-  </div>
-
+  <input type="number" id="bet" placeholder="المبلغ" value="10" min="1">
+  <button id="playBtn" onclick="startGame()">🚀 ابدأ</button>
+  <button id="cashoutBtn" onclick="cashOut()" class="hidden">💵 سحب</button>
+  <button onclick="logout()" style="background:linear-gradient(90deg,#ef4444,#dc2626); color:#fff; margin-top:15px;">تسجيل خروج</button>
 </div>
 
-<div id="profilePanel">
-
-  <div class="authBox">
-
-    <div id="profileHeader">
-
-      <button class="closePanelBtn" onclick="closePanel('profilePanel')">×</button>
-
-      <div id="profileAvatar">
-
-        <div id="profileFrame" class="hidden"></div>
-
-        <img src="https://ui-avatars.com/api/?name=Player&background=667eea&color=fff" id="profileImg">
-
-      </div>
-
-      <h2 id="profileName">لاعب</h2>
-
-      <div id="profileID">ID: <span id="userID">12345</span></div>
-
-    </div>
-
-    <div class="panelContent">
-
-      <div id="profileMenu">
-
-        <div class="menuItem" onclick="openWallet()"><div class="menuItemRight"><span>💳</span><span>المحفظة</span></div></div>
-
-        <div class="menuItem" onclick="openRoom()"><div class="menuItemRight"><span>⚙️</span><span>الإعدادات</span></div></div>
-
-        <div class="menuItem" onclick="openShop()"><div class="menuItemRight"><span>🛒</span><span>المتجر</span></div></div>
-
-        <div class="menuItem" onclick="openCashOut()"><div class="menuItemRight"><span>💵</span><span>سحب لفودافون كاش</span></div></div>
-
-        <div class="menuItem" onclick="openInventory()"><div class="menuItemRight"><span>🎒</span><span>الشنطة</span></div></div>
-
-        <div class="menuItem" onclick="openChatSearch()"><div class="menuItemRight"><span>🔍</span><span>بحث عن لاعب</span></div></div>
-
-        <div class="menuItem" onclick="openChatList()"><div class="menuItemRight"><span>📩</span><span>المحادثات</span></div></div>
-
-      </div>
-
-      
-
-      <div class="rechargeBox" id="profileSendBox" style="display:none;">
-
-        <h3>💸 إرسال كوينز</h3>
-
-        <input id="profileSendID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
-
-        <input id="profileSendAmount" type="number" placeholder="المبلغ" min="1">
-
-        <button onclick="sendCoinsFromProfile()">إرسال</button>
-
-        <div id="profileSendStatus"></div>
-
-      </div>
-
-      
-
-      <button class="logoutBtnFull" onclick="logout()">🚪 تسجيل الخروج</button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="walletPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('walletPanel')">×</button><h2>💳 المحفظة</h2></div>
-
-    <div class="panelContent">
-
-      <div class="walletBox"><div>رصيدك الحالي</div><div class="walletAmount" id="walletCoins">0 كوينز</div></div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="cashOutPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('cashOutPanel')">×</button><h2>💵 سحب لفودافون كاش</h2></div>
-
-    <div class="panelContent">
-
-      <div class="rechargeBox">
-
-        <h3>رقم فودافون كاش</h3>
-
-        <input id="vodafoneNumber" type="text" placeholder="01xxxxxxxxx" maxlength="11">
-
-        <h3 style="margin-top:15px;">المبلغ بالكوينز</h3>
-
-        <input id="cashOutAmount" type="number" placeholder="الحد الأدنى 1000 كوينز" min="1000">
-
-        <button id="cashOutBtn" style="background:#00d4aa;">طلب سحب</button>
-
-        <div id="cashOutStatus" style="margin-top:10px;"></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="roomPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('roomPanel')">×</button><h2>⚙️ الإعدادات</h2></div>
-
-    <div class="panelContent">
-
-      <input id="editName" type="text" placeholder="الاسم الجديد">
-
-      <input id="editPhoto" type="file" accept="image/*">
-
-      <input id="editPass" type="password" placeholder="كلمة السر الجديدة">
-
-      
-
-      <hr style="margin:20px 0; border-color:#334155;">
-
-      <h4 style="color:#f59e0b; margin-bottom:10px;">تغيير الـ ID</h4>
-
-      <input id="editID" type="text" placeholder="الـ ID الجديد" maxlength="10" style="text-transform:uppercase;">
-
-      <button id="saveIDBtn" style="background:#f59e0b;">حفظ الـ ID الجديد</button>
-
-      
-
-      <button id="saveProfileBtn">حفظ التعديلات</button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="shopPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('shopPanel')">×</button><h2>🛒 المتجر</h2></div>
-
-    <div class="panelContent">
-
-      <div id="shopBalance" style="color:#ffd700; font-size:18px; margin-bottom:15px;">كوينز: 0</div>
-
-      <h3>🐾 شخصيات اللعبة</h3><div class="shopGrid" id="skinShop"></div>
-
-      <div style="margin-top: 20px;"><h3>🖼️ إطارات البروفايل</h3><div class="shopGrid" id="frameShop"></div></div>
-
-      
-
-      <div style="margin-top: 20px;">
-
-        <h3>⭐ IDs مميزة</h3>
-
-        <div class="shopGrid" id="idShop"></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="inventoryPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader"><button class="closePanelBtn" onclick="closePanel('inventoryPanel')">×</button><h2>🎒 الشنطة</h2></div>
-
-    <div class="panelContent">
-
-      <h3>🐾 حيواناتي</h3><div class="shopGrid" id="mySkins"></div>
-
-      <div style="margin-top: 20px;"><h3>🖼️ إطاراتي</h3><div class="shopGrid" id="myFrames"></div></div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="chatSearchPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader">
-
-      <button class="closePanelBtn" onclick="closePanel('chatSearchPanel')">×</button>
-
-      <h2>💬 ابحث عن لاعب</h2>
-
-    </div>
-
-    <div class="panelContent">
-
-      <input id="searchUID" type="text" placeholder="اكتب ID اللاعب هنا" style="text-transform:uppercase;">
-
-      <button id="searchUserBtn" style="background:#667eea;">بحث</button>
-
-      <div id="searchResult" style="margin-top:15px;"></div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="chatListPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader">
-
-      <button class="closePanelBtn" onclick="closePanel('chatListPanel')">×</button>
-
-      <h2>💬 المحادثات</h2>
-
-      <button onclick="openChatSearch()" style="position:absolute; top:15px; right:15px; width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); font-size:20px;">🔍</button>
-
-    </div>
-
-    <div class="panelContent" id="chatListContent">
-
-      <div style="text-align:center; color:#94a3b8;">مفيش محادثات لسه</div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="chatPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader">
-
-      <button class="closePanelBtn" onclick="closePanel('chatPanel')">×</button>
-
-      <div style="width:30px; height:30px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;">💬</div>
-
-      <h2 id="chatWithName">محادثة</h2>
-
-    </div>
-
-    <div class="panelContent" id="chatMessages" style="height:calc(60vh - 140px); display:flex; flex-direction:column; gap:10px;">
-
-    </div>
-
-    <div style="padding:15px; display:flex; gap:10px; border-top:1px solid #1e293b; background:#0f172a;">
-
-      <input id="chatInput" type="text" placeholder="اهلاً">
-
-      <button id="sendMsgBtn">إرسال</button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div id="adminPanel">
-
-  <div class="authBox">
-
-    <div class="panelHeader">
-
-      <button class="closePanelBtn" onclick="closePanel('adminPanel')">×</button>
-
-      <h2>👑 لوحة التحكم</h2>
-
-    </div>
-
-    <div class="panelContent">
-
-      <div class="rechargeBox">
-
-        <h3>💸 إرسال كوينز</h3>
-
-        <input id="adminSendID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
-
-        <input id="adminSendAmount" type="number" placeholder="المبلغ" min="1">
-
-        <button onclick="adminSendCoins()">إرسال</button>
-
-        <div id="adminSendStatus"></div>
-
-      </div>
-
-      <div class="rechargeBox">
-
-        <h3>🔨 باند مستخدم</h3>
-
-        <input id="banUserID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
-
-        <select id="banDuration">
-
-          <option value="60">ساعة</option>
-
-          <option value="1440">يوم</option>
-
-          <option value="10080">أسبوع</option>
-
-          <option value="forever">للأبد</option>
-
-        </select>
-
-        <button onclick="banUser()" style="background:#ff4757;">باند</button>
-
-        <div id="banStatus"></div>
-
-      </div>
-
-      <div class="rechargeBox">
-
-        <h3>✅ فك الباند</h3>
-
-        <input id="unbanUserID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
-
-        <button onclick="unbanUser()" style="background:#00ff88; color:#000;">فك الباند</button>
-
-        <div id="unbanStatus"></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<script type="module">
-
-import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2';
-
-const SUPABASE_URL = 'https://uftgmroollimzrhhehxv.supabase.co';
-
-const SUPABASE_ANON_KEY = 'sb_publishable_JxYGUjJp_-UTxITTpQdfIg_RCdcadZg';
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const ADMIN_UID = "sPQ9h5s5pQYONHz0eTuhet8jKq82";
-
-const specialIDs = [
-
-  {id: "VIP001", price: 1000},
-
-  {id: "VIP002", price: 1500},
-
-  {id: "11111", price: 2000},
-
-  {id: "BOSS1", price: 3000},
-
-  {id: "22222", price: 4000},
-
-  {id: "33333", price: 5000},
-
-  {id: "100", price: 6000},
-
-  {id: "BOSS2", price: 7000},
-
-  {id: "KING1", price: 8500},
-
-  {id: "100", price: 10000},
-
-  {id: "200", price: 10000},
-
-  {id: "10", price: 100000}
-
-];
-
-let currentUser = null;
-
-let userData = { coins: 0, skin: '🐰', email: '', frame: 'none', ownedSkins: ['🐰'], ownedFrames: ['none'], photo: '',
-shortID: '' };
-
-let bet = 0, multiplier = 1, running = false, currentStep = 0;
-
-let gameSteps = [];
-
-let multiplierBoost = 1;
-
-let chatWithUID = null;
-
-let chatUnsubscribe = null;
-
-let chatListUnsubscribe = null;
-
-function generateShortID() {
-
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-  let result = '';
-
-  for (let i = 0; i < 8; i++) {
-
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-
-  }
-
-  return result;
-
+<script>
+const supabase = supabase.createClient('https://uftgmroollimzrhhehxv.supabase.co', 'sb_publishable_JxYGUjJp_-UTxITTpQdfIg_RCdcadZg');
+
+let balance = 0;
+let currentMultiplier = 1.0;
+let gameRunning = false;
+let gameInterval;
+let userId = null;
+
+async function signUp() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  if(!email ||!password) return alert('املى كل البيانات');
+
+  const { error } = await supabase.auth.signUp({ email, password });
+  if(error) alert(error.message);
+  else alert('تم إنشاء الحساب! تقدر تدخل دلوقتي');
 }
 
-const baseSteps = [
+async function signIn() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if(error) alert(error.message);
+}
 
-  {left: 100, mult: 1.5}, {left: 180, mult: 2.0},
+async function logout() {
+  await supabase.auth.signOut();
+}
 
-  {left: 260, mult: 2.8}, {left: 340, mult: 3.5},
+async function loadProfile(user) {
+  userId = user.id;
+  const { data, error } = await supabase
+  .from('profiles')
+  .select('*')
+  .eq('id', user.id)
+  .single();
 
-  {left: 420, mult: 4.5}, {left: 500, mult: 5.8},
+  if(error) {
+    console.error(error);
+    return;
+  }
 
-  {left: 580, mult: 7.2}, {left: 660, mult: 9.0},
+  balance = data.balance;
+  document.getElementById('username').textContent = data.username || user.email.split('@')[0];
+  document.getElementById('userid').textContent = user.id.slice(0, 8).toUpperCase();
+  document.getElementById('balance').textContent = balance;
+}
 
-  {left: 740, mult: 11.5}, {left: 820, mult: 14.0},
+async function updateBalance(newBalance) {
+  balance = Math.floor(newBalance);
+  document.getElementById('balance').textContent = balance;
 
-  {left: 900, mult: 18.0}, {left: 980, mult: 23.0},
+  const { error } = await supabase
+  .from('profiles')
+  .update({ balance: balance })
+  .eq('id', userId);
 
-  {left: 1060, mult: 30.0}, {left: 1140, mult: 40.0},
-
-  {left: 1220, mult: 60.0}
-
-];
-
-const skins = [
-
-  { id: 'rabbit', emoji: '🐰', name: 'أرنب', price: 100 },
-
-  { id: 'redChicken', emoji: '🐔', name: 'فرخة حمرا', price: 1500 },
-
-  { id: 'yellowChicken', emoji: '🐤', name: 'فرخة صفرا', price: 5000 },
-
-  { id: 'snake', emoji: '🐍', name: 'ثعبان', price: 7000 },
-
-  { id: 'lion', emoji: '🦁', name: 'أسد', price: 10000 }
-
-];
-
-const frames = [
-
-  { id: 'none', name: 'بدون إطار', price: 0, img: '' },
-
-  { id: 'frame1', name: 'إطار التنين الأخضر', price: 500, img: 'https://g.top4top.io/p_3791n3mc50.png' },
-
-  { id: 'frame2', name: 'إطار الوحش', price: 1000, img: 'https://j.top4top.io/p_3791mrmqx0.png' },
-
-  { id: 'frame3', name: 'إطار الملكه', price: 2000, img: 'https://d.top4top.io/p_3791dha0z0.png' },
-
-  { id: 'frame4', name: 'إطار الزهور الذهبية', price: 5000, img: 'https://l.top4top.io/p_3791k8pp10.png' },
-
-  { id: 'frame5', name: 'إطار الأجنحة الذهبية', price: 7500, img: 'https://g.top4top.io/p_37913kpo00.png' },
-
-  { id: 'frame6', name: 'إطار الدرع الملكي', price: 8500, img: 'https://a.top4top.io/p_37914n4v10.png' },
-
-  { id: 'frame7', name: 'إطار VIP 8', price: 10000, img: 'https://f.top4top.io/p_3791ky4rs0.png' }
-
-];
-
-// Auth State
+  if(error) console.error('Error updating balance:', error);
+}
 
 supabase.auth.onAuthStateChange(async (event, session) => {
-
-  if (session?.user) {
-
-    currentUser = session.user;
-
-    const { data } = await supabase.from('users').select('*').eq('id', currentUser.id).single();
-
-    if (data?.bannedUntil && new Date(data.bannedUntil) > new Date()) {
-
-      alert(`انت مبند لحد ${new Date(data.bannedUntil).toLocaleString('ar-EG')}`);
-
-      await supabase.auth.signOut();
-
-      return;
-
-    }
-
-    document.getElementById('authScreen').style.display = 'none';
-
-    document.getElementById('gameScreen').style.display = 'block';
-
-    await supabase.from('users').update({ lastSeen: new Date() }).eq('id', currentUser.id);
-
-    loadUserData();
-
-    setupPresence();
-
-    if (currentUser.id === ADMIN_UID) {
-
-      document.getElementById('adminPanelBtn').style.display = 'flex';
-
-      document.getElementById('profileSendBox').style.display = 'block';
-
-    }
-
+  if(session) {
+    document.getElementById('auth').classList.add('hidden');
+    document.getElementById('game').classList.remove('hidden');
+    await loadProfile(session.user);
   } else {
-
-    currentUser = null;
-
-    document.getElementById('authScreen').style.display = 'flex';
-
-    document.getElementById('gameScreen').style.display = 'none';
-
+    document.getElementById('auth').classList.remove('hidden');
+    document.getElementById('game').classList.add('hidden');
+    balance = 0;
+    userId = null;
   }
-
 });
 
-function setupPresence() {
+function getCrashPoint() {
+  const diff = document.querySelector('input[name="diff"]:checked').value;
+  let max = 10;
+  if(diff === 'easy') max = 5;
+  if(diff === 'medium') max = 15;
+  if(diff === 'hard') max = 30;
+  return Math.random() * max + 1;
+}
 
-  setInterval(async () => {
+async function startGame() {
+  if(gameRunning) return;
 
-    if (currentUser) {
+  const bet = parseFloat(document.getElementById('bet').value);
+  if(bet > balance || bet < 1) return alert('المبلغ غلط');
 
-      await supabase.from('users').update({ lastSeen: new Date() }).eq('id', currentUser.id);
+  await updateBalance(balance - bet);
 
+  gameRunning = true;
+  currentMultiplier = 1.0;
+  document.getElementById('status').textContent = 'جاري اللعب...';
+  document.getElementById('playBtn').classList.add('hidden');
+  document.getElementById('cashoutBtn').classList.remove('hidden');
+
+  const crashPoint = getCrashPoint();
+
+  gameInterval = setInterval(() => {
+    currentMultiplier += 0.05;
+    document.getElementById('multiplier').textContent = currentMultiplier.toFixed(2) + 'x';
+
+    if(currentMultiplier >= crashPoint) {
+      endGame(false);
     }
-
-  }, 30000);
-
-}
-
-function toggleForm() {
-
-  const loginForm = document.getElementById('loginForm');
-
-  const signupForm = document.getElementById('signupForm');
-
-  const title = document.getElementById('authTitle');
-
-  if (loginForm.style.display === 'none') {
-
-    loginForm.style.display = 'block';
-
-    signupForm.style.display = 'none';
-
-    title.innerText = 'تسجيل دخول';
-
-  } else {
-
-    loginForm.style.display = 'none';
-
-    signupForm.style.display = 'block';
-
-    title.innerText = 'إنشاء حساب جديد';
-
-  }
-
-}
-
-async function login() {
-
-  const email = document.getElementById('loginEmail').value;
-
-  const pass = document.getElementById('loginPass').value;
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
-
-  if (error) alert("خطأ: " + error.message);
-
-}
-
-async function signup() {
-
-  const name = document.getElementById('signupName').value;
-
-  const email = document.getElementById('signupEmail').value;
-
-  const pass = document.getElementById('signupPass').value;
-
-  const { data, error } = await supabase.auth.signUp({
-
-    email,
-
-    password: pass,
-
-    options: { data: { full_name: name } }
-
-  });
-
-  if (error) {
-
-    alert("حصل خطأ: " + error.message);
-
-    return;
-
-  }
-
-  let shortID;
-
-  let exists = true;
-
-  while (exists) {
-
-    shortID = generateShortID();
-
-    const { data: snap } = await supabase.from('users').select('id').eq('shortID', shortID);
-
-    exists = snap.length > 0;
-
-  }
-
-  await supabase.from('users').insert([{
-
-    id: data.user.id,
-
-    email: email,
-
-    coins: 0,
-
-    skin: '🐰',
-
-    frame: 'none',
-
-    ownedSkins: ['🐰'],
-
-    ownedFrames: ['none'],
-
-    photo: '',
-
-    shortID: shortID,
-
-    lastSeen: new Date(),
-
-    bannedUntil: null
-
-  }]);
-
-  alert("تم إنشاء الحساب. ID بتاعك: " + shortID);
-
-}
-
-async function signInWithGoogle() {
-
-  const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-
-  if (error) alert("خطأ في الدخول بجوجل: " + error.message);
-
-}
-
-async function forgotPassword() {
-
-  const email = document.getElementById('loginEmail').value.trim();
-
-  if (!email) {
-
-    alert("اكتب الإيميل الأول");
-
-    return;
-
-  }
-
-  const { error } = await supabase.auth.resetPasswordForEmail(email);
-
-  if (error) alert("خطأ: " + error.message);
-
-  else alert("بعتلك لينك إعادة تعيين الباسورد على الإيميل");
-
-}
-
-function startGame() {
-
-  if (running) {
-
-    moveChicken();
-
-    return;
-
-  }
-
-  const difficulty = parseInt(document.getElementById('difficulty').value);
-
-  multiplierBoost = difficulty === 30? 2 : 1;
-
-  gameSteps = baseSteps.map(step => ({
-
-    left: step.left,
-
-    mult: step.mult * multiplierBoost
-
-  }));
-
-  document.querySelectorAll('.multiplier').forEach(el => {
-
-    const baseMult = parseFloat(el.dataset.mult);
-
-    if (baseMult) {
-
-      const newMult = (baseMult * multiplierBoost).toFixed(1);
-
-      el.innerText = newMult + 'x';
-
-    }
-
-  });
-
-  bet = parseInt(document.getElementById('bet').value);
-
-  if (bet > userData.coins) {
-
-    document.getElementById('status').innerText = "معكش كوينز كفاية!";
-
-    return;
-
-  }
-
-  userData.coins -= bet;
-
-  supabase.from('users').update({ coins: userData.coins }).eq('id', currentUser.id);
-
-  document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
-
-  running = true;
-
-  currentStep = 0;
-
-  multiplier = 1;
-
-  document.getElementById('cashBtn').disabled = false;
-
-  document.getElementById('status').innerText = difficulty === 30? "صعب! المضاعفات اتضاعفت 2x 🔥" : "اضغط للحركة التالية!";
-
-  document.getElementById('cashAmount').innerText = Math.floor(bet * multiplier);
-
-}
-
-function moveChicken() {
-
-  if (!running) return;
-
-  const difficulty = parseInt(document.getElementById('difficulty').value);
-
-  const failChance = difficulty / 100;
-
-  if (currentStep >= gameSteps.length) {
-
-    running = false;
-
-    const winAmount = Math.floor(bet * multiplier);
-
-    userData.coins += winAmount;
-
-    supabase.from('users').update({ coins: userData.coins }).eq('id', currentUser.id);
-
-    document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
-
-    document.getElementById('status').innerText = `وصلت للبوابة! كسبت ${winAmount} كوينز 🎉`;
-
-    document.getElementById('goBtn').disabled = false;
-
-    document.getElementById('cashBtn').disabled = true;
-
-    document.getElementById('player').style.left = "1300px";
-
-    resetMultipliers();
-
-    return;
-
-  }
-
-  if (Math.random() < failChance) {
-
-    running = false;
-
-    document.getElementById('status').innerText = "خسرت!";
-
-    document.getElementById('goBtn').disabled = false;
-
-    document.getElementById('cashBtn').disabled = true;
-
-    document.getElementById('player').style.left = "50px";
-
-    resetMultipliers();
-
-    return;
-
-  }
-
-  const step = gameSteps[currentStep];
-
-  multiplier = step.mult;
-
-  document.getElementById('player').style.left = step.left + "px";
-
-  document.getElementById('cashAmount').innerText = Math.floor(bet * multiplier);
-
-  document.querySelectorAll('.multiplier').forEach(m => m.classList.remove('active'));
-
-  document.querySelectorAll('.multiplier')[currentStep].classList.add('active');
-
-  currentStep++;
-
-  if (currentStep >= gameSteps.length) {
-
-    setTimeout(() => cashOut(), 500);
-
-  }
-
-}
-
-function resetMultipliers() {
-
-  document.querySelectorAll('.multiplier').forEach(el => {
-
-    const baseMult = parseFloat(el.dataset.mult);
-
-    if (baseMult) {
-
-      el.innerText = baseMult.toFixed(1) + 'x';
-
-    }
-
-  });
-
-  multiplierBoost = 1;
-
+  }, 100);
 }
 
 function cashOut() {
-
-  if (!running) return;
-
-  running = false;
-
-  const winAmount = Math.floor(bet * multiplier);
-
-  userData.coins += winAmount;
-
-  supabase.from('users').update({ coins: userData.coins }).eq('id', currentUser.id);
-
-  document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
-
-  document.getElementById('status').innerText = `كسبت ${winAmount} كوينز!`;
-
-  document.getElementById('goBtn').disabled = false;
-
-  document.getElementById('cashBtn').disabled = true;
-
-  resetMultipliers();
-
+  if(!gameRunning) return;
+  endGame(true);
 }
 
-async function loadUserData() {
-
-  if (!currentUser) return;
-
-  const { data } = await supabase.from('users').select('*').eq('id', currentUser.id).single();
-
-  if (data) {
-
-    userData = data;
-
-    document.getElementById('balance').innerText = `الكوينز: ${userData.coins}`;
-
-    document.getElementById('player').innerText = userData.skin;
-
-    document.getElementById('userInfo').innerText = `${userData.email.split('@')[0]} | ${userData.coins}`;
-
-    updateProfileFrame();
-
-    if (userData.photo) {
-
-      document.getElementById('profileImg').src = userData.photo;
-
-    }
-
-  }
-
-}
-
-window.openProfile = function() {
-
-  if (!currentUser) return;
-
-  document.getElementById('profilePanel').style.display = 'flex';
-
-  document.getElementById('profileName').innerText = currentUser.user_metadata.full_name || 'لاعب';
-
-  document.getElementById('profileImg').src = userData.photo || `https://ui-avatars.com/api/?name=${currentUser.email}&background=667eea&color=fff`;
-
-  document.getElementById('userID').innerText = userData.shortID || '------';
-
-  updateProfileFrame();
-
-}
-
-window.openWallet = function() {
-
-  document.getElementById('walletPanel').style.display = 'flex';
-
-  document.getElementById('walletCoins').innerText = userData.coins + ' كوينز';
-
-}
-
-window.openRoom = function() {
-
-  document.getElementById('roomPanel').style.display = 'flex';
-
-}
-
-window.openShop = function() {
-
-  document.getElementById('shopPanel').style.display = 'flex';
-
-  document.getElementById('shopBalance').innerText = `كوينز: ${userData.coins}`;
-
-  loadShop();
-
-  loadSpecialIDs();
-
-}
-
-window.openInventory = function() {
-
-  document.getElementById('inventoryPanel').style.display = 'flex';
-
-  loadInventory();
-
-}
-
-window.openCashOut = function() {
-
-  document.getElementById('cashOutPanel').style.display = 'flex';
-
-  document.getElementById('cashOutStatus').innerText = `رصيدك: ${userData.coins} كوينز`;
-
-}
-
-window.openChatSearch = function() {
-
-  document.getElementById('chatSearchPanel').style.display = 'flex';
-
-}
-
-window.openChatList = function() {
-
-  document.getElementById('chatListPanel').style.display = 'flex';
-
-  loadChatList();
-
-}
-
-window.closePanel = function(id) {
-
-  if (id === 'chatPanel' && chatUnsubscribe) {
-
-    chatUnsubscribe.unsubscribe();
-
-    chatUnsubscribe = null;
-
-    chatWithUID = null;
-
-  }
-
-  document.getElementById(id).style.display = 'none';
-
-}
-
-window.openFacebook = function() { window.open('https://www.facebook.com/share/14bpwBXGNAm/'); }
-
-window.logout = async function() {
-
-  await supabase.from('users').update({ lastSeen: new Date() }).eq('id', currentUser.id);
-
-  await supabase.auth.signOut();
-
-  closePanel('profilePanel');
-
-}
-
-function updateProfileFrame() {
-
-  const frame = document.getElementById('profileFrame');
-
-  const selectedFrame = frames.find(f => f.id === userData.frame);
-
-  if (userData.frame === 'none' ||!selectedFrame) {
-
-    frame.classList.add('hidden');
-
+async function endGame(won) {
+  clearInterval(gameInterval);
+  gameRunning = false;
+
+  const bet = parseFloat(document.getElementById('bet').value);
+
+  if(won) {
+    const winAmount = bet * currentMultiplier;
+    await updateBalance(balance + winAmount);
+    document.getElementById('status').textContent = `كسبت ${Math.floor(winAmount)} ج!`;
+    document.getElementById('multiplier').style.color = '#22c55e';
   } else {
-
-    frame.classList.remove('hidden');
-
-    frame.style.backgroundImage = `url('${selectedFrame.img}')`;
-
+    document.getElementById('status').textContent = 'خسرت!';
+    document.getElementById('multiplier').style.color = '#ef4444';
   }
-
-}
-
-function loadShop() {
-
-  let skinHTML = '';
-
-  skins.forEach(skin => {
-
-    const owned = userData.ownedSkins.includes(skin.emoji);
-
-    const selected = userData.skin === skin.emoji;
-
-    skinHTML += `
-
-      <div class="shopItem ${owned? 'owned' : ''} ${selected? 'equipped' : ''}">
-
-        <div class="emoji">${skin.emoji}</div>
-
-        <div>${skin.name}</div>
-
-        <div class="price">${skin.price} كوينز</div>
-
-        <button onclick="buySkin('${skin.emoji}', ${skin.price})" ${owned? 'disabled' : ''}>
-
-          ${owned? (selected? 'مُلبس' : 'في الشنطة') : 'شراء'}
-
-        </button>
-
-      </div>
-
-    `;
-
-  });
-
-  document.getElementById('skinShop').innerHTML = skinHTML;
-
-  let frameHTML = '';
-
-  frames.forEach(frame => {
-
-    const owned = userData.ownedFrames.includes(frame.id);
-
-    const selected = userData.frame === frame.id;
-
-    frameHTML += `
-
-      <div class="shopItem ${owned? 'owned' : ''} ${selected? 'equipped' : ''}">
-
-        <div class="framePreview" style="background-image: url('${frame.img}')"></div>
-
-        <div>${frame.name}</div>
-
-        <div class="price">${frame.price} كوينز</div>
-
-        <button onclick="buyFrame('${frame.id}', ${frame.price})" ${owned? 'disabled' : ''}>
-
-          ${owned? (selected? 'مُلبس' : 'في الشنطة') : 'شراء'}
-
-        </button>
-
-      </div>
-
-    `;
-
-  });
-
-  document.getElementById('frameShop').innerHTML = frameHTML;
-
-}
-
-function loadSpecialIDs() {
-
-  const idShop = document.getElementById('idShop');
-
-  idShop.innerHTML = '';
-
-  specialIDs.forEach(item => {
-
-    const div = document.createElement('div');
-
-    div.className = 'shopItem';
-
-    div.innerHTML = `
-
-      <div style="font-size:20px; font-weight:bold; color:#f59e0b;">${item.id}</div>
-
-      <div class="shopItem price">${item.price} كوينز</div>
-
-      <button onclick="buySpecialID('${item.id}', ${item.price})">شراء</button>
-
-    `;
-
-    idShop.appendChild(div);
-
-  });
-
-}
-
-window.buySpecialID = async function(id, price) {
-
-  if(userData.coins < price) {
-
-    alert("معكش كوينز كفاية");
-
-    return;
-
-  }
-
-  if(userData.idChanged) {
-
-    alert("أنت غيرت الـ ID قبل كده، مينفعش تغيره تاني");
-
-    return;
-
-  }
-
-  const { data } = await supabase.from('users').select('id').eq('shortID', id);
-
-  if(data.length > 0) {
-
-    alert("الـ ID ده اتباع خلاص");
-
-    return;
-
-  }
-
-  await supabase.from('users').update({
-
-    shortID: id,
-
-    coins: userData.coins - price,
-
-    idChanged: true
-
-  }).eq('id', currentUser.id);
-
-  userData.coins -= price;
-
-  userData.shortID = id;
-
-  userData.idChanged = true;
-
-  document.getElementById('userID').textContent = id;
-
-  document.getElementById('profileID').innerHTML = `ID: <span>${id}</span>`;
-
-  document.getElementById('shopBalance').textContent = `كوينز: ${userData.coins}`;
-
-  alert(`مبروك! بقى الـ ID بتاعك ${id}`);
-
-  closePanel('shopPanel');
-
-}
-
-function loadInventory() {
-
-  let skinHTML = '';
-
-  skins.forEach(skin => {
-
-    if (userData.ownedSkins.includes(skin.emoji)) {
-
-      const isEquipped = userData.skin === skin.emoji;
-
-      skinHTML += `
-
-        <div class="shopItem ${isEquipped? 'equipped' : 'owned'}">
-
-          <div class="emoji">${skin.emoji}</div>
-
-          <div>${skin.name}</div>
-
-          <button onclick="${isEquipped? `unequipSkin()` : `equipSkin('${skin.emoji}')`}"
-
-                  style="background:${isEquipped? '#ff4757' : '#8b5cf6'}">
-
-            ${isEquipped? 'اقلع' : 'البس'}
-
-          </button>
-
-        </div>
-
-      `;
-
-    }
-
-  });
-
-  document.getElementById('mySkins').innerHTML = skinHTML || '<div>لسه مفيش حيوانات</div>';
-
-  let frameHTML = '';
-
-  frames.forEach(frame => {
-
-    if (userData.ownedFrames.includes(frame.id)) {
-
-      const isEquipped = userData.frame === frame.id;
-
-      frameHTML += `
-
-        <div class="shopItem ${isEquipped? 'equipped' : 'owned'}">
-
-          <div class="framePreview" style="background-image: url('${frame.img}')"></div>
-
-          <div>${frame.name}</div>
-
-          <button onclick="${isEquipped? `unequipFrame()` : `equipFrame('${frame.id}')`}"
-
-                  style="background:${isEquipped? '#ff4757' : '#8b5cf6'}">
-
-            ${isEquipped? 'اقلع' : 'البس'}
-
-          </button>
-
-        </div>
-
-      `;
-
-    }
-
-  });
-
-  document.getElementById('myFrames').innerHTML = frameHTML || '<div>لسه مفيش إطارات</div>';
-
-}
-
-window.buySkin = async function(emoji, price) {
-
-  if (userData.coins < price) {
-
-    alert("معكش كوينز كفاية!");
-
-    return;
-
-  }
-
-  await supabase.from('users').update({
-
-    coins: userData.coins - price,
-
-    ownedSkins: [...userData.ownedSkins, emoji],
-
-    skin: emoji
-
-  }).eq('id', currentUser.id);
-
-  userData.skin = emoji;
-
-  document.getElementById('player').innerText = emoji;
-
-  loadUserData();
-
-  loadShop();
-
-}
-
-window.buyFrame = async function(frameId, price) {
-
-  if (userData.coins < price) {
-
-    alert("معكش كوينز كفاية!");
-
-    return;
-
-  }
-
-  await supabase.from('users').update({
-
-    coins: userData.coins - price,
-
-    ownedFrames: [...userData.ownedFrames, frameId],
-
-    frame: frameId
-
-  }).eq('id', currentUser.id);
-
-  userData.frame = frameId;
-
-  loadUserData();
-
-  loadShop();
-
-}
-
-window.equipSkin = async function(emoji) {
-
-  await supabase.from('users').update({ skin: emoji }).eq('id', currentUser.id);
-
-  userData.skin = emoji;
-
-  document.getElementById('player').innerText = emoji;
-
-  loadInventory();
-
-}
-
-window.unequipSkin = async function() {
-
-  await supabase.from('users').update({ skin: '🐰' }).eq('id', currentUser.id);
-
-  userData.skin = '🐰';
-
-  document.getElementById('player').innerText = '🐰';
-
-  loadInventory();
-
-}
-
-window.equipFrame = async function(frameId) {
-
-  await supabase.from('users').update({ frame: frameId }).eq('id', currentUser.id);
-
-  userData.frame = frameId;
-
-  loadInventory();
-
-}
-
-window.unequipFrame = async function() {
-
-  await supabase.from('users').update({ frame: 'none' }).eq('id', currentUser.id);
-
-  userData.frame = 'none';
-
-  loadInventory();
-
-}
-
-document.getElementById('saveProfileBtn').onclick = async function() {
-
-  const newName = document.getElementById('editName').value.trim();
-
-  const file = document.getElementById('editPhoto').files[0];
-
-  const btn = document.getElementById('saveProfileBtn');
-
-  try {
-
-    btn.disabled = true;
-
-    btn.innerText = "جاري الحفظ...";
-
-    if (file) {
-
-      if (file.size > 200000) {
-
-        alert("الصورة كبيرة أوي، اختار صورة أقل من 200KB");
-
-        btn.disabled = false;
-
-        btn.innerText = "حفظ التعديلات";
-
-        return;
-
-      }
-
-      const base64 = await fileToBase64(file);
-
-      await supabase.from('users').update({ photo: base64 }).eq('id', currentUser.id);
-
-    }
-
-    alert("تم الحفظ بنجاح");
-
-    closePanel('roomPanel');
-
-    loadUserData();
-
-  } catch (e) {
-
-    alert("خطأ: " + e.message);
-
-  } finally {
-
-    btn.disabled = false;
-
-    btn.innerText = "حفظ التعديلات";
-
-  }
-
-}
-
-document.getElementById('saveIDBtn').onclick = async function() {
-
-  const newID = document.getElementById('editID').value.trim().toUpperCase();
-
-  if(!newID) {
-
-    alert("اكتب ID جديد");
-
-    return;
-
-  }
-
-  if(newID.length < 4) {
-
-    alert("الـ ID لازم يكون 4 حروف على الأقل");
-
-    return;
-
-  }
-
-  const { data: userSnap } = await supabase.from('users').select('*').eq('id', currentUser.id).single();
-
-  if(userSnap.idChanged) {
-
-    alert("أنت غيرت الـ ID قبل كده، مينفعش تغيره تاني");
-
-    return;
-
-  }
-
-  const { data: idSnap } = await supabase.from('users').select('id').eq('shortID', newID);
-
-  if(idSnap.length > 0) {
-
-    alert("الـ ID ده مستخدم خلاص، اختار واحد تاني");
-
-    return;
-
-  }
-
-  await supabase.from('users').update({
-
-    shortID: newID,
-
-    idChanged: true
-
-  }).eq('id', currentUser.id);
-
-  document.getElementById('userID').textContent = newID;
-
-  document.getElementById('profileID').innerHTML = `ID: <span>${newID}</span>`;
-
-  alert("تم تغيير الـ ID بنجاح! مش هتقدر تغيره تاني");
-
-  closePanel('roomPanel');
-
-}
-
-function fileToBase64(file) {
-
-  return new Promise((resolve, reject) => {
-
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onload = () => resolve(reader.result);
-
-    reader.onerror = error => reject(error);
-
-  });
-
-}
-
-async function sendCoinsFromProfile() {
-
-  if (currentUser.id!== ADMIN_UID) {
-
-    alert("ممنوع، الأدمن بس");
-
-    return;
-
-  }
-
-  const shortID = document.getElementById('profileSendID').value.trim().toUpperCase();
-
-  const amount = parseInt(document.getElementById('profileSendAmount').value);
-
-  const status = document.getElementById('profileSendStatus');
-
-  if (!shortID ||!amount || amount < 1) {
-
-    status.innerText = "❌ دخل ID ومبلغ صح";
-
-    return;
-
-  }
-
-  const { data } = await supabase.from('users').select('id, coins').eq('shortID', shortID).single();
-
-  if (!data) {
-
-    status.innerText = "❌ الـ ID مش موجود";
-
-    return;
-
-  }
-
-  await supabase.from('users').update({ coins: userData.coins - amount }).eq('id', currentUser.id);
-
-  await supabase.from('users').update({ coins: data.coins + amount }).eq('id', data.id);
-
-  status.innerText = "✅ تم التحويل بنجاح";
-
-  document.getElementById('profileSendID').value = '';
-
-  document.getElementById('profileSendAmount').value = '';
-
-  loadUserData();
-
-}
-
-window.openAdminPanel = function() {
-
-  if (currentUser.id!== ADMIN_UID) return;
-
-  document.getElementById('adminPanel').style.display = 'flex';
-
-}
-
-window.banUser = async function() {
-
-  const shortID = document.getElementById('banUserID').value.trim().toUpperCase();
-
-  const duration = document.getElementById('banDuration').value;
-
-  const status = document.getElementById('banStatus');
-
-  const { data } = await supabase.from('users').select('id').eq('shortID', shortID).single();
-
-  if (!data) {
-
-    status.innerText = "❌ الـ ID مش موجود";
-
-    return;
-
-  }
-
-  let banTime;
-
-  if (duration === "forever") {
-
-    banTime = '2099-12-31';
-
-  } else {
-
-    banTime = new Date(Date.now() + parseInt(duration) * 60 * 1000);
-
-  }
-
-  await supabase.from('users').update({ bannedUntil: banTime }).eq('id', data.id);
-
-  status.innerText = `✅ تم الباند لحد ${new Date(banTime).toLocaleString('ar-EG')}`;
-
-}
-
-window.unbanUser = async function() {
-
-  const shortID = document.getElementById('unbanUserID').value.trim().toUpperCase();
-
-  const status = document.getElementById('unbanStatus');
-
-  const { data } = await supabase.from('users').select('id').eq('shortID', shortID).single();
-
-  if (!data) {
-
-    status.innerText = "❌ الـ ID مش موجود";
-
-    return;
-
-  }
-
-  await supabase.from('users').update({ bannedUntil: null }).eq('id', data.id);
-
-  status.innerText = "✅ تم فك الباند";
-
-}
-
-document.getElementById('cashOutBtn').onclick = async function() {
-
-  const number = document.getElementById('vodafoneNumber').value.trim();
-
-  const amount = parseInt(document.getElementById('cashOutAmount').value);
-
-  const status = document.getElementById('cashOutStatus');
-
-  if (!/^01[0-9]{9}$/.test(number)) {
-
-    status.innerText = "❌ رقم فودافون كاش غلط";
-
-    return;
-
-  }
-
-  if (!amount || amount < 1000) {
-
-    status.innerText = "❌ الحد الأدنى للسحب 1000 كوينز";
-
-    return;
-
-  }
-
-  if (amount > userData.coins) {
-
-    status.innerText = "❌ رصيدك مش كفاية";
-
-    return;
-
-  }
-
-  await supabase.from('users').update({ coins: userData.coins - amount }).eq('id', currentUser.id);
-
-  await supabase.from('cashOutRequests').insert([{
-
-    uid: currentUser.id,
-
-    email: currentUser.email,
-
-    vodafoneNumber: number,
-
-    coins: amount,
-
-    egp: amount / 30,
-
-    status: "pending",
-
-    time: new Date()
-
-  }]);
-
-  userData.coins -= amount;
-
-  status.innerText = "✅ تم إرسال طلب السحب. هيتم التحويل خلال 24 ساعة";
-
-  loadUserData();
-
-  document.getElementById('vodafoneNumber').value = '';
-
-  document.getElementById('cashOutAmount').value = '';
-
-}
-
-async function searchUserByUID() {
-
-  const shortID = document.getElementById('searchUID').value.trim().toUpperCase();
-
-  const resultDiv = document.getElementById('searchResult');
-
-  const { data } = await supabase.from('users').select('*').eq('shortID', shortID).single();
-
-  if (!data) {
-
-    resultDiv.innerHTML = 'اللاعب مش موجود';
-
-    return;
-
-  }
-
-  if (data.id === currentUser.id) {
-
-    resultDiv.innerHTML = 'ده انت 😅';
-
-    return;
-
-  }
-
-  resultDiv.innerHTML = `
-
-    <div class="searchUserCard">
-
-      <img src="${data.photo || `https://ui-avatars.com/api/?name=${data.email}&background=667eea&color=fff`}">
-
-      <div style="flex:1;">
-
-        <div style="font-weight:600;">${data.email.split('@')[0]}</div>
-
-        <div style="font-size:12px; color:#94a3b8;">ID: ${data.shortID}</div>
-
-      </div>
-
-      <button onclick="openChat('${data.id}', '${data.email.split('@')[0]}')" style="width:auto; padding:8px 15px; background:#00ff88; color:#000;">دردشة</button>
-
-    </div>
-
-  `;
-
-}
-
-window.adminSendCoins = async function() {
-
-  const shortID = document.getElementById('adminSendID').value.trim().toUpperCase();
-
-  const amount = parseInt(document.getElementById('adminSendAmount').value);
-
-  const status = document.getElementById('adminSendStatus');
-
-  const { data } = await supabase.from('users').select('id').eq('shortID', shortID).single();
-
-  if (!data) {
-
-    status.innerText = "❌ الـ ID مش موجود";
-
-    return;
-
-  }
-
-  await supabase.from('users').update({ coins: supabase.rpc('increment', { x: amount }) }).eq('id', data.id);
-
-  status.innerText = "✅ تم الإرسال بنجاح";
-
-  document.getElementById('adminSendID').value = '';
-
-  document.getElementById('adminSendAmount').value = '';
-
-}
-
-async function loadChatList() {
-
-  if (chatListUnsubscribe) chatListUnsubscribe.unsubscribe();
-
-  const chatListContent = document.getElementById('chatListContent');
-
-  chatListContent.innerHTML = 'جاري التحميل...';
-
-  const { data } = await supabase.from('chats').select('*').contains('users', [currentUser.id]);
-
-  let chatHTML = '';
-
-  if (data && data.length > 0) {
-
-    for (const chat of data) {
-
-      const otherUID = chat.users.find(uid => uid!== currentUser.id);
-
-      const { data: user } = await supabase.from('users').select('*').eq('id', otherUID).single();
-
-      chatHTML += `
-
-        <div class="chatListItem" onclick="openChat('${otherUID}', '${user.email.split('@')[0]}')">
-
-          <img src="${user.photo || `https://ui-avatars.com/api/?name=${user.email}&background=667eea&color=fff`}">
-
-          <div class="chatListInfo">
-
-            <div class="chatListName">${user.email.split('@')[0]}</div>
-
-          </div>
-
-        </div>
-
-      `;
-
-    }
-
-  } else {
-
-    chatHTML = '<div style="text-align:center; color:#94a3b8;">مفيش محادثات لسه</div>';
-
-  }
-
-  chatListContent.innerHTML = chatHTML;
-
-}
-
-window.openChat = async function(uid, name) {
-
-  chatWithUID = uid;
-
-  document.getElementById('chatWithName').innerText = name;
-
-  document.getElementById('chatPanel').style.display = 'flex';
-
-  loadMessages(uid);
-
-}
-
-function loadMessages(otherUID) {
-
-  if (chatUnsubscribe) chatUnsubscribe.unsubscribe();
-
-  const chatID = getChatID(currentUser.id, otherUID);
-
-  chatUnsubscribe = supabase
-
-   .channel('messages')
-
-   .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `chat_id=eq.${chatID}` },
-
-    payload => {
-
-      const msg = payload.new;
-
-      const isMe = msg.from === currentUser.id;
-
-      document.getElementById('chatMessages').innerHTML += `
-
-        <div class="chatMsg ${isMe? 'me' : 'other'}">
-
-          ${msg.text}
-
-        </div>
-
-      `;
-
-    }).subscribe();
-
-  supabase.from('messages').select('*').eq('chat_id', chatID).order('time', { ascending: true })
-
-   .then(({ data }) => {
-
-      document.getElementById('chatMessages').innerHTML = '';
-
-      data.forEach(msg => {
-
-        const isMe = msg.from === currentUser.id;
-
-        document.getElementById('chatMessages').innerHTML += `
-
-          <div class="chatMsg ${isMe? 'me' : 'other'}">${msg.text}</div>
-
-        `;
-
-      });
-
-    });
-
-}
-
-async function sendMessage() {
-
-  const text = document.getElementById('chatInput').value.trim();
-
-  if (!text ||!chatWithUID) return;
-
-  const chatID = getChatID(currentUser.id, chatWithUID);
-
-  await supabase.from('messages').insert([{
-
-    chat_id: chatID,
-
-    text: text,
-
-    from: currentUser.id,
-
-    time: new Date()
-
-  }]);
-
-  await supabase.from('chats').upsert([{
-
-    id: chatID,
-
-    users: [currentUser.id, chatWithUID]
-
-  }]);
-
-  document.getElementById('chatInput').value = '';
-
-}
-
-function getChatID(uid1, uid2) {
-
-  return uid1 < uid2? uid1 + '_' + uid2 : uid2 + '_' + uid1;
-
-}
-
-// Event Listeners
-
-document.getElementById('loginBtn').onclick = login;
-
-document.getElementById('signupBtn').onclick = signup;
-
-document.getElementById('googleBtn').onclick = signInWithGoogle;
-
-document.getElementById('googleBtnSignup').onclick = signInWithGoogle;
-
-document.getElementById('forgotPassBtn').onclick = forgotPassword;
-
-document.getElementById('toggleLink').onclick = toggleForm;
-
-document.getElementById('toggleLink2').onclick = toggleForm;
-
-document.getElementById('goBtn').onclick = startGame;
-
-document.getElementById('cashBtn').onclick = cashOut;
-
-document.getElementById('searchUserBtn').onclick = searchUserByUID;
-
-document.getElementById('sendMsgBtn').onclick = sendMessage;
-
-document.getElementById('chatInput').addEventListener('keypress', (e) => {
-
-  if (e.key === 'Enter') sendMessage();
-
-});
-
-window.onload = function() {
 
   setTimeout(() => {
-
-    document.getElementById('welcomeScreen').style.display = 'none';
-
-  }, 3000);
-
+    document.getElementById('status').textContent = 'جاهز للعب';
+    document.getElementById('multiplier').textContent = '1.00x';
+    document.getElementById('multiplier').style.color = '#facc15';
+    document.getElementById('playBtn').classList.remove('hidden');
+    document.getElementById('cashoutBtn').classList.add('hidden');
+  }, 2000);
 }
-
 </script>
 
 </body>
-
 </html>
     
   </body>
