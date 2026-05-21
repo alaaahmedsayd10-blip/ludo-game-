@@ -43,11 +43,21 @@
         background: #2d3042;
         padding: 8px 16px;
         border-radius: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
         font-weight: 700;
         font-size: 15px;
+    }
+    #rightIcons {
+        display: flex;
+        gap: 10px;
+    }
+    #adminPanelBtn {
+        background: #ffd700;
+        color: #000;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        display: none;
     }
     #menuBtn {
         font-size: 24px;
@@ -70,69 +80,80 @@
         border-radius: 50%;
         box-shadow: 0 0 8px #00ff88;
     }
-    #liveWinItem {
-        background: rgba(45, 48, 66, 0.8);
-        padding: 4px 10px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-    }
-    #liveWinItem.amount { color: #00ff88; font-weight: 700; }
 
     #gameArea {
         height: calc(100% - 210px);
         background: #2a2d3e;
-        background-image:
-            linear-gradient(90deg, transparent 48%, rgba(255,255,255,0.12) 49%, rgba(255,255,255,0.12) 51%, transparent 52%);
-        background-size: 120px 100%;
         position: relative;
-        overflow: hidden;
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    #gameArea::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 3px;
+        background: repeating-linear-gradient(
+            to right,
+            rgba(255,255,255,0.15),
+            rgba(255,255,255,0.15) 15px,
+            transparent 15px,
+            transparent 30px
+        );
+        transform: translateY(-50%);
     }
 
     #player {
         position: absolute;
-        left: 50%;
-        bottom: 60px;
-        transform: translateX(-50%);
-        width: 70px;
-        height: 70px;
-        transition: left 0.4s ease, bottom 0.4s ease;
+        left: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 70px;
+        transition: left 0.4s ease;
         z-index: 10;
         filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
     }
 
-   .multiplier {
-        position: absolute;
-        width: 68px;
-        height: 68px;
+ .multiplier {
+        position: relative;
+        min-width: 85px;
+        height: 85px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 800;
-        font-size: 15px;
-        transform: translateX(-50%);
+        font-size: 18px;
         transition: all 0.3s;
         box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        border: 4px solid rgba(255,255,255,0.2);
+        margin: 0 15px;
+        flex-shrink: 0;
+        z-index: 2;
     }
-   .multiplier.active {
-        transform: translateX(-50%) scale(1.15);
-        box-shadow: 0 0 25px currentColor;
+ .multiplier.active {
+        transform: scale(1.1);
+        box-shadow: 0 0 30px currentColor;
+        border-color: #fff;
     }
-   .multiplier.green {
+ .multiplier.green {
         background: radial-gradient(circle at 30% 30%, #00ff88, #00d4aa);
         color: white;
     }
-   .multiplier.purple {
-        background: radial-gradient(circle at 30% 30%, #7c7cff, #5a5aff);
+ .multiplier.purple {
+        background: radial-gradient(circle at 30% 30%, #6c5ce7, #a29bfe);
         color: white;
     }
-   .multiplier.gold {
+ .multiplier.gold {
         background: radial-gradient(circle at 30% 30%, #ffd700, #ffed4e);
         color: #000;
-        font-size: 35px;
+        font-size: 42px;
     }
 
     #panel {
@@ -167,7 +188,7 @@
         gap: 8px;
         margin-bottom: 12px;
     }
-   .betBtn {
+ .betBtn {
         background: #2d3042;
         border: none;
         padding: 12px;
@@ -181,7 +202,7 @@
         gap: 4px;
         cursor: pointer;
     }
-   .betBtn span {
+ .betBtn span {
         background: #fff;
         color: #1a1d2e;
         width: 18px;
@@ -218,14 +239,14 @@
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    #authScreen, #profilePanel {
+    #authScreen, #profilePanel, #adminPanel {
         position: fixed; top: 0; left: 0;
         width: 100%; height: 100%;
         background: rgba(0,0,0,0.95);
         display: none; align-items: center; justify-content: center;
         z-index: 100;
     }
-   .authBox {
+ .authBox {
         background: #2d3042;
         border-radius: 20px;
         width: 90%; max-width: 400px;
@@ -236,10 +257,32 @@
         border-radius: 12px; border: 1px solid #3a3d4e;
         background: #1a1d2e; color: white; outline: none;
     }
-   .btn {
+ .btn {
         padding: 14px; border-radius: 12px; border: none;
         font-weight: 700; cursor: pointer;
         width: 100%; margin-top: 10px;
+    }
+ .adminBox {
+        background: #2d3042;
+        border-radius: 20px;
+        width: 90%; max-width: 500px;
+        padding: 25px;
+    }
+ .adminTitle {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: 20px;
+        color: #ffd700;
+    }
+ .adminSection {
+        background: #1a1d2e;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+ .adminSection h3 {
+        margin-bottom: 10px;
+        color: #00d4aa;
     }
 </style>
 </head>
@@ -269,22 +312,20 @@
   <div id="topBar">
     <div id="logo">🥚 CHICKEN ROAD</div>
     <div id="balanceBox"><span id="balance">999 997</span><span>$</span></div>
-    <div id="menuBtn" onclick="openProfile()">☰</div>
+    <div id="rightIcons">
+      <div id="adminPanelBtn" onclick="openAdminPanel()">👑 Admin</div>
+      <div id="menuBtn" onclick="openProfile()">☰</div>
+    </div>
   </div>
 
   <div id="liveBar">
     <span>Live wins:</span>
     <span id="liveDot"></span>
     <span>Online: <span id="onlineCount">2701</span></span>
-    <div id="liveWinItem">
-      <span>🔴</span>
-      <span>Sapphire Viol...</span>
-      <span class="amount">+$420.00</span>
-    </div>
   </div>
 
   <div id="gameArea">
-    <img id="player" src="attachment://0" alt="chicken">
+    <div id="player">🐔</div>
   </div>
 
   <div id="panel">
@@ -317,14 +358,30 @@
     <p style="margin-bottom:10px;"><strong>Name:</strong> <span id="profileName">Player</span></p>
     <p style="margin-bottom:20px;"><strong>ID:</strong> <span id="userID">------</span></p>
     <button class="btn" onclick="closePanel('profilePanel')" style="background:#6c757d;">Close</button>
-    <button class="btn" onclick="logout()" style="background:#dc3545;">Logout</button>
+    <button class="btn" id="logoutBtn" style="background:#dc3545;">Logout</button>
+  </div>
+</div>
+
+<div id="adminPanel">
+  <div class="adminBox">
+    <div class="adminTitle">👑 لوحة الأدمن</div>
+
+    <div class="adminSection">
+      <h3>💸 إرسال كوينز</h3>
+      <input id="sendToID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
+      <input id="sendAmount" type="number" placeholder="عدد الكوينز" min="1">
+      <button class="btn" onclick="sendCoins()" style="background:#00d4aa;">إرسال</button>
+      <div id="sendStatus" style="margin-top:10px; text-align:center;"></div>
+    </div>
+
+    <button class="btn" onclick="closePanel('adminPanel')" style="background:#6c757d;">إغلاق</button>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithRedirect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, query, where, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
@@ -341,38 +398,47 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
+const ADMIN_UID = "sPQ9h5s5pQYONHz0eTuhet8jKq82";
+
 let currentUser = null;
-let userData = { coins: 999997 };
+let userData = { coins: 999997, shortID: '' };
 let bet = 3, multiplier = 1, running = false, currentStep = 0;
 
-// 15 مضاعف + النهاية بيضة
+function generateShortID() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 8; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 const multiplierPositions = [
-  {left: '25%', bottom: '240px', color: 'green', mult: 1.03},
-  {left: '75%', bottom: '240px', color: 'purple', mult: 1.07},
-  {left: '25%', bottom: '210px', color: 'purple', mult: 1.15},
-  {left: '75%', bottom: '210px', color: 'purple', mult: 1.25},
-  {left: '25%', bottom: '180px', color: 'purple', mult: 1.4},
-  {left: '75%', bottom: '180px', color: 'purple', mult: 1.6},
-  {left: '25%', bottom: '150px', color: 'purple', mult: 1.85},
-  {left: '75%', bottom: '150px', color: 'purple', mult: 2.1},
-  {left: '25%', bottom: '120px', color: 'purple', mult: 2.5},
-  {left: '75%', bottom: '120px', color: 'purple', mult: 3.0},
-  {left: '25%', bottom: '90px', color: 'purple', mult: 3.8},
-  {left: '75%', bottom: '90px', color: 'purple', mult: 4.8},
-  {left: '25%', bottom: '60px', color: 'purple', mult: 6.2},
-  {left: '75%', bottom: '60px', color: 'purple', mult: 8.5},
-  {left: '50%', bottom: '30px', color: 'gold', mult: '🥚'}
+  {color: 'green', mult: 1.03},
+  {color: 'purple', mult: 1.07},
+  {color: 'purple', mult: 1.15},
+  {color: 'purple', mult: 1.25},
+  {color: 'purple', mult: 1.4},
+  {color: 'purple', mult: 1.6},
+  {color: 'purple', mult: 1.85},
+  {color: 'purple', mult: 2.1},
+  {color: 'purple', mult: 2.5},
+  {color: 'purple', mult: 3.0},
+  {color: 'purple', mult: 3.8},
+  {color: 'purple', mult: 4.8},
+  {color: 'purple', mult: 6.2},
+  {color: 'purple', mult: 8.5},
+  {color: 'gold', mult: '🥚'}
 ];
 
 function renderMultipliers() {
   const gameArea = document.getElementById('gameArea');
-  gameArea.innerHTML = '<img id="player" src="attachment://0" alt="chicken">';
+  gameArea.innerHTML = '<div id="player">🐔</div>';
 
   multiplierPositions.forEach((pos, i) => {
     const div = document.createElement('div');
     div.className = `multiplier ${pos.color}`;
-    div.style.left = pos.left;
-    div.style.bottom = pos.bottom;
+    div.style.marginLeft = '30px';
     div.innerText = pos.mult === '🥚'? '🥚' : pos.mult + 'x';
     div.id = 'mult' + i;
     gameArea.appendChild(div);
@@ -385,14 +451,20 @@ onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     document.getElementById('authScreen').style.display = 'none';
     document.getElementById('gameScreen').style.display = 'flex';
-    loadUserData();
+
+    if (user.uid === ADMIN_UID) {
+      document.getElementById('adminPanelBtn').style.display = 'block';
+    }
+
+    await loadUserData();
   } else {
+    currentUser = null;
     document.getElementById('authScreen').style.display = 'flex';
     document.getElementById('gameScreen').style.display = 'none';
   }
 });
 
-function toggleForm() {
+window.toggleForm = function() {
   const loginForm = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
   loginForm.style.display = loginForm.style.display === 'none'? 'block' : 'none';
@@ -413,12 +485,77 @@ async function signup() {
   try {
     const userCred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(userCred.user, { displayName: name });
-    await setDoc(doc(db, "users", userCred.user.uid), { email, coins: 1000 });
+
+    let shortID;
+    let exists = true;
+    while (exists) {
+      shortID = generateShortID();
+      const q = query(collection(db, "users"), where("shortID", "==", shortID));
+      const snap = await getDocs(q);
+      exists =!snap.empty;
+    }
+
+    await setDoc(doc(db, "users", userCred.user.uid), {
+      email: email,
+      coins: 1000,
+      shortID: shortID,
+      displayName: name
+    });
+
+    alert("تم إنشاء الحساب! ID بتاعك: " + shortID);
   } catch (e) { alert(e.message); }
 }
 
 async function signInWithGoogle() {
   await signInWithRedirect(auth, provider);
+}
+
+async function loadUserData() {
+  if (!currentUser) return;
+  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+  if (userDoc.exists()) {
+    userData = userDoc.data();
+    updateBalance();
+    document.getElementById('userID').innerText = userData.shortID || '------';
+    document.getElementById('profileName').innerText = userData.displayName || currentUser.displayName || 'Player';
+  }
+}
+
+window.sendCoins = async function() {
+  const targetID = document.getElementById('sendToID').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('sendAmount').value);
+  const statusDiv = document.getElementById('sendStatus');
+
+  if (!targetID ||!amount || amount < 1) {
+    statusDiv.innerText = "❌ اكتب ID والمبلغ صح";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+
+  try {
+    const q = query(collection(db, "users"), where("shortID", "==", targetID));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      statusDiv.innerText = "❌ ID غير موجود";
+      statusDiv.style.color = "#ff4757";
+      return;
+    }
+
+    const targetDoc = snap.docs[0];
+    await updateDoc(doc(db, "users", targetDoc.id), {
+      coins: increment(amount)
+    });
+
+    statusDiv.innerText = `✅ تم إرسال ${amount} كوينز لـ ${targetID}`;
+    statusDiv.style.color = "#00ff88";
+    document.getElementById('sendToID').value = '';
+    document.getElementById('sendAmount').value = '';
+
+  } catch (e) {
+    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
+    statusDiv.style.color = "#ff4757";
+  }
 }
 
 window.setBet = function(amount) {
@@ -458,8 +595,13 @@ function moveChicken() {
   const step = multiplierPositions[currentStep];
   multiplier = step.mult === '🥚'? multiplier : step.mult;
 
-  document.getElementById('player').style.left = step.left;
-  document.getElementById('player').style.bottom = step.bottom;
+  const newLeft = 50 + (currentStep + 1) * 115;
+  document.getElementById('player').style.left = newLeft + 'px';
+
+  document.getElementById('gameArea').scrollTo({
+    left: newLeft - 200,
+    behavior: 'smooth'
+  });
 
   document.querySelectorAll('.multiplier').forEach(m => m.classList.remove('active'));
   document.getElementById('mult' + currentStep).classList.add('active');
@@ -479,7 +621,6 @@ function moveChicken() {
 
   currentStep++;
 
-  // لو وصل للبيضة
   if (step.mult === '🥚') {
     setTimeout(() => {
       cashOut();
@@ -501,8 +642,8 @@ function cashOut() {
 function resetGame() {
   running = false;
   currentStep = 0;
-  document.getElementById('player').style.left = '50%';
-  document.getElementById('player').style.bottom = '60px';
+  document.getElementById('player').style.left = '50px';
+  document.getElementById('gameArea').scrollTo({left: 0, behavior: 'smooth'});
   document.getElementById('goBtn').innerText = 'GO';
   document.getElementById('cashBtn').disabled = true;
   document.getElementById('cashAmount').innerText = '0 USD';
@@ -513,28 +654,27 @@ function updateBalance() {
   document.getElementById('balance').innerText = userData.coins.toLocaleString();
 }
 
-async function loadUserData() {
-  if (!currentUser) return;
-  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-  if (userDoc.exists()) {
-    userData = userDoc.data();
-    updateBalance();
-  }
-}
-
 window.openProfile = function() {
   document.getElementById('profilePanel').style.display = 'flex';
 }
+
+window.openAdminPanel = function() {
+  document.getElementById('adminPanel').style.display = 'flex';
+}
+
 window.closePanel = function(id) {
   document.getElementById(id).style.display = 'none';
 }
+
 window.logout = async function() {
   await signOut(auth);
 }
 
+// ربط الزرارين
 document.getElementById('loginBtn').onclick = login;
 document.getElementById('signupBtn').onclick = signup;
 document.getElementById('googleBtn').onclick = signInWithGoogle;
+document.getElementById('logoutBtn').onclick = logout;
 document.getElementById('goBtn').onclick = startGame;
 document.getElementById('cashBtn').onclick = cashOut;
 
@@ -548,3 +688,4 @@ setInterval(() => {
   </body>
   
 </html>
+
