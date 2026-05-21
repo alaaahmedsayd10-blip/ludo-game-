@@ -50,6 +50,13 @@
         display: flex;
         gap: 10px;
     }
+    #depositBtn {
+        background:#00d4aa;
+        padding:8px 12px;
+        border-radius:10px;
+        font-weight:700;
+        cursor:pointer;
+    }
     #adminPanelBtn {
         background: #ffd700;
         color: #000;
@@ -120,7 +127,7 @@
         filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
     }
 
-.multiplier {
+   .multiplier {
         position: relative;
         min-width: 85px;
         height: 85px;
@@ -137,22 +144,21 @@
         flex-shrink: 0;
         z-index: 2;
     }
-.multiplier.active {
+   .multiplier.active {
         transform: scale(1.1);
         box-shadow: 0 0 30px currentColor;
         border-color: #fff;
     }
-.multiplier.green {
+   .multiplier.green {
         background: radial-gradient(circle at 30% 30%, #00ff88, #00d4aa);
         color: white;
     }
-.multiplier.purple {
+   .multiplier.purple {
         background: radial-gradient(circle at 30% 30%, #6c5ce7, #a29bfe);
         color: white;
     }
 
- /* البوابة زي الصورة */
-.multiplier.portal {
+   .multiplier.portal {
         width: 120px;
         height: 140px;
         background: url(attachment://0) no-repeat center;
@@ -163,7 +169,7 @@
         position: relative;
     }
 
-.portal-egg {
+   .portal-egg {
         position: absolute;
         top: -15px;
         left: 50%;
@@ -173,7 +179,7 @@
         animation: eggGlow 2s ease-in-out infinite;
     }
 
- @keyframes eggGlow {
+    @keyframes eggGlow {
         0%, 100% { filter: drop-shadow(0 0 15px #ffd700); }
         50% { filter: drop-shadow(0 0 25px #ffed4e); }
     }
@@ -210,7 +216,7 @@
         gap: 8px;
         margin-bottom: 12px;
     }
-.betBtn {
+   .betBtn {
         background: #2d3042;
         border: none;
         padding: 12px;
@@ -224,7 +230,7 @@
         gap: 4px;
         cursor: pointer;
     }
-.betBtn span {
+   .betBtn span {
         background: #fff;
         color: #1a1d2e;
         width: 18px;
@@ -261,14 +267,15 @@
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    #authScreen, #profilePanel, #adminPanel {
+    #authScreen, #profilePanel, #adminPanel, #depositPanel {
         position: fixed; top: 0; left: 0;
         width: 100%; height: 100%;
         background: rgba(0,0,0,0.95);
         display: none; align-items: center; justify-content: center;
         z-index: 100;
+        overflow-y: auto;
     }
-.authBox {
+   .authBox {
         background: #2d3042;
         border-radius: 20px;
         width: 90%; max-width: 400px;
@@ -279,32 +286,112 @@
         border-radius: 12px; border: 1px solid #3a3d4e;
         background: #1a1d2e; color: white; outline: none;
     }
-.btn {
+   .btn {
         padding: 14px; border-radius: 12px; border: none;
         font-weight: 700; cursor: pointer;
         width: 100%; margin-top: 10px;
     }
-.adminBox {
+   .adminBox {
         background: #2d3042;
         border-radius: 20px;
-        width: 90%; max-width: 500px;
+        width: 95%; max-width: 700px;
         padding: 25px;
+        max-height: 90vh;
+        overflow-y: auto;
     }
-.adminTitle {
+   .adminTitle {
         text-align: center;
         font-size: 22px;
         margin-bottom: 20px;
         color: #ffd700;
     }
-.adminSection {
+   .adminSection {
         background: #1a1d2e;
         padding: 15px;
         border-radius: 12px;
         margin-bottom: 15px;
     }
-.adminSection h3 {
+   .adminSection h3 {
         margin-bottom: 10px;
         color: #00d4aa;
+    }
+
+    /* Upload button style */
+   .upload-btn-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+        margin: 10px 0;
+    }
+   .upload-btn {
+        border: 2px dashed #00d4aa;
+        color: #00d4aa;
+        background-color: #1a1d2e;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+    }
+   .upload-btn-wrapper input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+    #fileName {
+        margin-top: 8px;
+        color: #8b8ea3;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    /* Deposit requests table */
+   .deposit-item {
+        background: #2d3042;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 4px solid #ffc107;
+    }
+   .deposit-item.approved {
+        border-left-color: #00ff88;
+        opacity: 0.7;
+    }
+   .deposit-info {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+   .deposit-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+    }
+   .btn-approve {
+        background: #00d4aa;
+        flex: 1;
+    }
+   .btn-reject {
+        background: #dc3545;
+        flex: 1;
+    }
+   .tab-btn {
+        padding: 10px;
+        background: #2d3042;
+        border: none;
+        color: #8b8ea3;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-right: 8px;
+    }
+   .tab-btn.active {
+        background: #00d4aa;
+        color: #000;
     }
 </style>
 </head>
@@ -335,6 +422,7 @@
     <div id="logo">🥚 CHICKEN ROAD</div>
     <div id="balanceBox"><span id="balance">0</span><span>$</span></div>
     <div id="rightIcons">
+      <div id="depositBtn" onclick="openDepositPanel()">💳 شحن</div>
       <div id="adminPanelBtn" onclick="openAdminPanel()">👑 Admin</div>
       <div id="menuBtn" onclick="openProfile()">☰</div>
     </div>
@@ -388,22 +476,66 @@
   <div class="adminBox">
     <div class="adminTitle">👑 لوحة الأدمن</div>
 
-    <div class="adminSection">
-      <h3>💸 إرسال كوينز</h3>
-      <input id="sendToID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
-      <input id="sendAmount" type="number" placeholder="عدد الكوينز" min="1">
-      <button class="btn" onclick="sendCoins()" style="background:#00d4aa;">إرسال</button>
-      <div id="sendStatus" style="margin-top:10px; text-align:center;"></div>
+    <div style="margin-bottom:15px;">
+      <button class="tab-btn active" onclick="switchAdminTab('send')">💸 إرسال كوينز</button>
+      <button class="tab-btn" onclick="switchAdminTab('deposits')">📋 طلبات الشحن</button>
+    </div>
+
+    <div id="sendTab">
+      <div class="adminSection">
+        <h3>💸 إرسال كوينز</h3>
+        <input id="sendToID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
+        <input id="sendAmount" type="number" placeholder="عدد الكوينز" min="1">
+        <button class="btn" onclick="sendCoins()" style="background:#00d4aa;">إرسال</button>
+        <div id="sendStatus" style="margin-top:10px; text-align:center;"></div>
+      </div>
+    </div>
+
+    <div id="depositsTab" style="display:none;">
+      <div class="adminSection">
+        <h3>📋 طلبات الشحن المعلقة</h3>
+        <div id="depositsList">جاري التحميل...</div>
+      </div>
     </div>
 
     <button class="btn" onclick="closePanel('adminPanel')" style="background:#6c757d;">إغلاق</button>
   </div>
 </div>
 
+<div id="depositPanel">
+  <div class="adminBox">
+    <div class="adminTitle">💳 شحن فودافون كاش</div>
+
+    <div class="adminSection">
+      <h3>رقم فودافون كاش:</h3>
+      <div style="background:#1a1d2e; padding:15px; border-radius:12px; text-align:center; font-size:22px; font-weight:800; color:#00d4aa;">
+        01148029377
+      </div>
+      <p style="color:#8b8ea3; text-align:center; margin-top:10px;">حوّل المبلغ على الرقم ده وبعدين ارفع السكرين</p>
+    </div>
+
+    <div class="adminSection">
+      <input id="depositPhone" type="tel" placeholder="رقمك اللي حولت منه">
+      <input id="depositAmount" type="number" placeholder="المبلغ اللي حولته" min="10">
+
+      <div class="upload-btn-wrapper">
+        <button class="upload-btn">📷 اختار سكرين التحويل</button>
+        <input id="depositScreenshot" type="file" accept="image/*" onchange="showFileName()">
+      </div>
+      <div id="fileName">لم يتم اختيار ملف</div>
+
+      <button class="btn" onclick="submitDeposit()" style="background:#00d4aa;">📤 إرسال الطلب</button>
+      <div id="depositStatus" style="margin-top:10px; text-align:center;"></div>
+    </div>
+
+    <button class="btn" onclick="closePanel('depositPanel')" style="background:#6c757d;">إغلاق</button>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithRedirect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, query, where, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, query, where, getDocs, collection, addDoc, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
@@ -688,6 +820,11 @@ window.openProfile = function() {
 
 window.openAdminPanel = function() {
   document.getElementById('adminPanel').style.display = 'flex';
+  loadDeposits();
+}
+
+window.openDepositPanel = function() {
+  document.getElementById('depositPanel').style.display = 'flex';
 }
 
 window.closePanel = function(id) {
@@ -696,6 +833,138 @@ window.closePanel = function(id) {
 
 window.logout = async function() {
   await signOut(auth);
+}
+
+window.showFileName = function() {
+  const fileInput = document.getElementById('depositScreenshot');
+  const fileNameDiv = document.getElementById('fileName');
+  if (fileInput.files.length > 0) {
+    fileNameDiv.innerText = "✓ " + fileInput.files[0].name;
+    fileNameDiv.style.color = "#00ff88";
+  }
+}
+
+window.submitDeposit = async function() {
+  const phone = document.getElementById('depositPhone').value.trim();
+  const amount = document.getElementById('depositAmount').value.trim();
+  const fileInput = document.getElementById('depositScreenshot');
+  const statusDiv = document.getElementById('depositStatus');
+
+  if (!phone ||!amount ||!fileInput.files[0]) {
+    statusDiv.innerText = "❌ املى كل البيانات وارفع السكرين";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+
+  statusDiv.innerText = "⏳ جاري إرسال الطلب...";
+  statusDiv.style.color = "#ffc107";
+
+  try {
+    // Convert image to base64 for demo. In production use Firebase Storage
+    const reader = new FileReader();
+    reader.readAsDataURL(fileInput.files[0]);
+    reader.onload = async () => {
+      await addDoc(collection(db, "deposits"), {
+        userID: currentUser.uid,
+        userShortID: userData.shortID,
+        userName: currentUser.displayName || 'مستخدم',
+        senderPhone: phone,
+        amount: parseInt(amount),
+        screenshot: reader.result,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      });
+
+      statusDiv.innerText = "✅ تم إرسال الطلب! هيتم مراجعته قريباً";
+      statusDiv.style.color = "#00ff88";
+
+      setTimeout(() => {
+        closePanel('depositPanel');
+        document.getElementById('depositPhone').value = '';
+        document.getElementById('depositAmount').value = '';
+        document.getElementById('depositScreenshot').value = '';
+        document.getElementById('fileName').innerText = 'لم يتم اختيار ملف';
+        document.getElementById('fileName').style.color = '#8b8ea3';
+      }, 2000);
+    };
+  } catch (e) {
+    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
+    statusDiv.style.color = "#ff4757";
+  }
+}
+
+window.switchAdminTab = function(tab) {
+  document.getElementById('sendTab').style.display = tab === 'send'? 'block' : 'none';
+  document.getElementById('depositsTab').style.display = tab === 'deposits'? 'block' : 'none';
+
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (tab === 'deposits') loadDeposits();
+}
+
+window.loadDeposits = async function() {
+  const depositsList = document.getElementById('depositsList');
+  depositsList.innerHTML = 'جاري التحميل...';
+
+  try {
+    const q = query(collection(db, "deposits"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      depositsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات شحن</p>';
+      return;
+    }
+
+    depositsList.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const date = d.createdAt? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
+
+      depositsList.innerHTML += `
+        <div class="deposit-item ${d.status === 'approved'? 'approved' : ''}">
+          <div class="deposit-info">
+            <strong>ID:</strong> ${d.userShortID}<br>
+            <strong>الاسم:</strong> ${d.userName}<br>
+            <strong>رقم المرسل:</strong> ${d.senderPhone}<br>
+            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
+            <strong>الحالة:</strong> ${d.status === 'pending'? '⏳ معلق' : '✅ تم التأكيد'}<br>
+            <strong>التاريخ:</strong> ${date}
+          </div>
+          ${d.status === 'pending'? `
+            <div class="deposit-actions">
+              <button class="btn btn-approve" onclick="approveDeposit('${doc.id}', '${d.userID}', ${d.amount})">تأكيد</button>
+              <button class="btn btn-reject" onclick="rejectDeposit('${doc.id}')">رفض</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    });
+  } catch (e) {
+    depositsList.innerHTML = '<p style="color:#ff4757;">خطأ في التحميل</p>';
+  }
+}
+
+window.approveDeposit = async function(depositID, userID, amount) {
+  try {
+    await updateDoc(doc(db, "deposits", depositID), { status: 'approved' });
+    await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+    alert(`✅ تم تأكيد الشحن وإضافة ${amount} كوينز`);
+    loadDeposits();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
+}
+
+window.rejectDeposit = async function(depositID) {
+  if (!confirm('متأكد عايز ترفض الطلب ده؟')) return;
+  try {
+    await updateDoc(doc(db, "deposits", depositID), { status: 'rejected' });
+    alert('تم رفض الطلب');
+    loadDeposits();
+    } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
 }
 
 document.getElementById('loginBtn').onclick = login;
