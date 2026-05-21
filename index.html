@@ -960,7 +960,220 @@ window.submitDeposit = async function() {
     };
   } catch (e) {
     statusDiv.innerText = "❌ حصل خطأ: " + e.message;
-    statusDiv.style.color = "#ff4757
+    statusDiv.style.color = "#ff4757";
+  }
+}
+
+window.submitWithdraw = async function() {
+  const phone = document.getElementById('withdrawPhone').value.trim();
+  const amount = parseInt(document.getElementById('withdrawAmount').value);
+  const statusDiv = document.getElementById('withdrawStatus');
+
+  if (!phone || !amount) {
+    statusDiv.innerText = "❌ املى الرقم والمبلغ";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+
+  if (amount < 200) {
+    statusDiv.innerText = "❌ أقل مبلغ للسحب 200 جنيه";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+
+  if (amount > userData.coins) {
+    statusDiv.innerText = "❌ رصيدك مش كفاية";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+
+  statusDiv.innerText = "⏳ جاري إرسال الطلب...";
+  statusDiv.style.color = "#ffc107";
+
+  try {
+    await addDoc(collection(db, "withdraws"), {
+      userID: currentUser.uid,
+      userShortID: userData.shortID,
+      userName: currentUser.displayName || 'مستخدم',
+      phone: phone,
+      amount: amount,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+
+    await updateDoc(doc(db, "users", currentUser.uid), { 
+      coins: increment(-amount) 
+    });
+    userData.coins -= amount;
+    updateBalance();
+
+    statusDiv.innerText = "✅ تم إرسال طلب السحب! هيتم التحويل خلال 24 ساعة";
+    statusDiv.style.color = "#00ff88";
+
+    setTimeout(() => {
+      closePanel('withdrawPanel');
+      document.getElementById('withdrawPhone').value = '';
+      document.getElementById('withdrawAmount').value = '';
+    }, 2000);
+  } catch (e) {
+    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
+    statusDiv.style.color = "#ff4757";
+  }
+}
+
+window.switchAdminTab = function(tab) {
+  document.getElementById('sendTab').style.display = tab === 'send'? 'block' : 'none';
+  document.getElementById('depositsTab').style.display = tab === 'deposits'? 'block' : 'none';
+  document.getElementById('withdrawsTab').style.display = tab === 'withdraws'? 'block' : 'none';
+
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (tab === 'deposits') loadDeposits();
+  if (tab === 'withdraws') loadWithdraws();
+}
+
+window.loadDeposits = async function() {
+  const depositsList = document.getElementById('depositsList');
+  depositsList.innerHTML = 'جاري التحميل...';
+
+  try {
+    const q = query(collection(db, "deposits"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      depositsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات شحن</p>';
+      return;
+    }
+
+    depositsList.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const date = d.createdAt? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
+
+      depositsList.innerHTML += `
+        <div class="deposit-item ${d.status === 'approved'? 'approved' : ''}">
+          <div class="deposit-info">
+            <strong>ID:</strong> ${d.userShortID}<br>
+            <strong>الاسم:</strong> ${d.userName}<br>
+            <strong>رقم المرسل:</strong> ${d.senderPhone}<br>
+            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
+            <strong>الحالة:</strong> ${d.status === 'pending'? '⏳ معلق' : '✅ تم التأكيد'}<br>
+            <strong>التاريخ:</strong> ${date}
+          </div>
+          ${d.status === 'pending'? `
+            <div class="deposit-actions">
+              <button class="btn btn-approve" onclick="approveDeposit('${doc.id}', '${d.userID}', ${d.amount})">تأكيد</button>
+              <button class="btn btn-reject" onclick="rejectDeposit('${doc.id}')">رفض</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    });
+  } catch (e) {
+    depositsList.innerHTML = '<p style="color:#ff4757;">خطأ في التحميل</p>';
+  }
+}
+
+window.loadWithdraws = async function() {
+  const withdrawsList = document.getElementById('withdrawsList');
+  withdrawsList.innerHTML = 'جاري التحميل...';
+
+  try {
+    const q = query(collection(db, "withdraws"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      withdrawsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات سحب</p>';
+      return;
+    }
+
+    withdrawsList.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const date = d.createdAt? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
+
+      withdrawsList.innerHTML += `
+        <div class="withdraw-item ${d.status === 'approved'? 'approved' : ''}">
+          <div class="withdraw-info">
+            <strong>ID:</strong> ${d.userShortID}<br>
+            <strong>الاسم:</strong> ${d.userName}<br>
+            <strong>رقم السحب:</strong> ${d.phone}<br>
+            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
+            <strong>الحالة:</strong> ${d.status === 'pending'? '⏳ معلق' : '✅ تم التأكيد'}<br>
+            <strong>التاريخ:</strong> ${date}
+          </div>
+          ${d.status === 'pending'? `
+            <div class="withdraw-actions">
+              <button class="btn btn-approve" onclick="approveWithdraw('${doc.id}', '${d.userID}')">تأكيد</button>
+              <button class="btn btn-reject" onclick="rejectWithdraw('${doc.id}', '${d.userID}', ${d.amount})">رفض</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    });
+  } catch (e) {
+    withdrawsList.innerHTML = '<p style="color:#ff4757;">خطأ في التحميل</p>';
+  }
+}
+
+window.approveDeposit = async function(depositID, userID, amount) {
+  try {
+    await updateDoc(doc(db, "deposits", depositID), { status: 'approved' });
+    await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+    alert(`✅ تم تأكيد الشحن وإضافة ${amount} كوينز`);
+    loadDeposits();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
+}
+
+window.rejectDeposit = async function(depositID) {
+  if (!confirm('متأكد عايز ترفض الطلب ده؟')) return;
+  try {
+    await updateDoc(doc(db, "deposits", depositID), { status: 'rejected' });
+    alert('تم رفض الطلب');
+    loadDeposits();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
+}
+
+window.approveWithdraw = async function(withdrawID, userID) {
+  try {
+    await updateDoc(doc(db, "withdraws", withdrawID), { status: 'approved' });
+    alert('✅ تم تأكيد السحب');
+    loadWithdraws();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
+}
+
+window.rejectWithdraw = async function(withdrawID, userID, amount) {
+  if (!confirm('متأكد عايز ترفض الطلب ده؟ الفلوس هترجع للاعب')) return;
+  try {
+    await updateDoc(doc(db, "withdraws", withdrawID), { status: 'rejected' });
+    await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+    alert('تم رفض الطلب والفلوس رجعت للاعب');
+    loadWithdraws();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
+}
+
+document.getElementById('loginBtn').onclick = login;
+document.getElementById('signupBtn').onclick = signup;
+document.getElementById('googleBtn').onclick = signInWithGoogle;
+document.getElementById('logoutBtn').onclick = logout;
+document.getElementById('goBtn').onclick = startGame;
+document.getElementById('cashBtn').onclick = cashOut;
+
+setInterval(() => {
+  document.getElementById('onlineCount').innerText = 2700 + Math.floor(Math.random() * 100);
+}, 5000);
+</script>
+</body>
+</html>
     
   </body>
   
