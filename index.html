@@ -197,6 +197,16 @@
         color: white;
     }
 
+    .multiplier.exploded {
+        background: #ff4757;
+        animation: explode 0.6s ease-out;
+    }
+    @keyframes explode {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.8; }
+        100% { transform: scale(0.8); opacity: 0.3; }
+    }
+
     .multiplier.portal {
         width: 110px;
         height: 160px;
@@ -508,7 +518,7 @@
 
 <div id="gameScreen" style="display:none;height:100%;flex-direction:column;">
   <div id="topBar">
-    <div id="logo">🥚 CHICKEN ROAD</div>
+    <div id="logo">🥚 rabbiT ROAD</div>
     <div id="balanceBox"><span id="balance">0</span><span>$</span></div>
     <div id="rightIcons">
       <div id="depositBtn" onclick="openDepositPanel()">💳 شحن</div>
@@ -932,11 +942,31 @@ function moveChicken() {
     cashOut();
     return;
   }
+
   const step = multiplierPositions[currentStep];
   multiplier = step.mult === 'portal'? multiplier : step.mult;
 
   const circleLeft = 50 + currentStep * 115;
   const circleCenter = circleLeft + 42.5;
+
+  let loseChance = 0.12;
+  let willLose = Math.random() < loseChance;
+
+  // أول دايرة محمية مش بتنفجر
+  if (currentStep === 0) {
+    willLose = false;
+  }
+
+  if (willLose) {
+    document.getElementById('mult' + currentStep).classList.add('exploded');
+
+    setTimeout(() => {
+      running = false;
+      showLosePopup();
+    }, 400);
+    return;
+  }
+
   document.getElementById('player').style.left = circleCenter + 'px';
 
   document.getElementById('gameArea').scrollTo({
@@ -949,15 +979,6 @@ function moveChicken() {
 
   if (step.mult!== 'portal') {
     document.getElementById('cashAmount').innerText = Math.floor(bet * multiplier) + ' USD';
-  }
-
-  let loseChance = 0.12;
-  if (Math.random() < loseChance) {
-    running = false;
-    setTimeout(() => {
-      showLosePopup();
-    }, 500);
-    return;
   }
 
   currentStep++;
@@ -991,7 +1012,7 @@ function resetGame() {
   document.getElementById('goBtn').innerText = 'GO';
   document.getElementById('cashBtn').disabled = true;
   document.getElementById('cashAmount').innerText = '0 USD';
-  document.querySelectorAll('.multiplier').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.multiplier').forEach(m => m.classList.remove('active', 'exploded'));
   document.querySelectorAll('.betBtn').forEach(btn => {
     btn.disabled = false;
   });
