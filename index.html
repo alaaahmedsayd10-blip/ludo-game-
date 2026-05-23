@@ -334,7 +334,7 @@ body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
 </div>
 
 <input type="file" id="photoInput" accept="image/*" style="display:none">
-<audio id="bgAudio" loop style="visibility:hidden; position:absolute; width:0; height:0"></audio>
+<audio id="bgAudio" loop playsinline style="visibility:hidden; position:absolute; width:0; height:0"></audio>
 <audio id="micSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_3f1d1e0c3c.mp3" preload="auto"></audio>
 
 <script>
@@ -478,18 +478,21 @@ function playMusicFromList(index){
     audio.src=song.url;
     audio.volume = document.getElementById('volumeSlider').value / 100;
 
+    if(!audioContext){
+        audioContext=new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(audioContext.state === 'suspended'){
+        audioContext.resume();
+    }
+
     audio.play().catch(err => {
         console.log('Play failed:', err);
-        alert('اضغط على الشاشة الأول عشان الصوت يشتغل');
+        alert('دوس على الشاشة مرة كده وجرب تاني');
     });
 
     document.getElementById('nowPlaying').style.display='block';
     document.getElementById('songName').innerText=song.name;
     broadcast({type:'music',name:song.name});
-
-    if(!audioContext){
-        audioContext=new AudioContext();
-    }
 
     if(source) source.disconnect();
     source=audioContext.createMediaElementSource(audio);
