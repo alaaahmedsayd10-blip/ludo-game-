@@ -2,420 +2,1272 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voice Room</title>
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Chicken Road</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
-:root{
-    --bg:#0f0f14; --card:#1a1a22; --primary:#7c3aed; --primary-light:#a78bfa;
-    --accent:#fbbf24; --danger:#ef4444; --success:#22c55e; --text:#ffffff; --text-dim:#9ca3af;
-}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
-body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
-.loading-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999}
-.loading-spinner{width:50px;height:50px;border:3px solid #2a2a35;border-top:3px solid var(--primary);
-    border-radius:50%;animation:spin 1s infinite;margin-bottom:15px}
-@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.home-screen,.room-screen{display:none;flex-direction:column;height:100vh}
-.home-screen.active,.room-screen.active{display:flex}
-.top-header{background:linear-gradient(135deg,var(--primary),var(--primary-light));
-    padding:15px 20px;padding-top:45px}
-.header-top{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:800}
-.rooms-list{flex:1;overflow-y:auto;padding:20px;padding-bottom:90px}
-.room-item{background:var(--card);border-radius:16px;padding:14px;margin-bottom:12px;
-    display:flex;gap:14px;align-items:center;cursor:pointer;border:1px solid #2a2a35}
-.room-avatar{width:65px;height:65px;border-radius:14px;object-fit:cover;border:2px solid var(--primary)}
-.room-info{flex:1}
-.room-name{font-weight:800;font-size:16px;margin-bottom:4px}
-.room-desc{font-size:13px;color:var(--text-dim)}
-.no-rooms{text-align:center;color:var(--text-dim);margin-top:80px;font-size:15px}
-.room-screen{background:linear-gradient(180deg,#1a0f2e,#0f0f14,#1a0f2e)}
-.room-header{padding:15px 20px;display:flex;align-items:center;gap:12px;
-    background:rgba(0,0,0,0.3);backdrop-filter:blur(10px)}
-.back-btn{font-size:26px;cursor:pointer;padding:5px}
-.owner-info{display:flex;align-items:center;gap:12px;flex:1}
-.owner-avatar{width:48px;height:48px;border-radius:50%;border:2px solid var(--accent);object-fit:cover}
-.owner-name{font-weight:800;font-size:17px}
-.seats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;padding:20px}
-.seat{aspect-ratio:1;background:rgba(255,255,255,0.05);border-radius:50%;display:flex;
-    align-items:center;justify-content:center;position:relative;cursor:pointer;border:2px solid transparent;transition:0.3s}
-.seat.occupied{border-color:var(--accent);background:rgba(251,191,36,0.15)}
-.seat.talking{border-color:var(--success);box-shadow:0 0 25px var(--success)}
-.seat img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-.seat-num{font-size:15px;font-weight:800;position:absolute}
-.chat-box{margin:15px;background:rgba(0,0,0,0.4);border-radius:18px;height:190px;display:flex;
-    flex-direction:column;border:1px solid #2a2a35}
-.chat-messages{flex:1;overflow-y:auto;padding:12px;font-size:14px}
-.chat-msg{margin-bottom:10px;padding:10px 14px;background:rgba(255,255,255,0.08);
-    border-radius:12px;display:inline-block;max-width:85%}
-.chat-msg.own{background:var(--primary);margin-left:auto;display:block}
-.chat-input-area{display:flex;padding:12px;border-top:1px solid #2a2a35}
-.chat-input{flex:1;background:rgba(255,255,255,0.08);border:none;border-radius:25px;
-    padding:12px 18px;color:#fff;outline:none;font-size:14px}
-.send-btn{margin-right:10px;padding:0 18px;background:var(--primary);border:none;
-    border-radius:25px;color:#fff;font-weight:800;cursor:pointer}
-.bottom-bar{background:rgba(0,0,0,0.5);padding:15px 20px;display:flex;justify-content:center;gap:20px}
-.mic-btn{width:65px;height:65px;border-radius:50%;background:var(--success);
-    display:flex;align-items:center;justify-content:center;font-size:30px;
-    cursor:pointer;border:none}
-.mic-btn.muted{background:var(--danger)}
-.mic-btn:disabled{opacity:0.4;cursor:not-allowed}
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;
-    background:rgba(0,0,0,0.85);z-index:100;align-items:center;justify-content:center}
-.modal.active{display:flex}
-.modal-content{background:var(--card);padding:28px;border-radius:24px;width:90%;max-width:380px}
-.modal-content input{width:100%;padding:15px;background:var(--bg);border:1px solid #2a2a35;
-    border-radius:14px;color:#fff;margin-bottom:15px;font-size:16px}
-.modal-buttons{display:flex;gap:12px;flex-direction:column}
-.modal-buttons button{padding:15px;border:none;border-radius:14px;font-weight:800;cursor:pointer}
-.btn-cancel{background:#2a2a35;color:#fff}
-.btn-create{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+        height: 100%;
+        background: #1a1d2e;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        overflow: hidden;
+    }
+
+    #error-box {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ff3b30;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        animation: fadeIn 0.3s ease;
+        display: none;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; top: 0px; }
+        to { opacity: 1; top: 20px; }
+    }
+
+    #topBar {
+        background: #1a1d2e;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row-reverse;
+    }
+    #logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 16px;
+    }
+    #balanceBox {
+        background: #2d3042;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 15px;
+    }
+    #rightIcons {
+        display: flex;
+        gap: 6px;
+        flex-direction: row-reverse;
+        align-items: center;
+    }
+    #depositBtn, #withdrawBtn {
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor:pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    #depositBtn {
+        background:#00d4aa;
+        color: #000;
+    }
+    #withdrawBtn {
+        background:#ff4757;
+        color:white;
+    }
+    #adminPanelBtn {
+        background: #ffd700;
+        color: #000;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        display: none;
+        font-size: 13px;
+    }
+    #menuBtn {
+        font-size: 22px;
+        cursor: pointer;
+        padding: 4px 8px;
+    }
+
+    #liveBar {
+        background: #23263a;
+        padding: 6px 15px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #8b8ea3;
+        flex-direction: row-reverse;
+    }
+    #liveDot {
+        width: 7px;
+        height: 7px;
+        background: #00ff88;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #00ff88;
+    }
+
+    #gameArea {
+        height: calc(100% - 210px);
+        background: #2a2d3e;
+        position: relative;
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        flex-direction: row-reverse;
+    }
+
+    #gameArea::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 3px;
+        background: repeating-linear-gradient(
+            to right,
+            rgba(255,255,255,0.15),
+            rgba(255,255,255,0.15) 15px,
+            transparent 15px,
+            transparent 30px
+        );
+        transform: translateY(-50%);
+    }
+
+    #player {
+        position: absolute;
+        left: 92px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 70px;
+        transition: left 0.4s ease;
+        z-index: 10;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    }
+
+    .multiplier {
+        position: relative;
+        min-width: 85px;
+        height: 85px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 18px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        border: 4px solid rgba(255,255,255,0.2);
+        margin-right: 30px;
+        flex-shrink: 0;
+        z-index: 2;
+    }
+    .multiplier.active {
+        transform: scale(1.1);
+        box-shadow: 0 0 30px currentColor;
+        border-color: #fff;
+    }
+    .multiplier.green {
+        background: radial-gradient(circle at 30% 30%, #00ff88, #00d4aa);
+        color: white;
+    }
+    .multiplier.purple {
+        background: radial-gradient(circle at 30% 30%, #6c5ce7, #a29bfe);
+        color: white;
+    }
+
+    .multiplier.exploded {
+        background: #ff4757;
+        animation: explode 0.6s ease-out;
+    }
+    @keyframes explode {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.8; }
+        100% { transform: scale(0.8); opacity: 0.3; }
+    }
+
+    .multiplier.portal {
+        width: 110px;
+        height: 160px;
+        background: url(attachment://0) no-repeat center;
+        background-size: contain;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        position: relative;
+    }
+
+    .portal-egg {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70px;
+        height: 80px;
+        background: radial-gradient(circle at 30% 30%, #ffd700, #ffaa00);
+        border-radius: 50% 50% 45% 45%;
+        box-shadow: 0 0 30px #ffd700, inset 0 -10px 20px rgba(0,0,0,0.3);
+        animation: eggGlow 2s ease-in-out infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+        color: #000;
+    }
+
+    @keyframes eggGlow {
+        0%, 100% { box-shadow: 0 0 30px #ffd700, inset 0 -10px 20px rgba(0,0,0,0.3); }
+        50% { box-shadow: 0 0 50px #ffed4e, inset 0 -10px 25px rgba(0,0,0,0.4); }
+    }
+
+    #panel {
+        background: #1a1d2e;
+        padding: 15px;
+        border-top: 1px solid #2d3042;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    #betRange {
+        background: #2d3042;
+        padding: 10px 15px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        color: #8b8ea3;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    #betRange.center {
+        color: #fff;
+        font-size: 18px;
+    }
+
+    #betQuick {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .betBtn {
+        background: #2d3042;
+        border: none;
+        padding: 12px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+    }
+    .betBtn span {
+        background: #fff;
+        color: #1a1d2e;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+    }
+    .betBtn:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    #actionBtns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        flex-direction: row-reverse;
+    }
+    #cashBtn {
+        background: #ffc107;
+        color: #000;
+        font-weight: 800;
+        font-size: 15px;
+        padding: 16px;
+        border-radius: 16px;
+        line-height: 1.3;
+    }
+    #goBtn {
+        background: #00d4aa;
+        color: white;
+        font-weight: 800;
+        font-size: 20px;
+        padding: 16px;
+        border-radius: 16px;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #authScreen, #forgotPanel {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: #7a6f66;
+        display: none; align-items: center; justify-content: center;
+        z-index: 100;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .authBox {
+        background: #f5f5f5;
+        border-radius: 8px;
+        width: 90%; max-width: 400px;
+        padding: 30px 25px;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .authIcon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+    }
+    .authIcon.login { background: #4dd0e1; }
+    .authIcon.signup { background: #ffc107; }
+
+    .authBox h2 {
+        text-align: center;
+        color: #333;
+        margin-top: 40px;
+        margin-bottom: 25px;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    input {
+        width: 100%; padding: 12px; margin: 8px 0;
+        border-radius: 4px; border: none;
+        background: #e0e0e0; color: #333; outline: none;
+        font-size: 14px;
+        direction: rtl;
+    }
+    input::placeholder { color: #777; }
+
+    .btn {
+        padding: 14px; border-radius: 4px; border: none;
+        font-weight: 700; cursor: pointer;
+        width: 100%; margin-top: 15px;
+        background: #d32f2f; color: white; font-size: 16px;
+    }
+
+    .authLink {
+        text-align: center;
+        margin-top: 15px;
+        color: #777;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .authLink.small {
+        font-size: 12px;
+        margin-top: 10px;
+    }
+    .authLink:hover { color: #333; }
+
+    #profilePanel, #adminPanel, #depositPanel, #withdrawPanel {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        display: none; align-items: center; justify-content: center;
+        z-index: 100;
+        overflow-y: auto;
+    }
+    .adminBox {
+        background: #2d3042;
+        border-radius: 20px;
+        width: 95%; max-width: 700px;
+        padding: 25px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .adminTitle {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: 20px;
+        color: #ffd700;
+    }
+    .adminSection {
+        background: #1a1d2e;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+    .adminSection h3 {
+        margin-bottom: 10px;
+        color: #00d4aa;
+    }
+
+    .deposit-item,.withdraw-item {
+        background: #2d3042;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 4px solid #ffc107;
+    }
+    .deposit-item.approved,.withdraw-item.approved {
+        border-left-color: #00ff88;
+        opacity: 0.7;
+    }
+    .deposit-info,.withdraw-info {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    .deposit-actions,.withdraw-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+    }
+    .btn-approve {
+        background: #00d4aa;
+        flex: 1;
+    }
+    .btn-reject {
+        background: #dc3545;
+        flex: 1;
+    }
+    .tab-btn {
+        padding: 10px;
+        background: #2d3042;
+        border: none;
+        color: #8b8ea3;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-right: 8px;
+    }
+    .tab-btn.active {
+        background: #00d4aa;
+        color: #000;
+    }
 </style>
 </head>
 <body>
 
-<div class="loading-screen" id="loadingScreen">
-    <div class="loading-spinner"></div>
-    <div style="font-weight:700">جاري التحميل...</div>
+<div id="error-box"></div>
+
+<div id="authScreen" style="display:flex;">
+  <div class="authBox" id="loginBox">
+    <div class="authIcon login">👤</div>
+    <h2>تسجيل الدخول</h2>
+    <input id="loginEmail" type="email" placeholder="اسم المستخدم">
+    <input id="loginPass" type="password" placeholder="كلمة المرور">
+    <button class="btn" id="loginBtn">تسجيل الدخول</button>
+    <p class="authLink" onclick="showSignup()">إنشاء حساب</p>
+    <p class="authLink small" onclick="openForgotPanel()">هل نسيت كلمة السر؟</p>
+  </div>
+
+  <div class="authBox" id="signupBox" style="display:none;">
+    <div class="authIcon signup">✏️</div>
+    <h2>التسجيل</h2>
+    <input id="signupName" type="text" placeholder="اسم المستخدم">
+    <input id="signupEmail" type="email" placeholder="البريد الإلكتروني">
+    <input id="signupPass" type="password" placeholder="كلمة المرور">
+    <input id="signupPassConfirm" type="password" placeholder="أكد كلمة المرور">
+    <button class="btn" id="signupBtn">تسجيل</button>
+    <p class="authLink" onclick="showLogin()">سجل الدخول كمستخدم</p>
+  </div>
 </div>
 
-<div class="home-screen active" id="homeScreen">
-    <div class="top-header">
-        <div class="header-top">
-            <div>الغرف الصوتية</div>
-            <div onclick="createRoomModal()" style="font-size:28px;cursor:pointer">+</div>
-        </div>
-    </div>
-    <div class="rooms-list" id="roomsList">
-        <div id="roomsContainer">
-            <div class="no-rooms">مفيش غرف لسه. اعمل غرفة جديدة</div>
-        </div>
-    </div>
+<div id="forgotPanel">
+  <div class="authBox">
+    <h2 style="color:#333;">إعادة تعيين كلمة السر</h2>
+    <input id="forgotEmail" type="email" placeholder="اكتب الإيميل بتاعك">
+    <button class="btn" onclick="sendPasswordReset()">إرسال الرابط</button>
+    <div id="forgotStatus" style="margin-top:10px; text-align:center;"></div>
+    <button class="btn" onclick="closePanel('forgotPanel')" style="background:#6c757d;">رجوع</button>
+  </div>
 </div>
 
-<div class="room-screen" id="roomScreen">
-    <div class="room-header">
-        <div class="back-btn" onclick="exitRoom()">←</div>
-        <div class="owner-info">
-            <img class="owner-avatar" id="ownerAvatar" src="">
-            <div class="owner-name" id="ownerName"></div>
-        </div>
-        <div id="roomName" style="font-weight:700"></div>
+<div id="gameScreen" style="display:none;height:100%;flex-direction:column;">
+  <div id="topBar">
+    <div id="logo">🥚 rabbiT ROAD</div>
+    <div id="balanceBox"><span id="balance">0</span><span>$</span></div>
+    <div id="rightIcons">
+      <div id="depositBtn" onclick="openDepositPanel()">💳 شحن</div>
+      <div id="withdrawBtn" onclick="openWithdrawPanel()">💸 سحب</div>
+      <div id="adminPanelBtn" onclick="openAdminPanel()">👑</div>
+      <div id="menuBtn" onclick="openProfile()">☰</div>
     </div>
-    <div class="seats-grid" id="seatsGrid"></div>
-    <div class="chat-box">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input-area">
-            <button class="send-btn" onclick="sendMsg()">إرسال</button>
-            <input type="text" class="chat-input" id="chatInput" placeholder="اكتب رسالة للكل...">
-        </div>
+  </div>
+
+  <div id="liveBar">
+    <span>Online: <span id="onlineCount">2721</span></span>
+    <span id="liveDot"></span>
+    <span>Live wins:</span>
+  </div>
+
+  <div id="gameArea">
+    <div id="player">🐔</div>
+  </div>
+
+  <div id="panel">
+    <div id="betRange">
+      <span>MAX</span>
+      <span class="center" id="currentBet">20</span>
+      <span>MIN</span>
     </div>
-    <div class="bottom-bar">
-        <button class="mic-btn" id="micBtn" disabled onclick="toggleMic()">🎤</button>
+
+    <div id="betQuick">
+      <button class="betBtn" onclick="setBet(20)">20 <span>$</span></button>
+      <button class="betBtn" onclick="setBet(8)">8 <span>$</span></button>
+      <button class="betBtn" onclick="setBet(3)">3 <span>$</span></button>
+      <button class="betBtn" onclick="setBet(2)">2 <span>$</span></button>
     </div>
+
+    <div id="actionBtns">
+      <button id="goBtn">GO</button>
+      <button id="cashBtn" disabled>
+        CASH OUT<br>
+        <span id="cashAmount">0 USD</span>
+      </button>
+    </div>
+  </div>
 </div>
 
-<div class="modal" id="createModal">
-    <div class="modal-content">
-        <h3>إنشاء غرفة جديدة</h3>
-        <input type="text" id="roomNameInput" placeholder="اسم الغرفة">
-        <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
-            <button class="btn-create" onclick="createRoom()">إنشاء</button>
-        </div>
-    </div>
+<div id="profilePanel">
+  <div class="adminBox">
+    <h2 style="margin-bottom:15px;">Profile</h2>
+    <p style="margin-bottom:10px;"><strong>Name:</strong> <span id="profileName">Player</span></p>
+    <p style="margin-bottom:10px;"><strong>ID:</strong> <span id="userID">------</span></p>
+    <button class="btn" onclick="closePanel('profilePanel')" style="background:#6c757d;">Close</button>
+    <button class="btn" id="logoutBtn" style="background:#dc3545;">Logout</button>
+  </div>
 </div>
 
-<script>
+<div id="adminPanel">
+  <div class="adminBox">
+    <div class="adminTitle">👑 لوحة الأدمن</div>
+    <div style="margin-bottom:15px;">
+      <button class="tab-btn active" onclick="switchAdminTab('send')">💸 إرسال كوينز</button>
+      <button class="tab-btn" onclick="switchAdminTab('deposits')">📋 طلبات الشحن</button>
+      <button class="tab-btn" onclick="switchAdminTab('withdraws')">💰 طلبات السحب</button>
+    </div>
+
+    <div id="sendTab">
+      <div class="adminSection">
+        <h3>💸 إرسال كوينز</h3>
+        <input id="sendToID" type="text" placeholder="ID اللاعب" style="text-transform:uppercase;">
+        <input id="sendAmount" type="number" placeholder="عدد الكوينز" min="1">
+        <button class="btn" onclick="sendCoins()" style="background:#00d4aa;">إرسال</button>
+        <div id="sendStatus" style="margin-top:10px; text-align:center;"></div>
+      </div>
+    </div>
+
+    <div id="depositsTab" style="display:none;">
+      <div class="adminSection">
+        <h3>📋 طلبات الشحن المعلقة</h3>
+        <div id="depositsList">جاري التحميل...</div>
+      </div>
+    </div>
+
+    <div id="withdrawsTab" style="display:none;">
+      <div class="adminSection">
+        <h3>💰 طلبات السحب المعلقة</h3>
+        <div id="withdrawsList">جاري التحميل...</div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="closePanel('adminPanel')" style="background:#6c757d;">إغلاق</button>
+  </div>
+</div>
+
+<div id="depositPanel">
+  <div class="adminBox">
+    <div class="adminTitle">💳 شحن فودافون كاش</div>
+    <div class="adminSection">
+      <h3>رقم فودافون كاش:</h3>
+      <div style="background:#1a1d2e; padding:15px; border-radius:12px; text-align:center; font-size:22px; font-weight:800; color:#00d4aa;">
+        01148029377
+      </div>
+      <p style="color:#8b8ea3; text-align:center; margin-top:10px;">حوّل المبلغ على الرقم ده واكتب بياناتك تحت</p>
+    </div>
+    <div class="adminSection">
+      <input id="depositPhone" type="tel" placeholder="رقمك اللي حولت منه">
+      <input id="depositAmount" type="number" placeholder="المبلغ اللي حولته" min="10">
+      <button class="btn" onclick="submitDeposit()" style="background:#00d4aa;">📤 إرسال الطلب</button>
+      <div id="depositStatus" style="margin-top:10px; text-align:center;"></div>
+    </div>
+    <button class="btn" onclick="closePanel('depositPanel')" style="background:#6c757d;">إغلاق</button>
+  </div>
+</div>
+
+<div id="withdrawPanel">
+  <div class="adminBox">
+    <div class="adminTitle">💸 سحب فودافون كاش</div>
+    <div class="adminSection">
+      <h3>رصيدك الحالي: <span id="withdrawBalance">0</span> جنيه</h3>
+      <input id="withdrawPhone" type="tel" placeholder="رقم فودافون كاش اللي هتسحب عليه">
+      <input id="withdrawAmount" type="number" placeholder="المبلغ - أقل حاجة 200 جنيه" min="200">
+      <button class="btn" onclick="submitWithdraw()" style="background:#00d4aa;">📤 طلب سحب</button>
+      <div id="withdrawStatus" style="margin-top:10px; text-align:center;"></div>
+    </div>
+    <button class="btn" onclick="closePanel('withdrawPanel')" style="background:#6c757d;">إغلاق</button>
+  </div>
+</div>
+
+<div id="winPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.7); align-items:center; justify-content:center; z-index:200;">
+  <div style="background:rgba(35,38,58,0.95); backdrop-filter:blur(10px);
+       padding:30px 40px; border-radius:20px; text-align:center;
+       box-shadow:0 0 30px rgba(0,0,0,0.5);">
+    <h2 style="color:white; font-size:28px; margin-bottom:10px;">WIN!</h2>
+    <div id="winMultiplier" style="color:#ffd700; font-size:48px; font-weight:800; margin-bottom:10px;">x1.03</div>
+    <div id="winAmount" style="color:#00ff88; font-size:24px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px;">
+      +154.5 <span>🪙</span>
+    </div>
+  </div>
+</div>
+
+<div id="losePopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.8); align-items:center; justify-content:center; z-index:200;">
+  <div style="background:#23263a; padding:35px 40px; border-radius:20px; text-align:center;
+       box-shadow:0 0 30px rgba(255,71,87,0.4); border:2px solid #ff4757; max-width:320px;">
+    <div style="font-size:60px; margin-bottom:15px;">😢</div>
+    <h2 style="color:#ff4757; font-size:28px; margin-bottom:10px;">حظ أوفر</h2>
+    <p style="color:#8b8ea3; font-size:16px; margin-bottom:20px;">جرب تاني</p>
+    <button onclick="closeLosePopup()" style="background:#ff4757; color:white; border:none;
+      padding:12px 30px; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer;">
+      موافق
+    </button>
+  </div>
+</div>
+
+<div id="idPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.8); align-items:center; justify-content:center; z-index:200;">
+  <div style="background:#23263a; padding:35px 40px; border-radius:20px; text-align:center;
+       box-shadow:0 0 30px rgba(0,212,170,0.4); border:2px solid #00d4aa; max-width:320px;">
+    <div style="font-size:60px; margin-bottom:15px;">🆔</div>
+    <h2 style="color:#00d4aa; font-size:24px; margin-bottom:10px;">تم إنشاء الحساب</h2>
+    <p style="color:#8b8ea3; font-size:16px; margin-bottom:10px;">ID بتاعك هو:</p>
+    <div id="userIDPopup" style="color:#ffd700; font-size:28px; font-weight:800; margin-bottom:20px; letter-spacing:2px;"></div>
+    <button onclick="closeIDPopup()" style="background:#00d4aa; color:#000; border:none;
+      padding:12px 30px; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer;">
+      تمام
+    </button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, updateDoc, increment, query, where, getDocs, collection, addDoc, orderBy, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
   authDomain: "game-af286.firebaseapp.com",
   projectId: "game-af286",
   storageBucket: "game-af286.firebasestorage.app",
   messagingSenderId: "567693078252",
-  appId: "1:567693078252:web:3b5d6475a583f1f7347fc9"
+  appId: "1:567693078252:web:3b5d6475a583f1f7347fc9",
+  measurementId: "G-JKFYDGCFML"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
-let peer,myId,myName="أحمد",myPhoto="https://i.pravatar.cc/150?u="+Math.random();
-let localStream;
-let mySeat=null;
-let rooms=[],myRoomId="";
-let hasRoom=false,inRoom=false;
-let roomOwner={name:"",photo:""};
-let isMicOn=false;
-let roomUnsubscribe=null, seatsUnsubscribe=null, chatUnsubscribe=null;
-let connectedPeers={};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-function init(){
-    peer=new Peer();
-    peer.on('open',id=>{
-        myId=id;
-        navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
-            localStream=s;
-            localStream.getAudioTracks()[0].enabled=false;
-        }).catch(e=>console.log("Mic error:",e));
-    });
+const ADMIN_UID = "sPQ9h5s5pQYONHz0eTuhet8jKq82";
 
-    peer.on('call',call=>{
-        call.answer(localStream);
-        call.on('stream',stream=>{
-            let audio=new Audio();
-            audio.srcObject=stream;
-            audio.play();
-        });
-    });
+let currentUser = null;
+let userData = { coins: 0, shortID: '' };
+let bet = 20, multiplier = 1, running = false, currentStep = 0;
+let userUnsubscribe = null;
 
-    db.collection('rooms').onSnapshot(snapshot => {
-        rooms = [];
-        snapshot.forEach(doc => rooms.push(doc.data()));
-        updateRoomsList();
-    });
-
-    setTimeout(()=>{document.getElementById('loadingScreen').style.display='none';},1500);
+function generateShortID() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 8; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
-init();
 
-function updateRoomsList(){
-    let container=document.getElementById('roomsContainer');
-    if(rooms.length===0){
-        container.innerHTML='<div class="no-rooms">مفيش غرف لسه. اعمل غرفة جديدة</div>';
-        return;
+const multiplierPositions = [
+  {color: 'green', mult: 1.03},
+  {color: 'purple', mult: 1.07},
+  {color: 'purple', mult: 1.15},
+  {color: 'purple', mult: 1.25},
+  {color: 'purple', mult: 1.4},
+  {color: 'purple', mult: 1.6},
+  {color: 'purple', mult: 1.85},
+  {color: 'purple', mult: 2.1},
+  {color: 'purple', mult: 2.5},
+  {color: 'purple', mult: 3.0},
+  {color: 'purple', mult: 3.8},
+  {color: 'purple', mult: 4.8},
+  {color: 'purple', mult: 6.2},
+  {color: 'purple', mult: 8.5},
+  {color: 'portal', mult: 'portal'}
+];
+
+function renderMultipliers() {
+  const gameArea = document.getElementById('gameArea');
+  gameArea.innerHTML = '<div id="player">🐔</div>';
+  multiplierPositions.forEach((pos, i) => {
+    const div = document.createElement('div');
+    div.className = `multiplier ${pos.color}`;
+    div.style.marginRight = '30px';
+    if(pos.mult === 'portal') {
+      div.innerHTML = '<div class="portal-egg">24.50x</div>';
+    } else {
+      div.innerText = pos.mult + 'x';
     }
-    container.innerHTML="";
-    rooms.forEach(room=>{
-        container.innerHTML+=`
-        <div class="room-item" onclick="joinRoom('${room.id}')">
-            <div class="room-info">
-                <div class="room-name">${room.name}</div>
-                <div class="room-desc">المضيف: ${room.owner} • ${room.users || 0} متصل</div>
+    div.id = 'mult' + i;
+    gameArea.appendChild(div);
+  });
+}
+renderMultipliers();
+
+function showError(message) {
+  let customMsg = "حصل خطأ، حاول تاني";
+  if (message.includes("auth/invalid-email")) customMsg = "البريد الإلكتروني غير صحيح";
+  else if (message.includes("auth/user-not-found") || message.includes("auth/wrong-password")) customMsg = "كلمة المرور خطأ";
+  else if (message.includes("auth/email-already-in-use")) customMsg = "الإيميل ده متسجل قبل كده";
+  else if (message.includes("auth/weak-password")) customMsg = "كلمة السر ضعيفة، خليها 6 حروف على الأقل";
+  else if (message.includes("auth/too-many-requests")) customMsg = "بعت طلبات كتير، استنى شوية وجرب تاني";
+  else if (message === "no-money") customMsg = "لا يوجد مال الآن";
+
+  const errorBox = document.getElementById("error-box");
+  errorBox.innerText = customMsg;
+  errorBox.style.display = "block";
+  setTimeout(() => errorBox.style.display = "none", 3000);
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('gameScreen').style.display = 'flex';
+    if (user.uid === ADMIN_UID) {
+      document.getElementById('adminPanelBtn').style.display = 'block';
+    }
+    listenUserData();
+  } else {
+    if (userUnsubscribe) userUnsubscribe();
+    currentUser = null;
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('gameScreen').style.display = 'none';
+  }
+});
+
+function listenUserData() {
+  if (!currentUser) return;
+  if (userUnsubscribe) userUnsubscribe();
+  userUnsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (docSnap) => {
+    if (docSnap.exists()) {
+      userData = docSnap.data();
+      updateBalance();
+      document.getElementById('userID').innerText = userData.shortID || '------';
+      document.getElementById('profileName').innerText = userData.displayName || currentUser.displayName || 'Player';
+    }
+  });
+}
+
+window.showSignup = function() {
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('signupBox').style.display = 'block';
+}
+
+window.showLogin = function() {
+  document.getElementById('signupBox').style.display = 'none';
+  document.getElementById('loginBox').style.display = 'block';
+}
+
+async function login() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  try { await signInWithEmailAndPassword(auth, email, pass); }
+  catch (e) { showError(e.message); }
+}
+
+async function signup() {
+  const name = document.getElementById('signupName').value;
+  const email = document.getElementById('signupEmail').value;
+  const pass = document.getElementById('signupPass').value;
+  const passConfirm = document.getElementById('signupPassConfirm').value;
+  if (pass!== passConfirm) {
+    showError("auth/password-mismatch");
+    return;
+  }
+  try {
+    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(userCred.user, { displayName: name });
+    let shortID;
+    let exists = true;
+    while (exists) {
+      shortID = generateShortID();
+      const q = query(collection(db, "users"), where("shortID", "==", shortID));
+      const snap = await getDocs(q);
+      exists =!snap.empty;
+    }
+    await setDoc(doc(db, "users", userCred.user.uid), {
+      email: email,
+      coins: 0,
+      shortID: shortID,
+      displayName: name
+    });
+    showIDPopup(shortID);
+  } catch (e) { showError(e.message); }
+}
+
+function showIDPopup(id) {
+  document.getElementById('userIDPopup').innerText = id;
+  document.getElementById('idPopup').style.display = 'flex';
+}
+
+window.closeIDPopup = function() {
+  document.getElementById('idPopup').style.display = 'none';
+}
+
+window.openForgotPanel = function() {
+  document.getElementById('forgotPanel').style.display = 'flex';
+}
+
+window.sendPasswordReset = async function() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  const statusDiv = document.getElementById('forgotStatus');
+  if (!email) {
+    statusDiv.innerText = "❌ اكتب الإيميل";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    statusDiv.innerText = "✅ تم إرسال رابط إعادة التعيين على الإيميل";
+    statusDiv.style.color = "#00ff88";
+  } catch (e) {
+    showError(e.message);
+  }
+}
+
+window.sendCoins = async function() {
+  const targetID = document.getElementById('sendToID').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('sendAmount').value);
+  const statusDiv = document.getElementById('sendStatus');
+  if (!targetID ||!amount || amount < 1) {
+    statusDiv.innerText = "❌ اكتب ID والمبلغ صح";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+  try {
+    const q = query(collection(db, "users"), where("shortID", "==", targetID));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      statusDiv.innerText = "❌ ID غير موجود";
+      statusDiv.style.color = "#ff4757";
+      return;
+    }
+    const targetDoc = snap.docs[0];
+    await updateDoc(doc(db, "users", targetDoc.id), {
+      coins: increment(amount)
+    });
+    statusDiv.innerText = `✅ تم إرسال ${amount} كوينز لـ ${targetID}`;
+    statusDiv.style.color = "#00ff88";
+    document.getElementById('sendToID').value = '';
+    document.getElementById('sendAmount').value = '';
+  } catch (e) {
+    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
+    statusDiv.style.color = "#ff4757";
+  }
+}
+
+window.setBet = function(amount) {
+  if (running) return;
+  bet = amount;
+  document.getElementById('currentBet').innerText = amount;
+}
+
+window.startGame = function() {
+  if (running) {
+    moveChicken();
+    return;
+  }
+  if (bet > userData.coins) {
+    showError("no-money");
+    return;
+  }
+  userData.coins -= bet;
+  updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins });
+  running = true;
+  currentStep = 0;
+  multiplier = 1;
+  document.getElementById('goBtn').innerText = 'NEXT';
+  document.getElementById('cashBtn').disabled = false;
+  document.querySelectorAll('.betBtn').forEach(btn => {
+    btn.disabled = true;
+  });
+  moveChicken();
+}
+
+function moveChicken() {
+  if (currentStep >= multiplierPositions.length) {
+    cashOut();
+    return;
+  }
+
+  const step = multiplierPositions[currentStep];
+  multiplier = step.mult === 'portal'? multiplier : step.mult;
+
+  const circleLeft = 50 + currentStep * 115;
+  const circleCenter = circleLeft + 42.5;
+
+  let loseChance = 0.12;
+  let willLose = Math.random() < loseChance;
+
+  // أول دايرة محمية مش بتنفجر
+  if (currentStep === 0) {
+    willLose = false;
+  }
+
+  if (willLose) {
+    document.getElementById('mult' + currentStep).classList.add('exploded');
+
+    setTimeout(() => {
+      running = false;
+      showLosePopup();
+    }, 400);
+    return;
+  }
+
+  document.getElementById('player').style.left = circleCenter + 'px';
+
+  document.getElementById('gameArea').scrollTo({
+    left: circleCenter - 200,
+    behavior: 'smooth'
+  });
+
+  document.querySelectorAll('.multiplier').forEach(m => m.classList.remove('active'));
+  document.getElementById('mult' + currentStep).classList.add('active');
+
+  if (step.mult!== 'portal') {
+    document.getElementById('cashAmount').innerText = Math.floor(bet * multiplier) + ' USD';
+  }
+
+  currentStep++;
+  if (step.mult === 'portal') {
+    setTimeout(() => {
+      cashOut();
+    }, 600);
+  }
+}
+
+function cashOut() {
+  if (!running && currentStep < multiplierPositions.length) return;
+  running = false;
+  const winAmount = Math.floor(bet * multiplier);
+  userData.coins += winAmount;
+  updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins });
+  document.getElementById('winMultiplier').innerText = 'x' + multiplier.toFixed(2);
+  document.getElementById('winAmount').innerHTML = `+${winAmount} <span>🪙</span>`;
+  document.getElementById('winPopup').style.display = 'flex';
+  setTimeout(() => {
+    document.getElementById('winPopup').style.display = 'none';
+    resetGame();
+  }, 2000);
+}
+
+function resetGame() {
+  running = false;
+  currentStep = 0;
+  document.getElementById('player').style.left = '92px';
+  document.getElementById('gameArea').scrollTo({left: 0, behavior: 'smooth'});
+  document.getElementById('goBtn').innerText = 'GO';
+  document.getElementById('cashBtn').disabled = true;
+  document.getElementById('cashAmount').innerText = '0 USD';
+  document.querySelectorAll('.multiplier').forEach(m => m.classList.remove('active', 'exploded'));
+  document.querySelectorAll('.betBtn').forEach(btn => {
+    btn.disabled = false;
+  });
+}
+
+function showLosePopup() {
+  document.getElementById('losePopup').style.display = 'flex';
+}
+
+window.closeLosePopup = function() {
+  document.getElementById('losePopup').style.display = 'none';
+  resetGame();
+}
+
+function updateBalance() {
+  document.getElementById('balance').innerText = userData.coins.toLocaleString();
+  document.getElementById('withdrawBalance').innerText = userData.coins;
+}
+
+window.openProfile = function() {
+  document.getElementById('profilePanel').style.display = 'flex';
+}
+
+window.openAdminPanel = function() {
+  document.getElementById('adminPanel').style.display = 'flex';
+  loadDeposits();
+  loadWithdraws();
+}
+
+window.openDepositPanel = function() {
+  document.getElementById('depositPanel').style.display = 'flex';
+}
+
+window.openWithdrawPanel = function() {
+  document.getElementById('withdrawBalance').innerText = userData.coins;
+  document.getElementById('withdrawPanel').style.display = 'flex';
+}
+
+window.closePanel = function(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+window.logout = async function() {
+  await signOut(auth);
+}
+
+window.submitDeposit = async function() {
+  const phone = document.getElementById('depositPhone').value.trim();
+  const amount = document.getElementById('depositAmount').value.trim();
+  const statusDiv = document.getElementById('depositStatus');
+  if (!phone ||!amount) {
+    statusDiv.innerText = "❌ املى كل البيانات";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+  statusDiv.innerText = "⏳ جاري إرسال الطلب...";
+  statusDiv.style.color = "#ffc107";
+  try {
+    await addDoc(collection(db, "deposits"), {
+      userID: currentUser.uid,
+      userShortID: userData.shortID,
+      userName: currentUser.displayName || 'مستخدم',
+      senderPhone: phone,
+      amount: parseInt(amount),
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+    statusDiv.innerText = "✅ تم إرسال الطلب! هيتم مراجعته قريباً";
+    statusDiv.style.color = "#00ff88";
+    setTimeout(() => {
+      closePanel('depositPanel');
+      document.getElementById('depositPhone').value = '';
+      document.getElementById('depositAmount').value = '';
+    }, 2000);
+  } catch (e) {
+    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
+    statusDiv.style.color = "#ff4757";
+  }
+}
+
+window.submitWithdraw = async function() {
+  const phone = document.getElementById('withdrawPhone').value.trim();
+  const amount = parseInt(document.getElementById('withdrawAmount').value);
+  const statusDiv = document.getElementById('withdrawStatus');
+  if (!phone ||!amount) {
+    statusDiv.innerText = "❌ املى الرقم والمبلغ";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+  if (amount < 200) {
+    statusDiv.innerText = "❌ أقل مبلغ للسحب 200 جنيه";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+  if (amount > userData.coins) {
+    statusDiv.innerText = "❌ رصيدك مش كفاية";
+    statusDiv.style.color = "#ff4757";
+    return;
+  }
+  statusDiv.innerText = "⏳ جاري إرسال الطلب...";
+  statusDiv.style.color = "#ffc107";
+  try {
+    await addDoc(collection(db, "withdraws"), {
+      userID: currentUser.uid,
+      userShortID: userData.shortID,
+      userName: currentUser.displayName || 'مستخدم',
+      phone: phone,
+      amount: amount,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      coins: increment(-amount)
+    });
+    statusDiv.innerText = "✅ تم إرسال طلب السحب! هيتم التحويل خلال 24 ساعة";
+    statusDiv.style.color = "#00ff88";
+    setTimeout(() => {
+      closePanel('withdrawPanel');
+      document.getElementById('withdrawPhone').value = '';
+      document.getElementById('withdrawAmount').value = '';
+    }, 2000);
+  } catch (e) {
+    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
+    statusDiv.style.color = "#ff4757";
+  }
+}
+
+window.switchAdminTab = function(tab) {
+  document.getElementById('sendTab').style.display = tab === 'send'? 'block' : 'none';
+  document.getElementById('depositsTab').style.display = tab === 'deposits'? 'block' : 'none';
+  document.getElementById('withdrawsTab').style.display = tab === 'withdraws'? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  if (tab === 'deposits') loadDeposits();
+  if (tab === 'withdraws') loadWithdraws();
+}
+
+window.loadDeposits = async function() {
+  const depositsList = document.getElementById('depositsList');
+  depositsList.innerHTML = 'جاري التحميل...';
+  try {
+    const q = query(collection(db, "deposits"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      depositsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات شحن</p>';
+      return;
+    }
+    depositsList.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const date = d.createdAt? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
+      depositsList.innerHTML += `
+        <div class="deposit-item ${d.status === 'approved'? 'approved' : ''}">
+          <div class="deposit-info">
+            <strong>ID:</strong> ${d.userShortID}<br>
+            <strong>الاسم:</strong> ${d.userName}<br>
+            <strong>رقم المرسل:</strong> ${d.senderPhone}<br>
+            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
+            <strong>الحالة:</strong> ${d.status === 'pending'? '⏳ معلق' : '✅ تم التأكيد'}<br>
+            <strong>التاريخ:</strong> ${date}
+          </div>
+          ${d.status === 'pending'? `
+            <div class="deposit-actions">
+              <button class="btn btn-approve" onclick="approveDeposit('${doc.id}', '${d.userID}', ${d.amount})">تأكيد</button>
+              <button class="btn btn-reject" onclick="rejectDeposit('${doc.id}')">رفض</button>
             </div>
-            <img class="room-avatar" src="${room.img}">
-        </div>`;
+          ` : ''}
+        </div>
+      `;
     });
+  } catch (e) {
+    depositsList.innerHTML = '<p style="color:#ff4757;">خطأ في التحميل</p>';
+  }
 }
 
-function createRoomModal(){
-    if(hasRoom){alert('انت عامل غرفة بالفعل');return;}
-    document.getElementById('createModal').classList.add('active');
-}
-function closeModal(){document.getElementById('createModal').classList.remove('active');}
-
-function createRoom(){
-    let roomName=document.getElementById('roomNameInput').value.trim();
-    if(!roomName)return;
-    myRoomId='room_'+Date.now();
-    let roomData = {id:myRoomId, name:roomName, owner:myName, img:myPhoto, peerId: myId, users: 1};
-
-    db.collection('rooms').doc(myRoomId).set(roomData);
-    hasRoom=true;
-    roomOwner={name:myName,photo:myPhoto};
-    closeModal();
-    enterRoom(myRoomId,roomName);
-}
-
-function joinRoom(roomId){
-    let room=rooms.find(r=>r.id===roomId);
-    if(room){
-        roomOwner={name:room.owner,photo:room.img};
-        enterRoom(roomId,room.name);
-
-        db.collection('rooms').doc(roomId).update({
-            users: firebase.firestore.FieldValue.increment(1)
-        });
+window.loadWithdraws = async function() {
+  const withdrawsList = document.getElementById('withdrawsList');
+  withdrawsList.innerHTML = 'جاري التحميل...';
+  try {
+    const q = query(collection(db, "withdraws"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      withdrawsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات سحب</p>';
+      return;
     }
-}
-
-function enterRoom(roomId,name){
-    inRoom=true;
-    myRoomId=roomId;
-    document.getElementById('loadingScreen').style.display='flex';
-
-    setTimeout(()=>{
-        document.getElementById('loadingScreen').style.display='none';
-        document.getElementById('homeScreen').classList.remove('active');
-        document.getElementById('roomScreen').classList.add('active');
-        document.getElementById('roomName').innerText=name;
-        document.getElementById('ownerName').innerText=roomOwner.name;
-        document.getElementById('ownerAvatar').src=roomOwner.photo;
-
-        let grid=document.getElementById('seatsGrid');
-        grid.innerHTML='';
-        for(let i=0;i<8;i++){
-            grid.innerHTML+=`<div class="seat" id="seat${i}" onclick="seatClick(${i})"><div class="seat-num">${i+1}</div></div>`;
-        }
-
-        // استمع للكراسي
-        if(seatsUnsubscribe) seatsUnsubscribe();
-        seatsUnsubscribe = db.collection('rooms').doc(roomId).collection('seats')
-       .onSnapshot(snapshot => {
-            let seatData={};
-            snapshot.forEach(doc=>{
-                seatData[doc.id]=doc.data();
-                updateSeatUI(doc.id, true, doc.data().photo, doc.data().talking);
-                connectToPeer(doc.data().peerId);
-            });
-
-            // امسح الكراسي الفاضية
-            for(let i=0;i<8;i++){
-                if(!seatData[i]){
-                    updateSeatUI(i, false);
-                }
-            }
-        });
-
-        // استمع للشات
-        if(chatUnsubscribe) chatUnsubscribe();
-        chatUnsubscribe = db.collection('rooms').doc(roomId).collection('chat')
-       .orderBy('time')
-       .limit(50)
-       .onSnapshot(snapshot=>{
-            document.getElementById('chatMessages').innerHTML='';
-            snapshot.forEach(doc=>{
-                let data=doc.data();
-                addChatMsg(data.name,data.msg,data.userId===myId);
-            });
-        });
-    },1000);
-}
-
-function connectToPeer(peerId){
-    if(!peerId || peerId===myId || connectedPeers[peerId]) return;
-
-    connectedPeers[peerId]=true;
-
-    let conn=peer.connect(peerId);
-    conn.on('open',()=>{
-        let call=peer.call(peerId,localStream);
-        call.on('stream',stream=>{
-            let audio=new Audio();
-            audio.srcObject=stream;
-            audio.play();
-        });
+    withdrawsList.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const date = d.createdAt? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
+      withdrawsList.innerHTML += `
+        <div class="withdraw-item ${d.status === 'approved'? 'approved' : ''}">
+          <div class="withdraw-info">
+            <strong>ID:</strong> ${d.userShortID}<br>
+            <strong>الاسم:</strong> ${d.userName}<br>
+            <strong>رقم السحب:</strong> ${d.phone}<br>
+            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
+            <strong>الحالة:</strong> ${d.status === 'pending'? '⏳ معلق' : '✅ تم التأكيد'}<br>
+            <strong>التاريخ:</strong> ${date}
+          </div>
+          ${d.status === 'pending'? `
+            <div class="withdraw-actions">
+              <button class="btn btn-approve" onclick="approveWithdraw('${doc.id}', '${d.userID}')">تأكيد</button>
+              <button class="btn btn-reject" onclick="rejectWithdraw('${doc.id}', '${d.userID}', ${d.amount})">رفض</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
     });
+  } catch (e) {
+    withdrawsList.innerHTML = '<p style="color:#ff4757;">خطأ في التحميل</p>';
+  }
 }
 
-function seatClick(seatNum){
-    if(mySeat===seatNum){
-        leaveSeat();
-        return;
-    }
-
-    db.collection('rooms').doc(myRoomId).collection('seats').doc(seatNum.toString()).get().then(doc=>{
-        if(doc.exists && doc.data().userId!==myId){
-            alert('المايك مشغول');
-            return;
-        }
-
-        if(mySeat!==null){
-            db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
-        }
-
-        mySeat=seatNum;
-        db.collection('rooms').doc(myRoomId).collection('seats').doc(seatNum.toString()).set({
-            userId: myId,
-            name: myName,
-            photo: myPhoto,
-            peerId: myId,
-            talking: false
-        });
-
-        document.getElementById('micBtn').disabled=false;
-    });
+window.approveDeposit = async function(depositID, userID, amount) {
+  try {
+    await updateDoc(doc(db, "deposits", depositID), { status: 'approved' });
+    await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+    alert(`✅ تم تأكيد الشحن وإضافة ${amount} كوينز`);
+    loadDeposits();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
 }
 
-function leaveSeat(){
-    if(mySeat===null)return;
-
-    if(isMicOn){
-        isMicOn=false;
-        if(localStream)localStream.getAudioTracks()[0].enabled=false;
-    }
-
-    db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
-    mySeat=null;
-    document.getElementById('micBtn').disabled=true;
-    document.getElementById('micBtn').classList.remove('muted');
+window.rejectDeposit = async function(depositID) {
+  if (!confirm('متأكد عايز ترفض الطلب ده؟')) return;
+  try {
+    await updateDoc(doc(db, "deposits", depositID), { status: 'rejected' });
+    alert('تم رفض الطلب');
+    loadDeposits();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
 }
 
-function updateSeatUI(seatNum, occupied, photo, talking){
-    let seat=document.getElementById('seat'+seatNum);
-    if(!seat) return;
-
-    seat.classList.toggle('occupied',occupied);
-    seat.classList.toggle('talking',talking);
-
-    if(occupied){
-        seat.innerHTML=`<img src="${photo}">`;
-    }else{
-        seat.innerHTML=`<div class="seat-num">${parseInt(seatNum)+1}</div>`;
-    }
+window.approveWithdraw = async function(withdrawID, userID) {
+  try {
+    await updateDoc(doc(db, "withdraws", withdrawID), { status: 'approved' });
+    alert('✅ تم تأكيد السحب');
+    loadWithdraws();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
 }
 
-function toggleMic(){
-    if(mySeat===null)return;
-    isMicOn=!isMicOn;
-
-    if(localStream){
-        localStream.getAudioTracks()[0].enabled=isMicOn;
-    }
-
-    document.getElementById('micBtn').classList.toggle('muted',!isMicOn);
-
-    db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).update({
-        talking: isMicOn
-    });
+window.rejectWithdraw = async function(withdrawID, userID, amount) {
+  if (!confirm('متأكد عايز ترفض الطلب ده؟ الفلوس هترجع للاعب')) return;
+  try {
+    await updateDoc(doc(db, "withdraws", withdrawID), { status: 'rejected' });
+    await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+    alert('تم رفض الطلب والفلوس رجعت للاعب');
+    loadWithdraws();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+  }
 }
 
-function sendMsg(){
-    let msg=document.getElementById('chatInput').value.trim();
-    if(!msg)return;
+document.getElementById('loginBtn').onclick = login;
+document.getElementById('signupBtn').onclick = signup;
+document.getElementById('logoutBtn').onclick = logout;
+document.getElementById('goBtn').onclick = startGame;
+document.getElementById('cashBtn').onclick = cashOut;
 
-    db.collection('rooms').doc(myRoomId).collection('chat').add({
-        name:myName,
-        msg:msg,
-        userId:myId,
-        time:firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    document.getElementById('chatInput').value='';
-}
-
-function addChatMsg(name,msg,isOwn){
-    let div=document.createElement('div');
-    div.className='chat-msg';
-    if(isOwn)div.classList.add('own');
-    div.innerText=name+': '+msg;
-    document.getElementById('chatMessages').appendChild(div);
-    document.getElementById('chatMessages').scrollTop=99999;
-}
-
-function exitRoom(){
-    if(mySeat!==null){
-        db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
-    }
-    if(myRoomId){
-        db.collection('rooms').doc(myRoomId).update({
-            users: firebase.firestore.FieldValue.increment(-1)
-        });
-    }
-
-    if(seatsUnsubscribe) seatsUnsubscribe();
-    if(chatUnsubscribe) chatUnsubscribe();
-    if(localStream)localStream.getTracks().forEach(t=>t.stop());
-
-    document.getElementById('roomScreen').classList.remove('active');
-    document.getElementById('homeScreen').classList.add('active');
-    inRoom=false;
-    mySeat=null;
-    isMicOn=false;
-    connectedPeers={};
-}
+setInterval(() => {
+  document.getElementById('onlineCount').innerText = 2700 + Math.floor(Math.random() * 100);
+}, 5000);
 </script>
 </body>
 </html>
