@@ -42,10 +42,17 @@ body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
 .owner-name{font-weight:800;font-size:17px}
 .seats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;padding:20px}
 .seat{aspect-ratio:1;background:rgba(255,255,255,0.05);border-radius:50%;display:flex;
-    align-items:center;justify-content:center;position:relative;cursor:pointer;border:2px solid transparent}
+    align-items:center;justify-content:center;position:relative;cursor:pointer;border:2px solid transparent;transition:0.3s}
 .seat.occupied{border-color:var(--accent);background:rgba(251,191,36,0.15)}
-.seat.talking{border-color:var(--success);box-shadow:0 0 25px var(--success)}
+.seat.talking{border-color:var(--success);box-shadow:0 0 25px var(--success), 0 0 50px var(--success);
+    animation:pulse 1.2s infinite}
 .seat.muted{opacity:0.4}
+.seat.talking::after{content:'🎤';position:absolute;top:-8px;right:-8px;background:var(--success);
+    border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;animation:bounce 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 25px var(--success), 0 0 50px var(--success)}
+    50%{box-shadow:0 0 35px var(--success), 0 0 70px var(--success)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .seat img{width:100%;height:100%;border-radius:50%;object-fit:cover}
 .seat-num{font-size:15px;font-weight:800;position:absolute}
 .chat-box{margin:15px;background:rgba(0,0,0,0.4);border-radius:18px;height:190px;display:flex;
@@ -62,8 +69,8 @@ body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
 .bottom-bar{background:rgba(0,0,0,0.5);padding:15px 20px;display:flex;justify-content:center;gap:20px}
 .mic-btn{width:65px;height:65px;border-radius:50%;background:var(--success);
     display:flex;align-items:center;justify-content:center;font-size:30px;
-    cursor:pointer;border:none}
-.mic-btn.muted{background:var(--danger)}
+    cursor:pointer;border:none;box-shadow:0 5px 20px rgba(34,197,94,0.4);transition:0.2s}
+.mic-btn.muted{background:var(--danger);box-shadow:0 5px 20px rgba(239,68,68,0.4)}
 .mic-btn:disabled{opacity:0.4;cursor:not-allowed}
 .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;
     background:rgba(0,0,0,0.85);z-index:100;align-items:center;justify-content:center}
@@ -175,7 +182,6 @@ function init(){
         conn.on('data',handleData);
     });
 
-    // Listen to rooms in real time
     db.collection('rooms').onSnapshot(snapshot => {
         rooms = [];
         snapshot.forEach(doc => {
@@ -268,11 +274,25 @@ function enterRoom(roomId,name){
         document.getElementById('roomName').innerText=name;
         document.getElementById('ownerName').innerText=roomOwner.name;
         document.getElementById('ownerAvatar').src=roomOwner.photo;
+
         let grid=document.getElementById('seatsGrid');
         grid.innerHTML='';
         for(let i=0;i<8;i++){
             grid.innerHTML+=`<div class="seat" id="seat${i}" onclick="seatClick(${i})"><div class="seat-num">${i+1}</div></div>`;
         }
+
+        // استمع لحالة الكراسي
+        if(roomUnsubscribe) roomUnsubscribe();
+        roomUnsubscribe = db.collection('rooms').doc(roomId).collection('seats')
+       .onSnapshot(snapshot => {
+            seatStatus = new Array(8).fill(null);
+            snapshot.forEach(doc => {
+                let data = doc.data();
+                let seatNum = parseInt(doc.id);
+                seatStatus[seatNum] = data.userId;
+                updateSeatUI(seatNum, true, data.photo, data.talking);
+            });
+        });
     },1000);
 }
 
@@ -281,21 +301,52 @@ function seatClick(seatNum){
         alert('المايك ده مشغول');
         return;
     }
+    takeMic(seatNum);
+}
+
+function takeMic(seatNum){
+    if(seatStatus[seatNum] && seatStatus[seatNum]!=myId)return;
+
     if(mySeat!==null){
-        seatStatus[mySeat]=null;
-        updateSeatUI(mySeat,false);
+        db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
     }
+
     mySeat=seatNum;
-    seatStatus[seatNum]=myId;
-    updateSeatUI(seatNum,true);
+    db.collection('rooms').doc(myRoomId).collection('seats').doc(seatNum.toString()).set({
+        userId: myId,
+        name: myName,
+        photo: myPhoto,
+        talking: false
+    });
+
     document.getElementById('micBtn').disabled=false;
 }
 
-function updateSeatUI(seatNum,occupied){
+function leaveSeat(){
+    if(mySeat===null)return;
+
+    if(isMicOn){
+        isMicOn=false;
+        if(localStream)localStream.getAudioTracks()[0].enabled=false;
+        broadcast({type:'micStatus',seat:mySeat,talking:false});
+    }
+
+    db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
+
+    mySeat=null;
+    document.getElementById('micBtn').disabled=true;
+    document.getElementById('micBtn').classList.remove('muted');
+}
+
+function updateSeatUI(seatNum, occupied, photo, talking){
     let seat=document.getElementById('seat'+seatNum);
+    if(!seat) return;
+
     seat.classList.toggle('occupied',occupied);
+    seat.classList.toggle('talking',talking);
+
     if(occupied){
-        seat.innerHTML=`<img src="${myPhoto}">`;
+        seat.innerHTML=`<img src="${photo}">`;
     }else{
         seat.innerHTML=`<div class="seat-num">${seatNum+1}</div>`;
     }
@@ -303,12 +354,18 @@ function updateSeatUI(seatNum,occupied){
 
 function toggleMic(){
     if(mySeat===null)return;
+
     isMicOn=!isMicOn;
     if(localStream){
         localStream.getAudioTracks()[0].enabled=isMicOn;
     }
+
     document.getElementById('micBtn').classList.toggle('muted',!isMicOn);
-    document.getElementById('seat'+mySeat).classList.toggle('talking',isMicOn);
+
+    db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).update({
+        talking: isMicOn
+    });
+
     broadcast({type:'micStatus',seat:mySeat,talking:isMicOn});
 }
 
@@ -324,7 +381,7 @@ function handleData(data){
     if(data.type==='chat')addChatMsg(data.name,data.msg,false);
     if(data.type==='micStatus'){
         let seatEl=document.getElementById('seat'+data.seat);
-        seatEl.classList.toggle('talking',data.talking);
+        if(seatEl) seatEl.classList.toggle('talking',data.talking);
     }
 }
 
@@ -342,6 +399,9 @@ function broadcast(data){
 }
 
 function exitRoom(){
+    if(mySeat!==null){
+        db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
+    }
     if(myRoomId){
         db.collection('rooms').doc(myRoomId).update({
             users: firebase.firestore.FieldValue.increment(-1)
