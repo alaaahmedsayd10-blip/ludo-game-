@@ -44,15 +44,7 @@ body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
 .seat{aspect-ratio:1;background:rgba(255,255,255,0.05);border-radius:50%;display:flex;
     align-items:center;justify-content:center;position:relative;cursor:pointer;border:2px solid transparent;transition:0.3s}
 .seat.occupied{border-color:var(--accent);background:rgba(251,191,36,0.15)}
-.seat.talking{border-color:var(--success);box-shadow:0 0 25px var(--success), 0 0 50px var(--success);
-    animation:pulse 1.2s infinite}
-.seat.muted{opacity:0.4}
-.seat.talking::after{content:'🎤';position:absolute;top:-8px;right:-8px;background:var(--success);
-    border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-    font-size:14px;animation:bounce 1s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 25px var(--success), 0 0 50px var(--success)}
-    50%{box-shadow:0 0 35px var(--success), 0 0 70px var(--success)}}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.seat.talking{border-color:var(--success);box-shadow:0 0 25px var(--success)}
 .seat img{width:100%;height:100%;border-radius:50%;object-fit:cover}
 .seat-num{font-size:15px;font-weight:800;position:absolute}
 .chat-box{margin:15px;background:rgba(0,0,0,0.4);border-radius:18px;height:190px;display:flex;
@@ -69,8 +61,8 @@ body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
 .bottom-bar{background:rgba(0,0,0,0.5);padding:15px 20px;display:flex;justify-content:center;gap:20px}
 .mic-btn{width:65px;height:65px;border-radius:50%;background:var(--success);
     display:flex;align-items:center;justify-content:center;font-size:30px;
-    cursor:pointer;border:none;box-shadow:0 5px 20px rgba(34,197,94,0.4);transition:0.2s}
-.mic-btn.muted{background:var(--danger);box-shadow:0 5px 20px rgba(239,68,68,0.4)}
+    cursor:pointer;border:none}
+.mic-btn.muted{background:var(--danger)}
 .mic-btn:disabled{opacity:0.4;cursor:not-allowed}
 .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;
     background:rgba(0,0,0,0.85);z-index:100;align-items:center;justify-content:center}
@@ -139,7 +131,6 @@ body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
 </div>
 
 <script>
-// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
   authDomain: "game-af286.firebaseapp.com",
@@ -151,14 +142,15 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let peer,myId,myName="أحمد",myPhoto="https://i.pravatar.cc/150?u=user";
-let connections=[],localStream;
-let mySeat=null,seatStatus=new Array(8).fill(null);
+let peer,myId,myName="أحمد",myPhoto="https://i.pravatar.cc/150?u="+Math.random();
+let localStream;
+let mySeat=null;
 let rooms=[],myRoomId="";
 let hasRoom=false,inRoom=false;
 let roomOwner={name:"",photo:""};
 let isMicOn=false;
-let roomUnsubscribe=null;
+let roomUnsubscribe=null, seatsUnsubscribe=null, chatUnsubscribe=null;
+let connectedPeers={};
 
 function init(){
     peer=new Peer();
@@ -167,8 +159,9 @@ function init(){
         navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
             localStream=s;
             localStream.getAudioTracks()[0].enabled=false;
-        });
+        }).catch(e=>console.log("Mic error:",e));
     });
+
     peer.on('call',call=>{
         call.answer(localStream);
         call.on('stream',stream=>{
@@ -177,22 +170,14 @@ function init(){
             audio.play();
         });
     });
-    peer.on('connection',conn=>{
-        connections.push(conn);
-        conn.on('data',handleData);
-    });
 
     db.collection('rooms').onSnapshot(snapshot => {
         rooms = [];
-        snapshot.forEach(doc => {
-            rooms.push(doc.data());
-        });
+        snapshot.forEach(doc => rooms.push(doc.data()));
         updateRoomsList();
     });
 
-    setTimeout(()=>{
-        document.getElementById('loadingScreen').style.display='none';
-    },1500);
+    setTimeout(()=>{document.getElementById('loadingScreen').style.display='none';},1500);
 }
 init();
 
@@ -216,10 +201,7 @@ function updateRoomsList(){
 }
 
 function createRoomModal(){
-    if(hasRoom){
-        alert('انت عامل غرفة بالفعل');
-        return;
-    }
+    if(hasRoom){alert('انت عامل غرفة بالفعل');return;}
     document.getElementById('createModal').classList.add('active');
 }
 function closeModal(){document.getElementById('createModal').classList.remove('active');}
@@ -231,7 +213,6 @@ function createRoom(){
     let roomData = {id:myRoomId, name:roomName, owner:myName, img:myPhoto, peerId: myId, users: 1};
 
     db.collection('rooms').doc(myRoomId).set(roomData);
-
     hasRoom=true;
     roomOwner={name:myName,photo:myPhoto};
     closeModal();
@@ -244,20 +225,6 @@ function joinRoom(roomId){
         roomOwner={name:room.owner,photo:room.img};
         enterRoom(roomId,room.name);
 
-        if(room.peerId && room.peerId!== myId){
-            let conn = peer.connect(room.peerId);
-            conn.on('open', () => {
-                connections.push(conn);
-                conn.on('data', handleData);
-            });
-            let call = peer.call(room.peerId, localStream);
-            call.on('stream', stream=>{
-                let audio=new Audio();
-                audio.srcObject=stream;
-                audio.play();
-            });
-        }
-
         db.collection('rooms').doc(roomId).update({
             users: firebase.firestore.FieldValue.increment(1)
         });
@@ -266,7 +233,9 @@ function joinRoom(roomId){
 
 function enterRoom(roomId,name){
     inRoom=true;
+    myRoomId=roomId;
     document.getElementById('loadingScreen').style.display='flex';
+
     setTimeout(()=>{
         document.getElementById('loadingScreen').style.display='none';
         document.getElementById('homeScreen').classList.remove('active');
@@ -281,45 +250,83 @@ function enterRoom(roomId,name){
             grid.innerHTML+=`<div class="seat" id="seat${i}" onclick="seatClick(${i})"><div class="seat-num">${i+1}</div></div>`;
         }
 
-        // استمع لحالة الكراسي
-        if(roomUnsubscribe) roomUnsubscribe();
-        roomUnsubscribe = db.collection('rooms').doc(roomId).collection('seats')
+        // استمع للكراسي
+        if(seatsUnsubscribe) seatsUnsubscribe();
+        seatsUnsubscribe = db.collection('rooms').doc(roomId).collection('seats')
        .onSnapshot(snapshot => {
-            seatStatus = new Array(8).fill(null);
-            snapshot.forEach(doc => {
-                let data = doc.data();
-                let seatNum = parseInt(doc.id);
-                seatStatus[seatNum] = data.userId;
-                updateSeatUI(seatNum, true, data.photo, data.talking);
+            let seatData={};
+            snapshot.forEach(doc=>{
+                seatData[doc.id]=doc.data();
+                updateSeatUI(doc.id, true, doc.data().photo, doc.data().talking);
+                connectToPeer(doc.data().peerId);
+            });
+
+            // امسح الكراسي الفاضية
+            for(let i=0;i<8;i++){
+                if(!seatData[i]){
+                    updateSeatUI(i, false);
+                }
+            }
+        });
+
+        // استمع للشات
+        if(chatUnsubscribe) chatUnsubscribe();
+        chatUnsubscribe = db.collection('rooms').doc(roomId).collection('chat')
+       .orderBy('time')
+       .limit(50)
+       .onSnapshot(snapshot=>{
+            document.getElementById('chatMessages').innerHTML='';
+            snapshot.forEach(doc=>{
+                let data=doc.data();
+                addChatMsg(data.name,data.msg,data.userId===myId);
             });
         });
     },1000);
 }
 
-function seatClick(seatNum){
-    if(seatStatus[seatNum] && seatStatus[seatNum]!=myId){
-        alert('المايك ده مشغول');
-        return;
-    }
-    takeMic(seatNum);
+function connectToPeer(peerId){
+    if(!peerId || peerId===myId || connectedPeers[peerId]) return;
+
+    connectedPeers[peerId]=true;
+
+    let conn=peer.connect(peerId);
+    conn.on('open',()=>{
+        let call=peer.call(peerId,localStream);
+        call.on('stream',stream=>{
+            let audio=new Audio();
+            audio.srcObject=stream;
+            audio.play();
+        });
+    });
 }
 
-function takeMic(seatNum){
-    if(seatStatus[seatNum] && seatStatus[seatNum]!=myId)return;
-
-    if(mySeat!==null){
-        db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
+function seatClick(seatNum){
+    if(mySeat===seatNum){
+        leaveSeat();
+        return;
     }
 
-    mySeat=seatNum;
-    db.collection('rooms').doc(myRoomId).collection('seats').doc(seatNum.toString()).set({
-        userId: myId,
-        name: myName,
-        photo: myPhoto,
-        talking: false
-    });
+    db.collection('rooms').doc(myRoomId).collection('seats').doc(seatNum.toString()).get().then(doc=>{
+        if(doc.exists && doc.data().userId!==myId){
+            alert('المايك مشغول');
+            return;
+        }
 
-    document.getElementById('micBtn').disabled=false;
+        if(mySeat!==null){
+            db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
+        }
+
+        mySeat=seatNum;
+        db.collection('rooms').doc(myRoomId).collection('seats').doc(seatNum.toString()).set({
+            userId: myId,
+            name: myName,
+            photo: myPhoto,
+            peerId: myId,
+            talking: false
+        });
+
+        document.getElementById('micBtn').disabled=false;
+    });
 }
 
 function leaveSeat(){
@@ -328,11 +335,9 @@ function leaveSeat(){
     if(isMicOn){
         isMicOn=false;
         if(localStream)localStream.getAudioTracks()[0].enabled=false;
-        broadcast({type:'micStatus',seat:mySeat,talking:false});
     }
 
     db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
-
     mySeat=null;
     document.getElementById('micBtn').disabled=true;
     document.getElementById('micBtn').classList.remove('muted');
@@ -348,14 +353,14 @@ function updateSeatUI(seatNum, occupied, photo, talking){
     if(occupied){
         seat.innerHTML=`<img src="${photo}">`;
     }else{
-        seat.innerHTML=`<div class="seat-num">${seatNum+1}</div>`;
+        seat.innerHTML=`<div class="seat-num">${parseInt(seatNum)+1}</div>`;
     }
 }
 
 function toggleMic(){
     if(mySeat===null)return;
-
     isMicOn=!isMicOn;
+
     if(localStream){
         localStream.getAudioTracks()[0].enabled=isMicOn;
     }
@@ -365,24 +370,20 @@ function toggleMic(){
     db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).update({
         talking: isMicOn
     });
-
-    broadcast({type:'micStatus',seat:mySeat,talking:isMicOn});
 }
 
 function sendMsg(){
     let msg=document.getElementById('chatInput').value.trim();
     if(!msg)return;
-    broadcast({type:'chat',name:myName,msg:msg});
-    addChatMsg(myName,msg,true);
-    document.getElementById('chatInput').value='';
-}
 
-function handleData(data){
-    if(data.type==='chat')addChatMsg(data.name,data.msg,false);
-    if(data.type==='micStatus'){
-        let seatEl=document.getElementById('seat'+data.seat);
-        if(seatEl) seatEl.classList.toggle('talking',data.talking);
-    }
+    db.collection('rooms').doc(myRoomId).collection('chat').add({
+        name:myName,
+        msg:msg,
+        userId:myId,
+        time:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    document.getElementById('chatInput').value='';
 }
 
 function addChatMsg(name,msg,isOwn){
@@ -394,10 +395,6 @@ function addChatMsg(name,msg,isOwn){
     document.getElementById('chatMessages').scrollTop=99999;
 }
 
-function broadcast(data){
-    connections.forEach(c=>{if(c.open)c.send(data);});
-}
-
 function exitRoom(){
     if(mySeat!==null){
         db.collection('rooms').doc(myRoomId).collection('seats').doc(mySeat.toString()).delete();
@@ -407,16 +404,17 @@ function exitRoom(){
             users: firebase.firestore.FieldValue.increment(-1)
         });
     }
-    connections.forEach(c=>c.close());
-    if(peer)peer.destroy();
+
+    if(seatsUnsubscribe) seatsUnsubscribe();
+    if(chatUnsubscribe) chatUnsubscribe();
     if(localStream)localStream.getTracks().forEach(t=>t.stop());
 
     document.getElementById('roomScreen').classList.remove('active');
     document.getElementById('homeScreen').classList.add('active');
     inRoom=false;
     mySeat=null;
-    seatStatus=new Array(8).fill(null);
     isMicOn=false;
+    connectedPeers={};
 }
 </script>
 </body>
