@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Rabbit Road & Fruit Party</title>
@@ -33,6 +44,59 @@
     @keyframes goldPop {
         0% { opacity: 0; transform: translateX(-50%) scale(0.5) translateY(-20px); }
         100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+    }
+
+    #offlineOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        text-align: center;
+    }
+    .offlineBox {
+        padding: 30px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        max-width: 320px;
+    }
+    .offlineIcon {
+        font-size: 60px;
+        margin-bottom: 15px;
+    }
+    .offlineBox h1 {
+        font-size: 22px;
+        margin: 0 0 10px;
+        color: #f0c75e;
+    }
+    .offlineBox p {
+        font-size: 16px;
+        color: #dcdcdc;
+        line-height: 1.6;
+    }
+
+    #gameLoading {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a1d2e, #2d3042);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 
     #topBar {
@@ -354,7 +418,6 @@
     .authLink.small { font-size: 12px; margin-top: 10px; }
     .authLink:hover { color: #333; }
 
-    /* Profile & Admin Panels - Fancy Glassmorphism */
     #profilePanel, #adminPanel, #depositPanel, #withdrawPanel {
         position: fixed; top: 0; left: 0;
         width: 100%; height: 100%;
@@ -401,7 +464,6 @@
     }
     .adminSection h3 { margin-bottom: 10px; color: #00d4aa; }
 
-    /* Fancy ID Display */
     #userID {
         background: linear-gradient(90deg, #ffd700, #ffaa00, #ffd700);
         background-size: 200% 100%;
@@ -492,7 +554,6 @@
         align-items: center;
     }
     
-    /* Fancy Deposit/Withdraw Buttons */
     #depositBtn, #withdrawBtn {
         padding: 10px 18px;
         border-radius: 14px;
@@ -671,7 +732,6 @@
         text-shadow: 0 0 10px rgba(255,215,0,0.5);
     }
 
-    /* Fruit Game Styles */
     #fruitGame {
         display: none;
         height: 100%;
@@ -690,21 +750,60 @@
     .fruitInfoRight{display:flex;gap:10px}
     .fruitInfoItem{background:linear-gradient(180deg,#FFD700,#FFA500);padding:5px 12px;border-radius:20px;color:#8B4513;font-weight:900;display:flex;align-items:center;gap:5px;font-size:14px;}
     .fruitGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#1a1a2e;padding:6px;border-radius:10px;position:relative;}
-    .fruitCell{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;transition:0.2s;border:3px solid transparent;}
-    .fruitCell.selected{border-color:#00FF00;box-shadow:0 0 15px #00FF00;}
-    .fruitCell.highlight{border-color:#FFD700;box-shadow:0 0 25px #FFD700;animation:fruitPulse 0.3s infinite;}
-    @keyframes fruitPulse{0%,100%{box-shadow:0 0 25px #FFD700}50%{box-shadow:0 0 40px #FFD700}}
-    .fruitCell img{width:60px;height:60px;margin-bottom:5px;filter:drop-shadow(2px 3px 4px rgba(0,0,0,0.5))}
-    .fruitCell span{color:#fff;font-weight:900;font-size:14px;text-shadow:1px 1px 2px #000;}
-    .fruitCell1{background:#4169E1}
-    .fruitCell2{background:#32CD32}
-    .fruitCell3{background:#9370DB}
-    .fruitCell4{background:#A0522D}
-    .fruitCell5{background:#000;border:3px solid #FFD700;box-shadow:0 0 20px #FFD700,inset 0 0 20px rgba(255,215,0,0.3);cursor:default;}
-    .fruitCell6{background:#228B22}
-    .fruitCell7{background:#DAA520}
-    .fruitCell8{background:#483D8B}
-    .fruitCell9{background:#DC143C}
+    
+    .fruitCell {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 4px solid rgba(255,255,255,0.2);
+    }
+    .fruitCell.selected {
+      border-color: #00FF00;
+      box-shadow: 0 0 15px #00FF00;
+      transform: scale(1.05);
+    }
+    .fruitCell.highlight {
+      border-color: #FFD700;
+      box-shadow: 0 0 25px #FFD700;
+      animation: fruitPulse 0.3s infinite;
+    }
+    @keyframes fruitPulse {
+      0%,100% { box-shadow: 0 0 25px #FFD700 }
+      50% { box-shadow: 0 0 40px #FFD700 }
+    }
+    
+    .fruitCell1 { background: #4169E1 }
+    .fruitCell2 { background: #32CD32 }
+    .fruitCell3 { background: #9370DB }
+    .fruitCell4 { background: #A0522D }
+    .fruitCell5 { background: #000; border: 3px solid #FFD700; box-shadow: 0 0 20px #FFD700,inset 0 0 20px rgba(255,215,0,0.3); cursor: default; }
+    .fruitCell6 { background: #228B22 }
+    .fruitCell7 { background: #DAA520 }
+    .fruitCell8 { background: #483D8B }
+    .fruitCell9 { background: #DC143C }
+    
+    .fruitCell img {
+      width: 45px;
+      height: 45px;
+      pointer-events: none;
+    }
+    .fruitCell span {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      padding: 2px 5px;
+      border-radius: 6px;
+    }
+    
     .fruitCenterText{font-size:45px;font-weight:900;color:#00FF00;text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 3px 3px 0 #000;letter-spacing:3px;}
     .fruitBetBar{background:linear-gradient(180deg,#CD853F,#8B4513);border-radius:10px;padding:12px;margin-top:8px;display:flex;align-items:center;gap:8px;}
     .fruitResetBtn{width:55px;height:55px;background:linear-gradient(180deg,#00CED1,#20B2AA);border:none;border-radius:50%;color:#fff;font-size:24px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.4);}
@@ -718,8 +817,12 @@
     .fruitPopupBox{background:linear-gradient(180deg,#FFD700,#FFA500);padding:25px 20px;border-radius:20px;border:4px solid #fff;text-align:center;transform:scale(0.8);animation:fruitPopupIn 0.3s forwards;min-width:280px;}
     @keyframes fruitPopupIn{to{transform:scale(1)}}
     .fruitPopupIcon{font-size:60px;margin-bottom:10px;}
-    .fruitPopupFruit{width:80px;height:80px;margin:0 auto 10px;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));}
-    .fruitPopupFruit.show{display:block}
+    .fruitPopupFruit {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 10px;
+      display: none;
+    }
     .fruitPopupTitle{font-size:28px;font-weight:900;color:#8B4513;margin-bottom:8px;}
     .fruitPopupText{font-size:18px;font-weight:700;color:#3D2914;margin-bottom:15px;}
     .fruitPopupBtn{background:linear-gradient(180deg,#32CD32,#228B22);color:#fff;border:none;padding:10px 30px;border-radius:15px;font-size:18px;font-weight:900;border:2px solid #fff;cursor:pointer;}
@@ -728,6 +831,23 @@
 <body>
 
 <div id="error-box"></div>
+
+<div id="offlineOverlay">
+    <div class="offlineBox">
+        <div class="offlineIcon">📡</div>
+        <h1>اتصل بالإنترنت</h1>
+        <p>يتطلب تشغيل 3MAX اتصالاً بالإنترنت.<br>تحقق من الشبكة وحاول مرة أخرى.</p>
+    </div>
+</div>
+
+<div id="gameLoading">
+  <div style="width:80px; height:80px; border:4px solid rgba(255,215,0,0.2); 
+    border-top:4px solid #ffd700; border-radius:50%; animation:spin 1s linear infinite;
+    box-shadow:0 0 30px rgba(255,215,0,0.5);"></div>
+  <h2 style="color:#ffd700; margin-top:20px; font-size:22px; text-shadow:0 0 20px rgba(255,215,0,0.6);">
+    جاري التحميل...
+  </h2>
+</div>
 
 <div id="authScreen" style="display:flex;">
   <div class="authBox" id="loginBox">
@@ -775,9 +895,9 @@
       <div id="menuBtn" onclick="openProfile()">☰</div>
     </div>
   </div>
-  
+
   <img src="https://i.top4top.io/p_3795uwy1t0.png" class="lobbyLogo" alt="Logo">
-  
+
   <div class="lobbyTitle">✨ اختار اللعبة ✨</div>
   <div class="game-icons-wrapper">
     <div class="game-icon" onclick="openGame('chicken')">
@@ -873,7 +993,7 @@
     </div>
   </div>
 
-  <button class="fruitGoBtn" id="fruitGoBtn">GO</button>
+  <button class="fruitGoBtn" id="fruitGoBtn" disabled style="opacity:0.5;">GO</button>
 
   <div class="fruitPopup" id="fruitPopup">
     <div class="fruitPopupBox">
@@ -1043,7 +1163,16 @@ let fruitSpinning = false;
 let selectedFruits = [];
 let fruitLossStreak = 0;
 const multipliers = {apple:5,lemon:5,grapes:5,kiwi:45,orange:5,watermelon:25,cherry:15,strawberry:10};
-const fruitImages = {apple:'https://cdn-icons-png.flaticon.com/128/590/590685.png',lemon:'https://cdn-icons-png.flaticon.com/128/590/590691.png',grapes:'https://cdn-icons-png.flaticon.com/128/590/590682.png',kiwi:'https://cdn-icons-png.flaticon.com/128/590/590689.png',orange:'https://cdn-icons-png.flaticon.com/128/590/590692.png',watermelon:'https://cdn-icons-png.flaticon.com/128/590/590686.png',cherry:'https://cdn-icons-png.flaticon.com/128/590/590684.png',strawberry:'https://cdn-icons-png.flaticon.com/128/590/590687.png'};
+const fruitImages = {
+  apple: 'https://cdn-icons-png.flaticon.com/128/590/590685.png',
+  lemon: 'https://cdn-icons-png.flaticon.com/128/590/590691.png',
+  grapes: 'https://cdn-icons-png.flaticon.com/128/590/590682.png',
+  kiwi: 'https://cdn-icons-png.flaticon.com/128/590/590689.png',
+  orange: 'https://cdn-icons-png.flaticon.com/128/590/590692.png',
+  watermelon: 'https://cdn-icons-png.flaticon.com/128/590/590686.png',
+  cherry: 'https://cdn-icons-png.flaticon.com/128/590/590684.png',
+  strawberry: 'https://cdn-icons-png.flaticon.com/128/590/590687.png'
+};
 const fruits = [{name:'apple', weight:4},{name:'lemon', weight:3},{name:'grapes', weight:3},{name:'orange', weight:3},{name:'strawberry', weight:0.8},{name:'cherry', weight:0.7},{name:'watermelon', weight:0.3},{name:'kiwi', weight:0.2}];
 
 function generateShortID() {
@@ -1091,6 +1220,18 @@ function renderMultipliers() {
   });
 }
 renderMultipliers();
+
+function checkOnlineStatus() {
+  const overlay = document.getElementById('offlineOverlay');
+  if (!navigator.onLine) {
+    overlay.style.display = 'flex';
+  } else {
+    overlay.style.display = 'none';
+  }
+}
+window.addEventListener('online', checkOnlineStatus);
+window.addEventListener('offline', checkOnlineStatus);
+document.addEventListener('DOMContentLoaded', checkOnlineStatus);
 
 function showError(message) {
   let customMsg = "حصل خطأ، حاول تاني";
@@ -1410,7 +1551,7 @@ window.submitDeposit = async function() {
   statusDiv.innerText = "⏳ جاري إرسال الطلب...";
   statusDiv.style.color = "#ffc107";
   try {
-    await addDoc(collection(db, "deposits"), {
+    await addDoc(collection(db, "deposits"),{
       userID: currentUser.uid,
       userShortID: userData.shortID,
       userName: currentUser.displayName || 'مستخدم',
@@ -1443,11 +1584,10 @@ window.submitWithdraw = async function() {
   }
   if (amount < 200) {
     statusDiv.innerText = "❌ أقل مبلغ للسحب 200 جنيه";
-    statusDiv.style.color = "#ff4757";
     return;
   }
   if (amount > userData.coins) {
-    statusDiv.innerText = "❌ رصيدك مش كفاية";
+    statusDiv.innerText = "❌ الرصيد مش كفاية";
     statusDiv.style.color = "#ff4757";
     return;
   }
@@ -1458,15 +1598,12 @@ window.submitWithdraw = async function() {
       userID: currentUser.uid,
       userShortID: userData.shortID,
       userName: currentUser.displayName || 'مستخدم',
-      phone: phone,
+      withdrawPhone: phone,
       amount: amount,
       status: 'pending',
       createdAt: serverTimestamp()
     });
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(-amount)
-    });
-    statusDiv.innerText = "✅ تم إرسال طلب السحب! هيتم التحويل خلال 24 ساعة";
+    statusDiv.innerText = "✅ تم إرسال طلب السحب! هيتم مراجعته قريباً";
     statusDiv.style.color = "#00ff88";
     setTimeout(() => {
       closePanel('withdrawPanel');
@@ -1480,187 +1617,231 @@ window.submitWithdraw = async function() {
 }
 
 window.switchAdminTab = function(tab) {
-  document.getElementById('sendTab').style.display = tab === 'send'? 'block' : 'none';
-  document.getElementById('depositsTab').style.display = tab === 'deposits'? 'block' : 'none';
-  document.getElementById('withdrawsTab').style.display = tab === 'withdraws'? 'block' : 'none';
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   event.target.classList.add('active');
-  
-  if (tab === 'deposits') loadDeposits();
-  if (tab === 'withdraws') loadWithdraws();
+
+  document.getElementById('sendTab').style.display = 'none';
+  document.getElementById('depositsTab').style.display = 'none';
+  document.getElementById('withdrawsTab').style.display = 'none';
+
+  if (tab === 'send') document.getElementById('sendTab').style.display = 'block';
+  if (tab === 'deposits') document.getElementById('depositsTab').style.display = 'block';
+  if (tab === 'withdraws') document.getElementById('withdrawsTab').style.display = 'block';
 }
 
-window.loadDeposits = async function() {
-  const depositsList = document.getElementById('depositsList');
-  depositsList.innerHTML = 'جاري التحميل...';
-  try {
-    const q = query(collection(db, "deposits"), orderBy("createdAt", "desc"));
-    const snap = await getDocs(q);
-    if (snap.empty) {
-      depositsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات شحن</p>';
+async function loadDeposits() {
+  const listDiv = document.getElementById('depositsList');
+  listDiv.innerHTML = 'جاري التحميل...';
+
+  const q = query(collection(db, "deposits"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
+  onSnapshot(q, (snapshot) => {
+    if (snapshot.empty) {
+      listDiv.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات معلقة</p>';
       return;
     }
-    depositsList.innerHTML = '';
-    snap.forEach(doc => {
-      const d = doc.data();
-      const date = d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
-      depositsList.innerHTML += `
-        <div class="deposit-item ${d.status === 'approved' ? 'approved' : ''}">
-          <div class="deposit-info">
-            <strong>ID:</strong> ${d.userShortID}<br>
-            <strong>الاسم:</strong> ${d.userName}<br>
-            <strong>رقم المرسل:</strong> ${d.senderPhone}<br>
-            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
-            <strong>الحالة:</strong> ${d.status === 'pending' ? '⏳ معلق' : '✅ تم التأكيد'}<br>
-            <strong>التاريخ:</strong> ${date}
-          </div>
-          ${d.status === 'pending' ? `
-            <div class="deposit-actions">
-              <button class="btn btn-approve" onclick="approveDeposit('${doc.id}', '${d.userID}', ${d.amount})">تأكيد</button>
-              <button class="btn btn-reject" onclick="rejectDeposit('${doc.id}')">رفض</button>
-            </div>
-          ` : ''}
+
+    listDiv.innerHTML = '';
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = 'deposit-item';
+      div.innerHTML = `
+        <div class="deposit-info">
+          <strong>${data.userName}</strong> - ID: ${data.userShortID}<br>
+          الرقم: ${data.senderPhone}<br>
+          المبلغ: ${data.amount} جنيه
+        </div>
+        <div class="deposit-actions">
+          <button class="btn btn-approve" onclick="approveDeposit('${doc.id}', '${data.userID}', ${data.amount})">قبول</button>
+          <button class="btn btn-reject" onclick="rejectDeposit('${doc.id}')">رفض</button>
         </div>
       `;
+      listDiv.appendChild(div);
     });
-  } catch (e) {
-    depositsList.innerHTML = '<p style="color:#ff4757;">خطأ في التحميل</p>';
-  }
+  });
 }
 
-window.loadWithdraws = async function() {
-  const withdrawsList = document.getElementById('withdrawsList');
-  withdrawsList.innerHTML = 'جاري التحميل...';
-  try {
-    const q = query(collection(db, "withdraws"), orderBy("createdAt", "desc"));
-    const snap = await getDocs(q);
-    if (snap.empty) {
-      withdrawsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات سحب</p>';
+async function loadWithdraws() {
+  const listDiv = document.getElementById('withdrawsList');
+  listDiv.innerHTML = 'جاري التحميل...';
+
+  const q = query(collection(db, "withdraws"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
+  onSnapshot(q, (snapshot) => {
+    if (snapshot.empty) {
+      listDiv.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات معلقة</p>';
       return;
     }
-    withdrawsList.innerHTML = '';
-    snap.forEach(doc => {
-      const d = doc.data();
-      const date = d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
-      withdrawsList.innerHTML += `
-        <div class="withdraw-item ${d.status === 'approved' ? 'approved' : ''}">
-          <div class="withdraw-info">
-            <strong>ID:</strong> ${d.userShortID}<br>
-            <strong>الاسم:</strong> ${d.userName}<br>
-            <strong>رقم السحب:</strong> ${d.phone}<br>
-            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
-            <strong>الحالة:</strong> ${d.status === 'pending' ? '⏳ معلق' : '✅ تم التأكيد'}<br>
-            <strong>التاريخ:</strong> ${date}
-          </div>
-          ${d.status === 'pending' ? `
-            <div class="withdraw-actions">
-              <button class="btn btn-approve" onclick="approveWithdraw('${doc.id}', '${d.userID}')">تأكيد</button>
-              <button class="btn btn-reject" onclick="rejectWithdraw('${doc.id}', '${d.userID}', ${d.amount})">رفض</button>
-            </div>
-          ` : ''}
+
+    listDiv.innerHTML = '';
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = 'withdraw-item';
+      div.innerHTML = `
+        <div class="withdraw-info">
+          <strong>${data.userName}</strong> - ID: ${data.userShortID}<br>
+          رقم السحب: ${data.withdrawPhone}<br>
+          المبلغ: ${data.amount} جنيه
+        </div>
+        <div class="withdraw-actions">
+          <button class="btn btn-approve" onclick="approveWithdraw('${doc.id}', '${data.userID}', ${data.amount})">قبول</button>
+          <button class="btn btn-reject" onclick="rejectWithdraw('${doc.id}')">رفض</button>
         </div>
       `;
+      listDiv.appendChild(div);
+    });
+  });
+}
+
+window.approveDeposit = async function(depositId, userId, amount) {
+  try {
+    await updateDoc(doc(db, "users", userId), {
+      coins: increment(amount)
+    });
+    await updateDoc(doc(db, "deposits", depositId), {
+      status: 'approved'
     });
   } catch (e) {
-    withdrawsList.innerHTML = '<p style="color:#ff4757;">خطأ في التحميل</p>';
+    alert('خطأ: ' + e.message);
   }
 }
 
-window.approveDeposit = async function(depositID, userID, amount) {
+window.rejectDeposit = async function(depositId) {
   try {
-    await updateDoc(doc(db, "deposits", depositID), { status: 'approved' });
-    await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
-    alert(`✅ تم تأكيد الشحن وإضافة ${amount} كوينز`);
-    loadDeposits();
+    await updateDoc(doc(db, "deposits", depositId), {
+      status: 'rejected'
+    });
   } catch (e) {
     alert('خطأ: ' + e.message);
   }
 }
 
-window.rejectDeposit = async function(depositID) {
-  if (!confirm('متأكد عايز ترفض الطلب ده؟')) return;
+window.approveWithdraw = async function(withdrawId, userId, amount) {
   try {
-    await updateDoc(doc(db, "deposits", depositID), { status: 'rejected' });
-    alert('تم رفض الطلب');
-    loadDeposits();
+    await updateDoc(doc(db, "users", userId), {
+      coins: increment(-amount)
+    });
+    await updateDoc(doc(db, "withdraws", withdrawId), {
+      status: 'approved'
+    });
   } catch (e) {
     alert('خطأ: ' + e.message);
   }
 }
 
-window.approveWithdraw = async function(withdrawID, userID) {
+window.rejectWithdraw = async function(withdrawId) {
   try {
-    await updateDoc(doc(db, "withdraws", withdrawID), { status: 'approved' });
-    alert('✅ تم تأكيد السحب');
-    loadWithdraws();
+    await updateDoc(doc(db, "withdraws", withdrawId), {
+      status: 'rejected'
+    });
   } catch (e) {
     alert('خطأ: ' + e.message);
   }
 }
 
-window.rejectWithdraw = async function(withdrawID, userID, amount) {
-  if (!confirm('متأكد عايز ترفض الطلب ده؟ الفلوس هترجع للرصيد')) return;
-  try {
-    await updateDoc(doc(db, "withdraws", withdrawID), { status: 'rejected' });
-    await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
-    alert('تم رفض الطلب ورجعت الفلوس للرصيد');
-    loadWithdraws();
-  } catch (e) {
-    alert('خطأ: ' + e.message);
-  }
+// Game Navigation
+window.openGame = function(game) {
+  document.getElementById('gamesLobby').style.display = 'none';
+  document.getElementById('gameLoading').style.display = 'flex';
+
+  setTimeout(() => {
+    document.getElementById('gameLoading').style.display = 'none';
+    if (game === 'chicken') {
+      document.getElementById('gameScreen').style.display = 'flex';
+    } else if (game === 'fruit') {
+      document.getElementById('fruitGame').style.display = 'block';
+      initFruitGame();
+    }
+  }, 3000);
 }
 
-// ===== Fruit Game Logic =====
+window.backToLobby = function() {
+  document.getElementById('gameScreen').style.display = 'none';
+  document.getElementById('fruitGame').style.display = 'none';
+  document.getElementById('gamesLobby').style.display = 'flex';
+}
+
+window.exitChickenGame = function() {
+  if (running) {
+    running = false;
+    resetGame();
+  }
+  backToLobby();
+}
+
+// Event Listeners
+document.getElementById('loginBtn').addEventListener('click', login);
+document.getElementById('signupBtn').addEventListener('click', signup);
+document.getElementById('logoutBtn').addEventListener('click', logout);
+document.getElementById('goBtn').addEventListener('click', startGame);
+document.getElementById('cashBtn').addEventListener('click', cashOut);
+
+// Fruit Game Functions
 function initFruitGame() {
-  fruitBalance = userData.coins;
-  document.getElementById('fruitBalance').innerText = fruitBalance.toLocaleString();
-  document.getElementById('fruitProfit').innerText = '0';
-  
   document.querySelectorAll('.fruitBetBtn').forEach(btn => {
     btn.addEventListener('click', function() {
-      if (fruitSpinning) return;
       document.querySelectorAll('.fruitBetBtn').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
       fruitBet = parseInt(this.dataset.cost);
     });
   });
-  
+
   document.getElementById('fruitResetBtn').addEventListener('click', resetFruitGame);
-  document.getElementById('fruitGoBtn').addEventListener('click', spinFruits);
-  
+  document.getElementById('fruitGoBtn').addEventListener('click', startFruitGame);
+
   document.querySelectorAll('.fruitCell[data-fruit]').forEach(cell => {
     cell.addEventListener('click', function() {
       if (fruitSpinning) return;
+
       const fruit = this.dataset.fruit;
+
       if (selectedFruits.includes(fruit)) {
-        selectedFruits = selectedFruits.filter(f => f !== fruit);
+        selectedFruits = selectedFruits.filter(f => f!== fruit);
         this.classList.remove('selected');
-      } else if (selectedFruits.length < 3) {
+      } else {
+        if (selectedFruits.length >= 3) {
+          showError("اختار 3 مربعات بالظبط");
+          return;
+        }
         selectedFruits.push(fruit);
         this.classList.add('selected');
       }
+
+      updateGoButton();
     });
   });
+
+  updateGoButton();
+}
+
+function updateGoButton() {
+  const goBtn = document.getElementById('fruitGoBtn');
+  if (selectedFruits.length === 3) {
+    goBtn.disabled = false;
+    goBtn.style.opacity = '1';
+  } else {
+    goBtn.disabled = true;
+    goBtn.style.opacity = '0.5';
+  }
 }
 
 function resetFruitGame() {
-  if (fruitSpinning) return;
   selectedFruits = [];
-  document.querySelectorAll('.fruitCell').forEach(cell => cell.classList.remove('selected', 'highlight'));
-  document.getElementById('fruitProfit').innerText = '0';
+  document.querySelectorAll('.fruitCell').forEach(cell => {
+    cell.classList.remove('selected', 'highlight');
+  });
   document.getElementById('fruitCenterText').innerText = 'GO';
+  fruitSpinning = false;
+  updateGoButton();
 }
 
-function spinFruits() {
-  if (fruitSpinning) return;
-
-  if (selectedFruits.length !== 3) {
-    showError('اختار 3 فواكه الأول');
+function startFruitGame() {
+  if (fruitSpinning || selectedFruits.length!== 3) {
+    showError("لازم تختار 3 مربعات بالظبط");
     return;
   }
-
   if (fruitBet > fruitBalance) {
-    showError('no-money');
+    showError("no-money");
     return;
   }
 
@@ -1672,64 +1853,86 @@ function spinFruits() {
   document.getElementById('fruitCenterText').innerText = '...';
 
   let spinCount = 0;
-  const maxSpins = 15;
   const spinInterval = setInterval(() => {
-    document.querySelectorAll('.fruitCell[data-fruit]').forEach(cell => cell.classList.remove('highlight'));
-    const randomFruit = fruits[Math.floor(Math.random() * fruits.length)].name;
-    document.querySelector(`[data-fruit="${randomFruit}"]`).classList.add('highlight');
-
+    document.querySelectorAll('.fruitCell[data-fruit]').forEach(cell => {
+      cell.classList.remove('highlight');
+    });
+    const randomCell = document.querySelectorAll('.fruitCell[data-fruit]')[Math.floor(Math.random() * 8)];
+    randomCell.classList.add('highlight');
     spinCount++;
-    if (spinCount >= maxSpins) {
+
+    if (spinCount > 15) {
       clearInterval(spinInterval);
-      const finalFruit = fruits[Math.floor(Math.random() * fruits.length)].name;
-      checkFruitResult(finalFruit);
+      finishFruitGame();
     }
   }, 100);
 }
 
-function checkFruitResult(finalFruit) {
-  const won = selectedFruits.includes(finalFruit);
-  const winAmount = won ? fruitBet * multipliers[finalFruit] : 0;
+function finishFruitGame() {
+  const winningFruits = [];
+  const totalWeight = fruits.reduce((sum, f) => sum + f.weight, 0);
+  let rand = Math.random() * totalWeight;
 
-  if (won) {
-    fruitBalance += winAmount;
-    fruitLossStreak = 0;
-    document.getElementById('fruitProfit').innerText = '+' + winAmount.toLocaleString();
-    showFruitPopup(finalFruit, winAmount, true);
-  } else {
-    fruitLossStreak++;
-    document.getElementById('fruitProfit').innerText = '0';
-    showFruitPopup(finalFruit, 0, false);
+  for (let fruit of fruits) {
+    if (rand < fruit.weight) {
+      winningFruits.push(fruit.name);
+      break;
+    }
+    rand -= fruit.weight;
   }
 
-  updateDoc(doc(db, "users", currentUser.uid), { coins: fruitBalance });
-  document.getElementById('fruitBalance').innerText = fruitBalance.toLocaleString();
+  if (winningFruits.length === 0) {
+    winningFruits.push(fruits[0].name);
+  }
+
+  const winFruit = winningFruits[0];
+  const isWin = selectedFruits.includes(winFruit);
+
+  document.querySelectorAll('.fruitCell[data-fruit]').forEach(cell => {
+    cell.classList.remove('highlight');
+    if (cell.dataset.fruit === winFruit) {
+      cell.classList.add('highlight');
+    }
+  });
 
   setTimeout(() => {
-    fruitSpinning = false;
-    document.getElementById('fruitGoBtn').disabled = false;
-    document.getElementById('fruitCenterText').innerText = 'GO';
+    if (isWin) {
+      const winAmount = fruitBet * multipliers[winFruit];
+      fruitBalance += winAmount;
+      fruitLossStreak = 0;
+      updateDoc(doc(db, "users", currentUser.uid), { coins: fruitBalance });
+      document.getElementById('fruitBalance').innerText = fruitBalance.toLocaleString();
+      document.getElementById('fruitProfit').innerText = winAmount.toLocaleString();
+      showFruitPopup('win', winFruit, winAmount);
+    } else {
+      fruitLossStreak++;
+      document.getElementById('fruitProfit').innerText = '0';
+      showFruitPopup('lose', winFruit, 0);
+    }
+
     resetFruitGame();
-  }, 2000);
+    document.getElementById('fruitGoBtn').disabled = false;
+    fruitSpinning = false;
+  }, 1000);
 }
 
-function showFruitPopup(fruit, amount, isWin) {
+function showFruitPopup(type, fruit, amount) {
   const popup = document.getElementById('fruitPopup');
-  const fruitImg = document.getElementById('fruitPopupFruit');
   const icon = document.getElementById('fruitPopupIcon');
+  const fruitImg = document.getElementById('fruitPopupFruit');
   const title = document.getElementById('fruitPopupTitle');
   const text = document.getElementById('fruitPopupText');
 
-  if (isWin) {
-    fruitImg.src = fruitImages[fruit];
-    fruitImg.classList.add('show');
-    icon.style.display = 'none';
+  if (type === 'win') {
+    icon.style.display = 'block';
+    fruitImg.style.display = 'none';
+    icon.innerText = '🎉';
     title.innerText = 'مبروك!';
     text.innerText = `كسبت ${amount.toLocaleString()} 🪙`;
   } else {
-    fruitImg.classList.remove('show');
-    icon.style.display = 'block';
-    icon.innerText = '💔';
+    icon.style.display = 'none';
+    fruitImg.style.display = 'block';
+    fruitImg.src = fruitImages[fruit];
     title.innerText = 'حظ أوفر';
     text.innerText = 'جرب تاني';
   }
@@ -1739,49 +1942,18 @@ function showFruitPopup(fruit, amount, isWin) {
 
 window.closeFruitPopup = function() {
   document.getElementById('fruitPopup').classList.remove('show');
-  resetFruitGame();
 }
 
-// ===== Navigation =====
-window.openGame = function(game) {
-  document.getElementById('gamesLobby').style.display = 'none';
-  if (game === 'chicken') {
-    document.getElementById('gameScreen').style.display = 'flex';
-    resetGame();
-  } else if (game === 'fruit') {
-    document.getElementById('fruitGame').style.display = 'block';
-    initFruitGame();
-  }
+// Live Online Counter
+function updateOnlineCount() {
+  const count = Math.floor(Math.random() * 500) + 2500;
+  document.getElementById('onlineCount').innerText = count;
 }
-
-window.exitChickenGame = function() {
-  document.getElementById('gameScreen').style.display = 'none';
-  document.getElementById('gamesLobby').style.display = 'flex';
-  resetGame();
-}
-
-window.backToLobby = function() {
-  document.getElementById('fruitGame').style.display = 'none';
-  document.getElementById('gamesLobby').style.display = 'flex';
-  resetFruitGame();
-}
-
-// ===== Event Listeners =====
-document.getElementById('loginBtn').addEventListener('click', login);
-document.getElementById('signupBtn').addEventListener('click', signup);
-document.getElementById('logoutBtn').addEventListener('click', logout);
-document.getElementById('goBtn').addEventListener('click', startGame);
-document.getElementById('cashBtn').addEventListener('click', cashOut);
-
-// Online counter animation
-setInterval(() => {
-  const onlineEl = document.getElementById('onlineCount');
-  if (onlineEl) {
-    let current = parseInt(onlineEl.innerText);
-    onlineEl.innerText = current + Math.floor(Math.random() * 3) - 1;
-  }
-}, 5000);
-
+setInterval(updateOnlineCount, 3000);
 </script>
 </body>
+</html>
+    
+  </body>
+  
 </html>
