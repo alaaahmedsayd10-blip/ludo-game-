@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Rabbit Road & Fruit Party & Slots</title>
@@ -637,6 +648,40 @@
         color: white;
         box-shadow: 0 4px 20px rgba(255,71,87,0.4);
     }
+  
+ #profilePanel .adminBox {
+  background: linear-gradient(
+    120deg,
+    #8B6914 0%,   /* أصفر غامق جداً */
+    #A0522D 25%,  /* بني مصفر */
+    #B8860B 50%,  /* دهبي غامق */
+    #A0522D 75%,
+    #8B6914 100%
+  );
+  background-size: 300% 300%;
+  animation: waveGold 4s ease infinite;
+
+  border: 2px solid #8B6914;
+  border-radius: 24px;
+
+  box-shadow: 
+    0 0 30px rgba(139, 105, 20, 0.6),   /* هالة غامقة */
+    0 15px 40px rgba(0, 0, 0, 0.5),
+    inset 0 2px 0 rgba(184, 134, 11, 0.4),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+
+  transform: perspective(1000px) rotateX(3deg);
+  width: 75%;
+  max-width: 350px;
+  margin: 0 auto;
+  padding: 14px 18px;
+}
+
+@keyframes waveGold {
+ 0% { background-position: 0% 50%; }
+ 50% { background-position: 100% 50%; }
+ 100% { background-position: 0% 50%; }
+}
     #adminPanelBtn {
         background: linear-gradient(135deg, #ffd700, #ffaa00);
         color: #000;
@@ -1338,11 +1383,11 @@
 <!-- Panels -->
 <div id="profilePanel">
   <div class="adminBox">
-    <h2 style="margin-bottom:15px; text-align:center;">👤 البروفايل</h2>
+    <h2 style="margin-bottom:15px; text-align:center;">👤الملف الشخصي</h2>
     <div class="adminSection" style="text-align:center;">
       <p style="margin-bottom:15px; color:#8b8ea3;">الاسم</p>
       <p style="font-size:20px; font-weight:700; margin-bottom:20px;" id="profileName">Player</p>
-      <p style="margin-bottom:15px; color:#8b8ea3;">ID بتاعك</p>
+      <p style="margin-bottom:15px; color:#8b8ea3;">🆔</p>
       <p id="userID">------</p>
     </div>
     <button class="btn" onclick="closePanel('profilePanel')" style="background:#6c757d; margin-top:15px;">إغلاق</button>
@@ -1645,7 +1690,7 @@ function showError(message) {
   else if (message.includes("auth/weak-password")) customMsg = "كلمة السر ضعيفة، خليها 6 حروف على الأقل";
   else if (message.includes("auth/too-many-requests")) customMsg = "بعت طلبات كتير، استنى شوية وجرب تاني";
   else if (message === "no-money") customMsg = "لا يوجد مال الآن";
-  else if (message === "select-1") customMsg = "لازم تختار فاكهة واحدة على الأقل";
+  else if (message === "select-1") customMsg = "لازم تختار 3 على الأقل";
 
   const errorBox = document.getElementById("error-box");
   errorBox.innerText = customMsg;
@@ -2294,7 +2339,7 @@ function weightedRandomFruit() {
 
 async function spinFruit() {
   if (fruitSpinning) return;
-  if (selectedFruits.length < 1) {
+  if (selectedFruits.length < 3) {
     showError("select-1");
     return;
   }
@@ -2586,4 +2631,8 @@ document.addEventListener('contextmenu',e=>e.preventDefault());
 
 </div>
 </body>
+</html>
+    
+  </body>
+  
 </html>
