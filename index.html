@@ -1,19 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Untitled</title>
-    
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
-<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Rabbit Road & Fruit Party</title>
+<title>Rabbit Road & Fruit Party & Slots</title>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -22,6 +11,42 @@
         color: white;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         overflow: hidden;
+    }
+
+    #loadingScreen {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(135deg, #1a1d2e, #2a2d3e);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 9999;
+    }
+    .loading-spinner {
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(255,215,0,0.2);
+        border-top: 4px solid #ffd700;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        box-shadow: 0 0 30px rgba(255,215,0,0.5);
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .loading-text {
+        margin-top: 20px;
+        font-size: 22px;
+        font-weight: 800;
+        background: linear-gradient(90deg, #ffd700, #ffaa00, #ffd700);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 2s linear infinite;
+        text-shadow: 0 0 20px rgba(255,215,0,0.6);
     }
 
     #error-box {
@@ -46,57 +71,55 @@
         100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
     }
 
-    #offlineOverlay {
+    #savePopup {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8);
+        backdrop-filter: blur(10px);
         display: none;
-        justify-content: center;
         align-items: center;
-        z-index: 10000;
-        text-align: center;
-    }
-    .offlineBox {
-        padding: 30px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.05);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        max-width: 320px;
-    }
-    .offlineIcon {
-        font-size: 60px;
-        margin-bottom: 15px;
-    }
-    .offlineBox h1 {
-        font-size: 22px;
-        margin: 0 0 10px;
-        color: #f0c75e;
-    }
-    .offlineBox p {
-        font-size: 16px;
-        color: #dcdcdc;
-        line-height: 1.6;
-    }
-
-    #gameLoading {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1a1d2e, #2d3042);
+        justify-content: center;
         z-index: 9999;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
     }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+    #savePopup.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+    .savePopupBox {
+        background: linear-gradient(135deg, #ffd700, #ffaa00);
+        padding: 35px 40px;
+        border-radius: 25px;
+        text-align: center;
+        border: 3px solid #fff;
+        box-shadow: 0 0 50px rgba(255,215,0,0.8), 0 0 100px rgba(255,215,0,0.4);
+        animation: savePop 0.5s cubic-bezier(0.68,-0.55,0.265,1.55);
+        min-width: 300px;
+    }
+    @keyframes savePop {
+        0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .savePopupIcon {
+        font-size: 70px;
+        margin-bottom: 15px;
+        animation: bounce 0.6s ease-in-out infinite;
+    }
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    .savePopupTitle {
+        font-size: 28px;
+        font-weight: 900;
+        color: #000;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(255,255,255,0.5);
+    }
+    .savePopupText {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
     }
 
     #topBar {
@@ -464,6 +487,25 @@
     }
     .adminSection h3 { margin-bottom: 10px; color: #00d4aa; }
 
+    .onlineStat {
+        background: linear-gradient(135deg, #00d4aa, #00b894);
+        padding: 15px;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px rgba(0,212,170,0.4);
+    }
+    .onlineStat h3 {
+        color: #000;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    .onlineStat span {
+        color: #000;
+        font-size: 32px;
+        font-weight: 900;
+    }
+
     #userID {
         background: linear-gradient(90deg, #ffd700, #ffaa00, #ffd700);
         background-size: 200% 100%;
@@ -573,40 +615,11 @@
         color: #000;
         box-shadow: 0 4px 20px rgba(0,212,170,0.4);
     }
-    #depositBtn::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-        animation: btnShine 2s linear infinite;
-    }
     #withdrawBtn {
         background: linear-gradient(135deg, #ff4757, #e03e4d);
         color: white;
         box-shadow: 0 4px 20px rgba(255,71,87,0.4);
     }
-    #withdrawBtn::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-        animation: btnShine 2s linear infinite;
-        animation-delay: 1s;
-    }
-    @keyframes btnShine {
-        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
-    #depositBtn:hover, #withdrawBtn:hover {
-        transform: translateY(-3px) scale(1.05);
-    }
-    
     #adminPanelBtn {
         background: linear-gradient(135deg, #ffd700, #ffaa00);
         color: #000;
@@ -632,11 +645,6 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.1);
         transition: 0.3s;
-    }
-    #menuBtn:hover {
-        background: rgba(255,215,0,0.2);
-        border-color: rgba(255,215,0,0.5);
-        transform: scale(1.1);
     }
 
     .lobbyLogo {
@@ -703,20 +711,6 @@
         position: relative;
         overflow: hidden;
     }
-    .game-icon::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
-        animation: neonShine 3s linear infinite;
-    }
-    @keyframes neonShine {
-        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
     .game-icon:hover {
         transform: translateY(-8px) scale(1.05);
         border-color: #ffd700;
@@ -750,60 +744,21 @@
     .fruitInfoRight{display:flex;gap:10px}
     .fruitInfoItem{background:linear-gradient(180deg,#FFD700,#FFA500);padding:5px 12px;border-radius:20px;color:#8B4513;font-weight:900;display:flex;align-items:center;gap:5px;font-size:14px;}
     .fruitGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#1a1a2e;padding:6px;border-radius:10px;position:relative;}
-    
-    .fruitCell {
-      aspect-ratio: 1;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      cursor: pointer;
-      transition: 0.2s;
-      border: 4px solid rgba(255,255,255,0.2);
-    }
-    .fruitCell.selected {
-      border-color: #00FF00;
-      box-shadow: 0 0 15px #00FF00;
-      transform: scale(1.05);
-    }
-    .fruitCell.highlight {
-      border-color: #FFD700;
-      box-shadow: 0 0 25px #FFD700;
-      animation: fruitPulse 0.3s infinite;
-    }
-    @keyframes fruitPulse {
-      0%,100% { box-shadow: 0 0 25px #FFD700 }
-      50% { box-shadow: 0 0 40px #FFD700 }
-    }
-    
-    .fruitCell1 { background: #4169E1 }
-    .fruitCell2 { background: #32CD32 }
-    .fruitCell3 { background: #9370DB }
-    .fruitCell4 { background: #A0522D }
-    .fruitCell5 { background: #000; border: 3px solid #FFD700; box-shadow: 0 0 20px #FFD700,inset 0 0 20px rgba(255,215,0,0.3); cursor: default; }
-    .fruitCell6 { background: #228B22 }
-    .fruitCell7 { background: #DAA520 }
-    .fruitCell8 { background: #483D8B }
-    .fruitCell9 { background: #DC143C }
-    
-    .fruitCell img {
-      width: 45px;
-      height: 45px;
-      pointer-events: none;
-    }
-    .fruitCell span {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      font-size: 11px;
-      font-weight: 800;
-      color: #fff;
-      background: rgba(0,0,0,0.6);
-      padding: 2px 5px;
-      border-radius: 6px;
-    }
-    
+    .fruitCell{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;transition:0.2s;border:3px solid transparent;}
+    .fruitCell.selected{border-color:#00FF00;box-shadow:0 0 15px #00FF00;}
+    .fruitCell.highlight{border-color:#FFD700;box-shadow:0 0 25px #FFD700;animation:fruitPulse 0.3s infinite;}
+    @keyframes fruitPulse{0%,100%{box-shadow:0 0 25px #FFD700}50%{box-shadow:0 0 40px #FFD700}}
+    .fruitCell img{width:60px;height:60px;margin-bottom:5px;filter:drop-shadow(2px 3px 4px rgba(0,0,0,0.5))}
+    .fruitCell span{color:#fff;font-weight:900;font-size:14px;text-shadow:1px 1px 2px #000;}
+    .fruitCell1{background:#4169E1}
+    .fruitCell2{background:#32CD32}
+    .fruitCell3{background:#9370DB}
+    .fruitCell4{background:#A0522D}
+    .fruitCell5{background:#000;border:3px solid #FFD700;box-shadow:0 0 20px #FFD700,inset 0 0 20px rgba(255,215,0,0.3);cursor:default;}
+    .fruitCell6{background:#228B22}
+    .fruitCell7{background:#DAA520}
+    .fruitCell8{background:#483D8B}
+    .fruitCell9{background:#DC143C}
     .fruitCenterText{font-size:45px;font-weight:900;color:#00FF00;text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 3px 3px 0 #000;letter-spacing:3px;}
     .fruitBetBar{background:linear-gradient(180deg,#CD853F,#8B4513);border-radius:10px;padding:12px;margin-top:8px;display:flex;align-items:center;gap:8px;}
     .fruitResetBtn{width:55px;height:55px;background:linear-gradient(180deg,#00CED1,#20B2AA);border:none;border-radius:50%;color:#fff;font-size:24px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.4);}
@@ -817,36 +772,336 @@
     .fruitPopupBox{background:linear-gradient(180deg,#FFD700,#FFA500);padding:25px 20px;border-radius:20px;border:4px solid #fff;text-align:center;transform:scale(0.8);animation:fruitPopupIn 0.3s forwards;min-width:280px;}
     @keyframes fruitPopupIn{to{transform:scale(1)}}
     .fruitPopupIcon{font-size:60px;margin-bottom:10px;}
-    .fruitPopupFruit {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 10px;
-      display: none;
-    }
+    .fruitPopupFruit{width:80px;height:80px;margin:0 auto 10px;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));}
+    .fruitPopupFruit.show{display:block}
     .fruitPopupTitle{font-size:28px;font-weight:900;color:#8B4513;margin-bottom:8px;}
     .fruitPopupText{font-size:18px;font-weight:700;color:#3D2914;margin-bottom:15px;}
     .fruitPopupBtn{background:linear-gradient(180deg,#32CD32,#228B22);color:#fff;border:none;padding:10px 30px;border-radius:15px;font-size:18px;font-weight:900;border:2px solid #fff;cursor:pointer;}
+
+    /* Slots Game Styles */
+    #slotsGame {
+        display: none;
+        height: 100%;
+        background: radial-gradient(circle at 50% 20%, #8A2BE2 0%, #4B0082 40%, #1A0033 100%);
+        overflow-y: auto;
+        position: relative;
+    }
+    .particles{
+        position:absolute;
+        top:0;left:0;
+        width:100%;height:100%;
+        overflow:hidden;
+        z-index:0;
+    }
+    .particle{
+        position:absolute;
+        width:4px;height:4px;
+        background:#FFD700;
+        border-radius:50%;
+        animation:float 6s infinite ease-in-out;
+        opacity:0.6;
+    }
+    @keyframes float{
+        0%,100%{transform:translateY(0) translateX(0);opacity:0.6}
+        50%{transform:translateY(-100px) translateX(20px);opacity:1}
+    }
+    .slotsTopBar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:12px 15px;
+        position:relative;
+        z-index:2;
+    }
+    .slotsBalanceBar{
+        background:linear-gradient(90deg,#FFD700,#FFA500);
+        padding:6px 20px;
+        border-radius:25px;
+        border:2px solid #fff;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-weight:900;
+        color:#8B0000;
+        box-shadow:0 0 15px rgba(255,215,0,0.8);
+        animation:glow 2s infinite;
+    }
+        }
+    @keyframes glow{
+        0%,100%{box-shadow:0 0 15px rgba(255,215,0,0.8)}
+        50%{box-shadow:0 0 25px rgba(255,215,0,1)}
+    }
+
+    .slotsTitleBox{
+        text-align:center;
+        margin:5px 15px;
+        position:relative;
+        z-index:2;
+    }
+    .slotsTitle{
+        font-size:38px;
+        font-weight:900;
+        background:linear-gradient(90deg,#FFD700,#FFF,#FFD700);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        text-shadow:0 0 20px rgba(255,215,0,0.8);
+        animation:shine 3s infinite;
+    }
+    @keyframes shine{
+        0%{filter:brightness(1)}
+        50%{filter:brightness(1.5)}
+        100%{filter:brightness(1)}
+    }
+    .slotsSubtitle{
+        color:#FFD700;
+        font-size:12px;
+        letter-spacing:3px;
+    }
+
+    .jackpots{
+        display:flex;
+        justify-content:space-around;
+        background:rgba(0,0,0,0.6);
+        padding:10px;
+        margin:10px 15px;
+        border-radius:15px;
+        border:2px solid #FFD700;
+        backdrop-filter:blur(10px);
+        position:relative;
+        z-index:2;
+    }
+    .jackpot{
+        text-align:center;
+    }
+    .jackpot.label{
+        font-size:10px;
+        color:#AAA;
+    }
+    .jackpot.value{
+        font-size:16px;
+        color:#FFD700;
+        font-weight:900;
+        text-shadow:0 0 10px #FFD700;
+    }
+
+    .slotsResult{
+        text-align:center;
+        font-size:24px;
+        font-weight:900;
+        color:#FFD700;
+        text-shadow:0 0 20px #FFD700,2px 2px 4px #000;
+        margin:15px 0;
+        min-height:35px;
+        position:relative;
+        z-index:2;
+    }
+    .slotsResult.win{
+        animation:bounce 0.5s;
+    }
+    @keyframes bounce{
+        0%,100%{transform:scale(1)}
+        50%{transform:scale(1.2)}
+    }
+
+    .gridWrap{
+        position:relative;
+        margin:15px;
+        padding:12px;
+        border-radius:25px;
+        background:linear-gradient(135deg,#FFD700 0%,#FF6B00 25%,#FFD700 50%,#FF6B00 75%,#FFD700 100%);
+        background-size:300% 300%;
+        animation:neonBorder 3s linear infinite;
+        box-shadow:
+            0 0 40px rgba(255,215,0,0.8),
+            0 0 80px rgba(255,107,0,0.6),
+            inset 0 0 20px rgba(255,255,255,0.2);
+        z-index:2;
+    }
+    @keyframes neonBorder{
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
+
+    .gridWrap::before{
+        content:'';
+        position:absolute;
+        top:-3px;left:-3px;right:-3px;bottom:-3px;
+        background:linear-gradient(45deg,#FF00FF,#00FFFF,#FF00FF);
+        border-radius:28px;
+        z-index:-1;
+        filter:blur(15px);
+        opacity:0.7;
+        animation:glowPulse 2s ease-in-out infinite;
+    }
+    @keyframes glowPulse{
+        0%,100%{opacity:0.7;filter:blur(15px)}
+        50%{opacity:1;filter:blur(25px)}
+    }
+
+    .slotsGrid{
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:8px;
+        background:#0A0A0A;
+        padding:10px;
+        border-radius:18px;
+        position:relative;
+        overflow:hidden;
+    }
+    .slotsGrid::after{
+        content:'';
+        position:absolute;
+        top:0;left:-100%;
+        width:100%;height:100%;
+        background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
+        animation:shineSweep 3s infinite;
+    }
+    @keyframes shineSweep{
+        0%{left:-100%}
+        100%{left:100%}
+    }
+
+    .slotsCell{
+        aspect-ratio:1;
+        background:
+            radial-gradient(circle at 30% 30%,#2A2A2A,#0A0A0A);
+        border-radius:15px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border:2px solid #333;
+        position:relative;
+        transform-style:preserve-3d;
+        transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+        box-shadow:
+            inset 0 2px 5px rgba(255,255,255,0.1),
+            inset 0 -2px 5px rgba(0,0,0,0.5),
+            0 4px 10px rgba(0,0,0,0.8);
+    }
+    .slotsCell::before{
+        content:'';
+        position:absolute;
+        inset:0;
+        border-radius:15px;
+        background:linear-gradient(135deg,rgba(255,215,0,0.2),transparent);
+        opacity:0;
+        transition:0.3s;
+    }
+    .slotsCell:hover::before{
+        opacity:1;
+    }
+
+    .slotsCell img{
+        width:70%;
+        height:70%;
+        object-fit:contain;
+        filter:drop-shadow(0 0 10px rgba(255,255,255,0.6));
+        transition:0.3s;
+        transform:translateZ(20px);
+    }
+
+    .slotsCell.spinning{
+        animation:cellSpin 0.1s linear infinite;
+    }
+    @keyframes cellSpin{
+        0%{transform:rotateY(0deg) scale(1)}
+        50%{transform:rotateY(180deg) scale(0.95)}
+        100%{transform:rotateY(360deg) scale(1)}
+    }
+
+    .slotsCell.win{
+        border-color:#00FF00;
+        background:radial-gradient(circle at center,#1A3A1A,#0A0A0A);
+        box-shadow:
+            0 0 30px #00FF00,
+            0 0 60px #00FF00,
+            inset 0 0 20px rgba(0,255,0,0.4);
+        animation:winPulse 0.6s ease-in-out infinite;
+    }
+    @keyframes winPulse{
+        0%,100%{transform:scale(1) translateZ(0)}
+        50%{transform:scale(1.08) translateZ(10px)}
+    }
+    .slotsCell.win img{
+        filter:drop-shadow(0 0 20px #00FF00);
+        animation:winGlow 0.6s infinite;
+    }
+    @keyframes winGlow{
+        0%,100%{filter:drop-shadow(0 0 20px #00FF00)}
+        50%{filter:drop-shadow(0 0 35px #00FF00)}
+    }
+
+    .slotsBottomBar{
+        position:fixed;
+        bottom:0;left:0;right:0;
+        background:linear-gradient(180deg,rgba(138,43,226,0.95),rgba(75,0,130,0.95));
+        padding:15px 10px;
+        border-top:3px solid #FFD700;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        backdrop-filter:blur(15px);
+        z-index:2;
+    }
+    .slotsBetControl{
+        background:rgba(0,0,0,0.7);
+        padding:8px 20px;
+        border-radius:20px;
+        display:flex;
+        align-items:center;
+        gap:15px;
+        border:2px solid #FFD700;
+        box-shadow:0 0 15px rgba(255,215,0,0.5);
+    }
+    .slotsBetControl button{
+        width:40px;height:40px;
+        background:linear-gradient(180deg,#FFD700,#FFA500);
+        border:none;
+        border-radius:50%;
+        font-size:24px;
+        font-weight:900;
+        color:#8B0000;
+        cursor:pointer;
+        transition:0.2s;
+    }
+    .slotsBetControl button:active{transform:scale(0.9)}
+    .spinBtn{
+        width:100px;height:100px;
+        border-radius:50%;
+        background:radial-gradient(circle,#00FF00,#00AA00);
+        border:5px solid #FFD700;
+        color:#fff;
+        font-weight:900;
+        font-size:18px;
+        cursor:pointer;
+        box-shadow:0 0 30px #00FF00;
+        transition:0.2s;
+        animation:pulseSpin 2s infinite;
+    }
+    @keyframes pulseSpin{
+        0%,100%{box-shadow:0 0 30px #00FF00}
+        50%{box-shadow:0 0 50px #00FF00}
+    }
+    .spinBtn:active{transform:scale(0.92) rotate(5deg)}
+    .spinBtn:disabled{opacity:0.5;cursor:not-allowed}
 </style>
 </head>
 <body>
 
-<div id="error-box"></div>
-
-<div id="offlineOverlay">
-    <div class="offlineBox">
-        <div class="offlineIcon">📡</div>
-        <h1>اتصل بالإنترنت</h1>
-        <p>يتطلب تشغيل 3MAX اتصالاً بالإنترنت.<br>تحقق من الشبكة وحاول مرة أخرى.</p>
-    </div>
+<div id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">جاري التحميل...</div>
 </div>
 
-<div id="gameLoading">
-  <div style="width:80px; height:80px; border:4px solid rgba(255,215,0,0.2); 
-    border-top:4px solid #ffd700; border-radius:50%; animation:spin 1s linear infinite;
-    box-shadow:0 0 30px rgba(255,215,0,0.5);"></div>
-  <h2 style="color:#ffd700; margin-top:20px; font-size:22px; text-shadow:0 0 20px rgba(255,215,0,0.6);">
-    جاري التحميل...
-  </h2>
+<div id="error-box"></div>
+
+<div id="savePopup">
+  <div class="savePopupBox">
+    <div class="savePopupIcon">💎</div>
+    <div class="savePopupTitle">تم الحفظ!</div>
+    <div class="savePopupText">الإعدادات اتحفظت بنجاح</div>
+  </div>
 </div>
 
 <div id="authScreen" style="display:flex;">
@@ -906,7 +1161,11 @@
     </div>
     <div class="game-icon" onclick="openGame('fruit')">
       <div class="emoji">🍎</div>
-       <div class="name">Fruit Party</div>
+      <div class="name">Fruit Party</div>
+    </div>
+    <div class="game-icon" onclick="openGame('slots')">
+      <div class="emoji">🎰</div>
+      <div class="name">Mr. Rich Slots</div>
     </div>
   </div>
 </div>
@@ -993,7 +1252,7 @@
     </div>
   </div>
 
-  <button class="fruitGoBtn" id="fruitGoBtn" disabled style="opacity:0.5;">GO</button>
+  <button class="fruitGoBtn" id="fruitGoBtn">GO</button>
 
   <div class="fruitPopup" id="fruitPopup">
     <div class="fruitPopupBox">
@@ -1003,6 +1262,59 @@
       <div class="fruitPopupText" id="fruitPopupText">كسبت 500 🪙</div>
       <button class="fruitPopupBtn" onclick="closeFruitPopup()">تمام</button>
     </div>
+  </div>
+</div>
+
+<!-- Slots Game -->
+<div id="slotsGame">
+  <div class="particles" id="particles"></div>
+
+  <div class="slotsTopBar">
+    <button class="fruitTopBtn" onclick="backToLobby()">←</button>
+    <div class="slotsBalanceBar">💰 <span id="slotsBalance">50,000</span></div>
+    <button class="fruitTopBtn">?</button>
+  </div>
+
+  <div class="slotsTitleBox">
+    <div class="slotsTitle">TOP1</div>
+    <div class="slotsSubtitle">DELUXE SLOTS</div>
+  </div>
+
+  <div class="jackpots">
+    <div class="jackpot">
+      <div class="label">GRAND</div>
+      <div class="value" id="grand">180,359</div>
+    </div>
+    <div class="jackpot">
+      <div class="label">MAJOR</div>
+      <div class="value" id="major">54,097</div>
+    </div>
+    <div class="jackpot">
+      <div class="label">MINOR</div>
+      <div class="value" id="minor">18,065</div>
+    </div>
+    <div class="jackpot">
+      <div class="label">MINI</div>
+      <div class="value" id="mini">7,240</div>
+    </div>
+  </div>
+
+  <div class="slotsResult" id="slotsResult">GOOD LUCK</div>
+
+  <div class="gridWrap">
+    <div class="slotsGrid" id="slotsGrid"></div>
+  </div>
+
+  <div class="slotsBottomBar">
+    <div class="slotsBetControl">
+      <button id="slotsBetMinus">-</button>
+      <div style="text-align:center">
+        <div id="slotsBet" style="font-size:20px;font-weight:900;color:#FFD700">10</div>
+        <div style="font-size:11px;color:#AAA">BET</div>
+      </div>
+      <button id="slotsBetPlus">+</button>
+    </div>
+    <button class="spinBtn" id="spinBtn">SPIN</button>
   </div>
 </div>
 
@@ -1024,10 +1336,17 @@
 <div id="adminPanel">
   <div class="adminBox">
     <div class="adminTitle">👑 لوحة الأدمن</div>
+
+    <div class="onlineStat">
+      <h3>👥 عدد الأونلاين الآن</h3>
+      <span id="adminOnlineCount">0</span>
+    </div>
+
     <div style="margin-bottom:15px;">
       <button class="tab-btn active" onclick="switchAdminTab('send')">💸 إرسال كوينز</button>
       <button class="tab-btn" onclick="switchAdminTab('deposits')">📋 طلبات الشحن</button>
       <button class="tab-btn" onclick="switchAdminTab('withdraws')">💰 طلبات السحب</button>
+      <button class="tab-btn" onclick="switchAdminTab('settings')">⚙️ إعدادات الربح</button>
     </div>
     <div id="sendTab">
       <div class="adminSection">
@@ -1048,6 +1367,23 @@
       <div class="adminSection">
         <h3>💰 طلبات السحب المعلقة</h3>
         <div id="withdrawsList">جاري التحميل...</div>
+      </div>
+    </div>
+    <div id="settingsTab" style="display:none;">
+      <div class="adminSection">
+        <h3>⚙️ نسبة ربح Chicken Road</h3>
+        <input id="chickenRate" type="number" min="0" max="100" placeholder="مثال: 95">
+        <button class="btn" onclick="saveRate('chicken')" style="background:#00d4aa;">حفظ</button>
+      </div>
+      <div class="adminSection">
+        <h3>⚙️ نسبة ربح Fruit Party</h3>
+        <input id="fruitRate" type="number" min="0" max="100" placeholder="مثال: 92">
+        <button class="btn" onclick="saveRate('fruit')" style="background:#00d4aa;">حفظ</button>
+      </div>
+      <div class="adminSection">
+        <h3>⚙️ نسبة ربح Slots</h3>
+        <input id="slotsRate" type="number" min="0" max="100" placeholder="مثال: 88">
+        <button class="btn" onclick="saveRate('slots')" style="background:#00d4aa;">حفظ</button>
       </div>
     </div>
     <button class="btn" onclick="closePanel('adminPanel')" style="background:#6c757d;">إغلاق</button>
@@ -1130,10 +1466,14 @@
   </div>
 </div>
 
+<audio id="spinSound" src="https://cdn.freesound.org/previews/456/456491_lq.mp3" preload="auto"></audio>
+<audio id="winSound" src="https://cdn.freesound.org/previews/270/270404_lq.mp3" preload="auto"></audio>
+<audio id="clickSound" src="https://cdn.freesound.org/previews/270/270404_lq.mp3" preload="auto" volume="0.3"></audio>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, updateDoc, increment, query, where, getDocs, collection, addDoc, orderBy, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, updateDoc, increment, query, where, getDocs, collection, addDoc, orderBy, serverTimestamp, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
@@ -1155,25 +1495,34 @@ let currentUser = null;
 let userData = { coins: 0, shortID: '' };
 let bet = 20, multiplier = 1, running = false, currentStep = 0;
 let userUnsubscribe = null;
+let onlineUnsubscribe = null;
+let gameRates = { chicken: 95, fruit: 92, slots: 88 };
 
 // Fruit Game Variables
 let fruitBalance = 0;
 let fruitBet = 100;
 let fruitSpinning = false;
 let selectedFruits = [];
-let fruitLossStreak = 0;
 const multipliers = {apple:5,lemon:5,grapes:5,kiwi:45,orange:5,watermelon:25,cherry:15,strawberry:10};
-const fruitImages = {
-  apple: 'https://cdn-icons-png.flaticon.com/128/590/590685.png',
-  lemon: 'https://cdn-icons-png.flaticon.com/128/590/590691.png',
-  grapes: 'https://cdn-icons-png.flaticon.com/128/590/590682.png',
-  kiwi: 'https://cdn-icons-png.flaticon.com/128/590/590689.png',
-  orange: 'https://cdn-icons-png.flaticon.com/128/590/590692.png',
-  watermelon: 'https://cdn-icons-png.flaticon.com/128/590/590686.png',
-  cherry: 'https://cdn-icons-png.flaticon.com/128/590/590684.png',
-  strawberry: 'https://cdn-icons-png.flaticon.com/128/590/590687.png'
-};
+const fruitImages = {apple:'https://cdn-icons-png.flaticon.com/128/590/590685.png',lemon:'https://cdn-icons-png.flaticon.com/128/590/590691.png',grapes:'https://cdn-icons-png.flaticon.com/128/590/590682.png',kiwi:'https://cdn-icons-png.flaticon.com/128/590/590689.png',orange:'https://cdn-icons-png.flaticon.com/128/590/590692.png',watermelon:'https://cdn-icons-png.flaticon.com/128/590/590686.png',cherry:'https://cdn-icons-png.flaticon.com/128/590/590684.png',strawberry:'https://cdn-icons-png.flaticon.com/128/590/590687.png'};
 const fruits = [{name:'apple', weight:4},{name:'lemon', weight:3},{name:'grapes', weight:3},{name:'orange', weight:3},{name:'strawberry', weight:0.8},{name:'cherry', weight:0.7},{name:'watermelon', weight:0.3},{name:'kiwi', weight:0.2}];
+
+// Slots Game Variables
+const symbols = [
+    {name:'mr', img:'https://cdn-icons-png.flaticon.com/128/3135/3135715.png'},
+    {name:'car', img:'https://cdn-icons-png.flaticon.com/128/744/744465.png'},
+    {name:'gold', img:'https://cdn-icons-png.flaticon.com/128/2331/2331972.png'},
+    {name:'silver', img:'https://cdn-icons-png.flaticon.com/128/2331/2331973.png'},
+    {name:'key', img:'https://cdn-icons-png.flaticon.com/128/1596/1596047.png'},
+    {name:'diamond', img:'https://cdn-icons-png.flaticon.com/128/2331/2331970.png'},
+    {name:'wild', img:'https://cdn-icons-png.flaticon.com/128/833/833472.png'},
+    {name:'champ', img:'https://cdn-icons-png.flaticon.com/128/1046/1046784.png'}
+];
+let slotsBalance = 50000;
+let slotsBet = 10;
+let slotsSpinning = false;
+const MULTIPLIER = 3;
+let slotsGrid = [];
 
 function generateShortID() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -1221,18 +1570,6 @@ function renderMultipliers() {
 }
 renderMultipliers();
 
-function checkOnlineStatus() {
-  const overlay = document.getElementById('offlineOverlay');
-  if (!navigator.onLine) {
-    overlay.style.display = 'flex';
-  } else {
-    overlay.style.display = 'none';
-  }
-}
-window.addEventListener('online', checkOnlineStatus);
-window.addEventListener('offline', checkOnlineStatus);
-document.addEventListener('DOMContentLoaded', checkOnlineStatus);
-
 function showError(message) {
   let customMsg = "حصل خطأ، حاول تاني";
   if (message.includes("auth/invalid-email")) customMsg = "البريد الإلكتروني غير صحيح";
@@ -1241,6 +1578,7 @@ function showError(message) {
   else if (message.includes("auth/weak-password")) customMsg = "كلمة السر ضعيفة، خليها 6 حروف على الأقل";
   else if (message.includes("auth/too-many-requests")) customMsg = "بعت طلبات كتير، استنى شوية وجرب تاني";
   else if (message === "no-money") customMsg = "لا يوجد مال الآن";
+  else if (message === "select-1") customMsg = "لازم تختار فاكهة واحدة على الأقل";
 
   const errorBox = document.getElementById("error-box");
   errorBox.innerText = customMsg;
@@ -1248,24 +1586,47 @@ function showError(message) {
   setTimeout(() => errorBox.style.display = "none", 3000);
 }
 
+function showSaveSuccess() {
+  const popup = document.getElementById('savePopup');
+  popup.classList.add('show');
+  setTimeout(() => {
+    popup.classList.remove('show');
+  }, 2000);
+}
+
+function showLoading(callback) {
+  document.getElementById('loadingScreen').style.display = 'flex';
+  setTimeout(() => {
+    document.getElementById('loadingScreen').style.display = 'none';
+    if(callback) callback();
+  }, 2000);
+}
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('gamesLobby').style.display = 'flex';
-    document.getElementById('gameScreen').style.display = 'none';
-    document.getElementById('fruitGame').style.display = 'none';
-    if (user.uid === ADMIN_UID) {
-      document.getElementById('adminPanelBtn').style.display = 'block';
-    }
-    listenUserData();
+    showLoading(() => {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('gamesLobby').style.display = 'flex';
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('fruitGame').style.display = 'none';
+      document.getElementById('slotsGame').style.display = 'none';
+      if (user.uid === ADMIN_UID) {
+        document.getElementById('adminPanelBtn').style.display = 'block';
+      }
+      listenUserData();
+      listenOnlineCount();
+      loadGameRates();
+    });
   } else {
     if (userUnsubscribe) userUnsubscribe();
+    if (onlineUnsubscribe) onlineUnsubscribe();
     currentUser = null;
     document.getElementById('authScreen').style.display = 'flex';
     document.getElementById('gamesLobby').style.display = 'none';
     document.getElementById('gameScreen').style.display = 'none';
     document.getElementById('fruitGame').style.display = 'none';
+    document.getElementById('slotsGame').style.display = 'none';
   }
 });
 
@@ -1277,11 +1638,31 @@ function listenUserData() {
       userData = docSnap.data();
       updateBalance();
       fruitBalance = userData.coins;
+      slotsBalance = userData.coins;
       document.getElementById('fruitBalance').innerText = fruitBalance.toLocaleString();
+      document.getElementById('slotsBalance').innerText = slotsBalance.toLocaleString();
       document.getElementById('userID').innerText = userData.shortID || '------';
       document.getElementById('profileName').innerText = userData.displayName || currentUser.displayName || 'Player';
     }
   });
+}
+
+function listenOnlineCount() {
+  if (onlineUnsubscribe) onlineUnsubscribe();
+  onlineUnsubscribe = onSnapshot(doc(db, "stats", "online"), (docSnap) => {
+    if (docSnap.exists()) {
+      const count = docSnap.data().count || 0;
+      document.getElementById('onlineCount').innerText = count;
+      document.getElementById('adminOnlineCount').innerText = count;
+    }
+  });
+}
+
+async function loadGameRates() {
+  const docSnap = await getDoc(doc(db, "settings", "rates"));
+  if (docSnap.exists()) {
+    gameRates = docSnap.data();
+  }
 }
 
 window.showSignup = function() {
@@ -1432,7 +1813,7 @@ function moveChicken() {
   const circleLeft = 50 + currentStep * 115;
   const circleCenter = circleLeft + 42.5;
 
-  let loseChance = 0.12;
+  let loseChance = (100 - gameRates.chicken) / 100;
   let willLose = Math.random() < loseChance;
 
   if (currentStep === 0) {
@@ -1518,8 +1899,7 @@ window.openProfile = function() {
 
 window.openAdminPanel = function() {
   document.getElementById('adminPanel').style.display = 'flex';
-  loadDeposits();
-  loadWithdraws();
+  switchAdminTab('send');
 }
 
 window.openDepositPanel = function() {
@@ -1535,41 +1915,180 @@ window.closePanel = function(id) {
   document.getElementById(id).style.display = 'none';
 }
 
-window.logout = async function() {
-  await signOut(auth);
+window.switchAdminTab = function(tab) {
+  document.getElementById('sendTab').style.display = tab === 'send'? 'block' : 'none';
+  document.getElementById('depositsTab').style.display = tab === 'deposits'? 'block' : 'none';
+  document.getElementById('withdrawsTab').style.display = tab === 'withdraws'? 'block' : 'none';
+  document.getElementById('settingsTab').style.display = tab === 'settings'? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (tab === 'deposits') loadDeposits();
+  if (tab === 'withdraws') loadWithdraws();
+  if (tab === 'settings') {
+    document.getElementById('chickenRate').value = gameRates.chicken;
+    document.getElementById('fruitRate').value = gameRates.fruit;
+    document.getElementById('slotsRate').value = gameRates.slots;
+  }
+}
+
+window.loadDeposits = async function() {
+  const depositsList = document.getElementById('depositsList');
+  depositsList.innerHTML = 'جاري التحميل...';
+  try {
+    const q = query(collection(db, "deposits"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      depositsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات شحن</p>';
+      return;
+    }
+    depositsList.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const date = d.createdAt? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
+      depositsList.innerHTML += `
+        <div class="deposit-item ${d.status === 'approved'? 'approved' : ''}">
+          <div class="deposit-info">
+            <strong>ID:</strong> ${d.userShortID}<br>
+            <strong>الاسم:</strong> ${d.userName}<br>
+            <strong>رقم المرسل:</strong> ${d.senderPhone}<br>
+            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
+            <strong>الحالة:</strong> ${d.status === 'pending'? '⏳ معلق' : '✅ تم التأكيد'}<br>
+            <strong>التاريخ:</strong> ${date}
+          </div>
+          ${d.status === 'pending'? `
+            <div class="deposit-actions">
+              <button class="btn btn-approve" onclick="approveDeposit('${doc.id}', '${d.userId}', ${d.amount}, '${d.userShortID}')">✅ تأكيد</button>
+              <button class="btn btn-reject" onclick="rejectDeposit('${doc.id}')">❌ رفض</button>
+            </div>
+          `: ''}
+        </div>
+      `;
+    });
+  } catch (e) {
+    depositsList.innerHTML = '<p style="text-align:center; color:#ff4757;">خطأ في التحميل</p>';
+  }
+}
+
+window.loadWithdraws = async function() {
+  const withdrawsList = document.getElementById('withdrawsList');
+  withdrawsList.innerHTML = 'جاري التحميل...';
+  try {
+    const q = query(collection(db, "withdraws"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      withdrawsList.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات سحب</p>';
+      return;
+    }
+    withdrawsList.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const date = d.createdAt? new Date(d.createdAt.seconds * 1000).toLocaleString('ar-EG') : '';
+      withdrawsList.innerHTML += `
+        <div class="withdraw-item ${d.status === 'approved'? 'approved' : ''}">
+          <div class="withdraw-info">
+            <strong>ID:</strong> ${d.userShortID}<br>
+            <strong>الاسم:</strong> ${d.userName}<br>
+            <strong>رقم السحب:</strong> ${d.withdrawPhone}<br>
+            <strong>المبلغ:</strong> ${d.amount} جنيه<br>
+            <strong>الحالة:</strong> ${d.status === 'pending'? '⏳ معلق' : '✅ تم التأكيد'}<br>
+            <strong>التاريخ:</strong> ${date}
+          </div>
+          ${d.status === 'pending'? `
+            <div class="withdraw-actions">
+              <button class="btn btn-approve" onclick="approveWithdraw('${doc.id}', '${d.userId}', ${d.amount})">✅ تأكيد</button>
+              <button class="btn btn-reject" onclick="rejectWithdraw('${doc.id}')">❌ رفض</button>
+            </div>
+          `: ''}
+        </div>
+      `;
+    });
+  } catch (e) {
+    withdrawsList.innerHTML = '<p style="text-align:center; color:#ff4757;">خطأ في التحميل</p>';
+  }
+}
+
+window.saveRate = async function(game) {
+  const val = parseInt(document.getElementById(game + 'Rate').value);
+  if (isNaN(val) || val < 0 || val > 100) {
+    alert('دخل رقم من 0 لـ 100');
+    return;
+  }
+  gameRates[game] = val;
+  await setDoc(doc(db, "settings", "rates"), gameRates, { merge: true });
+  showSaveSuccess();
+}
+
+window.approveDeposit = async function(docId, userId, amount, userShortID) {
+  try {
+    await updateDoc(doc(db, "deposits", docId), { status: 'approved' });
+    await updateDoc(doc(db, "users", userId), { coins: increment(amount) });
+    alert('✅ تم تأكيد الشحن وإضافة ' + amount + ' كوينز لـ ' + userShortID);
+    loadDeposits();
+  } catch (e) {
+    alert('❌ خطأ: ' + e.message);
+  }
+}
+
+window.rejectDeposit = async function(docId) {
+  try {
+    await updateDoc(doc(db, "deposits", docId), { status: 'rejected' });
+    alert('❌ تم رفض الطلب');
+    loadDeposits();
+  } catch (e) {
+    alert('❌ خطأ: ' + e.message);
+  }
+}
+
+window.approveWithdraw = async function(docId, userId, amount) {
+  try {
+    await updateDoc(doc(db, "withdraws", docId), { status: 'approved' });
+    await updateDoc(doc(db, "users", userId), { coins: increment(-amount) });
+    alert('✅ تم تأكيد السحب وخصم ' + amount + ' كوينز');
+    loadWithdraws();
+  } catch (e) {
+    alert('❌ خطأ: ' + e.message);
+  }
+}
+
+window.rejectWithdraw = async function(docId) {
+  try {
+    await updateDoc(doc(db, "withdraws", docId), { status: 'rejected' });
+    alert('❌ تم رفض الطلب');
+    loadWithdraws();
+  } catch (e) {
+    alert('❌ خطأ: ' + e.message);
+  }
 }
 
 window.submitDeposit = async function() {
   const phone = document.getElementById('depositPhone').value.trim();
-  const amount = document.getElementById('depositAmount').value.trim();
+  const amount = parseInt(document.getElementById('depositAmount').value);
   const statusDiv = document.getElementById('depositStatus');
-  if (!phone ||!amount) {
-    statusDiv.innerText = "❌ املى كل البيانات";
-    statusDiv.style.color = "#ff4757";
+
+  if (!phone ||!amount || amount < 10) {
+    statusDiv.innerText = '❌ اكتب رقم صحيح ومبلغ 10 جنيه على الأقل';
+    statusDiv.style.color = '#ff4757';
     return;
   }
-  statusDiv.innerText = "⏳ جاري إرسال الطلب...";
-  statusDiv.style.color = "#ffc107";
+
   try {
-    await addDoc(collection(db, "deposits"),{
-      userID: currentUser.uid,
+    await addDoc(collection(db, "deposits"), {
+      userId: currentUser.uid,
       userShortID: userData.shortID,
-      userName: currentUser.displayName || 'مستخدم',
+      userName: userData.displayName,
       senderPhone: phone,
-      amount: parseInt(amount),
+      amount: amount,
       status: 'pending',
       createdAt: serverTimestamp()
     });
-    statusDiv.innerText = "✅ تم إرسال الطلب! هيتم مراجعته قريباً";
-    statusDiv.style.color = "#00ff88";
-    setTimeout(() => {
-      closePanel('depositPanel');
-      document.getElementById('depositPhone').value = '';
-      document.getElementById('depositAmount').value = '';
-    }, 2000);
+    statusDiv.innerText = '✅ تم إرسال الطلب، استنى التأكيد من الأدمن';
+    statusDiv.style.color = '#00ff88';
+    document.getElementById('depositPhone').value = '';
+    document.getElementById('depositAmount').value = '';
   } catch (e) {
-    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
-    statusDiv.style.color = "#ff4757";
+    statusDiv.innerText = '❌ خطأ: ' + e.message;
+    statusDiv.style.color = '#ff4757';
   }
 }
 
@@ -1577,267 +2096,136 @@ window.submitWithdraw = async function() {
   const phone = document.getElementById('withdrawPhone').value.trim();
   const amount = parseInt(document.getElementById('withdrawAmount').value);
   const statusDiv = document.getElementById('withdrawStatus');
-  if (!phone ||!amount) {
-    statusDiv.innerText = "❌ املى الرقم والمبلغ";
-    statusDiv.style.color = "#ff4757";
+
+  if (!phone ||!amount || amount < 200) {
+    statusDiv.innerText = '❌ اكتب رقم صحيح ومبلغ 200 جنيه على الأقل';
+    statusDiv.style.color = '#ff4757';
     return;
   }
-  if (amount < 200) {
-    statusDiv.innerText = "❌ أقل مبلغ للسحب 200 جنيه";
-    return;
-  }
+
   if (amount > userData.coins) {
-    statusDiv.innerText = "❌ الرصيد مش كفاية";
-    statusDiv.style.color = "#ff4757";
+    statusDiv.innerText = '❌ رصيدك لا يكفي';
+    statusDiv.style.color = '#ff4757';
     return;
   }
-  statusDiv.innerText = "⏳ جاري إرسال الطلب...";
-  statusDiv.style.color = "#ffc107";
+
   try {
     await addDoc(collection(db, "withdraws"), {
-      userID: currentUser.uid,
+      userId: currentUser.uid,
       userShortID: userData.shortID,
-      userName: currentUser.displayName || 'مستخدم',
+      userName: userData.displayName,
       withdrawPhone: phone,
       amount: amount,
       status: 'pending',
       createdAt: serverTimestamp()
     });
-    statusDiv.innerText = "✅ تم إرسال طلب السحب! هيتم مراجعته قريباً";
-    statusDiv.style.color = "#00ff88";
-    setTimeout(() => {
-      closePanel('withdrawPanel');
-      document.getElementById('withdrawPhone').value = '';
-      document.getElementById('withdrawAmount').value = '';
-    }, 2000);
+    statusDiv.innerText = '✅ تم إرسال طلب السحب، استنى التأكيد';
+    statusDiv.style.color = '#00ff88';
+    document.getElementById('withdrawPhone').value = '';
+    document.getElementById('withdrawAmount').value = '';
   } catch (e) {
-    statusDiv.innerText = "❌ حصل خطأ: " + e.message;
-    statusDiv.style.color = "#ff4757";
+    statusDiv.innerText = '❌ خطأ: ' + e.message;
+    statusDiv.style.color = '#ff4757';
   }
 }
 
-window.switchAdminTab = function(tab) {
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-
-  document.getElementById('sendTab').style.display = 'none';
-  document.getElementById('depositsTab').style.display = 'none';
-  document.getElementById('withdrawsTab').style.display = 'none';
-
-  if (tab === 'send') document.getElementById('sendTab').style.display = 'block';
-  if (tab === 'deposits') document.getElementById('depositsTab').style.display = 'block';
-  if (tab === 'withdraws') document.getElementById('withdrawsTab').style.display = 'block';
-}
-
-async function loadDeposits() {
-  const listDiv = document.getElementById('depositsList');
-  listDiv.innerHTML = 'جاري التحميل...';
-
-  const q = query(collection(db, "deposits"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
-  onSnapshot(q, (snapshot) => {
-    if (snapshot.empty) {
-      listDiv.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات معلقة</p>';
-      return;
-    }
-
-    listDiv.innerHTML = '';
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = 'deposit-item';
-      div.innerHTML = `
-        <div class="deposit-info">
-          <strong>${data.userName}</strong> - ID: ${data.userShortID}<br>
-          الرقم: ${data.senderPhone}<br>
-          المبلغ: ${data.amount} جنيه
-        </div>
-        <div class="deposit-actions">
-          <button class="btn btn-approve" onclick="approveDeposit('${doc.id}', '${data.userID}', ${data.amount})">قبول</button>
-          <button class="btn btn-reject" onclick="rejectDeposit('${doc.id}')">رفض</button>
-        </div>
-      `;
-      listDiv.appendChild(div);
-    });
-  });
-}
-
-async function loadWithdraws() {
-  const listDiv = document.getElementById('withdrawsList');
-  listDiv.innerHTML = 'جاري التحميل...';
-
-  const q = query(collection(db, "withdraws"), where("status", "==", "pending"), orderBy("createdAt", "desc"));
-  onSnapshot(q, (snapshot) => {
-    if (snapshot.empty) {
-      listDiv.innerHTML = '<p style="text-align:center; color:#8b8ea3;">مفيش طلبات معلقة</p>';
-      return;
-    }
-
-    listDiv.innerHTML = '';
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = 'withdraw-item';
-      div.innerHTML = `
-        <div class="withdraw-info">
-          <strong>${data.userName}</strong> - ID: ${data.userShortID}<br>
-          رقم السحب: ${data.withdrawPhone}<br>
-          المبلغ: ${data.amount} جنيه
-        </div>
-        <div class="withdraw-actions">
-          <button class="btn btn-approve" onclick="approveWithdraw('${doc.id}', '${data.userID}', ${data.amount})">قبول</button>
-          <button class="btn btn-reject" onclick="rejectWithdraw('${doc.id}')">رفض</button>
-        </div>
-      `;
-      listDiv.appendChild(div);
-    });
-  });
-}
-
-window.approveDeposit = async function(depositId, userId, amount) {
-  try {
-    await updateDoc(doc(db, "users", userId), {
-      coins: increment(amount)
-    });
-    await updateDoc(doc(db, "deposits", depositId), {
-      status: 'approved'
-    });
-  } catch (e) {
-    alert('خطأ: ' + e.message);
-  }
-}
-
-window.rejectDeposit = async function(depositId) {
-  try {
-    await updateDoc(doc(db, "deposits", depositId), {
-      status: 'rejected'
-    });
-  } catch (e) {
-    alert('خطأ: ' + e.message);
-  }
-}
-
-window.approveWithdraw = async function(withdrawId, userId, amount) {
-  try {
-    await updateDoc(doc(db, "users", userId), {
-      coins: increment(-amount)
-    });
-    await updateDoc(doc(db, "withdraws", withdrawId), {
-      status: 'approved'
-    });
-  } catch (e) {
-    alert('خطأ: ' + e.message);
-  }
-}
-
-window.rejectWithdraw = async function(withdrawId) {
-  try {
-    await updateDoc(doc(db, "withdraws", withdrawId), {
-      status: 'rejected'
-    });
-  } catch (e) {
-    alert('خطأ: ' + e.message);
-  }
-}
-
-// Game Navigation
 window.openGame = function(game) {
-  document.getElementById('gamesLobby').style.display = 'none';
-  document.getElementById('gameLoading').style.display = 'flex';
-
-  setTimeout(() => {
-    document.getElementById('gameLoading').style.display = 'none';
+  showLoading(() => {
+    document.getElementById('gamesLobby').style.display = 'none';
     if (game === 'chicken') {
       document.getElementById('gameScreen').style.display = 'flex';
+      resetGame();
     } else if (game === 'fruit') {
       document.getElementById('fruitGame').style.display = 'block';
       initFruitGame();
+    } else if (game === 'slots') {
+      document.getElementById('slotsGame').style.display = 'block';
+      initSlotsGame();
     }
-  }, 3000);
+  });
 }
 
 window.backToLobby = function() {
-  document.getElementById('gameScreen').style.display = 'none';
-  document.getElementById('fruitGame').style.display = 'none';
-  document.getElementById('gamesLobby').style.display = 'flex';
+  showLoading(() => {
+    document.getElementById('gameScreen').style.display = 'none';
+    document.getElementById('fruitGame').style.display = 'none';
+    document.getElementById('slotsGame').style.display = 'none';
+    document.getElementById('gamesLobby').style.display = 'flex';
+  });
 }
 
 window.exitChickenGame = function() {
   if (running) {
     running = false;
-    resetGame();
   }
   backToLobby();
 }
 
-// Event Listeners
-document.getElementById('loginBtn').addEventListener('click', login);
-document.getElementById('signupBtn').addEventListener('click', signup);
-document.getElementById('logoutBtn').addEventListener('click', logout);
-document.getElementById('goBtn').addEventListener('click', startGame);
-document.getElementById('cashBtn').addEventListener('click', cashOut);
+document.getElementById('loginBtn').onclick = login;
+document.getElementById('signupBtn').onclick = signup;
+document.getElementById('logoutBtn').onclick = () => signOut(auth);
+document.getElementById('goBtn').onclick = startGame;
+document.getElementById('cashBtn').onclick = cashOut;
 
 // Fruit Game Functions
 function initFruitGame() {
   document.querySelectorAll('.fruitBetBtn').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.onclick = function() {
+      if (fruitSpinning) return;
       document.querySelectorAll('.fruitBetBtn').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
       fruitBet = parseInt(this.dataset.cost);
-    });
+    };
   });
 
-  document.getElementById('fruitResetBtn').addEventListener('click', resetFruitGame);
-  document.getElementById('fruitGoBtn').addEventListener('click', startFruitGame);
+  document.getElementById('fruitResetBtn').onclick = resetFruitSelection;
+  document.getElementById('fruitGoBtn').onclick = spinFruit;
 
   document.querySelectorAll('.fruitCell[data-fruit]').forEach(cell => {
-    cell.addEventListener('click', function() {
+    cell.onclick = function() {
       if (fruitSpinning) return;
-
       const fruit = this.dataset.fruit;
-
       if (selectedFruits.includes(fruit)) {
         selectedFruits = selectedFruits.filter(f => f!== fruit);
         this.classList.remove('selected');
       } else {
-        if (selectedFruits.length >= 3) {
-          showError("اختار 3 مربعات بالظبط");
-          return;
+        if (selectedFruits.length < 3) {
+          selectedFruits.push(fruit);
+          this.classList.add('selected');
         }
-        selectedFruits.push(fruit);
-        this.classList.add('selected');
       }
-
-      updateGoButton();
-    });
+    };
   });
 
-  updateGoButton();
+  updateFruitUI();
 }
 
-function updateGoButton() {
-  const goBtn = document.getElementById('fruitGoBtn');
-  if (selectedFruits.length === 3) {
-    goBtn.disabled = false;
-    goBtn.style.opacity = '1';
-  } else {
-    goBtn.disabled = true;
-    goBtn.style.opacity = '0.5';
-  }
-}
-
-function resetFruitGame() {
+function resetFruitSelection() {
+  if (fruitSpinning) return;
   selectedFruits = [];
-  document.querySelectorAll('.fruitCell').forEach(cell => {
-    cell.classList.remove('selected', 'highlight');
-  });
+  document.querySelectorAll('.fruitCell').forEach(cell => cell.classList.remove('selected', 'highlight'));
   document.getElementById('fruitCenterText').innerText = 'GO';
-  fruitSpinning = false;
-  updateGoButton();
 }
 
-function startFruitGame() {
-  if (fruitSpinning || selectedFruits.length!== 3) {
-    showError("لازم تختار 3 مربعات بالظبط");
+function updateFruitUI() {
+  document.getElementById('fruitBalance').innerText = fruitBalance.toLocaleString();
+  document.getElementById('fruitProfit').innerText = '0';
+}
+
+function weightedRandomFruit() {
+  const totalWeight = fruits.reduce((sum, f) => sum + f.weight, 0);
+  let rand = Math.random() * totalWeight;
+  for (let f of fruits) {
+    if (rand < f.weight) return f.name;
+    rand -= f.weight;
+  }
+  return fruits[0].name;
+}
+
+async function spinFruit() {
+  if (fruitSpinning) return;
+  if (selectedFruits.length < 1) {
+    showError("select-1");
     return;
   }
   if (fruitBet > fruitBalance) {
@@ -1847,94 +2235,84 @@ function startFruitGame() {
 
   fruitSpinning = true;
   fruitBalance -= fruitBet;
-  updateDoc(doc(db, "users", currentUser.uid), { coins: fruitBalance });
-  document.getElementById('fruitBalance').innerText = fruitBalance.toLocaleString();
+  updateFruitUI();
+
   document.getElementById('fruitGoBtn').disabled = true;
   document.getElementById('fruitCenterText').innerText = '...';
 
-  let spinCount = 0;
-  const spinInterval = setInterval(() => {
+  let loseChance = (100 - gameRates.fruit) / 100;
+  let willLose = Math.random() < loseChance;
+
+  let resultFruits;
+  if (willLose) {
+    resultFruits = [];
+    while (resultFruits.length < 1) {
+      let f = weightedRandomFruit();
+      if (!selectedFruits.includes(f)) {
+        resultFruits.push(f);
+      }
+    }
+  } else {
+    resultFruits = [selectedFruits[Math.floor(Math.random() * selectedFruits.length)]];
+  }
+
+  for (let i = 0; i < 15; i++) {
     document.querySelectorAll('.fruitCell[data-fruit]').forEach(cell => {
       cell.classList.remove('highlight');
     });
-    const randomCell = document.querySelectorAll('.fruitCell[data-fruit]')[Math.floor(Math.random() * 8)];
-    randomCell.classList.add('highlight');
-    spinCount++;
-
-    if (spinCount > 15) {
-      clearInterval(spinInterval);
-      finishFruitGame();
-    }
-  }, 100);
-}
-
-function finishFruitGame() {
-  const winningFruits = [];
-  const totalWeight = fruits.reduce((sum, f) => sum + f.weight, 0);
-  let rand = Math.random() * totalWeight;
-
-  for (let fruit of fruits) {
-    if (rand < fruit.weight) {
-      winningFruits.push(fruit.name);
-      break;
-    }
-    rand -= fruit.weight;
+    const randCell = document.querySelectorAll('.fruitCell[data-fruit]')[Math.floor(Math.random() * 8)];
+    randCell.classList.add('highlight');
+    await new Promise(r => setTimeout(r, 80));
   }
-
-  if (winningFruits.length === 0) {
-    winningFruits.push(fruits[0].name);
-  }
-
-  const winFruit = winningFruits[0];
-  const isWin = selectedFruits.includes(winFruit);
 
   document.querySelectorAll('.fruitCell[data-fruit]').forEach(cell => {
     cell.classList.remove('highlight');
-    if (cell.dataset.fruit === winFruit) {
+    if (resultFruits.includes(cell.dataset.fruit)) {
       cell.classList.add('highlight');
     }
   });
 
-  setTimeout(() => {
-    if (isWin) {
-      const winAmount = fruitBet * multipliers[winFruit];
-      fruitBalance += winAmount;
-      fruitLossStreak = 0;
-      updateDoc(doc(db, "users", currentUser.uid), { coins: fruitBalance });
-      document.getElementById('fruitBalance').innerText = fruitBalance.toLocaleString();
-      document.getElementById('fruitProfit').innerText = winAmount.toLocaleString();
-      showFruitPopup('win', winFruit, winAmount);
-    } else {
-      fruitLossStreak++;
-      document.getElementById('fruitProfit').innerText = '0';
-      showFruitPopup('lose', winFruit, 0);
-    }
+  await new Promise(r => setTimeout(r, 800));
 
-    resetFruitGame();
-    document.getElementById('fruitGoBtn').disabled = false;
-    fruitSpinning = false;
-  }, 1000);
+  let winAmount = 0;
+  if (!willLose) {
+    resultFruits.forEach(f => {
+      winAmount += fruitBet * multipliers[f];
+    });
+    fruitBalance += Math.floor(winAmount);
+    document.getElementById('fruitProfit').innerText = Math.floor(winAmount);
+  } else {
+    document.getElementById('fruitProfit').innerText = '0';
+  }
+
+  updateFruitUI();
+  await updateDoc(doc(db, "users", currentUser.uid), { coins: fruitBalance });
+
+  showFruitPopup(resultFruits[0], Math.floor(winAmount),!willLose);
+
+  fruitSpinning = false;
+  document.getElementById('fruitGoBtn').disabled = false;
+  document.getElementById('fruitCenterText').innerText = 'GO';
 }
 
-function showFruitPopup(type, fruit, amount) {
+function showFruitPopup(fruit, amount, won) {
   const popup = document.getElementById('fruitPopup');
   const icon = document.getElementById('fruitPopupIcon');
-  const fruitImg = document.getElementById('fruitPopupFruit');
   const title = document.getElementById('fruitPopupTitle');
   const text = document.getElementById('fruitPopupText');
+  const fruitImg = document.getElementById('fruitPopupFruit');
 
-  if (type === 'win') {
-    icon.style.display = 'block';
-    fruitImg.style.display = 'none';
+  if (won && amount > 0) {
     icon.innerText = '🎉';
     title.innerText = 'مبروك!';
-    text.innerText = `كسبت ${amount.toLocaleString()} 🪙`;
-  } else {
-    icon.style.display = 'none';
-    fruitImg.style.display = 'block';
+    text.innerText = `كسبت ${amount} 🪙`;
     fruitImg.src = fruitImages[fruit];
+    fruitImg.classList.add('show');
+  } else {
+    icon.innerText = '😢';
     title.innerText = 'حظ أوفر';
     text.innerText = 'جرب تاني';
+    fruitImg.classList.remove('show');
   }
 
   popup.classList.add('show');
@@ -1942,18 +2320,195 @@ function showFruitPopup(type, fruit, amount) {
 
 window.closeFruitPopup = function() {
   document.getElementById('fruitPopup').classList.remove('show');
+  resetFruitSelection();
 }
 
-// Live Online Counter
-function updateOnlineCount() {
-  const count = Math.floor(Math.random() * 500) + 2500;
-  document.getElementById('onlineCount').innerText = count;
+// Slots Game Functions
+function initSlotsGame() {
+  // Create particles
+  const particles = document.getElementById('particles');
+  particles.innerHTML = '';
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.top=Math.random()*100+'%';
+    p.style.animationDelay=Math.random()*6+'s';
+    particles.appendChild(p);
+  }
+
+  // Build grid
+  const gridEl = document.getElementById('slotsGrid');
+  gridEl.innerHTML = '';
+  slotsGrid = [];
+  for(let i=0;i<15;i++){
+    const div=document.createElement('div');
+    div.className='slotsCell';
+    div.innerHTML='<img src="'+getRandomSymbol().img+'">';
+    gridEl.appendChild(div);
+    slotsGrid.push(div);
+  }
+
+  document.getElementById('slotsBetMinus').onclick=()=>{
+    if(slotsSpinning)return;
+    document.getElementById('clickSound').play();
+    slotsBet=Math.max(10,slotsBet-10);
+    document.getElementById('slotsBet').textContent=slotsBet.toLocaleString();
+  }
+
+  document.getElementById('slotsBetPlus').onclick=()=>{
+    if(slotsSpinning)return;
+    document.getElementById('clickSound').play();
+    slotsBet=Math.min(500,slotsBet+10);
+    document.getElementById('slotsBet').textContent=slotsBet.toLocaleString();
+  }
+
+  document.getElementById('spinBtn').onclick=spinSlots;
 }
-setInterval(updateOnlineCount, 3000);
+
+function getRandomSymbol(){
+  return symbols[Math.floor(Math.random()*symbols.length)];
+}
+
+function spinSlots(){
+  if(slotsSpinning || slotsBalance<slotsBet)return;
+  slotsSpinning=true;
+  slotsBalance-=slotsBet;
+  updateSlotsBalance();
+  document.getElementById('slotsResult').textContent='SPINNING...';
+  document.getElementById('slotsResult').className='slotsResult';
+  document.getElementById('spinSound').play();
+  document.getElementById('spinBtn').disabled=true;
+
+  slotsGrid.forEach(cell=>cell.classList.add('spinning'));
+
+  let spins=25;
+  let speed=60;
+  let interval=setInterval(()=>{
+    slotsGrid.forEach(cell=>{
+      cell.querySelector('img').src=getRandomSymbol().img;
+    });
+    spins--;
+    if(spins<10)speed+=15;
+    if(spins<=0){
+      clearInterval(interval);
+      checkSlotsWin();
+    }
+  },speed);
+}
+
+function checkSlotsWin(){
+    document.getElementById('spinBtn').disabled=false;
+  slotsGrid.forEach(cell=>cell.classList.remove('spinning'));
+
+  // Get final grid values
+  let values=[];
+  slotsGrid.forEach(cell=>{
+    let src=cell.querySelector('img').src;
+    let sym=symbols.find(s=>s.img===src);
+    values.push(sym.name);
+  });
+
+  // Check win conditions - 3+ matching in a row
+  let winAmount=0;
+  let winLines=0;
+
+  // Check rows
+  for(let row=0;row<3;row++){
+    for(let col=0;col<3;col++){
+      let idx=row*5+col;
+      let first=values[idx];
+      if(first==='wild')continue;
+
+      let match=1;
+      for(let i=1;i<3;i++){
+        let next=values[row*5+col+i];
+        if(next===first || next==='wild')match++;
+        else break;
+      }
+
+      if(match>=3){
+        winLines++;
+        let mult=match*MULTIPLIER;
+        winAmount+=slotsBet*mult;
+
+        // Highlight winning cells
+        for(let i=0;i<match;i++){
+          slotsGrid[row*5+col+i].classList.add('win');
+        }
+      }
+    }
+  }
+
+  // Apply RTP rate
+  let rtpChance=Math.random()*100;
+  if(rtpChance>gameRates.slots){
+    winAmount=0;
+    winLines=0;
+    slotsGrid.forEach(cell=>cell.classList.remove('win'));
+  }
+
+  slotsBalance+=winAmount;
+  updateSlotsBalance();
+
+  if(winAmount>0){
+    document.getElementById('slotsResult').textContent=`WIN ${winAmount.toLocaleString()}!`;
+    document.getElementById('slotsResult').className='slotsResult win';
+    document.getElementById('winSound').play();
+
+    // Update Firestore
+    updateDoc(doc(db,"users",currentUser.uid),{coins:slotsBalance});
+
+    setTimeout(()=>{
+      slotsGrid.forEach(cell=>cell.classList.remove('win'));
+    },2000);
+  }else{
+    document.getElementById('slotsResult').textContent='TRY AGAIN';
+    updateDoc(doc(db,"users",currentUser.uid),{coins:slotsBalance});
+  }
+
+  slotsSpinning=false;
+}
+
+function updateSlotsBalance(){
+  document.getElementById('slotsBalance').textContent=slotsBalance.toLocaleString();
+  // Sync with main balance
+  document.getElementById('balance').textContent=slotsBalance.toLocaleString();
+  document.getElementById('withdrawBalance').textContent=slotsBalance;
+}
+
+// Update online count every 30 seconds
+setInterval(async()=>{
+  if(!currentUser)return;
+  try{
+    const onlineRef=doc(db,"stats","online");
+    await updateDoc(onlineRef,{count:increment(Math.floor(Math.random()*3)-1)});
+  }catch(e){}
+},30000);
+
+// Initialize online count
+async function initOnlineCount(){
+  const onlineRef=doc(db,"stats","online");
+  const snap=await getDoc(onlineRef);
+  if(!snap.exists()){
+    await setDoc(onlineRef,{count:2721});
+  }
+}
+initOnlineCount();
+
+// Prevent zoom on double tap
+let lastTouchEnd=0;
+document.addEventListener('touchend',function(event){
+  const now=Date.now();
+  if(now-lastTouchEnd<=300){
+    event.preventDefault();
+  }
+  lastTouchEnd=now;
+},false);
+
+// Prevent context menu on long press
+document.addEventListener('contextmenu',e=>e.preventDefault());
 </script>
+
 </body>
-</html>
-    
-  </body>
-  
 </html>
