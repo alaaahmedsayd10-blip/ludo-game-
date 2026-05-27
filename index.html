@@ -28,6 +28,8 @@
   --red: #e74c3c;
   --blue: #53bdeb;
   --gold: #ffd700;
+  --shadow: 0 8px 32px rgba(0,0,0,0.3);
+  --radius: 16px;
 }
 
 [data-theme="light"] {
@@ -37,11 +39,12 @@
   --bg-input: #f0f2f5;
   --text-primary: #111b21;
   --text-secondary: #667781;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   height: 100vh;
@@ -53,107 +56,148 @@ body {
   display: none; 
   height: 100vh; 
   flex-direction: column; 
+  animation: fadeIn 0.3s ease;
 }
-.page.active { 
-  display: flex; 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+.page.active { display: flex; }
   
 .pull-refresh {
-  height: 60px;
+  height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
   font-size: 14px;
-  transition: height 0.3s;
+  overflow: hidden;
+  transition: height 0.3s ease;
 }
 
 .auth-page {
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+  background: linear-gradient(135deg, #00a884 0%, #111b21 100%);
   justify-content: center;
   align-items: center;
   padding: 20px;
 }
 .auth-box {
   background: var(--bg-secondary);
-  padding: 40px 30px;
+  padding: 45px 35px;
   border-radius: 24px;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  max-width: 420px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
 }
-.auth-box h2 { text-align: center; margin-bottom: 30px; font-size: 24px; }
+.auth-box h2 { 
+  text-align: center; 
+  margin-bottom: 35px; 
+  font-size: 28px; 
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .auth-box input, .auth-box select {
   width: 100%;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--bg-input);
+  padding: 16px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  border: 2px solid transparent;
   background: var(--bg-input);
   color: var(--text-primary);
   outline: none;
   font-size: 15px;
+  transition: 0.3s;
 }
-.auth-box input:focus, .auth-box select:focus { border-color: var(--green); }
+.auth-box input:focus, .auth-box select:focus { 
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(0,168,132,0.1);
+}
 
 .btn {
   width: 100%;
-  padding: 14px;
-  border-radius: 12px;
+  padding: 16px;
+  border-radius: 14px;
   border: none;
   font-weight: 700;
   cursor: pointer;
-  margin-top: 10px;
-  font-size: 15px;
-  transition: 0.2s;
+  margin-top: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
-.btn-primary { background: var(--green); color: #fff; }
-.btn-primary:hover { background: var(--green-hover); }
-.btn-secondary { background: transparent; color: var(--green); border: 1px solid var(--green); }
+.btn-primary { 
+  background: linear-gradient(135deg, var(--green), var(--green-hover)); 
+  color: #fff; 
+  box-shadow: 0 4px 15px rgba(0,168,132,0.3);
+}
+.btn-primary:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,168,132,0.4);
+}
+.btn-secondary { 
+  background: transparent; 
+  color: var(--green); 
+  border: 2px solid var(--green); 
+}
+.btn-secondary:hover { background: rgba(0,168,132,0.1); }
 .btn-danger { background: var(--red); color: white; }
-.btn-gold { background: var(--gold); color: #000; }
+.btn-gold { background: linear-gradient(135deg, var(--gold), #ffed4e); color: #000; }
 
 .header {
   background: var(--bg-tertiary);
-  padding: 12px 16px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   border-bottom: 1px solid var(--bg-input);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 .header img {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
+  border: 2px solid var(--green);
 }
-.header h2 { font-size: 17px; flex: 1; cursor: pointer; }
+.header h2 { font-size: 18px; flex: 1; cursor: pointer; font-weight: 600; }
 .header-btn {
-  background: none;
+  background: var(--bg-input);
   border: none;
   color: var(--text-secondary);
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
+  border-radius: 12px;
   transition: 0.2s;
 }
-.header-btn:hover { color: var(--green); }
+.header-btn:hover { 
+  background: var(--green);
+  color: white;
+  transform: scale(1.05);
+}
 
 .search-box {
-  padding: 12px 16px;
+  padding: 14px 18px;
   background: var(--bg-secondary);
 }
 .search-box input {
   width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: none;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid transparent;
   background: var(--bg-input);
   color: var(--text-primary);
   outline: none;
   font-size: 15px;
+  transition: 0.3s;
 }
+.search-box input:focus { border-color: var(--green); }
 
 .list {
   flex: 1;
@@ -161,53 +205,74 @@ body {
   background: var(--bg-secondary);
 }
 .list-item {
-  padding: 12px 16px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   cursor: pointer;
   border-bottom: 1px solid var(--bg-tertiary);
   transition: 0.2s;
 }
 .list-item:hover { background: var(--bg-tertiary); }
 .list-item img {
-  width: 50px;
-  height: 50px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid transparent;
 }
+.list-item:hover img { border-color: var(--green); }
 .list-item-info { flex: 1; }
-.list-item-name { font-weight: 500; font-size: 16px; }
-.list-item-id { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.list-item-name { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+.list-item-id { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
 .admin-id { color: var(--gold) !important; font-weight: 700; }
-.admin-badge { color: var(--gold); font-size: 16px; }
+.admin-badge { 
+  background: linear-gradient(135deg, var(--gold), #ffed4e);
+  color: #000;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.verified-badge {
+  background: linear-gradient(135deg, #00bfff, #0084ff);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 .gender-icon { font-size: 16px; margin-left: 5px; }
 .country-flag { font-size: 16px; }
 
 .post-card {
   background: var(--bg-tertiary);
-  margin: 12px;
-  border-radius: 16px;
+  margin: 14px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow);
   position: relative;
+  transition: 0.3s;
 }
+.post-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
 .post-header {
-  padding: 14px;
+  padding: 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 .post-header img {
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--green);
 }
-.post-author { font-weight: 600; font-size: 15px; }
+.post-author { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px; }
 .post-time { font-size: 12px; color: var(--text-secondary); }
-.post-content { padding: 0 14px 14px; line-height: 1.6; font-size: 15px; }
+.post-content { padding: 0 16px 16px; line-height: 1.7; font-size: 15px; }
 .post-image {
   width: 100%;
   max-height: 500px;
@@ -216,19 +281,19 @@ body {
 .post-actions {
   display: flex;
   border-top: 1px solid var(--bg-input);
-  padding: 8px;
-  gap: 8px;
+  padding: 10px;
+  gap: 10px;
 }
 .post-action {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px;
+  gap: 8px;
+  padding: 12px;
   cursor: pointer;
   color: var(--text-secondary);
-  border-radius: 10px;
+  border-radius: 12px;
   transition: 0.2s;
   font-weight: 600;
 }
@@ -237,33 +302,35 @@ body {
 
 .admin-delete-btn {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
   background: var(--red);
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
+  border-radius: 10px;
+  padding: 8px 14px;
   font-size: 12px;
   cursor: pointer;
   display: none;
+  font-weight: 700;
 }
 .admin-delete-btn.show { display: block; }
 
 .comment-box {
-  padding: 12px;
+  padding: 14px;
   background: var(--bg-primary);
   display: none;
+  border-top: 1px solid var(--bg-input);
 }
 .comment-box.show { display: block; }
 .comment-item {
-  padding: 12px;
+  padding: 14px;
   background: var(--bg-input);
-  border-radius: 12px;
-  margin-bottom: 8px;
+  border-radius: 14px;
+  margin-bottom: 10px;
 }
 .comment-user {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
   margin-bottom: 4px;
   color: var(--green);
@@ -271,19 +338,21 @@ body {
 
 .fab {
   position: fixed;
-  bottom: 80px;
-  left: 20px;
-  width: 60px;
-  height: 60px;
+  bottom: 85px;
+  left: 22px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--green), var(--green-hover));
   color: #fff;
   border: none;
-  font-size: 32px;
+  font-size: 34px;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(0,168,132,0.4);
+  box-shadow: 0 8px 30px rgba(0,168,132,0.4);
   z-index: 10;
+  transition: 0.3s;
 }
+.fab:hover { transform: scale(1.1) rotate(90deg); }
 
 .chat-area {
   flex: 1;
@@ -296,88 +365,102 @@ body {
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 15px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .message {
   max-width: 75%;
-  padding: 10px 14px;
-  border-radius: 12px;
-  line-height: 1.5;
+  padding: 12px 16px;
+  border-radius: 14px;
+  line-height: 1.6;
   font-size: 15px;
   word-wrap: break-word;
+  animation: messageIn 0.2s ease;
+}
+@keyframes messageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .message.sent {
   align-self: flex-end;
   background: linear-gradient(135deg, #005c4b, #006f5a);
-  border-radius: 16px 4px 16px 16px;
+  border-radius: 18px 6px 18px 18px;
   color: white;
 }
 .message.received {
   align-self: flex-start;
   background: var(--bg-tertiary);
-  border-radius: 4px 16px 16px 16px;
+  border-radius: 6px 18px 18px 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .message-gift {
   align-self: center;
   background: linear-gradient(135deg, var(--gold), #ffed4e);
-  padding: 12px 20px;
-  border-radius: 25px;
+  padding: 14px 22px;
+  border-radius: 30px;
   font-size: 15px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: #000;
   font-weight: 700;
+  box-shadow: 0 4px 15px rgba(255,215,0,0.3);
 }
 .chat-input {
-  padding: 10px 12px;
+  padding: 12px 14px;
   background: var(--bg-tertiary);
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
+  border-top: 1px solid var(--bg-input);
 }
 .chat-input input {
   flex: 1;
-  padding: 14px 18px;
-  border-radius: 25px;
-  border: none;
+  padding: 16px 20px;
+  border-radius: 30px;
+  border: 2px solid transparent;
   background: var(--bg-input);
   color: var(--text-primary);
   outline: none;
   font-size: 15px;
+  transition: 0.3s;
 }
+.chat-input input:focus { border-color: var(--green); }
 .chat-input button {
-  width: 50px;
-  height: 50px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   border: none;
   background: linear-gradient(135deg, var(--green), var(--green-hover));
   color: #fff;
-  font-size: 22px;
+  font-size: 24px;
   cursor: pointer;
+  transition: 0.3s;
 }
+.chat-input button:hover { transform: scale(1.1); }
 
 .gift-box {
   background: var(--bg-primary);
-  padding: 15px;
+  padding: 16px;
   display: none;
-  gap: 12px;
+  gap: 14px;
   overflow-x: auto;
   border-top: 1px solid var(--bg-input);
 }
 .gift-box.show { display: flex; }
 .gift-item {
-  min-width: 80px;
+  min-width: 85px;
   background: linear-gradient(135deg, var(--bg-input), var(--bg-tertiary));
-  padding: 12px;
-  border-radius: 16px;
+  padding: 14px;
+  border-radius: 18px;
   text-align: center;
   cursor: pointer;
+  transition: 0.3s;
 }
-.gift-item div { font-size: 36px; margin-bottom: 6px; }
+.gift-item:hover { transform: scale(1.05); }
+.gift-item div { font-size: 38px; margin-bottom: 8px; }
 .gift-price { font-size: 13px; color: var(--gold); font-weight: 700; }
 
 .profile-page {
@@ -385,100 +468,119 @@ body {
   overflow-y: auto;
 }
 .profile-header {
-  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-  padding: 40px 20px 30px;
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  padding: 50px 25px 35px;
   text-align: center;
   position: relative;
 }
 .profile-img {
-  width: 130px;
-  height: 130px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 0 auto 15px;
+  margin: 0 auto 18px;
   cursor: pointer;
   border: 4px solid var(--green);
+  box-shadow: 0 8px 30px rgba(0,168,132,0.3);
+  transition: 0.3s;
 }
+.profile-img:hover { transform: scale(1.05); }
 .profile-name {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
-  margin-bottom: 8px;
-}
-.profile-id {
-  font-size: 15px;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
+.profile-id {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
 
 .profile-section {
   background: var(--bg-tertiary);
-  margin: 12px;
-  border-radius: 16px;
-  padding: 18px;
+  margin: 14px;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--shadow);
 }
 .profile-section label {
   font-size: 13px;
   color: var(--text-secondary);
   display: block;
-  margin-bottom: 10px;
-  font-weight: 600;
+  margin-bottom: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .profile-section input,.profile-section select, .profile-section textarea {
   width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid transparent;
   background: var(--bg-input);
   color: var(--text-primary);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   font-size: 15px;
+  transition: 0.3s;
 }
+.profile-section input:focus, .profile-section textarea:focus { border-color: var(--green); }
 
 .help-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
+  padding: 18px 0;
   border-bottom: 1px solid var(--bg-input);
   cursor: pointer;
+  transition: 0.2s;
 }
-.help-item-left { display: flex; align-items: center; gap: 12px; }
-.help-item-icon { font-size: 24px; color: var(--text-secondary); }
-.help-item-text h4 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+.help-item:hover { padding-left: 10px; }
+.help-item-left { display: flex; align-items: center; gap: 14px; }
+.help-item-icon { font-size: 26px; color: var(--text-secondary); }
+.help-item-text h4 { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
 .help-item-text p { font-size: 13px; color: var(--text-secondary); }
 
 .modal {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: 200;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
 }
 .modal.show { display: flex; }
 .modal-box {
   background: var(--bg-tertiary);
-  padding: 28px;
-  border-radius: 20px;
+  padding: 32px;
+  border-radius: 24px;
   width: 90%;
-  max-width: 450px;
-  max-height: 80vh;
+  max-width: 480px;
+  max-height: 85vh;
   overflow-y: auto;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--bg-input);
 }
 
 .nav-bar {
   background: var(--bg-tertiary);
-  padding: 10px;
+  padding: 12px;
   display: flex;
   justify-content: space-around;
   border-top: 1px solid var(--bg-input);
   margin-top: auto;
+  backdrop-filter: blur(10px);
 }
 .nav-btn {
   background: none;
@@ -486,64 +588,88 @@ body {
   color: var(--text-secondary);
   font-size: 13px;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  transition: 0.3s;
 }
-.nav-btn.active { color: var(--green); }
-.nav-btn span { font-size: 26px; }
+.nav-btn.active { color: var(--green); transform: scale(1.1); }
+.nav-btn span { font-size: 28px; }
 
 .group-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px;
+  gap: 12px;
+  padding: 12px;
   overflow-y: auto;
 }
 .group-item {
   background: var(--bg-tertiary);
-  border-radius: 12px;
-  padding: 15px;
+  border-radius: 16px;
+  padding: 18px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   cursor: pointer;
+  transition: 0.3s;
+  box-shadow: var(--shadow);
 }
+.group-item:hover { transform: translateX(-5px); }
 .group-item img {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid var(--green);
 }
 .group-info { flex: 1; }
-.group-name { font-weight: 600; font-size: 16px; }
+.group-name { font-weight: 700; font-size: 17px; }
 .group-members { font-size: 13px; color: var(--text-secondary); }
-.group-actions { display: flex; gap: 8px; }
+.group-actions { display: flex; gap: 10px; }
 
 .delete-chat-btn {
   background: var(--red);
   border: none;
-  padding: 8px 14px;
-  border-radius: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
   color: white;
   font-size: 13px;
   cursor: pointer;
+  font-weight: 700;
+  transition: 0.3s;
 }
-.error-text { color: var(--red); font-size: 13px; text-align: center; margin-top: 10px; }
-.follow-box { background: var(--bg-input); padding: 8px 16px; border-radius: 20px; cursor: pointer; display: inline-block; }
-.copy-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 16px; }
+.delete-chat-btn:hover { transform: scale(1.05); }
+.error-text { color: var(--red); font-size: 13px; text-align: center; margin-top: 12px; }
+.follow-box { 
+  background: linear-gradient(135deg, var(--green), var(--green-hover)); 
+  padding: 10px 20px; 
+  border-radius: 25px; 
+  cursor: pointer; 
+  display: inline-block; 
+  color: white;
+  font-weight: 700;
+}
+.copy-btn { 
+  background: var(--bg-input); 
+  border: none; 
+  color: var(--text-secondary); 
+  cursor: pointer; 
+  font-size: 16px; 
+  padding: 8px;
+  border-radius: 10px;
+}
 
 .alert-modal-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 15px;
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 36px;
 }
 .alert-modal-icon.success { background: rgba(0,168,132,0.2); color: var(--green); }
 .alert-modal-icon.error { background: rgba(231,76,60,0.2); color: var(--red); }
@@ -552,16 +678,31 @@ body {
 .muted-badge {
   background: var(--red);
   color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 3px 10px;
+  border-radius: 14px;
   font-size: 11px;
+  font-weight: 700;
 }
 .private-badge {
   background: var(--blue);
   color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 3px 10px;
+  border-radius: 14px;
   font-size: 11px;
+  font-weight: 700;
+}
+
+.delete-all-btn {
+  background: linear-gradient(135deg, var(--red), #c0392b);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 14px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  width: 100%;
+  margin-bottom: 15px;
 }
 </style>
 </head>
@@ -570,17 +711,17 @@ body {
 <div id="alertModal" class="modal">
   <div class="modal-box" style="text-align:center;">
     <div class="alert-modal-icon" id="alertIcon">✓</div>
-    <h3 id="alertTitle" style="margin-bottom:10px;">تم</h3>
-    <p id="alertMessage" style="color:var(--text-secondary);margin-bottom:20px;">الرسالة هنا</p>
+    <h3 id="alertTitle" style="margin-bottom:12px; font-size: 22px;">تم</h3>
+    <p id="alertMessage" style="color:var(--text-secondary);margin-bottom:25px; font-size: 15px;">الرسالة هنا</p>
     <button class="btn btn-primary" onclick="closeAlertModal()">حسنا</button>
   </div>
 </div>
 
 <div id="confirmModal" class="modal">
   <div class="modal-box">
-    <h3 id="confirmTitle">تأكيد</h3>
-    <p id="confirmMessage">هل انت متأكد؟</p>
-    <div style="display:flex; gap:10px;">
+    <h3 id="confirmTitle" style="margin-bottom: 15px;">تأكيد</h3>
+    <p id="confirmMessage" style="margin-bottom: 20px; color: var(--text-secondary);">هل انت متأكد؟</p>
+    <div style="display:flex; gap:12px;">
       <button class="btn btn-danger" id="confirmYesBtn">ايوه</button>
       <button class="btn btn-secondary" onclick="closeConfirmModal()">الغاء</button>
     </div>
@@ -589,10 +730,10 @@ body {
 
 <div id="authPage" class="page active auth-page">
   <div class="auth-box" id="loginBox">
-    <h2>تسجيل الدخول</h2>
+    <h2>مرحباً بك</h2>
     <input id="loginEmail" type="email" placeholder="البريد الالكتروني">
     <input id="loginPass" type="password" placeholder="كلمة السر">
-    <button class="btn btn-primary" onclick="login()">دخول</button>
+    <button class="btn btn-primary" onclick="login()">تسجيل الدخول</button>
     <button class="btn btn-secondary" onclick="showSignup()">مفيش حساب؟ سجل دلوقتي</button>
     <div id="loginError" class="error-text"></div>
   </div>
@@ -631,7 +772,7 @@ body {
     <button class="btn btn-primary" onclick="signup()">تسجيل</button>
     <button class="btn btn-secondary" onclick="showLogin()">عندي حساب</button>
     <div id="signupError" class="error-text"></div>
-    <div id="signupSuccess" style="color:var(--green); text-align:center; margin-top:10px; display:none;">
+    <div id="signupSuccess" style="color:var(--green); text-align:center; margin-top:12px; display:none; font-weight: 700;">
       تم انشاء الحساب! ID بتاعك: <span id="newID"></span>
     </div>
   </div>
@@ -730,8 +871,8 @@ body {
 <div id="groupChatPage" class="page">
   <div class="header">
     <button class="header-btn" onclick="backToGroups()">←</button>
-    <img id="groupChatImg" src="">
-    <h2 id="groupChatName"></h2>
+    <img id="groupChatImg" src="" onclick="viewGroupProfile()">
+    <h2 id="groupChatName" onclick="viewGroupProfile()"></h2>
     <button class="header-btn" id="groupSettingsBtn" onclick="openGroupSettings()">⚙️</button>
     <button class="header-btn" onclick="clearGroupChat()">🗑️</button>
   </div>
@@ -752,13 +893,14 @@ body {
   </div>
 
   <div class="profile-header">
-    <button class="header-btn" style="position:absolute; top:15px; left:15px; font-size:20px;" onclick="openEditModal()">✏️</button>
+    <button class="header-btn" style="position:absolute; top:18px; left:18px; font-size:22px;" onclick="openEditModal()">✏️</button>
     <img id="profileImg" class="profile-img" src="" onclick="document.getElementById('fileInput').click()">
     <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="updatePhoto(event)">
     <div class="profile-name" id="profileNameDisplay"></div>
     <div class="profile-id">
       ID: <span id="profileID"></span>
       <span id="adminBadge" style="display:none">🛡️</span>
+      <span id="verifiedBadge" style="display:none" class="verified-badge">✓</span>
       <span id="genderIcon" class="gender-icon"></span>
       <span id="countryFlag" class="country-flag"></span>
       <button class="copy-btn" onclick="copyID()">📋</button>
@@ -766,12 +908,12 @@ body {
     <div class="follow-box" onclick="openFollowers()">
       🔔 <span id="followersCount">0</span> متابع
     </div>
-    <div id="profileBioDisplay" style="font-size:14px; color:var(--text-secondary); margin-top:8px; padding:0 20px;"></div>
+    <div id="profileBioDisplay" style="font-size:15px; color:var(--text-secondary); margin-top:12px; padding:0 25px;"></div>
   </div>
 
   <div class="profile-section">
     <label>الكوينز</label>
-    <div style="font-size: 24px; font-weight: 700; color: var(--gold);">🪙 <span id="profileCoins">0</span></div>
+    <div style="font-size: 28px; font-weight: 700; color: var(--gold);">🪙 <span id="profileCoins">0</span></div>
   </div>
 
   <div class="profile-section" id="adminPanel" style="display:none;border:2px solid var(--gold)">
@@ -787,6 +929,15 @@ body {
     <input id="broadcastText" type="text" placeholder="نص الإعلان">
     <input type="file" id="broadcastImage" accept="image/*">
     <button class="btn btn-primary" onclick="sendBroadcast()">إرسال للكل</button>
+    <hr style="margin:15px 0;border-color:var(--bg-input)">
+    <h4 style="margin-bottom:10px;">إعطاء علامة توثيق</h4>
+    <input id="verifyUserID" type="text" placeholder="ID المستخدم">
+    <select id="verifyDuration">
+      <option value="5">5 أيام</option>
+      <option value="30">شهر</option>
+      <option value="permanent">دائم</option>
+    </select>
+    <button class="btn btn-primary" onclick="giveVerification()">إعطاء التوثيق</button>
   </div>
 
   <div class="profile-section">
@@ -900,7 +1051,7 @@ body {
     <div style="margin-top:10px;">
       <button class="btn btn-danger" onclick="toggleBlock()" id="blockBtn">حظر</button>
     </div>
-    <div id="viewProfileBio" style="font-size:14px; color:var(--text-secondary); margin-top:8px; padding:0 20px;"></div>
+    <div id="viewProfileBio" style="font-size:15px; color:var(--text-secondary); margin-top:12px; padding:0 25px;"></div>
   </div>
 </div>
 
@@ -914,10 +1065,10 @@ body {
 
 <div id="postModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">انشاء منشور</h3>
-    <textarea id="postContent" placeholder="اكتب اللي على بالك..." style="width:100%;height:120px;padding:14px;border-radius:10px;border:none;background:var(--bg-input);color:var(--text-primary);margin-bottom:10px;"></textarea>
+    <h3 style="margin-bottom:18px; font-size: 22px;">انشاء منشور</h3>
+    <textarea id="postContent" placeholder="اكتب اللي على بالك..." style="width:100%;height:130px;padding:16px;border-radius:14px;border:2px solid transparent;background:var(--bg-input);color:var(--text-primary);margin-bottom:12px;resize:none;"></textarea>
     <input type="file" id="postImage" accept="image/*" onchange="previewPostImage(event)">
-    <img id="postImagePreview" src="" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;display:none;margin-top:10px;">
+    <img id="postImagePreview" src="" style="width:100%;max-height:220px;object-fit:cover;border-radius:14px;display:none;margin-top:12px;">
     <button class="btn btn-primary" onclick="createPost()">نشر</button>
     <button class="btn btn-secondary" onclick="closePostModal()">إلغاء</button>
   </div>
@@ -925,9 +1076,9 @@ body {
 
 <div id="editPostModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">تعديل المنشور</h3>
-    <textarea id="editPostContent" style="width:100%;height:120px;padding:14px;border-radius:10px;border:none;background:var(--bg-input);color:var(--text-primary);margin-bottom:10px;"></textarea>
-    <label style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
+    <h3 style="margin-bottom:18px; font-size: 22px;">تعديل المنشور</h3>
+    <textarea id="editPostContent" style="width:100%;height:130px;padding:16px;border-radius:14px;border:2px solid transparent;background:var(--bg-input);color:var(--text-primary);margin-bottom:12px;resize:none;"></textarea>
+    <label style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
       <input type="checkbox" id="allowCommentsCheck" checked>
       <span>السماح بالتعليقات</span>
     </label>
@@ -938,10 +1089,10 @@ body {
 
 <div id="editProfileModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">تعديل الحساب</h3>
+    <h3 style="margin-bottom:18px; font-size: 22px;">تعديل الحساب</h3>
     <input id="profileNameInput" type="text" placeholder="الاسم الجديد">
     <input id="newPassword" type="password" placeholder="كلمة سر جديدة">
-    <input id="profileBioInput" type="text" placeholder="النبذة التعريفية">
+    <textarea id="profileBioInput" placeholder="النبذة التعريفية" style="height:80px;resize:none;"></textarea>
     <button class="btn btn-primary" onclick="saveProfileChanges()">حفظ التغييرات</button>
     <button class="btn btn-secondary" onclick="closeEditProfileModal()">إلغاء</button>
   </div>
@@ -949,7 +1100,8 @@ body {
 
 <div id="deleteChatModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">مسح المحادثات</h3>
+    <h3 style="margin-bottom:18px; font-size: 22px;">مسح المحادثات</h3>
+    <button class="delete-all-btn" onclick="deleteAllChats()">🗑️ مسح الكل</button>
     <div id="deleteChatList" style="max-height:300px;overflow-y:auto;"></div>
     <button class="btn btn-secondary" onclick="closeDeleteChatModal()" style="margin-top:15px;">إغلاق</button>
   </div>
@@ -957,11 +1109,11 @@ body {
 
 <div id="createGroupModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">إنشاء جروب</h3>
+    <h3 style="margin-bottom:18px; font-size: 22px;">إنشاء جروب</h3>
     <input id="groupName" type="text" placeholder="اسم الجروب">
     <input type="file" id="groupImage" accept="image/*" onchange="previewGroupImage(event)">
-    <img id="groupImagePreview" src="" style="width:100%;max-height:150px;object-fit:cover;border-radius:10px;display:none;margin-top:10px;">
-    <label style="display:flex;align-items:center;gap:10px;margin:10px 0;">
+    <img id="groupImagePreview" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:14px;display:none;margin-top:12px;">
+    <label style="display:flex;align-items:center;gap:12px;margin:12px 0;">
       <input type="checkbox" id="groupPrivate">
       <span>جروب خاص</span>
     </label>
@@ -972,8 +1124,30 @@ body {
 
 <div id="groupSettingsModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">إعدادات الجروب</h3>
-    <div id="groupMembersList" style="max-height:300px;overflow-y:auto;margin-bottom:15px;"></div>
+    <h3 style="margin-bottom:18px; font-size: 22px;">إعدادات الجروب</h3>
+
+    <div style="margin-bottom:20px;">
+      <label>صورة الجروب</label>
+      <input type="file" id="editGroupImage" accept="image/*" onchange="previewEditGroupImage(event)">
+      <img id="editGroupImagePreview" src="" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;margin-top:10px;">
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label>اسم الجروب</label>
+      <input id="editGroupName" type="text" placeholder="الاسم الجديد">
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label>نبذة الجروب</label>
+      <textarea id="editGroupBio" placeholder="وصف الجروب" style="height:80px;resize:none;"></textarea>
+    </div>
+
+    <button class="btn btn-primary" onclick="saveGroupSettings()">حفظ التغييرات</button>
+
+    <hr style="margin:20px 0;border-color:var(--bg-input)">
+
+    <h4 style="margin-bottom:12px;">الأعضاء</h4>
+    <div id="groupMembersList" style="max-height:250px;overflow-y:auto;margin-bottom:15px;"></div>
     <input id="addMemberID" type="text" placeholder="ID العضو للإضافة">
     <button class="btn btn-primary" onclick="addMemberToGroup()">إضافة عضو</button>
     <button class="btn btn-danger" onclick="deleteGroup()">حذف الجروب</button>
@@ -983,8 +1157,8 @@ body {
 
 <div id="feedbackModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">ارسال ملاحظات</h3>
-    <textarea id="feedbackText" placeholder="اكتب ملاحظتك او اقتراحك هنا..." rows="5" style="width:100%;padding:14px;border-radius:10px;border:none;background:var(--bg-input);color:var(--text-primary);margin-bottom:10px;"></textarea>
+    <h3 style="margin-bottom:18px; font-size: 22px;">ارسال ملاحظات</h3>
+    <textarea id="feedbackText" placeholder="اكتب ملاحظتك او اقتراحك هنا..." rows="5" style="width:100%;padding:16px;border-radius:14px;border:2px solid transparent;background:var(--bg-input);color:var(--text-primary);margin-bottom:12px;resize:none;"></textarea>
     <button class="btn btn-primary" onclick="sendFeedback()">ارسال</button>
     <button class="btn btn-secondary" onclick="closeFeedbackModal()">إلغاء</button>
   </div>
@@ -992,11 +1166,11 @@ body {
 
 <div id="policyModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:15px;">سياسة التطبيق</h3>
-    <div id="policyContent" style="max-height:300px;overflow-y:auto;color:var(--text-secondary);line-height:1.6;">
+    <h3 style="margin-bottom:18px; font-size: 22px;">سياسة التطبيق</h3>
+    <div id="policyContent" style="max-height:300px;overflow-y:auto;color:var(--text-secondary);line-height:1.8; font-size: 15px;">
       باستخدامك للتطبيق فأنت موافق على الشروط والأحكام. ممنوع نشر محتوى مسيء أو مخالف للقانون. الإدارة تحتفظ بحق حذف أي حساب مخالف.
     </div>
-    <a id="policyLink" href="#" target="_blank" style="color:var(--green);display:block;margin:10px 0;">افتح الرابط</a>
+    <a id="policyLink" href="#" target="_blank" style="color:var(--green);display:block;margin:15px 0; font-weight: 700;">افتح الرابط</a>
     <button class="btn btn-secondary" onclick="closePolicy()">إغلاق</button>
   </div>
 </div>
@@ -1022,7 +1196,7 @@ const db = getFirestore(app);
 
 let currentUser = null;
 let userData = {
-  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: ''
+  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: '', verification: null
 };
 let currentChatUser = null;
 let currentEditPostID = null;
@@ -1105,6 +1279,7 @@ onAuthStateChanged(auth, async (user) => {
     startActiveTracking();
     checkAndDeleteOldPosts();
     checkCustomBgExpiry();
+    checkVerificationExpiry();
     updateOnlineCount();
     setInterval(updateOnlineCount, 30000);
   } else {
@@ -1168,6 +1343,7 @@ function loadUserData() {
       userData = {...userData,...docSnap.data() };
       updateProfileUI();
       checkDailyTasks();
+      checkVerificationExpiry();
     }
   });
 }
@@ -1175,7 +1351,7 @@ function loadUserData() {
 function updateProfileUI() {
   document.getElementById('profileID').innerText = userData.shortID || '---';
   document.getElementById('profileCoins').innerText = userData.coins || 0;
-  document.getElementById('profileNameDisplay').innerText = userData.displayName || 'بدون اسم';
+  document.getElementById('profileNameDisplay').innerHTML = userData.displayName || 'بدون اسم';
   document.getElementById('profileImg').src = userData.photoURL || 'https://via.placeholder.com/120';
   document.getElementById('languageSelect').value = userData.language || 'ar';
   document.getElementById('themeSelect').value = userData.theme || 'dark';
@@ -1183,11 +1359,31 @@ function updateProfileUI() {
   document.getElementById('followersCount').innerText = (userData.followers || []).length;
   document.getElementById('genderIcon').innerText = userData.gender === 'male'? '♂️' : userData.gender === 'female'? '♀️' : '';
   document.getElementById('countryFlag').innerText = COUNTRIES[userData.country] || '';
+
   if (userData.shortID === '10') {
     document.getElementById('adminBadge').style.display = 'inline';
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('profileID').classList.add('admin-id');
   }
+
+  if (userData.verification && userData.verification.expiresAt > Date.now()) {
+    document.getElementById('verifiedBadge').style.display = 'inline-flex';
+    document.getElementById('profileNameDisplay').innerHTML += ' <span class="verified-badge">✓</span>';
+  }
+}
+  window.openProfile = function() {
+  document.getElementById('page1').classList.remove('active');
+  document.getElementById('profilePage').classList.add('active');
+}
+
+window.backToPage1 = function() {
+  document.getElementById('profilePage').classList.remove('active');
+  document.getElementById('page1').classList.add('active');
+}
+
+window.backToChat = function() {
+  document.getElementById('userProfilePage').classList.remove('active');
+  document.getElementById('chatPage').classList.add('active');
 }
 
 function applySettings() {
@@ -1275,7 +1471,8 @@ window.signup = async function() {
       customBg: null,
       dailyTasks: {},
       gender: gender,
-      country: country
+      country: country,
+      verification: null
     });
     document.getElementById('newID').innerText = shortID;
     document.getElementById('signupSuccess').style.display = 'block';
@@ -1299,6 +1496,14 @@ async function checkCustomBgExpiry() {
     await updateDoc(doc(db, "users", currentUser.uid), { customBg: null });
     userData.customBg = null;
     showAlert('تنبيه', 'خلفيتك المخصصة انتهت', 'info');
+  }
+}
+
+async function checkVerificationExpiry() {
+  if (userData.verification && userData.verification.expiresAt && userData.verification.expiresAt < Date.now()) {
+    await updateDoc(doc(db, "users", currentUser.uid), { verification: null });
+    userData.verification = null;
+    showAlert('تنبيه', 'علامة التوثيق انتهت', 'info');
   }
 }
 
@@ -1332,10 +1537,11 @@ function loadChats() {
                 item.onclick = () => openChat(user, otherID);
                 userList.appendChild(item);
               }
+              const verified = user.verification && user.verification.expiresAt > Date.now()? '<span class="verified-badge">✓</span>' : '';
               item.innerHTML = `
                 <img src="${user.photoURL || 'https://via.placeholder.com/50'}">
                 <div class="list-item-info">
-                  <div class="list-item-name">${user.displayName} ${user.gender === 'male'? '♂️' : user.gender === 'female'? '♀️' : ''} ${COUNTRIES[user.country] || ''}</div>
+                  <div class="list-item-name">${user.displayName} ${verified} ${user.gender === 'male'? '♂️' : user.gender === 'female'? '♀️' : ''} ${COUNTRIES[user.country] || ''}</div>
                   <div class="list-item-id ${user.shortID === '10'? 'admin-id' : ''}">${user.shortID} ${user.shortID === '10'? '🛡️' : ''}</div>
                   <div class="list-item-id" id="lastMsg-${otherID}" style="font-size:12px; color:var(--text-secondary);">
                     ${chatData.lastMessage || user.bio || ''}
@@ -1377,11 +1583,12 @@ document.getElementById('searchID').addEventListener('input', async function(e) 
     snap.forEach(doc => {
       const user = doc.data();
       if (doc.id === currentUser.uid || userData.blocked.includes(doc.id)) return;
+      const verified = user.verification && user.verification.expiresAt > Date.now()? '<span class="verified-badge">✓</span>' : '';
       userList.innerHTML += `
         <div class="list-item" onclick='openChat(${JSON.stringify(user)}, "${doc.id}")'>
           <img src="${user.photoURL || 'https://via.placeholder.com/50'}">
           <div class="list-item-info">
-            <div class="list-item-name">${user.displayName} ${user.gender === 'male'? '♂️' : user.gender === 'female'? '♀️' : ''} ${COUNTRIES[user.country] || ''}</div>
+            <div class="list-item-name">${user.displayName} ${verified} ${user.gender === 'male'? '♂️' : user.gender === 'female'? '♀️' : ''} ${COUNTRIES[user.country] || ''}</div>
             <div class="list-item-id ${user.shortID === '10'? 'admin-id' : ''}">${user.shortID} ${user.shortID === '10'? '🛡️' : ''}</div>
             <div class="list-item-id" style="font-size:12px; color:var(--text-secondary);">${user.bio || ''}</div>
           </div>
@@ -1390,156 +1597,301 @@ document.getElementById('searchID').addEventListener('input', async function(e) 
     });
   } catch(e) { console.error(e); }
 });
+  // ===== فتح وادارة الشات =====
+window.openChat = function(user, uid) {
+  currentChatUser = {...user, id: uid };
+  document.getElementById('page1').classList.remove('active');
+  document.getElementById('chatPage').classList.add('active');
+  document.getElementById('chatUserName').innerText = user.displayName;
+  document.getElementById('chatUserImg').src = user.photoURL || 'https://via.placeholder.com/50';
 
-function loadPosts() {
-  if (!currentUser) return;
-  try {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50));
-    onSnapshot(q, (snap) => {
-      const postsList = document.getElementById('postsList');
-      postsList.innerHTML = '';
-      snap.forEach(doc => {
-        const post = doc.data();
-        if (userData.blocked.includes(post.userID)) return;
-        const isLiked = post.likes?.includes(currentUser.uid);
-        const isAdmin = userData.shortID === '10';
-        let commentsHTML = '';
-        if (post.comments && post.comments.length > 0) {
-          commentsHTML = post.comments.map(c => `
-            <div class="comment-item">
-              <div class="comment-user">${c.displayName}</div>
-              <div class="comment-text">${c.text}</div>
-            </div>
-          `).join('');
-        }
-        postsList.innerHTML += `
-          <div class="post-card">
-            <button class="admin-delete-btn ${isAdmin? 'show' : ''}" onclick="deletePostByAdmin('${doc.id}')">مسح</button>
-            <div class="post-header">
-              <img src="${post.photoURL || 'https://via.placeholder.com/40'}">
-              <div style="flex:1">
-                <div class="post-author">${post.displayName || 'مجهول'} ${post.gender === 'male'? '♂️' : post.gender === 'female'? '♀️' : ''}</div>
-                <div class="post-time">${post.createdAt? new Date(post.createdAt.seconds*1000).toLocaleString('ar-EG') : ''}</div>
-              </div>
-            </div>
-            ${post.image? `<img src="${post.image}" class="post-image">` : ''}
-            <div class="post-content">${post.content}</div>
-            <div class="post-actions">
-              <div class="post-action ${isLiked? 'liked' : ''}" onclick="toggleLike('${doc.id}')">
-                ❤️ ${post.likes?.length || 0}
-              </div>
-              <div class="post-action" onclick="toggleComments('${doc.id}')">
-                💬 ${post.comments?.length || 0}
-              </div>
-            </div>
-            <div id="comments-${doc.id}" class="comment-box">
-              <div id="commentList-${doc.id}">${commentsHTML}</div>
-              ${post.allowComments? `
-                <div class="comment-input" style="display:flex;gap:8px;margin-top:8px;">
-                  <input id="commentInput-${doc.id}" placeholder="اكتب تعليق..." style="flex:1;padding:10px;border-radius:20px;border:none;background:var(--bg-input);color:var(--text-primary);">
-                  <button onclick="addComment('${doc.id}')" style="background:var(--green);border:none;padding:10px 16px;border-radius:20px;color:white;cursor:pointer;">إرسال</button>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-        `;
-      });
-    });
-  } catch(e) { console.error(e); }
+  loadChatMessages(uid);
+  loadChatBg(uid);
+
+  if (userData.customBg) {
+    document.getElementById('chatArea').style.backgroundImage = `url(${userData.customBg.url})`;
+  } else {
+    document.getElementById('chatArea').style.backgroundImage = 'none';
+  }
+
+  if (!userData.dailyTasks?.lastChat) {
+    userData.dailyTasks = {...userData.dailyTasks, chatCount: 0 };
+  }
 }
 
-function loadGroups() {
-  if (!currentUser) return;
-  const q = query(collection(db, "groups"), orderBy("createdAt", "desc"), limit(100));
-  onSnapshot(q, (snap) => {
-    const groupsList = document.getElementById('groupsList');
-    groupsList.innerHTML = '';
-    snap.forEach(doc => {
-      const group = doc.data();
-      const isMember = group.members.includes(currentUser.uid);
-      const isBanned = group.banned.includes(currentUser.uid);
-      if (group.isPrivate &&!isMember) return;
-      if (isBanned) return;
-
-      groupsList.innerHTML += `
-        <div class="group-item" onclick="openGroup('${doc.id}')">
-          <img src="${group.photoURL || 'https://via.placeholder.com/60'}">
-          <div class="group-info">
-            <div class="group-name">${group.name} ${group.isPrivate? '<span class="private-badge">خاص</span>' : ''}</div>
-            <div class="group-members">${group.members.length}/30 عضو</div>
-          </div>
-        </div>
-      `;
-    });
-  });
+window.backToChatList = function() {
+  document.getElementById('chatPage').classList.remove('active');
+  document.getElementById('page1').classList.add('active');
+  currentChatUser = null;
 }
 
-window.openGroup = function(groupID) {
-  currentGroup = groupID;
-  document.getElementById('groupChatPage').classList.add('active');
-  document.getElementById('page3').classList.remove('active');
-
-  getDoc(doc(db, "groups", groupID)).then(snap => {
-    if (snap.exists()) {
-      const group = snap.data();
-      document.getElementById('groupChatName').innerText = group.name;
-      document.getElementById('groupChatImg').src = group.photoURL || 'https://via.placeholder.com/40';
-      document.getElementById('groupSettingsBtn').style.display = group.admin === currentUser.uid? 'block' : 'none';
-      loadGroupMessages();
+function loadChatMessages(uid) {
+  const chatID = [currentUser.uid, uid].sort().join('_');
+  const chatRef = doc(db, "chats", chatID);
+  onSnapshot(chatRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const messages = docSnap.data().messages || [];
+      displayMessages(messages);
+      updateDoc(chatRef, { lastMessage: messages[messages.length - 1]?.text || '' });
     }
   });
 }
 
-function loadGroupMessages() {
-  if (!currentGroup) return;
-  const q = query(collection(db, "groups", currentGroup, "messages"), orderBy("createdAt"));
-  onSnapshot(q, (snap) => {
-    const chatMessages = document.getElementById('groupChatMessages');
-    chatMessages.innerHTML = '';
-    snap.forEach(doc => {
-      const msg = doc.data();
-      const isSent = msg.senderID === currentUser.uid;
-      chatMessages.innerHTML += `
-        <div class="message ${isSent? 'sent' : 'received'}">
-          <div style="font-size:12px;color:var(--green);margin-bottom:4px;">${msg.senderName}</div>
-          ${msg.text}
+function displayMessages(messages) {
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = '';
+  messages.forEach(msg => {
+    const div = document.createElement('div');
+    div.className = `message ${msg.sender === currentUser.uid? 'sent' : 'received'}`;
+    div.innerText = msg.text;
+    container.appendChild(div);
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
+window.sendMessage = async function() {
+  const input = document.getElementById('messageInput');
+  const text = input.value.trim();
+  if (!text ||!currentChatUser) return;
+
+  const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
+  const chatRef = doc(db, "chats", chatID);
+
+  await setDoc(chatRef, {
+    messages: arrayUnion({ sender: currentUser.uid, text, timestamp: Date.now() }),
+    lastMessage: text
+  }, { merge: true });
+
+  input.value = '';
+  updateChatTask();
+}
+
+function updateChatTask() {
+  const today = new Date().toDateString();
+  const tasks = userData.dailyTasks || {};
+  const chatCount = (tasks.chatCount || 0) + 1;
+
+  updateDoc(doc(db, "users", currentUser.uid), {
+    'dailyTasks.chatCount': chatCount,
+    'dailyTasks.lastChat': today
+  });
+}
+
+// ===== الخلفيات والهدايا =====
+window.toggleGiftBox = function() {
+  const box = document.getElementById('giftBox');
+  box.classList.toggle('show');
+  if (box.classList.contains('show') && box.innerHTML === '') {
+    loadGifts();
+  }
+}
+
+function loadGifts() {
+  const box = document.getElementById('giftBox');
+  box.innerHTML = '';
+  gifts.forEach(gift => {
+    box.innerHTML += `
+      <div class="gift-item" onclick="sendGift(${gift.id})">
+        <div>${gift.emoji}</div>
+        <div class="gift-price">${gift.price} 🪙</div>
+        <div style="font-size:12px;">${gift.name}</div>
+      </div>
+    `;
+  });
+}
+
+window.sendGift = async function(giftID) {
+  const gift = gifts.find(g => g.id === giftID);
+  if (!gift ||!currentChatUser) return;
+  if (userData.coins < gift.price) {
+    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+    return;
+  }
+  await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(-gift.price) });
+  await updateDoc(doc(db, "users", currentChatUser.id), { coins: increment(gift.price) });
+
+  const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
+  await setDoc(doc(db, "chats", chatID), {
+    messages: arrayUnion({
+      sender: 'system',
+      text: `🎁 ${userData.displayName} أرسل ${gift.emoji} ${gift.name} لـ ${currentChatUser.displayName}`,
+      timestamp: Date.now()
+    })
+  }, { merge: true });
+
+  showAlert('مبروك', `تم ارسال ${gift.name}`);
+  toggleGiftBox();
+}
+
+window.openBgModal = function() {
+  showAlert('خلفيات الشات', 'قريباً تقدر تشتري خلفيات مخصصة من هنا');
+}
+
+// ===== المنشورات =====
+function loadPosts() {
+  const postsList = document.getElementById('postsList');
+  onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50)), (snap) => {
+    postsList.innerHTML = '';
+    snap.forEach(docSnap => {
+      const post = docSnap.data();
+      const postID = docSnap.id;
+      const isLiked = post.likes?.includes(currentUser.uid);
+      const verified = post.verification && post.verification.expiresAt > Date.now()? '<span class="verified-badge">✓</span>' : '';
+
+      postsList.innerHTML += `
+        <div class="post-card">
+          ${userData.shortID === '10'? `<button class="admin-delete-btn show" onclick="deletePostByAdmin('${postID}')">مسح</button>` : ''}
+          <div class="post-header">
+            <img src="${post.photoURL || 'https://via.placeholder.com/50'}">
+            <div>
+              <div class="post-author">${post.displayName} ${verified}</div>
+              <div class="post-time">${post.createdAt?.toDate? new Date(post.createdAt.toDate()).toLocaleString('ar-EG') : ''}</div>
+            </div>
+          </div>
+          <div class="post-content">${post.content}</div>
+          ${post.image? `<img class="post-image" src="${post.image}">` : ''}
+          <div class="post-actions">
+            <div class="post-action ${isLiked? 'liked' : ''}" onclick="toggleLike('${postID}')">
+              ❤️ ${post.likes?.length || 0}
+            </div>
+            <div class="post-action" onclick="toggleComments('${postID}')">
+              💬 ${post.comments?.length || 0}
+            </div>
+          </div>
+          <div id="comments-${postID}" class="comment-box">
+            ${(post.comments || []).map(c => `
+              <div class="comment-item">
+                <div class="comment-user">${c.displayName}</div>
+                <div>${c.text}</div>
+              </div>
+            `).join('')}
+            <div style="display:flex;gap:10px;margin-top:10px;">
+              <input id="commentInput-${postID}" type="text" placeholder="اكتب تعليق..." style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--bg-input);color:var(--text-primary);">
+              <button onclick="addComment('${postID}')" style="padding:12px 18px;border-radius:12px;border:none;background:var(--green);color:white;font-weight:700;">ارسال</button>
+            </div>
+          </div>
         </div>
       `;
     });
-    chatMessages.scrollTop = chatMessages.scrollHeight;
   });
 }
 
-window.sendGroupMessage = async function() {
-  const text = document.getElementById('groupMessageInput').value.trim();
-  if (!text ||!currentGroup) return;
+window.createPost = async function() {
+  const content = document.getElementById('postContent').value.trim();
+  const image = document.getElementById('postImagePreview').src;
 
-  const groupSnap = await getDoc(doc(db, "groups", currentGroup));
-  if (!groupSnap.exists()) return;
-  const group = groupSnap.data();
-
-  if (group.muted.includes(currentUser.uid)) {
-    showAlert('خطأ', 'انت مكتوم في الجروب', 'error');
+  if (!content &&!image.includes('data:image')) {
+    showAlert('خطأ', 'اكتب حاجة او اختار صورة', 'error');
     return;
   }
 
-  await addDoc(collection(db, "groups", currentGroup, "messages"), {
-    senderID: currentUser.uid,
-    senderName: userData.displayName,
-    text: text,
+  await addDoc(collection(db, "posts"), {
+    userID: currentUser.uid,
+    displayName: userData.displayName,
+    photoURL: userData.photoURL,
+    gender: userData.gender,
+    verification: userData.verification,
+    content: content,
+    image: image.includes('data:image')? image : '',
+    likes: [],
+    comments: [],
+    allowComments: true,
     createdAt: serverTimestamp()
   });
-  document.getElementById('groupMessageInput').value = '';
+
+  closePostModal();
+  showAlert('تم', 'تم نشر البوست');
+
+  if (userData.dailyTasks?.lastPost!== new Date().toDateString()) {
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      coins: increment(10),
+      'dailyTasks.lastPost': new Date().toDateString()
+    });
+  }
 }
 
-window.clearGroupChat = async function() {
-  showConfirmModal('مسح الشات', 'متأكد عايز تمسح كل الرسايل؟', async () => {
-    const snap = await getDocs(collection(db, "groups", currentGroup, "messages"));
+// ===== مسح كل المحادثات =====
+window.openDeleteChatModal = function() {
+  document.getElementById('deleteChatModal').classList.add('show');
+  loadDeleteChatList();
+}
+
+window.closeDeleteChatModal = function() {
+  document.getElementById('deleteChatModal').classList.remove('show');
+}
+
+function loadDeleteChatList() {
+  const list = document.getElementById('deleteChatList');
+  list.innerHTML = '';
+  onSnapshot(collection(db, "chats"), (snap) => {
+    list.innerHTML = '';
+    snap.forEach(docSnap => {
+      if (docSnap.id.includes(currentUser.uid)) {
+        const otherID = docSnap.id.split('_').find(id => id!== currentUser.uid);
+        if (otherID) {
+          getDoc(doc(db, "users", otherID)).then(userSnap => {
+            if (userSnap.exists()) {
+              const user = userSnap.data();
+              list.innerHTML += `
+                <div class="list-item">
+                  <img src="${user.photoURL || 'https://via.placeholder.com/50'}" style="width:45px;height:45px;">
+                  <div class="list-item-info">
+                    <div class="list-item-name">${user.displayName}</div>
+                    <div class="list-item-id">${user.shortID}</div>
+                  </div>
+                  <button class="delete-chat-btn" onclick="deleteSingleChat('${docSnap.id}')">مسح</button>
+                </div>
+              `;
+            }
+          });
+        }
+      }
+    });
+  });
+}
+
+window.deleteAllChats = function() {
+  showConfirmModal('مسح الكل', 'متأكد عايز تمسح كل المحادثات؟ مش هتقدر ترجعهم تاني', async () => {
+    const snap = await getDocs(collection(db, "chats"));
     const batch = writeBatch(db);
-    snap.forEach(msg => batch.delete(msg.ref));
+    snap.forEach(docSnap => {
+      if (docSnap.id.includes(currentUser.uid)) {
+        batch.delete(docSnap.ref);
+      }
+    });
     await batch.commit();
     closeConfirmModal();
-    showAlert('تم', 'تم مسح الشات');
+    closeDeleteChatModal();
+    showAlert('تم', 'تم مسح كل المحادثات');
+  });
+}
+
+window.deleteSingleChat = function(chatID) {
+  showConfirmModal('مسح المحادثة', 'متأكد عايز تمسح المحادثة دي؟', async () => {
+    await deleteDoc(doc(db, "chats", chatID));
+    closeConfirmModal();
+    showAlert('تم', 'تم مسح المحادثة');
+  });
+}
+
+// ===== الجروبات =====
+function loadGroups() {
+  const groupsList = document.getElementById('groupsList');
+  onSnapshot(collection(db, "groups"), (snap) => {
+    groupsList.innerHTML = '';
+    snap.forEach(docSnap => {
+      const group = docSnap.data();
+      const groupID = docSnap.id;
+      groupsList.innerHTML += `
+        <div class="group-item" onclick="openGroupChat('${groupID}')">
+          <img src="${group.image || 'https://via.placeholder.com/64'}">
+          <div class="group-info">
+            <div class="group-name">${group.name} ${group.private? '<span class="private-badge">خاص</span>' : ''}</div>
+            <div class="group-members">${group.members?.length || 0} عضو</div>
+          </div>
+        </div>
+      `;
+    });
   });
 }
 
@@ -1564,8 +1916,8 @@ window.previewGroupImage = function(e) {
 
 window.createGroup = async function() {
   const name = document.getElementById('groupName').value.trim();
-  const isPrivate = document.getElementById('groupPrivate').checked;
   const image = document.getElementById('groupImagePreview').src;
+  const isPrivate = document.getElementById('groupPrivate').checked;
 
   if (!name) {
     showAlert('خطأ', 'اكتب اسم الجروب', 'error');
@@ -1574,93 +1926,38 @@ window.createGroup = async function() {
 
   await addDoc(collection(db, "groups"), {
     name: name,
-    admin: currentUser.uid,
+    image: image.includes('data:image')? image : '',
+    bio: '',
+    owner: currentUser.uid,
     members: [currentUser.uid],
-    banned: [],
-    muted: [],
-    isPrivate: isPrivate,
-    photoURL: image.includes('data:image')? image : '',
+    private: isPrivate,
     createdAt: serverTimestamp()
   });
 
   closeCreateGroupModal();
-  showAlert('تم', 'تم إنشاء الجروب');
+  showAlert('تم', 'تم انشاء الجروب');
 }
 
-window.openGroupSettings = async function() {
-  document.getElementById('groupSettingsModal').classList.add('show');
-  const groupSnap = await getDoc(doc(db, "groups", currentGroup));
-  const group = groupSnap.data();
+window.openGroupChat = function(groupID) {
+  currentGroup = groupID;
+  document.getElementById('page3').classList.remove('active');
+  document.getElementById('groupChatPage').classList.add('active');
 
-  const membersList = document.getElementById('groupMembersList');
-  membersList.innerHTML = '';
-  for (let uid of group.members) {
-    const userSnap = await getDoc(doc(db, "users", uid));
-    if (userSnap.exists()) {
-      const user = userSnap.data();
-      const isMuted = group.muted.includes(uid);
-      membersList.innerHTML += `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid var(--bg-input)">
-          <div>${user.displayName}</div>
-          <div style="display:flex;gap:5px;">
-            <button class="btn btn-secondary" style="width:auto;padding:5px 10px;" onclick="toggleMuteMember('${uid}')">${isMuted? 'فك كتم' : 'كتم'}</button>
-            ${uid!== currentUser.uid? `<button class="btn btn-danger" style="width:auto;padding:5px 10px;" onclick="kickMember('${uid}')">طرد</button>` : ''}
-          </div>
-        </div>
-      `;
+  getDoc(doc(db, "groups", groupID)).then(docSnap => {
+    if (docSnap.exists()) {
+      const group = docSnap.data();
+      document.getElementById('groupChatName').innerText = group.name;
+      document.getElementById('groupChatImg').src = group.image || 'https://via.placeholder.com/50';
+
+      if (group.owner === currentUser.uid) {
+        document.getElementById('groupSettingsBtn').style.display = 'block';
+      } else {
+        document.getElementById('groupSettingsBtn').style.display = 'none';
+      }
     }
-  }
-}
-
-window.closeGroupSettings = function() {
-  document.getElementById('groupSettingsModal').classList.remove('show');
-}
-
-window.addMemberToGroup = async function() {
-  const id = document.getElementById('addMemberID').value.trim().toUpperCase();
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الـ ID غلط', 'error');
-    return;
-  }
-  const uid = snap.docs[0].id;
-  await updateDoc(doc(db, "groups", currentGroup), {
-    members: arrayUnion(uid)
   });
-  document.getElementById('addMemberID').value = '';
-  showAlert('تم', 'تم إضافة العضو');
-  openGroupSettings();
-}
 
-window.kickMember = async function(uid) {
-  await updateDoc(doc(db, "groups", currentGroup), {
-    members: arrayRemove(uid),
-    banned: arrayUnion(uid)
-  });
-  showAlert('تم', 'تم طرد العضو');
-  openGroupSettings();
-}
-
-window.toggleMuteMember = async function(uid) {
-  const groupSnap = await getDoc(doc(db, "groups", currentGroup));
-  const group = groupSnap.data();
-  if (group.muted.includes(uid)) {
-    await updateDoc(doc(db, "groups", currentGroup), { muted: arrayRemove(uid) });
-  } else {
-    await updateDoc(doc(db, "groups", currentGroup), { muted: arrayUnion(uid) });
-  }
-  openGroupSettings();
-}
-
-window.deleteGroup = async function() {
-  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب ده؟', async () => {
-    await deleteDoc(doc(db, "groups", currentGroup));
-    closeConfirmModal();
-    closeGroupSettings();
-    backToGroups();
-    showAlert('تم', 'تم حذف الجروب');
-  });
+  loadGroupMessages(groupID);
 }
 
 window.backToGroups = function() {
@@ -1669,389 +1966,188 @@ window.backToGroups = function() {
   currentGroup = null;
 }
 
-window.openChat = async function(user, uid) {
-  if (userData.blocked.includes(uid)) {
-    showAlert('خطأ', 'انت عامل بلوك للشخص ده', 'error');
-    return;
-  }
-
-  currentChatUser = {...user, id: uid };
-  document.getElementById('chatPage').classList.add('active');
-  document.getElementById('page1').classList.remove('active');
-
-  document.getElementById('chatUserName').innerText = user.displayName;
-  document.getElementById('chatUserImg').src = user.photoURL || 'https://via.placeholder.com/40';
-
-  const chatID = [currentUser.uid, uid].sort().join('_');
-  const bg = localStorage.getItem(`chatbg_${uid}`) || 'none';
-  document.getElementById('chatArea').style.backgroundImage = bg === 'none'? 'none' : `url(${bg})`;
-
-  loadMessages(chatID);
-  updateChatTask();
-}
-
-window.loadMessages = function(chatID) {
-  const chatMessages = document.getElementById('chatMessages');
-  const q = query(collection(db, "chats", chatID, "messages"), orderBy("createdAt"));
-  onSnapshot(q, (snap) => {
-    chatMessages.innerHTML = '';
-    snap.forEach(doc => {
-      const msg = doc.data();
-      if (msg.type === 'gift') {
-        chatMessages.innerHTML += `
-          <div class="message-gift">
-            ${msg.emoji} ${msg.senderName} أهدى ${msg.receiverName} ${msg.giftName}
-          </div>
-        `;
-      } else {
-        const isSent = msg.senderID === currentUser.uid;
-        chatMessages.innerHTML += `
-          <div class="message ${isSent? 'sent' : 'received'}">
-            ${msg.text}
-          </div>
-        `;
-      }
-    });
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  });
-}
-
-window.sendMessage = async function() {
-  const text = document.getElementById('messageInput').value.trim();
-  if (!text ||!currentChatUser) return;
-
-  if (userData.blocked.includes(currentChatUser.id)) {
-    showAlert('خطأ', 'انت عامل بلوك للشخص ده', 'error');
-    return;
-  }
-
-  const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-  await addDoc(collection(db, "chats", chatID, "messages"), {
-    senderID: currentUser.uid,
-    senderName: userData.displayName,
-    text: text,
-    type: 'text',
-    createdAt: serverTimestamp()
-  });
-
-  await updateDoc(doc(db, "chats", chatID), {
-    lastMessage: text,
-    updatedAt: serverTimestamp()
-  });
-
-  document.getElementById('messageInput').value = '';
-  updateChatTask();
-}
-
-window.toggleGiftBox = function() {
-  const giftBox = document.getElementById('giftBox');
-  giftBox.classList.toggle('show');
-  if (giftBox.classList.contains('show')) {
-    giftBox.innerHTML = '';
-    gifts.forEach(gift => {
-      giftBox.innerHTML += `
-        <div class="gift-item" onclick="sendGift(${gift.id})">
-          <div>${gift.emoji}</div>
-          <div>${gift.name}</div>
-          <div class="gift-price">${gift.price} 🪙</div>
-        </div>
-      `;
-    });
-  }
-}
-
-window.sendGift = async function(giftID) {
-  const gift = gifts.find(g => g.id === giftID);
-  if (!gift) return;
-
-  if (userData.coins < gift.price) {
-    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
-    return;
-  }
-
-  const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-
-  await updateDoc(doc(db, "users", currentUser.uid), {
-    coins: increment(-gift.price)
-  });
-
-  await updateDoc(doc(db, "users", currentChatUser.id), {
-    coins: increment(gift.price)
-  });
-
-  await addDoc(collection(db, "chats", chatID, "messages"), {
-    senderID: currentUser.uid,
-    senderName: userData.displayName,
-    receiverName: currentChatUser.displayName,
-    type: 'gift',
-    emoji: gift.emoji,
-    giftName: gift.name,
-    createdAt: serverTimestamp()
-  });
-
-  userData.coins -= gift.price;
-  document.getElementById('profileCoins').innerText = userData.coins;
-  document.getElementById('giftBox').classList.remove('show');
-  showAlert('تم', `أرسلت ${gift.name} لـ ${currentChatUser.displayName}`);
-}
-
-window.openBgModal = function() {
-  let html = '<h3 style="margin-bottom:15px;">اختر الخلفية</h3>';
-  chatBgs.forEach(bg => {
-    const owned = userData.backgrounds?.includes(bg.id) || bg.price === 0;
-    html += `
-      <div class="list-item" onclick="applyBg('${bg.id}', ${bg.price})">
-        <div style="width:60px;height:40px;border-radius:8px;background:${bg.url === 'none'? 'var(--bg-input)' : `url(${bg.url}) center/cover`}"></div>
-        <div style="flex:1">
-          <div>${bg.name}</div>
-          <div style="font-size:13px;color:${owned? 'var(--green)' : 'var(--gold)'}">${owned? 'مملوكة' : bg.price + ' 🪙'}</div>
-        </div>
-      </div>
-    `;
-  });
-  html += `<button class="btn btn-primary" onclick="uploadCustomBg()">خلفية مخصصة - 100 🪙 لمدة 5 ايام</button>`;
-  html += `<button class="btn btn-secondary" onclick="closeBgModal()" style="margin-top:10px;">إغلاق</button>`;
-
-  document.getElementById('deleteChatList').innerHTML = html;
-  document.getElementById('deleteChatModal').classList.add('show');
-}
-
-window.closeBgModal = function() {
-  document.getElementById('deleteChatModal').classList.remove('show');
-}
-
-window.applyBg = async function(bgID, price) {
-  const bg = chatBgs.find(b => b.id === bgID);
-  if (price > 0 &&!userData.backgrounds?.includes(bgID)) {
-    if (userData.coins < price) {
-      showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
-      return;
-    }
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(-price),
-      backgrounds: arrayUnion(bgID)
-    });
-    userData.coins -= price;
-    userData.backgrounds = [...(userData.backgrounds || []), bgID];
-  }
-  localStorage.setItem(`chatbg_${currentChatUser.id}`, bg.url === 'none'? 'none' : bg.url);
-  document.getElementById('chatArea').style.backgroundImage = bg.url === 'none'? 'none' : `url(${bg.url})`;
-  closeBgModal();
-  showAlert('تم', `تم تفعيل خلفية ${bg.name}`);
-}
-
-window.uploadCustomBg = function() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (userData.coins < 100) {
-      showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const url = event.target.result;
-      const expiresAt = Date.now() + 5 * 24 * 60 * 60 * 1000;
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        coins: increment(-100),
-        customBg: { url: url, expiresAt: expiresAt }
+function loadGroupMessages(groupID) {
+  onSnapshot(doc(db, "groups", groupID), (docSnap) => {
+    if (docSnap.exists()) {
+      const messages = docSnap.data().messages || [];
+      const container = document.getElementById('groupChatMessages');
+      container.innerHTML = '';
+      messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = `message ${msg.sender === currentUser.uid? 'sent' : 'received'}`;
+        div.innerHTML = `<strong>${msg.senderName}:</strong> ${msg.text}`;
+        container.appendChild(div);
       });
-      userData.coins -= 100;
-      userData.customBg = { url, expiresAt };
-      document.getElementById('profileCoins').innerText = userData.coins;
-      localStorage.setItem(`chatbg_${currentChatUser.id}`, 'custom');
-      document.getElementById('chatArea').style.backgroundImage = `url(${url})`;
-      closeBgModal();
-      showAlert('تم', 'تم تفعيل الخلفية لمدة 5 أيام');
-    };
-    reader.readAsDataURL(file);
-  };
-  input.click();
-}
-
-window.openDeleteChatModal = async function() {
-  document.getElementById('deleteChatModal').classList.add('show');
-  const deleteList = document.getElementById('deleteChatList');
-  deleteList.innerHTML = '';
-  const q = query(collection(db, "chats"));
-  const snap = await getDocs(q);
-  snap.forEach(docSnap => {
-    const chatID = docSnap.id;
-    if (chatID.includes(currentUser.uid)) {
-      const otherID = chatID.split('_').find(id => id!== currentUser.uid);
-      if (otherID) {
-        getDoc(doc(db, "users", otherID)).then(userSnap => {
-          if (userSnap.exists()) {
-            const user = userSnap.data();
-            deleteList.innerHTML += `
-              <div class="list-item" style="justify-content:space-between">
-                <div style="display:flex;align-items:center;gap:10px">
-                  <img src="${user.photoURL || 'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%">
-                  <div>
-                    <div>${user.displayName}</div>
-                    <div style="font-size:12px;color:var(--text-secondary)">${user.shortID}</div>
-                  </div>
-                </div>
-                <button class="delete-chat-btn" onclick="deleteChat('${chatID}')">مسح</button>
-              </div>
-            `;
-          }
-        });
-      }
+      container.scrollTop = container.scrollHeight;
     }
   });
 }
 
-window.closeDeleteChatModal = function() {
-  document.getElementById('deleteChatModal').classList.remove('show');
+window.sendGroupMessage = async function() {
+  const input = document.getElementById('groupMessageInput');
+  const text = input.value.trim();
+  if (!text ||!currentGroup) return;
+
+  const groupRef = doc(db, "groups", currentGroup);
+  await updateDoc(groupRef, {
+    messages: arrayUnion({
+      sender: currentUser.uid,
+      senderName: userData.displayName,
+      text,
+      timestamp: Date.now()
+    })
+  });
+
+  input.value = '';
 }
 
-window.deleteChat = async function(chatID) {
-  showConfirmModal('مسح المحادثة', 'متأكد عايز تمسح المحادثة دي؟ كل الرسايل هتتمسح', async () => {
-    const messagesSnap = await getDocs(collection(db, "chats", chatID, "messages"));
-    const batch = writeBatch(db);
-    messagesSnap.forEach(msg => batch.delete(msg.ref));
-    batch.delete(doc(db, "chats", chatID));
-    await batch.commit();
+window.clearGroupChat = function() {
+  showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل الجروب؟', async () => {
+    await updateDoc(doc(db, "groups", currentGroup), { messages: [] });
     closeConfirmModal();
-    closeDeleteChatModal();
-    showAlert('تم', 'تم مسح المحادثة');
-    loadChats();
+    showAlert('تم', 'تم مسح رسايل الجروب');
   });
 }
 
-window.sendCoinsToUser = async function() {
-  if (userData.shortID!== '10') return;
-  const targetID = document.getElementById('sendCoinsID').value.trim();
-  const amount = parseInt(document.getElementById('sendCoinsAmount').value);
-  if (!targetID ||!amount || amount <= 0) {
-    showAlert('خطأ', 'دخل ID والمبلغ صح', 'error');
-    return;
-  }
-  const q = query(collection(db, "users"), where("shortID", "==", targetID));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الـ ID ده مش موجود', 'error');
-    return;
-  }
-  const targetDoc = snap.docs[0];
-  await updateDoc(doc(db, "users", targetDoc.id), { coins: increment(amount) });
-  showAlert('تم', `تم إرسال ${amount} كوينز لـ ${targetID}`);
-  document.getElementById('sendCoinsID').value = '';
-  document.getElementById('sendCoinsAmount').value = '';
-}
-
-window.sendBroadcast = async function() {
-  if (userData.shortID!== '10') return;
-  const text = document.getElementById('broadcastText').value.trim();
-  const file = document.getElementById('broadcastImage').files[0];
-
-  if (!text &&!file) {
-    showAlert('خطأ', 'اكتب رسالة او اختار صورة', 'error');
-    return;
-  }
-
-  let imageUrl = '';
-  if (file) {
-    const reader = new FileReader();
-    imageUrl = await new Promise(resolve => {
-      reader.onload = (e) => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  const usersSnap = await getDocs(collection(db, "users"));
-  const batch = writeBatch(db);
-
-  usersSnap.forEach(userDoc => {
-    const chatID = [currentUser.uid, userDoc.id].sort().join('_');
-    const msgRef = doc(collection(db, "chats", chatID, "messages"));
-    batch.set(msgRef, {
-      senderID: currentUser.uid,
-      senderName: 'الإدارة',
-      text: text,
-      image: imageUrl,
-      type: 'broadcast',
-      createdAt: serverTimestamp()
-    });
-    batch.set(doc(db, "chats", chatID), {
-      lastMessage: text || 'صورة',
-      updatedAt: serverTimestamp()
-    }, { merge: true });
+// ===== اعدادات الجروب - صاحب الجروب بس =====
+window.openGroupSettings = function() {
+  if (!currentGroup) return;
+  getDoc(doc(db, "groups", currentGroup)).then(docSnap => {
+    if (docSnap.exists()) {
+      const group = docSnap.data();
+      if (group.owner!== currentUser.uid) {
+        showAlert('خطأ', 'انت مش صاحب الجروب', 'error');
+        return;
+      }
+      document.getElementById('editGroupName').value = group.name;
+      document.getElementById('editGroupBio').value = group.bio || '';
+      document.getElementById('editGroupImagePreview').src = group.image || '';
+      document.getElementById('groupSettingsModal').classList.add('show');
+      loadGroupMembers(group.members);
+    }
   });
-
-  await batch.commit();
-  document.getElementById('broadcastText').value = '';
-  document.getElementById('broadcastImage').value = '';
-  showAlert('تم', 'تم إرسال الإعلان لكل المستخدمين');
 }
 
-async function updateOnlineCount() {
-  const now = Date.now();
-  const fiveMinAgo = now - 5 * 60 * 1000;
-  const q = query(collection(db, "users"), where("lastActive", ">", fiveMinAgo));
-  const snap = await getDocs(q);
-  document.getElementById('onlineCount').innerText = snap.size;
+window.closeGroupSettings = function() {
+  document.getElementById('groupSettingsModal').classList.remove('show');
 }
 
-window.openPostModal = function() {
-  document.getElementById('postModal').classList.add('show');
-}
-
-window.closePostModal = function() {
-  document.getElementById('postModal').classList.remove('show');
-  document.getElementById('postContent').value = '';
-  document.getElementById('postImage').value = '';
-  document.getElementById('postImagePreview').style.display = 'none';
-}
-
-window.previewPostImage = function(e) {
+window.previewEditGroupImage = function(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (event) => {
-    document.getElementById('postImagePreview').src = event.target.result;
-    document.getElementById('postImagePreview').style.display = 'block';
+    document.getElementById('editGroupImagePreview').src = event.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-window.createPost = async function() {
-  const content = document.getElementById('postContent').value.trim();
-  const image = document.getElementById('postImagePreview').src;
+window.saveGroupSettings = async function() {
+  const name = document.getElementById('editGroupName').value.trim();
+  const bio = document.getElementById('editGroupBio').value.trim();
+  const image = document.getElementById('editGroupImagePreview').src;
 
-  if (!content &&!image.includes('data:image')) {
-    showAlert('خطأ', 'اكتب حاجة او اختار صورة', 'error');
+  await updateDoc(doc(db, "groups", currentGroup), {
+    name: name,
+    bio: bio,
+    image: image.includes('data:image')? image : image
+  });
+
+  closeGroupSettings();
+  showAlert('تم', 'تم حفظ التغييرات');
+}
+
+function loadGroupMembers(members) {
+  const list = document.getElementById('groupMembersList');
+  list.innerHTML = '';
+  members?.forEach(uid => {
+    getDoc(doc(db, "users", uid)).then(userSnap => {
+      if (userSnap.exists()) {
+        const user = userSnap.data();
+        list.innerHTML += `
+          <div class="list-item">
+            <img src="${user.photoURL || 'https://via.placeholder.com/45'}" style="width:45px;height:45px;">
+            <div class="list-item-info">
+              <div class="list-item-name">${user.displayName}</div>
+              <div class="list-item-id">${user.shortID}</div>
+            </div>
+            ${userData.shortID === '10' || currentGroup.owner === currentUser.uid?
+              `<button class="delete-chat-btn" onclick="removeMemberFromGroup('${uid}')">طرد</button>` : ''}
+          </div>
+        `;
+      }
+    });
+  });
+}
+
+window.addMemberToGroup = async function() {
+  const id = document.getElementById('addMemberID').value.trim().toUpperCase();
+  if (!id) return;
+
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي غلط', 'error');
     return;
   }
 
-  await addDoc(collection(db, "posts"), {
-    userID: currentUser.uid,
-    displayName: userData.displayName,
-    photoURL: userData.photoURL,
-    gender: userData.gender,
-    content: content,
-    image: image.includes('data:image')? image : '',
-    likes: [],
-    comments: [],
-    allowComments: true,
-    createdAt: serverTimestamp()
+  const userID = snap.docs[0].id;
+  await updateDoc(doc(db, "groups", currentGroup), {
+    members: arrayUnion(userID)
   });
 
-  closePostModal();
-  showAlert('تم', 'تم نشر البوست');
-
-  if (userData.dailyTasks?.lastPost!== new Date().toDateString()) {
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(10),
-      'dailyTasks.lastPost': new Date().toDateString()
-    });
-  }
+  document.getElementById('addMemberID').value = '';
+  showAlert('تم', 'تم اضافة العضو');
 }
 
+window.removeMemberFromGroup = async function(uid) {
+  await updateDoc(doc(db, "groups", currentGroup), {
+    members: arrayRemove(uid)
+  });
+  showAlert('تم', 'تم طرد العضو');
+}
+
+window.deleteGroup = function() {
+  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائي؟', async () => {
+    await deleteDoc(doc(db, "groups", currentGroup));
+    closeConfirmModal();
+    closeGroupSettings();
+    backToGroups();
+    showAlert('تم', 'تم حذف الجروب');
+  });
+}
+
+// ===== علامة التوثيق =====
+window.giveVerification = async function() {
+  if (userData.shortID!== '10') return;
+
+  const id = document.getElementById('verifyUserID').value.trim().toUpperCase();
+  const duration = document.getElementById('verifyDuration').value;
+
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي غلط', 'error');
+    return;
+  }
+
+  const userID = snap.docs[0].id;
+  let expiresAt = null;
+  if (duration!== 'permanent') {
+    expiresAt = Date.now() + parseInt(duration) * 24 * 60 * 60 * 1000;
+  }
+
+  await updateDoc(doc(db, "users", userID), {
+    verification: {
+      givenAt: Date.now(),
+      expiresAt: expiresAt,
+      type: duration
+    }
+  });
+
+  showAlert('تم', 'تم اعطاء علامة التوثيق');
+}
+  // ===== التفاعل مع المنشورات =====
 window.toggleLike = async function(postID) {
   const postRef = doc(db, "posts", postID);
   const postSnap = await getDoc(postRef);
@@ -2094,27 +2190,52 @@ window.deletePostByAdmin = async function(postID) {
   });
 }
 
-window.openProfile = function() {
-  document.getElementById('profilePage').classList.add('active');
-  document.getElementById('page1').classList.remove('active');
+// ===== تعديل الملف الشخصي =====
+window.openEditModal = function() {
+  document.getElementById('editProfileModal').classList.add('show');
+  document.getElementById('profileNameInput').value = userData.displayName;
+  document.getElementById('profileBioInput').value = userData.bio || '';
 }
 
-window.backToPage1 = function() {
-  document.getElementById('profilePage').classList.remove('active');
-  document.getElementById('page1').classList.add('active');
+window.closeEditProfileModal = function() {
+  document.getElementById('editProfileModal').classList.remove('show');
 }
 
-window.backToChat = function() {
-  document.getElementById('userProfilePage').classList.remove('active');
-  document.getElementById('chatPage').classList.add('active');
+window.saveProfileChanges = async function() {
+  const name = document.getElementById('profileNameInput').value.trim();
+  const bio = document.getElementById('profileBioInput').value.trim();
+  const pass = document.getElementById('newPassword').value.trim();
+
+  if (name) {
+    await updateProfile(currentUser, { displayName: name });
+    await updateDoc(doc(db, "users", currentUser.uid), { displayName: name });
+  }
+
+  if (bio) {
+    await updateDoc(doc(db, "users", currentUser.uid), { bio: bio });
+  }
+
+  if (pass) {
+    await updatePassword(currentUser, pass);
+  }
+
+  closeEditProfileModal();
+  showAlert('تم', 'تم حفظ التغييرات');
 }
 
-window.backToChatList = function() {
-  document.getElementById('chatPage').classList.remove('active');
-  document.getElementById('page1').classList.add('active');
-  currentChatUser = null;
+window.updatePhoto = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const url = event.target.result;
+    await updateDoc(doc(db, "users", currentUser.uid), { photoURL: url });
+    document.getElementById('profileImg').src = url;
+  };
+  reader.readAsDataURL(file);
 }
 
+// ===== المتابعة والحظر =====
 window.viewUserProfile = async function() {
   if (!currentChatUser) return;
   document.getElementById('chatPage').classList.remove('active');
@@ -2185,60 +2306,7 @@ window.backToProfile = function() {
   document.getElementById('profilePage').classList.add('active');
 }
 
-window.openEditModal = function() {
-  document.getElementById('editProfileModal').classList.add('show');
-  document.getElementById('profileNameInput').value = userData.displayName;
-  document.getElementById('profileBioInput').value = userData.bio || '';
-}
-
-window.closeEditProfileModal = function() {
-  document.getElementById('editProfileModal').classList.remove('show');
-}
-
-window.saveProfileChanges = async function() {
-  const name = document.getElementById('profileNameInput').value.trim();
-  const bio = document.getElementById('profileBioInput').value.trim();
-  const pass = document.getElementById('newPassword').value.trim();
-
-  if (name) {
-    await updateProfile(currentUser, { displayName: name });
-    await updateDoc(doc(db, "users", currentUser.uid), { displayName: name });
-  }
-
-  if (bio) {
-    await updateDoc(doc(db, "users", currentUser.uid), { bio: bio });
-  }
-
-  if (pass) {
-    await updatePassword(currentUser, pass);
-  }
-
-  closeEditProfileModal();
-  showAlert('تم', 'تم حفظ التغييرات');
-}
-
-window.updatePhoto = async function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async (event) => {
-    const url = event.target.result;
-    await updateDoc(doc(db, "users", currentUser.uid), { photoURL: url });
-    document.getElementById('profileImg').src = url;
-  };
-  reader.readAsDataURL(file);
-}
-
-function updateChatTask() {
-  const today = new Date().toDateString();
-  const tasks = userData.dailyTasks || {};
-  const chatCount = (tasks.chatCount || 0) + 1;
-
-  updateDoc(doc(db, "users", currentUser.uid), {
-    'dailyTasks.chatCount': chatCount
-  });
-}
-
+// ===== المهام اليومية =====
 window.checkDailyTasks = function() {
   const today = new Date().toDateString();
   const tasks = userData.dailyTasks || {};
@@ -2312,6 +2380,103 @@ window.claimDailyChat = async function() {
   document.getElementById('profileCoins').innerText = userData.coins;
   checkDailyTasks();
   showAlert('مبروك', 'خدت 15 كوينز');
+}
+
+// ===== لوحة الادمن =====
+window.sendCoinsToUser = async function() {
+  if (userData.shortID!== '10') return;
+  const id = document.getElementById('sendCoinsID').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('sendCoinsAmount').value);
+
+  if (!id ||!amount || amount <= 0) {
+    showAlert('خطأ', 'دخل بيانات صح', 'error');
+    return;
+  }
+
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي مش موجود', 'error');
+    return;
+  }
+
+  const userID = snap.docs[0].id;
+  await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+  showAlert('تم', `تم ارسال ${amount} كوينز لـ ${id}`);
+}
+
+window.sendBroadcast = async function() {
+  if (userData.shortID!== '10') return;
+  const text = document.getElementById('broadcastText').value.trim();
+  const imageFile = document.getElementById('broadcastImage').files[0];
+
+  if (!text &&!imageFile) {
+    showAlert('خطأ', 'اكتب رسالة او اختار صورة', 'error');
+    return;
+  }
+
+  let imageUrl = '';
+  if (imageFile) {
+    const reader = new FileReader();
+    imageUrl = await new Promise(resolve => {
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(imageFile);
+    });
+  }
+
+  const snap = await getDocs(collection(db, "users"));
+  const batch = writeBatch(db);
+  snap.forEach(docSnap => {
+    if (docSnap.id!== currentUser.uid) {
+      const chatID = [currentUser.uid, docSnap.id].sort().join('_');
+      batch.set(doc(db, "chats", chatID), {
+        messages: arrayUnion({
+          sender: currentUser.uid,
+          text: text,
+          image: imageUrl,
+          timestamp: Date.now(),
+          isBroadcast: true
+        }),
+        lastMessage: text || '📷 صورة'
+      }, { merge: true });
+    }
+  });
+  await batch.commit();
+
+  document.getElementById('broadcastText').value = '';
+  document.getElementById('broadcastImage').value = '';
+  showAlert('تم', 'تم ارسال الإعلان لكل المستخدمين');
+}
+
+async function updateOnlineCount() {
+  const now = Date.now();
+  const fiveMinAgo = now - 5 * 60 * 1000;
+  const q = query(collection(db, "users"), where("lastActive", ">", fiveMinAgo));
+  const snap = await getDocs(q);
+  document.getElementById('onlineCount').innerText = snap.size;
+}
+
+// ===== المودالات التانية =====
+window.openPostModal = function() {
+  document.getElementById('postModal').classList.add('show');
+}
+
+window.closePostModal = function() {
+  document.getElementById('postModal').classList.remove('show');
+  document.getElementById('postContent').value = '';
+  document.getElementById('postImage').value = '';
+  document.getElementById('postImagePreview').style.display = 'none';
+}
+
+window.previewPostImage = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    document.getElementById('postImagePreview').src = event.target.result;
+    document.getElementById('postImagePreview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
 }
 
 window.openFeedbackModal = function() {
