@@ -370,6 +370,41 @@ body {
   flex-direction: column;
   gap: 10px;
 }
+ .bg-item {
+  background: var(--bg-input);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.3s;
+}
+.bg-item:hover {
+  transform: scale(1.03);
+  border-color: var(--green);
+}
+.bg-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+.bg-item-info {
+  padding: 10px;
+  text-align: center;
+}
+.bg-item-name {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.bg-item-price {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 13px;
+}
+.bg-item.active {
+  border-color: var(--green);
+  box-shadow: 0 0 15px rgba(0,168,132,0.4);
+}
 .message {
   max-width: 75%;
   padding: 12px 16px;
@@ -857,7 +892,55 @@ body {
     <button class="header-btn" onclick="toggleGiftBox()">🎁</button>
     <button class="header-btn" onclick="openBgModal()">🖼️</button>
   </div>
+<div id="bgModal" class="modal">
 
+  <div class="modal-box">
+
+    <h3 style="margin-bottom:18px; font-size: 22px;">خلفيات الشات</h3>
+
+    <p style="color:var(--text-secondary); margin-bottom:15px;">
+
+      عندك <span id="bgCoinsShow" style="color:var(--gold); font-weight:700;">0</span> 🪙
+
+    </p>
+
+    <div id="bgList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; max-height:400px; overflow-y:auto;">
+
+      <!-- رفع خلفية مخصصة -->
+
+      <div class="bg-item" style="border:2px dashed var(--green);">
+
+        <div style="height:120px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; background:var(--bg-tertiary);">
+
+          <span style="font-size:30px;">📤</span>
+
+          <span style="font-size:13px;">رفع صورة من عندك</span>
+
+        </div>
+
+        <div class="bg-item-info">
+
+          <div class="bg-item-name">خلفية مخصصة</div>
+
+          <div class="bg-item-price">200 🪙</div>
+
+          <input type="file" id="customBgInput" accept="image/*" style="display:none" onchange="uploadCustomBg(event)">
+
+          <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
+
+        </div>
+
+      </div>
+
+      <!-- باقي الخلفيات هتولد هنا بالـ JS -->
+
+    </div>
+
+    <button class="btn btn-secondary" onclick="closeBgModal()" style="margin-top:15px;">إغلاق</button>
+
+  </div>
+
+</div>
   <div class="chat-area" id="chatArea">
     <div id="chatMessages" class="chat-messages"></div>
     <div id="giftBox" class="gift-box"></div>
@@ -1234,6 +1317,39 @@ const COUNTRIES = {
 
 const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
 
+  
+ window.uploadCustomBg = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const price = 200; // سعر الخلفية المخصصة
+  if (userData.coins < price) {
+    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const url = event.target.result;
+
+    // خصم الكوينز وحفظ الخلفية
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      coins: increment(-price),
+      customBg: { id: 'custom', url: url, name: 'خلفية مخصصة', price: price }
+    });
+
+    userData.coins -= price;
+    userData.customBg = { id: 'custom', url: url, name: 'خلفية مخصصة', price: price };
+
+    document.getElementById('bgCoinsShow').innerText = userData.coins;
+    document.getElementById('profileCoins').innerText = userData.coins;
+
+    applyBgToChat(userData.customBg);
+    closeBgModal();
+    showAlert('تم', 'تم رفع وتطبيق الخلفية المخصصة');
+  };
+  reader.readAsDataURL(file);
+}
 // ===== المودالات =====
 window.showAlert = function(title, message, type = 'success') {
   document.getElementById('alertTitle').innerText = title;
@@ -1264,6 +1380,81 @@ document.getElementById('confirmYesBtn').addEventListener('click', () => {
   if (confirmCallback) confirmCallback();
 });
 
+ window.openBgModal = function() {
+  document.getElementById('bgModal').classList.add('show');
+  document.getElementById('bgCoinsShow').innerText = userData.coins || 0;
+  loadBgModal();
+}
+
+window.closeBgModal = function() {
+  document.getElementById('bgModal').classList.remove('show');
+}
+
+function loadBgModal() {
+  const list = document.getElementById('bgList');
+  list.innerHTML = '';
+  const currentBg = userData.customBg?.id || 'none';
+
+  chatBgs.forEach(bg => {
+    const isActive = bg.id === currentBg;
+    const hasBg = userData.backgrounds?.includes(bg.id) || bg.id === 'none';
+    
+    list.innerHTML += `
+      <div class="bg-item ${isActive ? 'active' : ''}" onclick="selectBg('${bg.id}', ${bg.price}, ${hasBg})">
+        ${bg.url !== 'none' ? `<img src="${bg.url}">` : `<div style="height:120px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">بدون خلفية</div>`}
+        <div class="bg-item-info">
+          <div class="bg-item-name">${bg.name}</div>
+          <div class="bg-item-price">${hasBg ? 'مملوكة' : bg.price + ' 🪙'}</div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+window.selectBg = async function(bgID, price, hasBg) {
+  const bg = chatBgs.find(b => b.id === bgID);
+  
+  if (!hasBg && userData.coins < price) {
+    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+    return;
+  }
+
+  if (!hasBg) {
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      coins: increment(-price),
+      backgrounds: arrayUnion(bgID)
+    });
+    userData.coins -= price;
+    userData.backgrounds = [...(userData.backgrounds || []), bgID];
+    document.getElementById('bgCoinsShow').innerText = userData.coins;
+    document.getElementById('profileCoins').innerText = userData.coins;
+    showAlert('مبروك', `اشتريت خلفية ${bg.name}`);
+  }
+
+  await updateDoc(doc(db, "users", currentUser.uid), {
+    customBg: bg
+  });
+  userData.customBg = bg;
+
+  applyBgToChat(bg);
+  closeBgModal();
+  showAlert('تم', `تم تطبيق خلفية ${bg.name}`);
+}
+
+function applyBgToChat(bg) {
+  const chatArea = document.getElementById('chatArea');
+  if (bg.url === 'none') {
+    chatArea.style.backgroundImage = 'none';
+  } else {
+    chatArea.style.backgroundImage = `url(${bg.url})`;
+  }
+}
+
+function loadChatBg(uid) {
+  if (userData.customBg) {
+    applyBgToChat(userData.customBg);
+  }
+}
 // ===== المصادقة =====
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -1721,10 +1912,6 @@ window.sendGift = async function(giftID) {
 
   showAlert('مبروك', `تم ارسال ${gift.name}`);
   toggleGiftBox();
-}
-
-window.openBgModal = function() {
-  showAlert('خلفيات الشات', 'قريباً تقدر تشتري خلفيات مخصصة من هنا');
 }
 
 // ===== المنشورات =====
