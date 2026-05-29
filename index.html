@@ -20,6 +20,7 @@
   --shadow: 0 8px 32px rgba(0,0,0,0.3);
   --radius: 16px;
 }
+
 [data-theme="light"] {
   --bg-primary: #f0f2f5;
   --bg-secondary: #ffffff;
@@ -29,6 +30,7 @@
   --text-secondary: #667781;
   --shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -38,6 +40,7 @@ body {
   overflow: hidden;
   overscroll-behavior-y: contain;
 }
+
 .page { 
   display: none; 
   height: 100vh; 
@@ -49,6 +52,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 .page.active { display: flex; }
+  
 .pull-refresh {
   height: 0;
   display: flex;
@@ -59,6 +63,7 @@ body {
   overflow: hidden;
   transition: height 0.3s ease;
 }
+
 .auth-page {
   background: linear-gradient(135deg, #00a884 0%, #111b21 100%);
   justify-content: center;
@@ -83,7 +88,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.auth-box input, .auth-box select, .auth-box textarea {
+.auth-box input, .auth-box select {
   width: 100%;
   padding: 16px;
   margin-bottom: 14px;
@@ -95,10 +100,11 @@ body {
   font-size: 15px;
   transition: 0.3s;
 }
-.auth-box input:focus, .auth-box select:focus, .auth-box textarea:focus { 
+.auth-box input:focus, .auth-box select:focus { 
   border-color: var(--green);
   box-shadow: 0 0 0 4px rgba(0,168,132,0.1);
 }
+
 .btn {
   width: 100%;
   padding: 16px;
@@ -127,6 +133,7 @@ body {
 .btn-secondary:hover { background: rgba(0,168,132,0.1); }
 .btn-danger { background: var(--red); color: white; }
 .btn-gold { background: linear-gradient(135deg, var(--gold), #ffed4e); color: #000; }
+
 .header {
   background: var(--bg-tertiary);
   padding: 14px 18px;
@@ -163,6 +170,7 @@ body {
   color: white;
   transform: scale(1.05);
 }
+
 .search-box {
   padding: 14px 18px;
   background: var(--bg-secondary);
@@ -179,6 +187,7 @@ body {
   transition: 0.3s;
 }
 .search-box input:focus { border-color: var(--green); }
+
 .list {
   flex: 1;
   overflow-y: auto;
@@ -235,6 +244,7 @@ body {
 }
 .gender-icon { font-size: 16px; margin-left: 5px; }
 .country-flag { font-size: 16px; }
+
 .post-card {
   background: var(--bg-tertiary);
   margin: 14px;
@@ -287,6 +297,7 @@ body {
 }
 .post-action:hover { background: var(--bg-input); }
 .post-action.liked { color: var(--red); }
+
 .admin-delete-btn {
   position: absolute;
   top: 12px;
@@ -302,6 +313,7 @@ body {
   font-weight: 700;
 }
 .admin-delete-btn.show { display: block; }
+
 .comment-box {
   padding: 14px;
   background: var(--bg-primary);
@@ -321,6 +333,7 @@ body {
   margin-bottom: 4px;
   color: var(--green);
 }
+
 .fab {
   position: fixed;
   bottom: 85px;
@@ -338,6 +351,7 @@ body {
   transition: 0.3s;
 }
 .fab:hover { transform: scale(1.1) rotate(90deg); }
+
 .chat-area {
   flex: 1;
   display: flex;
@@ -438,11 +452,6 @@ body {
   border-radius: 20px;
   max-width: 85%;
 }
-.message.system.warning {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
-  color: white;
-  font-weight: 700;
-}
 .message-gift {
   align-self: center;
   background: linear-gradient(135deg, var(--gold), #ffed4e);
@@ -488,6 +497,7 @@ body {
   transition: 0.3s;
 }
 .chat-input button:hover { transform: scale(1.1); }
+
 .gift-box {
   background: var(--bg-primary);
   padding: 16px;
@@ -509,6 +519,7 @@ body {
 .gift-item:hover { transform: scale(1.05); }
 .gift-item div { font-size: 38px; margin-bottom: 8px; }
 .gift-price { font-size: 13px; color: var(--gold); font-weight: 700; }
+
 .profile-page {
   background: var(--bg-secondary);
   overflow-y: auto;
@@ -549,6 +560,7 @@ body {
   justify-content: center;
   gap: 10px;
 }
+
 .profile-section {
   background: var(--bg-tertiary);
   margin: 14px;
@@ -577,6 +589,7 @@ body {
   transition: 0.3s;
 }
 .profile-section input:focus, .profile-section textarea:focus { border-color: var(--green); }
+
 .help-item {
   display: flex;
   align-items: center;
@@ -591,6 +604,7 @@ body {
 .help-item-icon { font-size: 26px; color: var(--text-secondary); }
 .help-item-text h4 { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
 .help-item-text p { font-size: 13px; color: var(--text-secondary); }
+
 .modal {
   position: fixed;
   top: 0; left: 0;
@@ -615,6 +629,7 @@ body {
   box-shadow: var(--shadow);
   border: 1px solid var(--bg-input);
 }
+
 .nav-bar {
   background: var(--bg-tertiary);
   padding: 12px;
@@ -636,10 +651,10 @@ body {
   align-items: center;
   gap: 5px;
   transition: 0.3s;
-  user-select: none;
 }
 .nav-btn.active { color: var(--green); transform: scale(1.1); }
 .nav-btn span { font-size: 28px; }
+
 .group-container {
   display: flex;
   flex-direction: column;
@@ -669,6 +684,8 @@ body {
 .group-info { flex: 1; }
 .group-name { font-weight: 700; font-size: 17px; }
 .group-members { font-size: 13px; color: var(--text-secondary); }
+.group-actions { display: flex; gap: 10px; }
+
 .delete-chat-btn {
   background: var(--red);
   border: none;
@@ -700,6 +717,7 @@ body {
   padding: 8px;
   border-radius: 10px;
 }
+
 .alert-modal-icon {
   width: 70px;
   height: 70px;
@@ -713,6 +731,7 @@ body {
 .alert-modal-icon.success { background: rgba(0,168,132,0.2); color: var(--green); }
 .alert-modal-icon.error { background: rgba(231,76,60,0.2); color: var(--red); }
 .alert-modal-icon.info { background: rgba(83,189,235,0.2); color: var(--blue); }
+
 .muted-badge {
   background: var(--red);
   color: white;
@@ -729,6 +748,7 @@ body {
   font-size: 11px;
   font-weight: 700;
 }
+
 .delete-all-btn {
   background: linear-gradient(135deg, var(--red), #c0392b);
   border: none;
@@ -741,6 +761,8 @@ body {
   width: 100%;
   margin-bottom: 15px;
 }
+
+/* ايموشنات + مسح */
 .emoji-picker {
   position: absolute;
   bottom: 100%;
@@ -791,19 +813,6 @@ body {
   background: var(--bg-input);
   transform: scale(1.2);
 }
-.banned-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  color: white;
-  text-align: center;
-  padding: 40px;
-}
 </style>
 </head>
 <body>
@@ -837,6 +846,7 @@ body {
     <button class="btn btn-secondary" onclick="showSignup()">مفيش حساب؟ سجل دلوقتي</button>
     <div id="loginError" class="error-text"></div>
   </div>
+
   <div class="auth-box" id="signupBox" style="display:none;">
     <h2>انشاء حساب جديد</h2>
     <input id="signupName" type="text" placeholder="الاسم">
@@ -852,6 +862,21 @@ body {
       <option value="EG">🇪🇬 مصر</option>
       <option value="SA">🇸🇦 السعودية</option>
       <option value="AE">🇦🇪 الإمارات</option>
+      <option value="MA">🇲🇦 المغرب</option>
+      <option value="DZ">🇩🇿 الجزائر</option>
+      <option value="IQ">🇮🇶 العراق</option>
+      <option value="SY">🇸🇾 سوريا</option>
+      <option value="JO">🇯🇴 الأردن</option>
+      <option value="LB">🇱🇧 لبنان</option>
+      <option value="PS">🇵🇸 فلسطين</option>
+      <option value="YE">🇾🇪 اليمن</option>
+      <option value="SD">🇸🇩 السودان</option>
+      <option value="TN">🇹🇳 تونس</option>
+      <option value="LY">🇱🇾 ليبيا</option>
+      <option value="KW">🇰🇼 الكويت</option>
+      <option value="QA">🇶🇦 قطر</option>
+      <option value="BH">🇧🇭 البحرين</option>
+      <option value="OM">🇴🇲 عمان</option>
     </select>
     <button class="btn btn-primary" onclick="signup()">تسجيل</button>
     <button class="btn btn-secondary" onclick="showLogin()">عندي حساب</button>
@@ -869,26 +894,46 @@ body {
     <button class="header-btn" onclick="openDeleteChatModal()">🗑️</button>
     <button class="header-btn" onclick="openProfile()">⚙️</button>
   </div>
+
   <div class="search-box">
     <input id="searchID" type="text" placeholder="بحث بالـ ID">
   </div>
+
   <div id="userList" class="list"></div>
+
   <div class="nav-bar">
-    <button class="nav-btn active" id="nav-chats" ondblclick="refreshPage('page1')"><span>💬</span>الدردشات</button>
-    <button class="nav-btn" id="nav-posts" ondblclick="refreshPage('page2')"><span>📃</span>المنشورات</button>
-    <button class="nav-btn" id="nav-groups" ondblclick="refreshPage('page3')"><span>👥</span>الجروبات</button>
+    <button class="nav-btn active" onclick="switchPage('page1')">
+      <span>💬</span>الدردشات
+    </button>
+    <button class="nav-btn" onclick="switchPage('page2')">
+      <span>📃</span>المنشورات
+    </button>
+    <button class="nav-btn" onclick="switchPage('page3')">
+      <span>👥</span>الجروبات
+    </button>
   </div>
 </div>
 
 <div id="page2" class="page">
   <div class="pull-refresh" id="pullRefresh2">اسحب للاسفل للتحديث</div>
-  <div class="header"><h2>المنشورات</h2></div>
+  <div class="header">
+    <h2>المنشورات</h2>
+  </div>
+
   <div id="postsList" class="list"></div>
+
   <button class="fab" onclick="openPostModal()">+</button>
+
   <div class="nav-bar">
-    <button class="nav-btn" id="nav-chats2" ondblclick="refreshPage('page1')"><span>💬</span>الدردشات</button>
-    <button class="nav-btn active" id="nav-posts2" ondblclick="refreshPage('page2')"><span>📃</span>المنشورات</button>
-    <button class="nav-btn" id="nav-groups2" ondblclick="refreshPage('page3')"><span>👥</span>الجروبات</button>
+    <button class="nav-btn" onclick="switchPage('page1')">
+      <span>💬</span>الدردشات
+    </button>
+    <button class="nav-btn active" onclick="switchPage('page2')">
+      <span>📃</span>المنشورات
+    </button>
+    <button class="nav-btn" onclick="switchPage('page3')">
+      <span>👥</span>الجروبات
+    </button>
   </div>
 </div>
 
@@ -897,11 +942,19 @@ body {
     <h2>الجروبات</h2>
     <button class="header-btn" onclick="openCreateGroupModal()">➕</button>
   </div>
+
   <div id="groupsList" class="group-container"></div>
+
   <div class="nav-bar">
-    <button class="nav-btn" id="nav-chats3" ondblclick="refreshPage('page1')"><span>💬</span>الدردشات</button>
-    <button class="nav-btn" id="nav-posts3" ondblclick="refreshPage('page2')"><span>📃</span>المنشورات</button>
-    <button class="nav-btn active" id="nav-groups3" ondblclick="refreshPage('page3')"><span>👥</span>الجروبات</button>
+    <button class="nav-btn" onclick="switchPage('page1')">
+      <span>💬</span>الدردشات
+    </button>
+    <button class="nav-btn" onclick="switchPage('page2')">
+      <span>📃</span>المنشورات
+    </button>
+    <button class="nav-btn active" onclick="switchPage('page3')">
+      <span>👥</span>الجروبات
+    </button>
   </div>
 </div>
 
@@ -913,14 +966,29 @@ body {
     <button class="header-btn" onclick="toggleGiftBox()">🎁</button>
     <button class="header-btn" onclick="openBgModal()">🖼️</button>
   </div>
-  <div id="bgModal" class="modal">
-    <div class="modal-box">
-      <h3 style="margin-bottom:18px; font-size: 22px;">خلفيات الشات</h3>
-      <p style="color:var(--text-secondary); margin-bottom:15px;">عندك <span id="bgCoinsShow" style="color:var(--gold); font-weight:700;">0</span> 🪙</p>
-      <div id="bgList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; max-height:400px; overflow-y:auto;"></div>
-      <button class="btn btn-secondary" onclick="closeBgModal()" style="margin-top:15px;">إغلاق</button>
+<div id="bgModal" class="modal">
+  <div class="modal-box">
+    <h3 style="margin-bottom:18px; font-size: 22px;">خلفيات الشات</h3>
+    <p style="color:var(--text-secondary); margin-bottom:15px;">
+      عندك <span id="bgCoinsShow" style="color:var(--gold); font-weight:700;">0</span> 🪙
+    </p>
+    <div id="bgList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; max-height:400px; overflow-y:auto;">
+      <div class="bg-item" style="border:2px dashed var(--green);">
+        <div style="height:120px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; background:var(--bg-tertiary);">
+          <span style="font-size:30px;">📤</span>
+          <span style="font-size:13px;">رفع صورة من عندك</span>
+        </div>
+        <div class="bg-item-info">
+          <div class="bg-item-name">خلفية مخصصة</div>
+          <div class="bg-item-price">200 🪙</div>
+          <input type="file" id="customBgInput" accept="image/*" style="display:none" onchange="uploadCustomBg(event)">
+          <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
+        </div>
+      </div>
     </div>
+    <button class="btn btn-secondary" onclick="closeBgModal()" style="margin-top:15px;">إغلاق</button>
   </div>
+</div>
   <div class="chat-area" id="chatArea">
     <div id="chatMessages" class="chat-messages"></div>
     <div id="giftBox" class="gift-box"></div>
@@ -936,11 +1004,12 @@ body {
 <div id="groupChatPage" class="page">
   <div class="header">
     <button class="header-btn" onclick="backToGroups()">←</button>
-    <img id="groupChatImg" src="" onerror="this.src='https://via.placeholder.com/50'">
-    <h2 id="groupChatName"></h2>
+    <img id="groupChatImg" src="" onerror="this.src='https://via.placeholder.com/50'" onclick="viewGroupProfile()">
+    <h2 id="groupChatName" onclick="viewGroupProfile()"></h2>
     <button class="header-btn" id="groupSettingsBtn" onclick="openGroupSettings()">⚙️</button>
     <button class="header-btn" onclick="clearGroupChat()">🗑️</button>
   </div>
+
   <div class="chat-area" id="groupChatArea">
     <div id="groupChatMessages" class="chat-messages"></div>
     <div class="chat-input">
@@ -951,12 +1020,12 @@ body {
     </div>
   </div>
 </div>
-
 <div id="profilePage" class="page profile-page">
   <div class="header">
     <button class="header-btn" onclick="backToPage1()">←</button>
     <h2>الاعدادات</h2>
   </div>
+
   <div class="profile-header">
     <button class="header-btn" style="position:absolute; top:18px; left:18px; font-size:22px;" onclick="openEditModal()">✏️</button>
     <img id="profileImg" class="profile-img" src="" onerror="this.src='https://via.placeholder.com/120'" onclick="document.getElementById('fileInput').click()">
@@ -990,20 +1059,6 @@ body {
     <input id="sendCoinsAmount" type="number" placeholder="عدد الكوينز">
     <button class="btn btn-gold" onclick="sendCoinsToUser()">ارسال كوينز</button>
     <hr style="margin:15px 0;border-color:var(--bg-input)">
-    <h4 style="margin-bottom:10px;">حظر/بند مؤقت</h4>
-    <input id="banUserID" type="text" placeholder="ID المستخدم">
-    <input id="banDuration" type="number" placeholder="عدد الأيام">
-    <button class="btn btn-danger" onclick="banUser()">حظر المستخدم</button>
-    <hr style="margin:15px 0;border-color:var(--bg-input)">
-    <h4 style="margin-bottom:10px;">إرسال تحذير رسمي</h4>
-    <input id="warnUserID" type="text" placeholder="ID المستخدم">
-    <input id="warnReason" type="text" placeholder="سبب التحذير">
-    <button class="btn btn-primary" onclick="sendWarning()">إرسال تحذير</button>
-    <hr style="margin:15px 0;border-color:var(--bg-input)">
-    <h4 style="margin-bottom:10px;">مسح أي جروب</h4>
-    <input id="deleteGroupID" type="text" placeholder="ID الجروب">
-    <button class="btn btn-danger" onclick="adminDeleteGroup()">مسح الجروب</button>
-    <hr style="margin:15px 0;border-color:var(--bg-input)">
     <h4 style="margin-bottom:10px;">إرسال إعلان للكل</h4>
     <input id="broadcastText" type="text" placeholder="نص الإعلان">
     <input type="file" id="broadcastImage" accept="image/*">
@@ -1032,6 +1087,7 @@ body {
         </div>
         <span id="dailyLoginStatus">جاهز</span>
       </div>
+
       <div class="help-item" onclick="claimDailyPost()">
         <div class="help-item-left">
           <div class="help-item-icon">📱</div>
@@ -1042,6 +1098,7 @@ body {
         </div>
         <span id="dailyPostStatus">جاهز</span>
       </div>
+
       <div class="help-item" onclick="claimDailyChat()">
         <div class="help-item-left">
           <div class="help-item-icon">💬</div>
@@ -1062,6 +1119,7 @@ body {
       <option value="en">English</option>
     </select>
   </div>
+
   <div class="profile-section">
     <label>المظهر</label>
     <select id="themeSelect" onchange="changeTheme()">
@@ -1069,6 +1127,7 @@ body {
       <option value="light">فاتح</option>
     </select>
   </div>
+
   <div class="profile-section">
     <label>المساعدة والملاحظات</label>
     <div class="help-item" onclick="openAdminChat()">
@@ -1080,6 +1139,7 @@ body {
         </div>
       </div>
     </div>
+
     <div class="help-item" onclick="openFeedbackModal()">
       <div class="help-item-left">
         <div class="help-item-icon">📝</div>
@@ -1089,6 +1149,7 @@ body {
         </div>
       </div>
     </div>
+
     <div class="help-item" onclick="openPolicy()">
       <div class="help-item-left">
         <div class="help-item-icon">📜</div>
@@ -1099,6 +1160,7 @@ body {
       </div>
     </div>
   </div>
+
   <div style="padding: 20px;">
     <button class="btn btn-danger" onclick="logout()">تسجيل خروج</button>
   </div>
@@ -1146,6 +1208,19 @@ body {
   </div>
 </div>
 
+<div id="editPostModal" class="modal">
+  <div class="modal-box">
+    <h3 style="margin-bottom:18px; font-size: 22px;">تعديل المنشور</h3>
+    <textarea id="editPostContent" style="width:100%;height:130px;padding:16px;border-radius:14px;border:2px solid transparent;background:var(--bg-input);color:var(--text-primary);margin-bottom:12px;resize:none;"></textarea>
+    <label style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+      <input type="checkbox" id="allowCommentsCheck" checked>
+      <span>السماح بالتعليقات</span>
+    </label>
+    <button class="btn btn-primary" onclick="saveEditPost()">حفظ</button>
+    <button class="btn btn-secondary" onclick="closeEditModal()">إلغاء</button>
+  </div>
+</div>
+
 <div id="editProfileModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">تعديل الحساب</h3>
@@ -1156,7 +1231,6 @@ body {
     <button class="btn btn-secondary" onclick="closeEditProfileModal()">إلغاء</button>
   </div>
 </div>
-
 <div id="deleteChatModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">مسح المحادثات</h3>
@@ -1190,25 +1264,77 @@ body {
 <div id="groupSettingsModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">إعدادات الجروب</h3>
-    <input id="editGroupName" type="text" placeholder="اسم الجروب">
-    <textarea id="editGroupBio" placeholder="وصف الجروب" style="height:80px;resize:none;"></textarea>
-    <input id="editGroupMaxMembers" type="number" placeholder="الحد الأقصى للأعضاء">
-    <input type="file" id="editGroupImage" accept="image/*" onchange="previewEditGroupImage(event)">
-    <img id="editGroupImagePreview" src="" onerror="this.style.display='none'" style="width:100%;max-height:160px;object-fit:cover;border-radius:14px;display:none;margin-top:12px;">
-    <div id="groupMembersList" style="max-height:200px;overflow-y:auto;margin:15px 0;"></div>
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-primary" onclick="saveGroupSettings()">حفظ</button>
-      <button class="btn btn-danger" onclick="deleteGroup()">حذف الجروب</button>
+
+    <div style="margin-bottom:20px;">
+      <label>صورة الجروب</label>
+      <input type="file" id="editGroupImage" accept="image/*" onchange="previewEditGroupImage(event)">
+      <img id="editGroupImagePreview" src="" onerror="this.style.display='none'" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;margin-top:10px;">
     </div>
+
+    <div style="margin-bottom:20px;">
+      <label>اسم الجروب</label>
+      <input id="editGroupName" type="text" placeholder="الاسم الجديد">
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label>نبذة الجروب</label>
+      <textarea id="editGroupBio" placeholder="وصف الجروب" style="height:80px;resize:none;"></textarea>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label>الحد الأقصى للأعضاء</label>
+      <select id="editGroupMaxMembers">
+        <option value="20">20 عضو</option>
+        <option value="50">50 عضو</option>
+        <option value="100">100 عضو</option>
+        <option value="200">200 عضو</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" onclick="saveGroupSettings()">حفظ التغييرات</button>
+
+    <hr style="margin:20px 0;border-color:var(--bg-input)">
+
+    <h4 style="margin-bottom:12px;">الأعضاء</h4>
+    <div id="groupMembersList" style="max-height:250px;overflow-y:auto;margin-bottom:15px;"></div>
+    <input id="addMemberID" type="text" placeholder="ID العضو للإضافة">
+    <button class="btn btn-primary" onclick="addMemberToGroup()">إضافة عضو</button>
+    <button class="btn btn-gold" onclick="showPromoteModal()">ترقية مشرف</button>
+    <button class="btn btn-danger" onclick="deleteGroup()">حذف الجروب</button>
     <button class="btn btn-secondary" onclick="closeGroupSettings()">إغلاق</button>
+  </div>
+</div>
+
+<div id="promoteModal" class="modal">
+  <div class="modal-box">
+    <h3 style="margin-bottom:18px; font-size: 22px;">إدارة المشرفين</h3>
+    <input id="promoteUserID" type="text" placeholder="ID العضو">
+    <button class="btn btn-gold" onclick="promoteToAdmin()">ترقية لمشرف</button>
+    <button class="btn btn-danger" onclick="demoteAdmin()">إزالة من المشرفين</button>
+    <button class="btn btn-secondary" onclick="closePromoteModal()" style="margin-top:15px;">إغلاق</button>
+  </div>
+</div>
+
+<div id="muteModal" class="modal">
+  <div class="modal-box">
+    <h3 style="margin-bottom:18px; font-size: 22px;">كتم عضو</h3>
+    <input id="muteUserID" type="text" placeholder="ID العضو">
+    <select id="muteDuration">
+      <option value="300">5 دقائق</option>
+      <option value="1800">30 دقيقة</option>
+      <option value="3600">ساعة</option>
+      <option value="86400">يوم</option>
+    </select>
+    <button class="btn btn-danger" onclick="muteUser()">كتم</button>
+    <button class="btn btn-secondary" onclick="closeMuteModal()" style="margin-top:15px;">إغلاق</button>
   </div>
 </div>
 
 <div id="feedbackModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">ارسال ملاحظات</h3>
-    <textarea id="feedbackText" placeholder="اكتب ملاحظتك او مشكلتك..." style="width:100%;height:120px;padding:16px;border-radius:14px;border:2px solid transparent;background:var(--bg-input);color:var(--text-primary);margin-bottom:12px;resize:none;"></textarea>
-    <button class="btn btn-primary" onclick="sendFeedback()">إرسال</button>
+    <textarea id="feedbackText" placeholder="اكتب ملاحظتك او اقتراحك هنا..." rows="5" style="width:100%;padding:16px;border-radius:14px;border:2px solid transparent;background:var(--bg-input);color:var(--text-primary);margin-bottom:12px;resize:none;"></textarea>
+    <button class="btn btn-primary" onclick="sendFeedback()">ارسال</button>
     <button class="btn btn-secondary" onclick="closeFeedbackModal()">إلغاء</button>
   </div>
 </div>
@@ -1216,7 +1342,10 @@ body {
 <div id="policyModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">سياسة التطبيق</h3>
-    <iframe id="policyLink" src="" style="width:100%;height:400px;border:none;border-radius:12px;"></iframe>
+    <div id="policyContent" style="max-height:300px;overflow-y:auto;color:var(--text-secondary);line-height:1.8; font-size: 15px;">
+      باستخدامك للتطبيق فأنت موافق على الشروط والأحكام. ممنوع نشر محتوى مسيء أو مخالف للقانون. الإدارة تحتفظ بحق حذف أي حساب مخالف.
+    </div>
+    <a id="policyLink" href="#" target="_blank" style="color:var(--green);display:block;margin:15px 0; font-weight: 700;">افتح الرابط</a>
     <button class="btn btn-secondary" onclick="closePolicy()">إغلاق</button>
   </div>
 </div>
@@ -1224,7 +1353,7 @@ body {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, addDoc, deleteDoc, orderBy, serverTimestamp, arrayUnion, arrayRemove, increment, writeBatch, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, addDoc, deleteDoc, orderBy, serverTimestamp, arrayUnion, arrayRemove, increment, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
@@ -1244,34 +1373,62 @@ const storage = getStorage(app);
 
 let currentUser = null;
 let userData = {
-  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: '', verification: null, backgrounds: ['none'], customBg: null, bannedUntil: null
+  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: '', verification: null, backgrounds: ['none'], customBg: null
 };
 let currentChatUser = null;
+let currentEditPostID = null;
+let currentChatBg = 'none';
 let currentGroup = null;
 let currentGroupData = null;
-let selectedMessageDiv = null;
+let startY = 0;
+let isRefreshing = false;
+let activeTimeInterval = null;
 let confirmCallback = null;
+let selectedMessageDiv = null;
+let selectedMsgIndex = null;
 
 const emojis = ['❤️', '😂', '😮', '😢', '👍', '👎', '🔥', '🎉'];
-const gifts = [
-  {id:1, emoji:'🌹', name:'وردة', price:10},
-  {id:2, emoji:'🎁', name:'هدية', price:25},
-  {id:3, emoji:'💎', name:'ألماس', price:50},
-  {id:4, emoji:'👑', name:'تاج', price:100}
-];
+
 const chatBgs = [
-  {id:'none', name:'بدون خلفية', url:'none', price:0},
-  {id:'bg1', name:'سادة داكن', url:'https://i.imgur.com/8QfXzQk.jpg', price:20},
-  {id:'bg2', name:'طبيعة', url:'https://i.imgur.com/3QpT8Xl.jpg', price:30},
-  {id:'bg3', name:'نيون', url:'https://i.imgur.com/5X8Y9Qm.jpg', price:40}
+  {id: 'none', url: 'none', price: 0, name: 'عادي'},
+  {id: 'bg1', url: 'https://b.top4top.io/p_37990dsp70.jpg', price: 100, name: 'طبيعة'},
+  {id: 'bg2', url: 'https://j.top4top.io/p_37990ivw30.jpg', price: 100, name: 'عيد سعيد '},
+  {id: 'bg3', url: 'https://c.top4top.io/p_37999pnnd0.jpg', price: 100, name: 'بحر'},
+  {id: 'bg4', url: 'https://e.top4top.io/p_3799kahxt0.jpg', price: 100, name: 'مدينة'}
 ];
+
+const gifts = [
+  {id:1, emoji:'🌹', price:5, name:'وردة'},
+  {id:2, emoji:'💎', price:5, name:'ماسة'},
+  {id:3, emoji:'🎁', price:5, name:'هدية'},
+  {id:4, emoji:'🏆', price:5, name:'كأس'},
+  {id:5, emoji:'❤️', price:5, name:'قلب'},
+  {id:6, emoji:'🔥', price:5, name:'نار'},
+  {id:7, emoji:'👑', price:10, name:'تاج'},
+  {id:8, emoji:'🚀', price:10, name:'صاروخ'}
+];
+
 const COUNTRIES = {
   EG: '🇪🇬', SA: '🇸🇦', AE: '🇦🇪', MA: '🇲🇦', DZ: '🇩🇿', IQ: '🇮🇶', SY: '🇸🇾',
   JO: '🇯🇴', LB: '🇱🇧', PS: '🇵🇸', YE: '🇾🇪', SD: '🇸🇩', TN: '🇹🇳', LY: '🇱🇾',
   KW: '🇰🇼', QA: '🇶🇦', BH: '🇧🇭', OM: '🇴🇲'
 };
+
 const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
 const DEFAULT_AVATAR = 'https://via.placeholder.com/120/202c33/ffffff?text=👤';
+
+function saveToCache(key, data) {
+  localStorage.setItem('chatapp_' + key, JSON.stringify({data, time: Date.now()}));
+}
+
+function getFromCache(key, maxAge = 60000) {
+  const cached = localStorage.getItem('chatapp_' + key);
+  if (!cached) return null;
+  const parsed = JSON.parse(cached);
+  const {data, time} = parsed;
+  if (Date.now() - time > maxAge) return null;
+  return data;
+}
 
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -1281,21 +1438,27 @@ function linkify(text) {
 function createEmojiPicker(msgIndex, isGroup) {
   const picker = document.createElement('div');
   picker.className = 'emoji-picker';
+
   const deleteOptions = document.createElement('div');
   deleteOptions.className = 'delete-options';
+
   const btnMe = document.createElement('button');
   btnMe.className = 'delete-btn for-me';
   btnMe.innerText = 'مسح من عندي';
   btnMe.onclick = () => deleteMessage(msgIndex, isGroup, 'me');
+
   const btnAll = document.createElement('button');
   btnAll.className = 'delete-btn';
   btnAll.innerText = 'مسح للكل';
   btnAll.onclick = () => deleteMessage(msgIndex, isGroup, 'all');
+
   deleteOptions.appendChild(btnMe);
   deleteOptions.appendChild(btnAll);
   picker.appendChild(deleteOptions);
+
   const emojiOptions = document.createElement('div');
   emojiOptions.className = 'emoji-options';
+
   emojis.forEach(emoji => {
     const span = document.createElement('span');
     span.className = 'emoji-option';
@@ -1313,6 +1476,7 @@ function showEmojiPicker(messageDiv, msgIndex, isGroup) {
   messageDiv.appendChild(picker);
   picker.classList.add('show');
   selectedMessageDiv = messageDiv;
+  selectedMsgIndex = msgIndex;
   setTimeout(() => {
     document.addEventListener('click', hideEmojiPicker, {once: true});
   }, 100);
@@ -1410,126 +1574,190 @@ window.closeConfirmModal = function() {
 
 document.getElementById('confirmYesBtn').addEventListener('click', () => {
   if (confirmCallback) confirmCallback();
-})
+});
 
-// دالة الريفريش بالضغطتين - بدون رسالة
-window.refreshPage = function(pageID) {
-  if(pageID === 'page1') {
-    loadChats();
-  } else if(pageID === 'page2') {
-    loadPosts();
-  } else if(pageID === 'page3') {
-    loadGroups();
+window.uploadCustomBg = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const price = 200;
+  if (userData.coins < price) {
+    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+    return;
   }
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const url = event.target.result;
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      coins: increment(-price),
+      customBg: { id: 'custom', url: url, name: 'خلفية مخصصة', price: price }
+    });
+    userData.coins -= price;
+    userData.customBg = { id: 'custom', url: url, name: 'خلفية مخصصة', price: price };
+    document.getElementById('bgCoinsShow').innerText = userData.coins;
+    document.getElementById('profileCoins').innerText = userData.coins;
+    applyBgToChat(userData.customBg);
+    closeBgModal();
+    showAlert('تم', 'تم رفع وتطبيق الخلفية المخصصة');
+  };
+  reader.readAsDataURL(file);
 }
 
-// ===== دوال الأدمن =====
-window.banUser = async function() {
-  if (userData.shortID!== '10') return;
-  const id = document.getElementById('banUserID').value.trim().toUpperCase();
-  const days = parseInt(document.getElementById('banDuration').value);
-  if (!id ||!days || days <= 0) {
-    showAlert('خطأ', 'دخل ID وعدد أيام صحيح', 'error');
-    return;
-  }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي مش موجود', 'error');
-    return;
-  }
-  const userID = snap.docs[0].id;
-  const banUntil = Date.now() + (days * 24 * 60 * 60 * 1000);
-  await updateDoc(doc(db, "users", userID), { bannedUntil: banUntil });
-  showAlert('تم', `تم حظر ${id} لمدة ${days} يوم`);
-  document.getElementById('banUserID').value = '';
-  document.getElementById('banDuration').value = '';
+window.openBgModal = function() {
+  document.getElementById('bgModal').classList.add('show');
+  document.getElementById('bgCoinsShow').innerText = userData.coins || 0;
+  loadBgModal();
 }
 
-window.sendWarning = async function() {
-  if (userData.shortID!== '10') return;
-  const id = document.getElementById('warnUserID').value.trim().toUpperCase();
-  const reason = document.getElementById('warnReason').value.trim();
-  if (!id ||!reason) {
-    showAlert('خطأ', 'دخل ID وسبب التحذير', 'error');
-    return;
-  }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي مش موجود', 'error');
-    return;
-  }
-  const userID = snap.docs[0].id;
-  const chatID = [currentUser.uid, userID].sort().join('_');
-  await setDoc(doc(db, "chats", chatID), {
-    messages: arrayUnion({
-      sender: 'system',
-      text: `⚠️ تحذير رسمي من الإدارة\nالسبب: ${reason}\nيرجى الالتزام بقوانين التطبيق`,
-      timestamp: Date.now(),
-      isWarning: true
-    }),
-    lastMessage: '⚠️ تحذير رسمي'
-  }, { merge: true });
-  showAlert('تم', `تم إرسال تحذير لـ ${id}`);
-  document.getElementById('warnUserID').value = '';
-  document.getElementById('warnReason').value = '';
+window.closeBgModal = function() {
+  document.getElementById('bgModal').classList.remove('show');
 }
 
-window.adminDeleteGroup = async function() {
-  if (userData.shortID!== '10') return;
-  const groupID = document.getElementById('deleteGroupID').value.trim();
-  if (!groupID) {
-    showAlert('خطأ', 'دخل ID الجروب', 'error');
-    return;
-  }
-  showConfirmModal('مسح الجروب', 'متأكد عايز تمسح الجروب ده نهائي؟', async () => {
-    await deleteDoc(doc(db, "groups", groupID));
-    closeConfirmModal();
-    showAlert('تم', 'تم مسح الجروب بنجاح');
-    document.getElementById('deleteGroupID').value = '';
+function loadBgModal() {
+  const list = document.getElementById('bgList');
+  list.innerHTML = `
+    <div class="bg-item" style="border:2px dashed var(--green);">
+      <div style="height:120px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; background:var(--bg-tertiary);">
+        <span style="font-size:30px;">📤</span>
+        <span style="font-size:13px;">رفع صورة من عندك</span>
+      </div>
+      <div class="bg-item-info">
+        <div class="bg-item-name">خلفية مخصصة</div>
+        <div class="bg-item-price">200 🪙</div>
+        <input type="file" id="customBgInput" accept="image/*" style="display:none" onchange="uploadCustomBg(event)">
+        <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
+      </div>
+    </div>
+  `;
+  const currentBg = userData.customBg?.id || 'none';
+  chatBgs.forEach(bg => {
+    const isActive = bg.id === currentBg;
+    const hasBg = userData.backgrounds?.includes(bg.id) || bg.id === 'none';
+    list.innerHTML += `
+      <div class="bg-item ${isActive? 'active' : ''}" onclick="selectBg('${bg.id}', ${bg.price}, ${hasBg})">
+        ${bg.url!== 'none'? `<img src="${bg.url}" onerror="thissrc='${DEFAULT_AVATAR}'">` : `<div style="height:120px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">بدون خلفية</div>`}
+        <div class="bg-item-info">
+          <div class="bg-item-name">${bg.name}</div>
+          <div class="bg-item-price">${hasBg? 'مملوكة' : bg.price + ' 🪙'}</div>
+        </div>
+      </div>
+    `;
   });
 }
 
-// فحص الباند عند الدخول
+window.selectBg = async function(bgID, price, hasBg) {
+  const bg = chatBgs.find(b => b.id === bgID);
+  if (!hasBg && userData.coins < price) {
+    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+    return;
+  }
+  if (!hasBg) {
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      coins: increment(-price),
+      backgrounds: arrayUnion(bgID)
+    });
+    userData.coins -= price;
+    userData.backgrounds = [...(userData.backgrounds || []), bgID];
+    document.getElementById('bgCoinsShow').innerText = userData.coins;
+    document.getElementById('profileCoins').innerText = userData.coins;
+    showAlert('مبروك', `اشتريت خلفية ${bg.name}`);
+  }
+  await updateDoc(doc(db, "users", currentUser.uid), {
+    customBg: bg
+  });
+  userData.customBg = bg;
+  applyBgToChat(bg);
+  closeBgModal();
+  showAlert('تم', `تم تطبيق خلفية ${bg.name}`);
+}
+
+function applyBgToChat(bg) {
+  const chatArea = document.getElementById('chatArea');
+  if (bg.url === 'none') {
+    chatArea.style.backgroundImage = 'none';
+  } else {
+    chatArea.style.backgroundImage = `url(${bg.url})`;
+  }
+}
+
+function loadChatBg(uid) {
+  if (userData.customBg) {
+    applyBgToChat(userData.customBg);
+  }
+}
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    const userSnap = await getDoc(doc(db, "users", user.uid));
-    if (userSnap.exists()) {
-      const data = userSnap.data();
-      if (data.bannedUntil && data.bannedUntil > Date.now()) {
-        const banDate = new Date(data.bannedUntil).toLocaleDateString('ar-EG');
-        document.body.innerHTML = `
-          <div class="banned-overlay">
-            <div>
-              <h2 style="font-size:40px;margin-bottom:20px;">🚫</h2>
-              <h3>تم حظر حسابك</h3>
-              <p style="margin-top:15px;color:#ccc;">الحظر ينتهي بتاريخ: ${banDate}</p>
-              <button onclick="signOut(auth).then(()=>location.reload())" style="margin-top:30px;padding:12px 30px;background:#e74c3c;border:none;border-radius:12px;color:white;font-weight:700;cursor:pointer;">تسجيل خروج</button>
-            </div>
-          </div>
-        `;
-        return;
-      }
-    }
     currentUser = user;
     document.getElementById('authPage').classList.remove('active');
     document.getElementById('page1').classList.add('active');
-    loadUserData();
-    loadChats();
-    loadPosts();
-    loadGroups();
+    Promise.all([
+      loadUserData(),
+      loadChats(),
+      loadPosts(),
+      loadGroups()
+    ]);
     applySettings();
+    setupPullRefresh();
+    startActiveTracking();
+    checkAndDeleteOldPosts();
+    checkCustomBgExpiry();
+    checkVerificationExpiry();
     updateOnlineCount();
     setInterval(updateOnlineCount, 30000);
-    setInterval(() => {
-      if(currentUser) updateDoc(doc(db, "users", currentUser.uid), { lastActive: Date.now() });
-    }, 60000);
   } else {
     currentUser = null;
     document.getElementById('authPage').classList.add('active');
+    stopActiveTracking();
   }
 });
+
+function startActiveTracking() {
+  if (activeTimeInterval) clearInterval(activeTimeInterval);
+  activeTimeInterval = setInterval(() => {
+    userData.lastActive = Date.now();
+    updateDoc(doc(db, "users", currentUser.uid), { lastActive: Date.now() });
+  }, 60000);
+}
+
+function stopActiveTracking() {
+  if (activeTimeInterval) clearInterval(activeTimeInterval);
+}
+
+function setupPullRefresh() {
+  const pages = [document.getElementById('page1'), document.getElementById('page2')];
+  pages.forEach(page => {
+    page.addEventListener('touchstart', (e) => {
+      startY = e.touches[0].pageY;
+    });
+    page.addEventListener('touchmove', (e) => {
+      const y = e.touches[0].pageY;
+      const scrollTop = page.scrollTop;
+      if (scrollTop === 0 && y > startY + 80 &&!isRefreshing) {
+        isRefreshing = true;
+        const refreshEl = page.querySelector('.pull-refresh');
+        refreshEl.style.height = '60px';
+        refreshEl.innerText = 'جاري التحديث...';
+        setTimeout(() => {
+          loadChats();
+          loadPosts();
+          loadGroups();
+          refreshEl.style.height = '0';
+          refreshEl.innerText = 'اسحب للاسفل للتحديث';
+          isRefreshing = false;
+        }, 1000);
+      }
+    });
+  });
+}
+
+function generateShortID() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < 8; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
 
 function loadUserData() {
   onSnapshot(doc(db, "users", currentUser.uid), (docSnap) => {
@@ -1537,6 +1765,7 @@ function loadUserData() {
       userData = {...userData,...docSnap.data() };
       updateProfileUI();
       checkDailyTasks();
+      checkVerificationExpiry();
     }
   });
 }
@@ -1561,6 +1790,10 @@ function updateProfileUI() {
     document.getElementById('verifiedBadge').style.display = 'inline-flex';
     document.getElementById('profileNameDisplay').innerHTML += ' <span class="verified-badge">✓</span>';
   }
+  const savedChatImg = document.querySelector('[data-userid="' + currentUser.uid + '"] img');
+  if (savedChatImg) {
+    savedChatImg.src = userData.photoURL || DEFAULT_AVATAR;
+  }
 }
 
 window.openProfile = function() {
@@ -1571,6 +1804,11 @@ window.openProfile = function() {
 window.backToPage1 = function() {
   document.getElementById('profilePage').classList.remove('active');
   document.getElementById('page1').classList.add('active');
+}
+
+window.backToChat = function() {
+  document.getElementById('userProfilePage').classList.remove('active');
+  document.getElementById('chatPage').classList.add('active');
 }
 
 function applySettings() {
@@ -1636,7 +1874,7 @@ window.signup = async function() {
     let shortID;
     let exists = true;
     while (exists) {
-      shortID = Math.random().toString(36).substr(2, 8).toUpperCase();
+      shortID = generateShortID();
       const q = query(collection(db, "users"), where("shortID", "==", shortID));
       const snap = await getDocs(q);
       exists =!snap.empty;
@@ -1659,8 +1897,7 @@ window.signup = async function() {
       dailyTasks: {},
       gender: gender,
       country: country,
-      verification: null,
-      bannedUntil: null
+      verification: null
     });
     document.getElementById('newID').innerText = shortID;
     document.getElementById('signupSuccess').style.display = 'block';
@@ -1669,8 +1906,38 @@ window.signup = async function() {
   }
 }
 
+async function checkAndDeleteOldPosts() {
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const q = query(collection(db, "posts"), where("createdAt", "<", new Date(now - oneDay)));
+  const snap = await getDocs(q);
+  const batch = writeBatch(db);
+  snap.forEach(doc => batch.delete(doc.ref));
+  await batch.commit();
+}
+
+async function checkCustomBgExpiry() {
+  if (userData.customBg && userData.customBg.expiresAt < Date.now()) {
+    await updateDoc(doc(db, "users", currentUser.uid), { customBg: null });
+    userData.customBg = null;
+    showAlert('تنبيه', 'خلفيتك المخصصة انتهت', 'info');
+  }
+}
+
+async function checkVerificationExpiry() {
+  if (userData.verification && userData.verification.expiresAt && userData.verification.expiresAt < Date.now()) {
+    await updateDoc(doc(db,"users", currentUser.uid), { verification: null });
+    userData.verification = null;
+    showAlert('تنبيه', 'علامة التوثيق انتهت', 'info');
+  }
+}
+
 function loadChats() {
   const userList = document.getElementById('userList');
+  const cachedChats = getFromCache('chats');
+  if (cachedChats) {
+    userList.innerHTML = cachedChats;
+  }
   userList.innerHTML = `
     <div class="list-item" data-userid="${currentUser.uid}" onclick="openSelfChat()">
       <img src="${userData.photoURL || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'">
@@ -1715,6 +1982,7 @@ function loadChats() {
         }
       }
     });
+    saveToCache('chats', userList.innerHTML);
   });
 }
 
@@ -1805,8 +2073,11 @@ function displayMessages(messages, containerID, isGroup) {
     if (msg.deletedFor && msg.deletedFor.includes(currentUser.uid)) return;
     const div = document.createElement('div');
     div.dataset.index = index;
-    if (msg.deleted || msg.sender === 'system') {
-      div.className = 'message system' + (msg.isWarning? ' warning' : '');
+    if (msg.deleted) {
+      div.className = 'message system';
+      div.innerText = msg.text;
+    } else if (msg.sender === 'system') {
+      div.className = 'message system';
       div.innerText = msg.text;
     } else {
       div.className = `message ${msg.sender === currentUser.uid? 'sent' : 'received'}`;
@@ -1858,15 +2129,17 @@ window.sendMessage = async function() {
 window.sendChatImage = async function(e) {
   const file = e.target.files[0];
   if (!file ||!currentChatUser) return;
-  const storageRef = ref(storage, `chatImages/${Date.now()}_${file.name}`);
-  await uploadBytes(storageRef, file);
-  const image = await getDownloadURL(storageRef);
-  const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-  const chatRef = doc(db, "chats", chatID);
-  await setDoc(chatRef, {
-    messages: arrayUnion({ sender: currentUser.uid, text: '', image, timestamp: Date.now() }),
-    lastMessage: '📷 صورة'
-  }, { merge: true });
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const image = event.target.result;
+    const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
+    const chatRef = doc(db, "chats", chatID);
+    await setDoc(chatRef, {
+      messages: arrayUnion({ sender: currentUser.uid, text: '', image, timestamp: Date.now() }),
+      lastMessage: '📷 صورة'
+    }, { merge: true });
+  };
+  reader.readAsDataURL(file);
   e.target.value = '';
 }
 
@@ -1925,6 +2198,8 @@ window.sendGift = async function(giftID) {
 
 function loadPosts() {
   const postsList = document.getElementById('postsList');
+  const cachedPosts = getFromCache('posts');
+  if (cachedPosts) postsList.innerHTML = cachedPosts;
   onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50)), (snap) => {
     postsList.innerHTML = '';
     snap.forEach(docSnap => {
@@ -1967,21 +2242,16 @@ function loadPosts() {
         </div>
       `;
     });
+    saveToCache('posts', postsList.innerHTML);
   });
 }
 
 window.createPost = async function() {
   const content = document.getElementById('postContent').value.trim();
-  const imageFile = document.getElementById('postImage').files[0];
-  if (!content &&!imageFile) {
+  const image = document.getElementById('postImagePreview').src;
+  if (!content &&!image.includes('data:image')) {
     showAlert('خطأ', 'اكتب حاجة او اختار صورة', 'error');
     return;
-  }
-  let imageUrl = '';
-  if (imageFile) {
-    const storageRef = ref(storage, `posts/${Date.now()}_${imageFile.name}`);
-    await uploadBytes(storageRef, imageFile);
-    imageUrl = await getDownloadURL(storageRef);
   }
   await addDoc(collection(db, "posts"), {
     userID: currentUser.uid,
@@ -1990,7 +2260,7 @@ window.createPost = async function() {
     gender: userData.gender,
     verification: userData.verification,
     content: content,
-    image: imageUrl,
+    image: image.includes('data:image')? image : '',
     likes: [],
     comments: [],
     allowComments: true,
@@ -2072,12 +2342,19 @@ function loadDeleteChatList() {
 function loadGroups() {
   const groupsList = document.getElementById('groupsList');
   onSnapshot(collection(db, "groups"), (snap) => {
-    groupsList.innerHTML = '';
+    let groupsArray = [];
     snap.forEach(docSnap => {
       const group = docSnap.data();
       const groupID = docSnap.id;
+      const lastMsg = group.messages?.[group.messages.length - 1]?.timestamp || group.createdAt?.toMillis() || 0;
+      groupsArray.push({id: groupID, data: group, lastMsg});
+    });
+    groupsArray.sort((a, b) => b.lastMsg - a.lastMsg);
+    groupsList.innerHTML = '';
+    groupsArray.forEach(g => {
+      const group = g.data;
       groupsList.innerHTML += `
-        <div class="group-item" onclick="openGroupChat('${groupID}')">
+        <div class="group-item" onclick="openGroupChat('${g.id}')">
           <img src="${group.image || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'">
           <div class="group-info">
             <div class="group-name">${group.name} ${group.private? '<span class="private-badge">خاص</span>' : ''}</div>
@@ -2111,22 +2388,16 @@ window.previewGroupImage = function(e) {
 window.createGroup = async function() {
   const name = document.getElementById('groupName').value.trim();
   const maxMembers = parseInt(document.getElementById('groupMaxMembers').value);
-  const imageFile = document.getElementById('groupImage').files[0];
+  const image = document.getElementById('groupImagePreview').src;
   const isPrivate = document.getElementById('groupPrivate').checked;
   if (!name) {
     showAlert('خطأ', 'اكتب اسم الجروب', 'error');
     return;
   }
-  let imageUrl = '';
-  if (imageFile) {
-    const storageRef = ref(storage, `groupImages/${Date.now()}_${imageFile.name}`);
-    await uploadBytes(storageRef, imageFile);
-    imageUrl = await getDownloadURL(storageRef);
-  }
   await addDoc(collection(db, "groups"), {
     name: name,
     maxMembers: maxMembers,
-    image: imageUrl,
+    image: image.includes('data:image')? image : '',
     bio: '',
     owner: currentUser.uid,
     admins: [currentUser.uid],
@@ -2210,110 +2481,340 @@ window.sendGroupMessage = async function() {
 window.sendGroupImage = async function(e) {
   const file = e.target.files[0];
   if (!file ||!currentGroup) return;
-  const storageRef = ref(storage, `groupImages/${Date.now()}_${file.name}`);
-  await uploadBytes(storageRef, file);
-  const image = await getDownloadURL(storageRef);
-  const groupRef = doc(db, "groups", currentGroup);
-  await updateDoc(groupRef, {
-    messages: arrayUnion({
-      sender: currentUser.uid,
-      senderName: userData.displayName,
-      text: '',
-      image,
-      timestamp: Date.now()
-    })
-  });
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const image = event.target.result;
+    const groupRef = doc(db, "groups", currentGroup);
+    await updateDoc(groupRef, {
+      messages: arrayUnion({
+        sender: currentUser.uid,
+        senderName: userData.displayName,
+        text: '',
+        image,
+        timestamp: Date.now()
+      })
+    });
+  };
+  reader.readAsDataURL(file);
   e.target.value = '';
 }
 
-window.openBgModal = function() {
-  document.getElementById('bgModal').classList.add('show');
-  document.getElementById('bgCoinsShow').innerText = userData.coins;
-  loadBgs();
-}
-
-window.closeBgModal = function() {
-  document.getElementById('bgModal').classList.remove('show');
-}
-
-function loadBgs() {
-  const bgList = document.getElementById('bgList');
-  bgList.innerHTML = '';
-  chatBgs.forEach(bg => {
-    const hasBg = userData.backgrounds?.includes(bg.id);
-    bgList.innerHTML += `
-      <div class="bg-item ${userData.customBg?.id === bg.id? 'active' : ''}" onclick="selectBg('${bg.id}', ${bg.price}, ${hasBg})">
-        ${bg.url === 'none'? `<div style="height:120px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">بدون خلفية</div>` : `<img src="${bg.url}" onerror="this.src='${DEFAULT_AVATAR}'">`}
-        <div class="bg-item-info">
-          <div class="bg-item-name">${bg.name}</div>
-          <div class="bg-item-price">${hasBg? 'مملوكة' : bg.price + ' 🪙'}</div>
-        </div>
-      </div>
-    `;
-  });
-}
-
-window.selectBg = async function(bgID, price, hasBg) {
-  const bg = chatBgs.find(b => b.id === bgID);
-  if (!hasBg && userData.coins < price) {
-    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+window.openGroupSettings = async function() {
+  if (!currentGroup) return;
+  const groupSnap = await getDoc(doc(db, "groups", currentGroup));
+  if (!groupSnap.exists()) return;
+  const group = groupSnap.data();
+  if (group.owner!== currentUser.uid) {
+    showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
     return;
   }
-  if (!hasBg) {
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(-price),
-      backgrounds: arrayUnion(bgID)
-    });
-    userData.coins -= price;
-    userData.backgrounds = [...(userData.backgrounds || []), bgID];
-    document.getElementById('bgCoinsShow').innerText = userData.coins;
-    document.getElementById('profileCoins').innerText = userData.coins;
-    showAlert('مبروك', `اشتريت خلفية ${bg.name}`);
+  document.getElementById('editGroupName').value = group.name || '';
+  document.getElementById('editGroupBio').value = group.bio || '';
+  document.getElementById('editGroupImagePreview').src = group.image || '';
+  document.getElementById('editGroupMaxMembers').value = group.maxMembers || 50;
+  loadGroupMembers(group.members, group.admins, group.owner);
+  document.getElementById('groupSettingsModal').classList.add('show');
+}
+
+window.clearGroupChat = async function() {
+  if (!currentGroup ||!currentGroupData) return;
+  const isOwner = currentGroupData.owner === currentUser.uid;
+  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
+  if (!isOwner &&!isAdmin) {
+    showAlert('ممنوع', 'انت مشرف', 'error');
+    return;
   }
-  await updateDoc(doc(db, "users", currentUser.uid), {
-    customBg: bg
+  showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل الجروب؟', async () => {
+    await updateDoc(doc(db, "groups", currentGroup), { messages: [] });
+    closeConfirmModal();
+    showAlert('تم مسح رسايل الجروب', 'تم');
   });
-  userData.customBg = bg;
-  applyBgToChat(bg);
-  closeBgModal();
-  showAlert('تم', `تم تطبيق خلفية ${bg.name}`);
 }
 
-function applyBgToChat(bg) {
-  const chatArea = document.getElementById('chatArea');
-  if (bg.url === 'none') {
-    chatArea.style.backgroundImage = 'none';
-  } else {
-    chatArea.style.backgroundImage = `url(${bg.url})`;
-  }
+window.closeGroupSettings = function() {
+  document.getElementById('groupSettingsModal').classList.remove('show');
 }
 
-function loadChatBg(uid) {
-  if (userData.customBg) {
-    applyBgToChat(userData.customBg);
-  }
-}
-
-window.uploadCustomBg = async function(e) {
+window.previewEditGroupImage = function(e) {
   const file = e.target.files[0];
   if (!file) return;
-  if (userData.coins < 200) {
-    showAlert('خطأ', 'لازم 200 كوينز لرفع خلفية مخصصة', 'error');
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    document.getElementById('editGroupImagePreview').src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+window.saveGroupSettings = async function() {
+  const name = document.getElementById('editGroupName').value.trim();
+  const bio = document.getElementById('editGroupBio').value.trim();
+  const maxMembers = parseInt(document.getElementById('editGroupMaxMembers').value);
+  const image = document.getElementById('editGroupImagePreview').src;
+  await updateDoc(doc(db, "groups", currentGroup), {
+    name: name,
+    bio: bio,
+    maxMembers: maxMembers,
+    image: image.includes('data:image')? image : image
+  });
+  closeGroupSettings();
+  showAlert('تم', 'تم حفظ التغييرات');
+}
+
+function loadGroupMembers(members, admins, owner) {
+  const list = document.getElementById('groupMembersList');
+  list.innerHTML = '';
+  members?.forEach(uid => {
+    getDoc(doc(db, "users", uid)).then(userSnap => {
+      if (userSnap.exists()) {
+        const user = userSnap.data();
+        const isAdmin = admins?.includes(uid);
+        const isOwner = owner === uid;
+        let badges = '';
+        if (isOwner) badges = '<span class="admin-badge">مالك</span>';
+        else if (isAdmin) badges = '<span class="mod-badge">مشرف</span>';
+        list.innerHTML += `
+          <div class="list-item">
+            <img src="${user.photoURL || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'" style="width:45px;height:45px;">
+            <div class="list-item-info">
+              <div class="list-item-name">${user.displayName} ${badges}</div>
+              <div class="list-item-id">${user.shortID}</div>
+            </div>
+            ${owner === currentUser.uid &&!isOwner?
+              `<button class="delete-chat-btn" onclick="removeMemberFromGroup('${uid}')">طرد</button>` : ''}
+          </div>
+        `;
+      }
+    });
+  });
+}
+
+window.addMemberToGroup = async function() {
+  const id = document.getElementById('addMemberID').value.trim().toUpperCase();
+  if (!id) return;
+  if (currentGroupData.members.length >= currentGroupData.maxMembers) {
+    showAlert('خطأ', `الجروب وصل للحد الأقصى ${currentGroupData.maxMembers} عضو`, 'error');
     return;
   }
-  const storageRef = ref(storage, `customBgs/${currentUser.uid}_${Date.now()}`);
-  await uploadBytes(storageRef, file);
-  const url = await getDownloadURL(storageRef);
-  const customBg = {id: 'custom_' + Date.now(), name: 'خلفية مخصصة', url: url, price: 200};
-  await updateDoc(doc(db, "users", currentUser.uid), {
-    coins: increment(-200),
-    customBg: customBg
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي غلط', 'error');
+    return;
+  }
+  const userID = snap.docs[0].id;
+  await updateDoc(doc(db, "groups", currentGroup), {
+    members: arrayUnion(userID)
   });
-  userData.coins -= 200;
-  userData.customBg = customBg;
-  applyBgToChat(customBg);
-  closeBgModal();
-  showAlert('تم', 'تم رفع الخلفية وتطبيقها');
+  document.getElementById('addMemberID').value = '';
+  showAlert('تم', 'تم اضافة العضو');
+}
+
+window.removeMemberFromGroup = async function(uid) {
+  const isOwner = currentGroupData.owner === currentUser.uid;
+  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
+  if (!isOwner &&!isAdmin) {
+    showAlert('ممنوع', 'انت مشرف', 'error');
+    return;
+  }
+  await updateDoc(doc(db, "groups", currentGroup), {
+    members: arrayRemove(uid),
+    admins: arrayRemove(uid)
+  });
+  showAlert('تم', 'تم طرد العضو');
+}
+
+window.deleteGroup = function() {
+  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائي؟', async () => {
+    await deleteDoc(doc(db, "groups", currentGroup));
+    closeConfirmModal();
+    closeGroupSettings();
+    backToGroups();
+    showAlert('تم', 'تم حذف الجروب');
+  });
+}
+
+window.showPromoteModal = function() {
+  document.getElementById('promoteModal').classList.add('show');
+}
+
+window.closePromoteModal = function() {
+  document.getElementById('promoteModal').classList.remove('show');
+}
+
+window.promoteToAdmin = async function() {
+  const id = document.getElementById('promoteUserID').value.trim().toUpperCase();
+  if (!id ||!currentGroup) return;
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي غلط', 'error');
+    return;
+  }
+  const userID = snap.docs[0].id;
+  await updateDoc(doc(db, "groups", currentGroup), {
+    admins: arrayUnion(userID)
+  });
+  document.getElementById('promoteUserID').value = '';
+  closePromoteModal();
+  showAlert('تم', 'تم ترقية العضو لمشرف');
+  openGroupSettings();
+}
+
+window.demoteAdmin = async function() {
+  const id = document.getElementById('promoteUserID').value.trim().toUpperCase();
+  if (!id ||!currentGroup) return;
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي غلط', 'error');
+    return;
+  }
+  const userID = snap.docs[0].id;
+  await updateDoc(doc(db, "groups", currentGroup), {
+    admins: arrayRemove(userID)
+  });
+  document.getElementById('promoteUserID').value = '';
+  closePromoteModal();
+  showAlert('تم', 'تم إزالة العضو من المشرفين');
+  openGroupSettings();
+}
+
+window.showMuteModal = function() {
+  document.getElementById('muteModal').classList.add('show');
+}
+
+window.closeMuteModal = function() {
+  document.getElementById('muteModal').classList.remove('show');
+}
+
+window.muteUser = async function() {
+  const id = document.getElementById('muteUserID').value.trim().toUpperCase();
+  const duration = parseInt(document.getElementById('muteDuration').value);
+  if (!id ||!currentGroup) return;
+  const isOwner = currentGroupData.owner === currentUser.uid;
+  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
+  if (!isOwner &&!isAdmin) {
+    showAlert('ممنوع', 'انت مشرف', 'error');
+    return;
+  }
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي غلط', 'error');
+    return;
+  }
+  const userID = snap.docs[0].id;
+  const muteUntil = Date.now() + (duration * 1000);
+  await updateDoc(doc(db, "groups", currentGroup), {
+    [`muted.${userID}`]: muteUntil
+  });
+  document.getElementById('muteUserID').value = '';
+  closeMuteModal();
+  showAlert('تم', `تم كتم العضو لمدة ${duration/60} دقيقة`);
+}
+
+window.giveVerification = async function() {
+  if (userData.shortID!== '10') return;
+  const id = document.getElementById('verifyUserID').value.trim().toUpperCase();
+  const duration = document.getElementById('verifyDuration').value;
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي غلط', 'error');
+    return;
+  }
+  const userID = snap.docs[0].id;
+  let expiresAt = null;
+  if (duration!== 'permanent') {
+    expiresAt = Date.now() + parseInt(duration) * 24 * 60 * 60 * 1000;
+  }
+  await updateDoc(doc(db, "users", userID), {
+    verification: {
+      givenAt: Date.now(),
+      expiresAt: expiresAt,
+      type: duration
+    }
+  });
+  showAlert('تم', 'تم اعطاء علامة التوثيق');
+}
+
+window.toggleLike = async function(postID) {
+  const postRef = doc(db, "posts", postID);
+  const postSnap = await getDoc(postRef);
+  const post = postSnap.data();
+  if (post.likes.includes(currentUser.uid)) {
+    await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
+  } else {
+    await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+  }
+}
+
+window.toggleComments = function(postID) {
+  document.getElementById(`comments-${postID}`).classList.toggle('show');
+}
+
+window.addComment = async function(postID) {
+  const input = document.getElementById(`commentInput-${postID}`);
+  const text = input.value.trim();
+  if (!text) return;
+  await updateDoc(doc(db, "posts", postID), {
+    comments: arrayUnion({
+      userID: currentUser.uid,
+      displayName: userData.displayName,
+      text: text,
+      createdAt: Date.now()
+    })
+  });
+  input.value = '';
+}
+
+window.deletePostByAdmin = async function(postID) {
+  if (userData.shortID!== '10') return;
+  showConfirmModal('مسح البوست', 'متأكد عايز تمسح البوست ده؟', async () => {
+    await deleteDoc(doc(db, "posts", postID));
+    closeConfirmModal();
+    showAlert('تم', 'تم مسح البوست');
+  });
+}
+
+window.openEditModal = function() {
+  document.getElementById('editProfileModal').classList.add('show');
+  document.getElementById('profileNameInput').value = userData.displayName;
+  document.getElementById('profileBioInput').value = userData.bio || '';
+}
+
+window.closeEditProfileModal = function() {
+  document.getElementById('editProfileModal').classList.remove('show');
+}
+
+window.saveProfileChanges = async function() {
+  const name = document.getElementById('profileNameInput').value.trim();
+  const bio = document.getElementById('profileBioInput').value.trim();
+  const pass = document.getElementById('newPassword').value.trim();
+  if (name) {
+    await updateProfile(currentUser, { displayName: name });
+    await updateDoc(doc(db, "users", currentUser.uid), { displayName: name });
+  }
+  if (bio) {
+    await updateDoc(doc(db, "users", currentUser.uid), { bio: bio });
+  }
+  if (pass) {
+    await updatePassword(currentUser, pass);
+  }
+  closeEditProfileModal();
+  showAlert('تم', 'تم حفظ التغييرات');
+}
+
+window.updatePhoto = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const url = event.target.result;
+    await updateDoc(doc(db, "users", currentUser.uid), { photoURL: url });
+    document.getElementById('profileImg').src = url;
+  };
+  reader.readAsDataURL(file);
 }
 
 window.viewUserProfile = async function() {
@@ -2482,9 +2983,11 @@ window.sendBroadcast = async function() {
   }
   let imageUrl = '';
   if (imageFile) {
-    const storageRef = ref(storage, `broadcast/${Date.now()}_${imageFile.name}`);
-    await uploadBytes(storageRef, imageFile);
-    imageUrl = await getDownloadURL(storageRef);
+    const reader = new FileReader();
+    imageUrl = await new Promise(resolve => {
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(imageFile);
+    });
   }
   const snap = await getDocs(collection(db, "users"));
   const batch = writeBatch(db);
@@ -2566,7 +3069,7 @@ window.sendFeedback = async function() {
 }
 
 window.openPolicy = function() {
-  document.getElementById('policyLink').src = POLICY_URL;
+  document.getElementById('policyLink').href = POLICY_URL;
   document.getElementById('policyModal').classList.add('show');
 }
 
@@ -2587,233 +3090,6 @@ window.switchPage = function(pageID) {
 
 window.logout = async function() {
   await signOut(auth);
-}
-
-window.openEditModal = function() {
-  document.getElementById('editProfileModal').classList.add('show');
-  document.getElementById('profileNameInput').value = userData.displayName;
-  document.getElementById('profileBioInput').value = userData.bio || '';
-}
-
-window.closeEditProfileModal = function() {
-  document.getElementById('editProfileModal').classList.remove('show');
-}
-
-window.saveProfileChanges = async function() {
-  const name = document.getElementById('profileNameInput').value.trim();
-  const bio = document.getElementById('profileBioInput').value.trim();
-  const pass = document.getElementById('newPassword').value.trim();
-  if (name) {
-    await updateProfile(currentUser, { displayName: name });
-    await updateDoc(doc(db, "users", currentUser.uid), { displayName: name });
-  }
-  if (bio) {
-    await updateDoc(doc(db, "users", currentUser.uid), { bio: bio });
-  }
-  if (pass) {
-    await updatePassword(currentUser, pass);
-  }
-  closeEditProfileModal();
-  showAlert('تم', 'تم حفظ التغييرات');
-}
-
-window.updatePhoto = async function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const storageRef = ref(storage, `avatars/${currentUser.uid}`);
-  await uploadBytes(storageRef, file);
-  const url = await getDownloadURL(storageRef);
-  await updateDoc(doc(db, "users", currentUser.uid), { photoURL: url });
-  document.getElementById('profileImg').src = url;
-}
-
-window.backToChat = function() {
-  document.getElementById('userProfilePage').classList.remove('active');
-  document.getElementById('chatPage').classList.add('active');
-}
-
-window.clearGroupChat = async function() {
-  if (!currentGroup ||!currentGroupData) return;
-  const isOwner = currentGroupData.owner === currentUser.uid;
-  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
-  if (!isOwner &&!isAdmin) {
-    showAlert('ممنوع', 'انت مش ادمن', 'error');
-    return;
-  }
-  showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل الجروب؟', async () => {
-    await updateDoc(doc(db, "groups", currentGroup), { messages: [] });
-    closeConfirmModal();
-    showAlert('تم', 'تم مسح رسايل الجروب');
-  });
-}
-
-window.openGroupSettings = async function() {
-  if (!currentGroup) return;
-  const groupSnap = await getDoc(doc(db, "groups", currentGroup));
-  if (!groupSnap.exists()) return;
-  const group = groupSnap.data();
-  if (group.owner!== currentUser.uid) {
-    showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
-    return;
-  }
-  document.getElementById('editGroupName').value = group.name || '';
-  document.getElementById('editGroupBio').value = group.bio || '';
-  document.getElementById('editGroupImagePreview').src = group.image || '';
-  document.getElementById('editGroupMaxMembers').value = group.maxMembers || 50;
-  loadGroupMembers(group.members, group.admins, group.owner);
-  document.getElementById('groupSettingsModal').classList.add('show');
-}
-
-window.closeGroupSettings = function() {
-  document.getElementById('groupSettingsModal').classList.remove('show');
-}
-
-window.previewEditGroupImage = function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    document.getElementById('editGroupImagePreview').src = event.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-window.saveGroupSettings = async function() {
-  const name = document.getElementById('editGroupName').value.trim();
-  const bio = document.getElementById('editGroupBio').value.trim();
-  const maxMembers = parseInt(document.getElementById('editGroupMaxMembers').value);
-  const imageFile = document.getElementById('editGroupImage').files[0];
-  let imageUrl = currentGroupData.image;
-  if (imageFile) {
-    const storageRef = ref(storage, `groupImages/${currentGroup}_${Date.now()}`);
-    await uploadBytes(storageRef, imageFile);
-    imageUrl = await getDownloadURL(storageRef);
-  }
-  await updateDoc(doc(db, "groups", currentGroup), {
-    name: name,
-    bio: bio,
-    maxMembers: maxMembers,
-    image: imageUrl
-  });
-  closeGroupSettings();
-  showAlert('تم', 'تم حفظ التغييرات');
-}
-
-function loadGroupMembers(members, admins, owner) {
-  const list = document.getElementById('groupMembersList');
-  list.innerHTML = '';
-  members?.forEach(uid => {
-    getDoc(doc(db, "users", uid)).then(userSnap => {
-      if (userSnap.exists()) {
-        const user = userSnap.data();
-        const isAdmin = admins?.includes(uid);
-        const isOwner = owner === uid;
-        let badges = '';
-        if (isOwner) badges = '<span class="admin-badge">مالك</span>';
-        else if (isAdmin) badges = '<span class="mod-badge">مشرف</span>';
-        list.innerHTML += `
-          <div class="list-item">
-            <img src="${user.photoURL || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'" style="width:45px;height:45px;">
-            <div class="list-item-info">
-              <div class="list-item-name">${user.displayName} ${badges}</div>
-              <div class="list-item-id">${user.shortID}</div>
-            </div>
-            ${owner === currentUser.uid &&!isOwner?
-              `<button class="delete-chat-btn" onclick="removeMemberFromGroup('${uid}')">طرد</button>` : ''}
-          </div>
-        `;
-      }
-    });
-  });
-}
-
-window.removeMemberFromGroup = async function(uid) {
-  const isOwner = currentGroupData.owner === currentUser.uid;
-  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
-  if (!isOwner &&!isAdmin) {
-    showAlert('ممنوع', 'انت مش ادمن', 'error');
-    return;
-  }
-  await updateDoc(doc(db, "groups", currentGroup), {
-    members: arrayRemove(uid),
-    admins: arrayRemove(uid)
-  });
-  showAlert('تم', 'تم طرد العضو');
-}
-
-window.deleteGroup = function() {
-  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائي؟', async () => {
-    await deleteDoc(doc(db, "groups", currentGroup));
-    closeConfirmModal();
-    closeGroupSettings();
-    backToGroups();
-    showAlert('تم', 'تم حذف الجروب');
-  });
-}
-
-window.giveVerification = async function() {
-  if (userData.shortID!== '10') return;
-  const id = document.getElementById('verifyUserID').value.trim().toUpperCase();
-  const duration = document.getElementById('verifyDuration').value;
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي غلط', 'error');
-    return;
-  }
-  const userID = snap.docs[0].id;
-  let expiresAt = null;
-  if (duration!== 'permanent') {
-    expiresAt = Date.now() + parseInt(duration) * 24 * 60 * 60 * 1000;
-  }
-  await updateDoc(doc(db, "users", userID), {
-    verification: {
-      givenAt: Date.now(),
-      expiresAt: expiresAt,
-      type: duration
-    }
-  });
-  showAlert('تم', 'تم اعطاء علامة التوثيق');
-}
-
-window.toggleLike = async function(postID) {
-  const postRef = doc(db, "posts", postID);
-  const snap = await getDoc(postRef);
-  if (!snap.exists()) return;
-  const likes = snap.data().likes || [];
-  if (likes.includes(currentUser.uid)) {
-    await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
-  } else {
-    await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
-  }
-}
-
-window.toggleComments = function(postID) {
-  document.getElementById(`comments-${postID}`).classList.toggle('show');
-}
-
-window.addComment = async function(postID) {
-  const input = document.getElementById(`commentInput-${postID}`);
-  const text = input.value.trim();
-  if (!text) return;
-  await updateDoc(doc(db, "posts", postID), {
-    comments: arrayUnion({
-      userID: currentUser.uid,
-      displayName: userData.displayName,
-      text: text,
-      timestamp: Date.now()
-    })
-  });
-  input.value = '';
-}
-
-window.deletePostByAdmin = function(postID) {
-  if (userData.shortID!== '10') return;
-  showConfirmModal('مسح البوست', 'متأكد عايز تمسح البوست ده؟', async () => {
-    await deleteDoc(doc(db, "posts", postID));
-    closeConfirmModal();
-    showAlert('تم', 'تم مسح البوست');
-  });
 }
 </script>
 </body>
