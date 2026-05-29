@@ -70,6 +70,7 @@ body {
   overflow: hidden;
   transition: height 0.3s ease;
 }
+.pull-refresh.loaded { height: 0 !important; } /* اخفاء اوتوماتيك */
 .auth-page {
   background: linear-gradient(135deg, #00a884 0%, #111b21 100%);
   justify-content: center;
@@ -801,7 +802,19 @@ body {
   background: var(--bg-input);
   transform: scale(1.2);
 }
-
+.banned-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  color: white;
+  text-align: center;
+  padding: 40px;
+}
 </style>
 </head>
 <body>
@@ -861,7 +874,7 @@ body {
 </div>
 
 <div id="page1" class="page">
-  <div class="pull-refresh" id="pullRefresh">اسحب للاسفل للتحديث</div>
+  <div class="pull-refresh" id="pullRefresh">جاري التحميل...</div>
   <div class="header">
     <h2>الدردشات</h2>
     <button class="header-btn" onclick="openDeleteChatModal()">🗑️</button>
@@ -879,7 +892,7 @@ body {
 </div>
 
 <div id="page2" class="page">
-  <div class="pull-refresh" id="pullRefresh2">اسحب للاسفل للتحديث</div>
+  <div class="pull-refresh" id="pullRefresh2">جاري التحميل...</div>
   <div class="header"><h2>المنشورات</h2></div>
   <div id="postsList" class="list"></div>
   <button class="fab" onclick="openPostModal()">+</button>
@@ -935,8 +948,7 @@ body {
   <div class="header">
     <button class="header-btn" onclick="backToGroups()">←</button>
     <img id="groupChatImg" src="" onerror="this.src='https://via.placeholder.com/50'">
-    <h2 id="groupChatName"></h2>
-    <button class="header-btn" id="groupSettingsBtn" onclick="openGroupSettings()">⚙️</button>
+    <h2 id="groupChatName"></h2>    <button class="header-btn" id="groupSettingsBtn" onclick="openGroupSettings()">⚙️</button>
     <button class="header-btn" onclick="clearGroupChat()">🗑️</button>
   </div>
   <div class="chat-area" id="groupChatArea">
@@ -1271,6 +1283,11 @@ const COUNTRIES = {
 const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
 const DEFAULT_AVATAR = 'https://via.placeholder.com/120/202c33/ffffff?text=👤';
 
+function hidePullRefresh() {
+  document.getElementById('pullRefresh')?.classList.add('loaded');
+  document.getElementById('pullRefresh2')?.classList.add('loaded');
+}
+
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
@@ -1410,74 +1427,6 @@ document.getElementById('confirmYesBtn').addEventListener('click', () => {
   if (confirmCallback) confirmCallback();
 })
 
-// ===== دوال الأدمن الجديدة =====
-window.banUser = async function() {
-  if (userData.shortID!== '10') return;
-  const id = document.getElementById('banUserID').value.trim().toUpperCase();
-  const days = parseInt(document.getElementById('banDuration').value);
-  if (!id ||!days || days <= 0) {
-    showAlert('خطأ', 'دخل ID وعدد أيام صحيح', 'error');
-    return;
-  }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي مش موجود', 'error');
-    return;
-  }
-  const userID = snap.docs[0].id;
-  const banUntil = Date.now() + (days * 24 * 60 * 60 * 1000);
-  await updateDoc(doc(db, "users", userID), { bannedUntil: banUntil });
-  showAlert('تم', `تم حظر ${id} لمدة ${days} يوم`);
-  document.getElementById('banUserID').value = '';
-  document.getElementById('banDuration').value = '';
-}
-
-window.sendWarning = async function() {
-  if (userData.shortID!== '10') return;
-  const id = document.getElementById('warnUserID').value.trim().toUpperCase();
-  const reason = document.getElementById('warnReason').value.trim();
-  if (!id ||!reason) {
-    showAlert('خطأ', 'دخل ID وسبب التحذير', 'error');
-    return;
-  }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي مش موجود', 'error');
-    return;
-  }
-  const userID = snap.docs[0].id;
-  const chatID = [currentUser.uid, userID].sort().join('_');
-  await setDoc(doc(db, "chats", chatID), {
-    messages: arrayUnion({
-      sender: 'system',
-      text: `⚠️ تحذير رسمي من الإدارة\nالسبب: ${reason}\nيرجى الالتزام بقوانين التطبيق`,
-      timestamp: Date.now(),
-      isWarning: true
-    }),
-    lastMessage: '⚠️ تحذير رسمي'
-  }, { merge: true });
-  showAlert('تم', `تم إرسال تحذير لـ ${id}`);
-  document.getElementById('warnUserID').value = '';
-  document.getElementById('warnReason').value = '';
-}
-
-window.adminDeleteGroup = async function() {
-  if (userData.shortID!== '10') return;
-  const groupID = document.getElementById('deleteGroupID').value.trim();
-  if (!groupID) {
-    showAlert('خطأ', 'دخل ID الجروب', 'error');
-    return;
-  }
-  showConfirmModal('مسح الجروب', 'متأكد عايز تمسح الجروب ده نهائي؟', async () => {
-    await deleteDoc(doc(db, "groups", groupID));
-    closeConfirmModal();
-    showAlert('تم', 'تم مسح الجروب بنجاح');
-    document.getElementById('deleteGroupID').value = '';
-  });
-}
-
 // ===== فحص الباند عند الدخول =====
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -1524,6 +1473,9 @@ function loadUserData() {
       userData = {...userData,...docSnap.data() };
       updateProfileUI();
       checkDailyTasks();
+      // تحديث صورة الرسائل المحفوظة اوتوماتيك
+      const savedChatImg = document.querySelector(`[data-userid="${currentUser.uid}"] img`);
+      if (savedChatImg) savedChatImg.src = userData.photoURL || DEFAULT_AVATAR;
     }
   });
 }
@@ -1668,7 +1620,13 @@ function loadChats() {
       </div>
     </div>
   `;
+  let firstLoad = true;
   onSnapshot(collection(db, "chats"), (snap) => {
+    // اخفاء علامة التحميل بعد اول جلب للداتا
+    if (firstLoad) {
+      hidePullRefresh();
+      firstLoad = false;
+    }
     snap.forEach(docSnap => {
       const chatID = docSnap.id;
       const chatData = docSnap.data();
@@ -1912,7 +1870,12 @@ window.sendGift = async function(giftID) {
 
 function loadPosts() {
   const postsList = document.getElementById('postsList');
+  let firstLoad = true;
   onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50)), (snap) => {
+    if (firstLoad) {
+      hidePullRefresh();
+      firstLoad = false;
+    }
     postsList.innerHTML = '';
     snap.forEach(docSnap => {
       const post = docSnap.data();
@@ -2469,7 +2432,7 @@ window.sendBroadcast = async function() {
   }
   let imageUrl = '';
   if (imageFile) {
-    const storageRef = ref(storage, `broadcast/${Date.now()}_${imageFile.name}`);
+    const storageRef =ref(storage, `broadcast/${Date.now()}_${imageFile.name}`);
     await uploadBytes(storageRef, imageFile);
     imageUrl = await getDownloadURL(storageRef);
   }
@@ -2766,29 +2729,32 @@ window.giveVerification = async function() {
 window.toggleLike = async function(postID) {
   const postRef = doc(db, "posts", postID);
   const snap = await getDoc(postRef);
-  if (!snap.exists()) return;
-  const likes = snap.data().likes || [];
-  if (likes.includes(currentUser.uid)) {
-    await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
-  } else {
-    await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+  if (snap.exists()) {
+    const likes = snap.data().likes || [];
+    if (likes.includes(currentUser.uid)) {
+      await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
+    } else {
+      await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+    }
   }
 }
 
 window.toggleComments = function(postID) {
-  document.getElementById(`comments-${postID}`).classList.toggle('show');
+  const box = document.getElementById(`comments-${postID}`);
+  box.classList.toggle('show');
 }
 
 window.addComment = async function(postID) {
   const input = document.getElementById(`commentInput-${postID}`);
   const text = input.value.trim();
   if (!text) return;
-  await updateDoc(doc(db, "posts", postID), {
+  const postRef = doc(db, "posts", postID);
+  await updateDoc(postRef, {
     comments: arrayUnion({
       userID: currentUser.uid,
       displayName: userData.displayName,
       text: text,
-      timestamp: Date.now()
+      createdAt: Date.now()
     })
   });
   input.value = '';
@@ -2796,10 +2762,10 @@ window.addComment = async function(postID) {
 
 window.deletePostByAdmin = function(postID) {
   if (userData.shortID!== '10') return;
-  showConfirmModal('مسح البوست', 'متأكد عايز تمسح البوست ده؟', async () => {
+  showConfirmModal('مسح المنشور', 'متأكد عايز تمسح المنشور ده؟', async () => {
     await deleteDoc(doc(db, "posts", postID));
     closeConfirmModal();
-    showAlert('تم', 'تم مسح البوست');
+    showAlert('تم', 'تم مسح المنشور');
   });
 }
 </script>
