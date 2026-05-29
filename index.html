@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Untitled</title>
-    
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -45,8 +34,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
-  min-height: 100vh;
-  overflow: auto;
+  height: 100vh;
+  overflow: hidden;
   overscroll-behavior-y: contain;
 }
 .page { 
@@ -67,7 +56,8 @@ body {
   justify-content: center;
   color: var(--text-secondary);
   font-size: 14px;
-  overflow: auto;
+  overflow: hidden;
+  transition: height 0.3s ease;
 }
 .auth-page {
   background: linear-gradient(135deg, #00a884 0%, #111b21 100%);
@@ -646,6 +636,7 @@ body {
   align-items: center;
   gap: 5px;
   transition: 0.3s;
+  user-select: none;
 }
 .nav-btn.active { color: var(--green); transform: scale(1.1); }
 .nav-btn span { font-size: 28px; }
@@ -883,9 +874,9 @@ body {
   </div>
   <div id="userList" class="list"></div>
   <div class="nav-bar">
-    <button class="nav-btn active" onclick="switchPage('page1')"><span>💬</span>الدردشات</button>
-    <button class="nav-btn" onclick="switchPage('page2')"><span>📃</span>المنشورات</button>
-    <button class="nav-btn" onclick="switchPage('page3')"><span>👥</span>الجروبات</button>
+    <button class="nav-btn active" id="nav-chats" ondblclick="refreshPage('page1')"><span>💬</span>الدردشات</button>
+    <button class="nav-btn" id="nav-posts" ondblclick="refreshPage('page2')"><span>📃</span>المنشورات</button>
+    <button class="nav-btn" id="nav-groups" ondblclick="refreshPage('page3')"><span>👥</span>الجروبات</button>
   </div>
 </div>
 
@@ -895,9 +886,9 @@ body {
   <div id="postsList" class="list"></div>
   <button class="fab" onclick="openPostModal()">+</button>
   <div class="nav-bar">
-    <button class="nav-btn" onclick="switchPage('page1')"><span>💬</span>الدردشات</button>
-    <button class="nav-btn active" onclick="switchPage('page2')"><span>📃</span>المنشورات</button>
-    <button class="nav-btn" onclick="switchPage('page3')"><span>👥</span>الجروبات</button>
+    <button class="nav-btn" id="nav-chats2" ondblclick="refreshPage('page1')"><span>💬</span>الدردشات</button>
+    <button class="nav-btn active" id="nav-posts2" ondblclick="refreshPage('page2')"><span>📃</span>المنشورات</button>
+    <button class="nav-btn" id="nav-groups2" ondblclick="refreshPage('page3')"><span>👥</span>الجروبات</button>
   </div>
 </div>
 
@@ -908,9 +899,9 @@ body {
   </div>
   <div id="groupsList" class="group-container"></div>
   <div class="nav-bar">
-    <button class="nav-btn" onclick="switchPage('page1')"><span>💬</span>الدردشات</button>
-    <button class="nav-btn" onclick="switchPage('page2')"><span>📃</span>المنشورات</button>
-    <button class="nav-btn active" onclick="switchPage('page3')"><span>👥</span>الجروبات</button>
+    <button class="nav-btn" id="nav-chats3" ondblclick="refreshPage('page1')"><span>💬</span>الدردشات</button>
+    <button class="nav-btn" id="nav-posts3" ondblclick="refreshPage('page2')"><span>📃</span>المنشورات</button>
+    <button class="nav-btn active" id="nav-groups3" ondblclick="refreshPage('page3')"><span>👥</span>الجروبات</button>
   </div>
 </div>
 
@@ -1261,13 +1252,6 @@ let currentGroupData = null;
 let selectedMessageDiv = null;
 let confirmCallback = null;
 
-const DEFAULT_AVATAR = 'https://via.placeholder.com/120/202c33/ffffff?text=👤';
-const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
-const COUNTRIES = {
-  EG: '🇪🇬', SA: '🇸🇦', AE: '🇦🇪', MA: '🇲🇦', DZ: '🇩🇿', IQ: '🇮🇶', SY: '🇸🇾',
-  JO: '🇯🇴', LB: '🇱🇧', PS: '🇵🇸', YE: '🇾🇪', SD: '🇸🇩', TN: '🇹🇳', LY: '🇱🇾',
-  KW: '🇰🇼', QA: '🇶🇦', BH: '🇧🇭', OM: '🇴🇲'
-};
 const emojis = ['❤️', '😂', '😮', '😢', '👍', '👎', '🔥', '🎉'];
 const gifts = [
   {id:1, emoji:'🌹', name:'وردة', price:10},
@@ -1281,16 +1265,13 @@ const chatBgs = [
   {id:'bg2', name:'طبيعة', url:'https://i.imgur.com/3QpT8Xl.jpg', price:30},
   {id:'bg3', name:'نيون', url:'https://i.imgur.com/5X8Y9Qm.jpg', price:40}
 ];
-
-// كود إعدام اللودر بتاع الـ APK
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.body.style.overflow = 'auto';
-    if(window.Android && Android.hideSplashScreen) Android.hideSplashScreen();
-    window.parent.postMessage('loaded', '*');
-    console.log('Splash removed');
-  }, 1200);
-});
+const COUNTRIES = {
+  EG: '🇪🇬', SA: '🇸🇦', AE: '🇦🇪', MA: '🇲🇦', DZ: '🇩🇿', IQ: '🇮🇶', SY: '🇸🇾',
+  JO: '🇯🇴', LB: '🇱🇧', PS: '🇵🇸', YE: '🇾🇪', SD: '🇸🇩', TN: '🇹🇳', LY: '🇱🇾',
+  KW: '🇰🇼', QA: '🇶🇦', BH: '🇧🇭', OM: '🇴🇲'
+};
+const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
+const DEFAULT_AVATAR = 'https://via.placeholder.com/120/202c33/ffffff?text=👤';
 
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -1431,6 +1412,18 @@ document.getElementById('confirmYesBtn').addEventListener('click', () => {
   if (confirmCallback) confirmCallback();
 })
 
+// دالة الريفريش بالضغطتين - بدون رسالة
+window.refreshPage = function(pageID) {
+  if(pageID === 'page1') {
+    loadChats();
+  } else if(pageID === 'page2') {
+    loadPosts();
+  } else if(pageID === 'page3') {
+    loadGroups();
+  }
+}
+
+// ===== دوال الأدمن =====
 window.banUser = async function() {
   if (userData.shortID!== '10') return;
   const id = document.getElementById('banUserID').value.trim().toUpperCase();
@@ -1498,6 +1491,7 @@ window.adminDeleteGroup = async function() {
   });
 }
 
+// فحص الباند عند الدخول
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const userSnap = await getDoc(doc(db, "users", user.uid));
@@ -1627,7 +1621,12 @@ window.login = async function() {
 
 window.signup = async function() {
   try {
-document.getElementById('signupError').innerText = '';
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const pass = document.getElementById('signupPass').value;
+    const gender = document.getElementById('signupGender').value;
+    const country = document.getElementById('signupCountry').value;
+    document.getElementById('signupError').innerText = '';
     if (!name ||!email ||!pass ||!gender ||!country) {
       document.getElementById('signupError').innerText = 'املأ كل البيانات';
       return;
@@ -2776,10 +2775,46 @@ window.giveVerification = async function() {
   });
   showAlert('تم', 'تم اعطاء علامة التوثيق');
 }
+
+window.toggleLike = async function(postID) {
+  const postRef = doc(db, "posts", postID);
+  const snap = await getDoc(postRef);
+  if (!snap.exists()) return;
+  const likes = snap.data().likes || [];
+  if (likes.includes(currentUser.uid)) {
+    await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
+  } else {
+    await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+  }
+}
+
+window.toggleComments = function(postID) {
+  document.getElementById(`comments-${postID}`).classList.toggle('show');
+}
+
+window.addComment = async function(postID) {
+  const input = document.getElementById(`commentInput-${postID}`);
+  const text = input.value.trim();
+  if (!text) return;
+  await updateDoc(doc(db, "posts", postID), {
+    comments: arrayUnion({
+      userID: currentUser.uid,
+      displayName: userData.displayName,
+      text: text,
+      timestamp: Date.now()
+    })
+  });
+  input.value = '';
+}
+
+window.deletePostByAdmin = function(postID) {
+  if (userData.shortID!== '10') return;
+  showConfirmModal('مسح البوست', 'متأكد عايز تمسح البوست ده؟', async () => {
+    await deleteDoc(doc(db, "posts", postID));
+    closeConfirmModal();
+    showAlert('تم', 'تم مسح البوست');
+  });
+}
 </script>
 </body>
-</html>
-    
-  </body>
-  
 </html>
