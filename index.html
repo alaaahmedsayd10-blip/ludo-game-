@@ -1361,12 +1361,13 @@ body {
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, addDoc, deleteDoc, orderBy, serverTimestamp, arrayUnion, arrayRemove, increment, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
   authDomain: "game-af286.firebaseapp.com",
@@ -1377,10 +1378,10 @@ const firebaseConfig = {
   measurementId: "G-JKFYDGCFML"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
 let currentUser = null;
 let userData = {
@@ -1501,23 +1502,23 @@ function hideEmojiPicker(e) {
 
 async function addReaction(emoji, msgIndex, isGroup) {
   if (isGroup) {
-    const groupRef = doc(db, "groups", currentGroup);
-    const snap = await getDoc(groupRef);
-    if (snap.exists()) {
+    const groupRef = db.collection("groups").doc(currentGroup);
+    const snap = await groupRef.get();
+    if (snap.exists) {
       const messages = snap.data().messages || [];
       if (!messages[msgIndex].reactions) messages[msgIndex].reactions = {};
       messages[msgIndex].reactions[currentUser.uid] = emoji;
-      await updateDoc(groupRef, { messages });
+      await groupRef.update({ messages });
     }
   } else {
     const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-    const chatRef = doc(db, "chats", chatID);
-    const snap = await getDoc(chatRef);
-    if (snap.exists()) {
+    const chatRef = db.collection("chats").doc(chatID);
+    const snap = await chatRef.get();
+    if (snap.exists) {
       const messages = snap.data().messages || [];
       if (!messages[msgIndex].reactions) messages[msgIndex].reactions = {};
       messages[msgIndex].reactions[currentUser.uid] = emoji;
-      await updateDoc(chatRef, { messages });
+      await chatRef.update({ messages });
     }
   }
   document.querySelectorAll('.emoji-picker').forEach(p => p.remove());
@@ -1525,32 +1526,32 @@ async function addReaction(emoji, msgIndex, isGroup) {
 
 async function deleteMessage(msgIndex, isGroup, type) {
   if (isGroup) {
-    const groupRef = doc(db, "groups", currentGroup);
-    const snap = await getDoc(groupRef);
-    if (snap.exists()) {
+    const groupRef = db.collection("groups").doc(currentGroup);
+    const snap = await groupRef.get();
+    if (snap.exists) {
       const messages = snap.data().messages || [];
       if (type === 'all') {
         messages[msgIndex] = {sender: 'system', text: 'تم حذف هذه الرسالة', timestamp: Date.now(), deleted: true};
-        await updateDoc(groupRef, { messages });
+        await groupRef.update({ messages });
       } else {
         if (!messages[msgIndex].deletedFor) messages[msgIndex].deletedFor = [];
         messages[msgIndex].deletedFor.push(currentUser.uid);
-        await updateDoc(groupRef, { messages });
+        await groupRef.update({ messages });
       }
     }
   } else {
     const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-    const chatRef = doc(db, "chats", chatID);
-    const snap = await getDoc(chatRef);
-    if (snap.exists()) {
+    const chatRef = db.collection("chats").doc(chatID);
+    const snap = await chatRef.get();
+    if (snap.exists) {
       const messages = snap.data().messages || [];
       if (type === 'all') {
         messages[msgIndex] = {sender: 'system', text: 'تم حذف هذه الرسالة', timestamp: Date.now(), deleted: true};
-        await updateDoc(chatRef, { messages });
+        await chatRef.update({ messages });
       } else {
         if (!messages[msgIndex].deletedFor) messages[msgIndex].deletedFor = [];
         messages[msgIndex].deletedFor.push(currentUser.uid);
-        await updateDoc(chatRef, { messages });
+        await chatRef.update({ messages });
       }
     }
   }
@@ -1598,8 +1599,8 @@ window.uploadCustomBg = async function(e) {
   const reader = new FileReader();
   reader.onload = async (event) => {
     const url = event.target.result;
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(-price),
+    await db.collection("users").doc(currentUser.uid).update({
+      coins: firebase.firestore.FieldValue.increment(-price),
       customBg: { id: 'custom', url: url, name: 'خلفية مخصصة', price: price }
     });
     userData.coins -= price;
@@ -1645,7 +1646,7 @@ function loadBgModal() {
     const hasBg = userData.backgrounds?.includes(bg.id) || bg.id === 'none';
     list.innerHTML += `
       <div class="bg-item ${isActive? 'active' : ''}" onclick="selectBg('${bg.id}', ${bg.price}, ${hasBg})">
-        ${bg.url!== 'none'? `<img src="${bg.url}" onerror="thissrc='${DEFAULT_AVATAR}'">` : `<div style="height:120px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">بدون خلفية</div>`}
+        ${bg.url!== 'none'? `<img src="${bg.url}" onerror="this.src='${DEFAULT_AVATAR}'">` : `<div style="height:120px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">بدون خلفية</div>`}
         <div class="bg-item-info">
           <div class="bg-item-name">${bg.name}</div>
           <div class="bg-item-price">${hasBg? 'مملوكة' : bg.price + ' 🪙'}</div>
@@ -1654,7 +1655,6 @@ function loadBgModal() {
     `;
   });
 }
-
 window.selectBg = async function(bgID, price, hasBg) {
   const bg = chatBgs.find(b => b.id === bgID);
   if (!hasBg && userData.coins < price) {
@@ -1662,9 +1662,9 @@ window.selectBg = async function(bgID, price, hasBg) {
     return;
   }
   if (!hasBg) {
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(-price),
-      backgrounds: arrayUnion(bgID)
+    await db.collection("users").doc(currentUser.uid).update({
+      coins: firebase.firestore.FieldValue.increment(-price),
+      backgrounds: firebase.firestore.FieldValue.arrayUnion(bgID)
     });
     userData.coins -= price;
     userData.backgrounds = [...(userData.backgrounds || []), bgID];
@@ -1672,7 +1672,7 @@ window.selectBg = async function(bgID, price, hasBg) {
     document.getElementById('profileCoins').innerText = userData.coins;
     showAlert('مبروك', `اشتريت خلفية ${bg.name}`);
   }
-  await updateDoc(doc(db, "users", currentUser.uid), {
+  await db.collection("users").doc(currentUser.uid).update({
     customBg: bg
   });
   userData.customBg = bg;
@@ -1696,7 +1696,7 @@ function loadChatBg(uid) {
   }
 }
 
-onAuthStateChanged(auth, async (user) => {
+auth.onAuthStateChanged(async (user) => {
   if (user) {
     currentUser = user;
     document.getElementById('authPage').classList.remove('active');
@@ -1726,7 +1726,7 @@ function startActiveTracking() {
   if (activeTimeInterval) clearInterval(activeTimeInterval);
   activeTimeInterval = setInterval(() => {
     userData.lastActive = Date.now();
-    updateDoc(doc(db, "users", currentUser.uid), { lastActive: Date.now() });
+    db.collection("users").doc(currentUser.uid).update({ lastActive: Date.now() });
   }, 60000);
 }
 
@@ -1771,8 +1771,8 @@ function generateShortID() {
 }
 
 function loadUserData() {
-  onSnapshot(doc(db, "users", currentUser.uid), (docSnap) => {
-    if (docSnap.exists()) {
+  db.collection("users").doc(currentUser.uid).onSnapshot((docSnap) => {
+    if (docSnap.exists) {
       userData = {...userData,...docSnap.data() };
       updateProfileUI();
       checkDailyTasks();
@@ -1831,14 +1831,14 @@ function applySettings() {
 window.changeLanguage = async function() {
   const lang = document.getElementById('languageSelect').value;
   userData.language = lang;
-  await updateDoc(doc(db, "users", currentUser.uid), { language: lang });
+  await db.collection("users").doc(currentUser.uid).update({ language: lang });
   applySettings();
 }
 
 window.changeTheme = async function() {
   const theme = document.getElementById('themeSelect').value;
   userData.theme = theme;
-  await updateDoc(doc(db, "users", currentUser.uid), { theme: theme });
+  await db.collection("users").doc(currentUser.uid).update({ theme: theme });
   applySettings();
 }
 
@@ -1862,7 +1862,7 @@ window.login = async function() {
     const email = document.getElementById('loginEmail').value;
     const pass = document.getElementById('loginPass').value;
     document.getElementById('loginError').innerText = '';
-    await signInWithEmailAndPassword(auth, email, pass);
+    await auth.signInWithEmailAndPassword(email, pass);
   } catch(e) {
     document.getElementById('loginError').innerText = 'غلط في الايميل او كلمة السر';
   }
@@ -1880,17 +1880,16 @@ window.signup = async function() {
       document.getElementById('signupError').innerText = 'املأ كل البيانات';
       return;
     }
-    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-    await updateProfile(userCred.user, { displayName: name });
+    const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+    await userCred.user.updateProfile({ displayName: name });
     let shortID;
     let exists = true;
     while (exists) {
       shortID = generateShortID();
-      const q = query(collection(db, "users"), where("shortID", "==", shortID));
-      const snap = await getDocs(q);
-      exists =!snap.empty;
+      const q = await db.collection("users").where("shortID", "==", shortID).get();
+      exists =!q.empty;
     }
-    await setDoc(doc(db, "users", userCred.user.uid), {
+    await db.collection("users").doc(userCred.user.uid).set({
       email: email,
       coins: 100,
       shortID: shortID,
@@ -1920,16 +1919,15 @@ window.signup = async function() {
 async function checkAndDeleteOldPosts() {
   const now = Date.now();
   const oneDay = 24 * 60 * 60 * 1000;
-  const q = query(collection(db, "posts"), where("createdAt", "<", new Date(now - oneDay)));
-  const snap = await getDocs(q);
-  const batch = writeBatch(db);
-  snap.forEach(doc => batch.delete(doc.ref));
+  const q = await db.collection("posts").where("createdAt", "<", new Date(now - oneDay)).get();
+  const batch = db.batch();
+  q.forEach(doc => batch.delete(doc.ref));
   await batch.commit();
 }
 
 async function checkCustomBgExpiry() {
   if (userData.customBg && userData.customBg.expiresAt < Date.now()) {
-    await updateDoc(doc(db, "users", currentUser.uid), { customBg: null });
+    await db.collection("users").doc(currentUser.uid).update({ customBg: null });
     userData.customBg = null;
     showAlert('تنبيه', 'خلفيتك المخصصة انتهت', 'info');
   }
@@ -1937,7 +1935,7 @@ async function checkCustomBgExpiry() {
 
 async function checkVerificationExpiry() {
   if (userData.verification && userData.verification.expiresAt && userData.verification.expiresAt < Date.now()) {
-    await updateDoc(doc(db,"users", currentUser.uid), { verification: null });
+    await db.collection("users").doc(currentUser.uid).update({ verification: null });
     userData.verification = null;
     showAlert('تنبيه', 'علامة التوثيق انتهت', 'info');
   }
@@ -1959,15 +1957,15 @@ function loadChats() {
       </div>
     </div>
   `;
-  onSnapshot(collection(db, "chats"), (snap) => {
+  db.collection("chats").onSnapshot((snap) => {
     snap.forEach(docSnap => {
       const chatID = docSnap.id;
       const chatData = docSnap.data();
       if (chatID.includes(currentUser.uid)) {
         const otherID = chatID.split('_').find(id => id!== currentUser.uid);
         if (otherID &&!userData.blocked.includes(otherID)) {
-          onSnapshot(doc(db, "users", otherID), (userSnap) => {
-            if (userSnap.exists()) {
+          db.collection("users").doc(otherID).onSnapshot((userSnap) => {
+            if (userSnap.exists) {
               const user = userSnap.data();
               let item = document.querySelector(`[data-userid="${otherID}"]`);
               if (!item) {
@@ -2002,10 +2000,9 @@ window.openSelfChat = function() {
 }
 
 window.openAdminChat = async function() {
-  const q = query(collection(db, "users"), where("shortID", "==", "10"));
-  const snap = await getDocs(q);
-  if (!snap.empty) {
-    const adminDoc = snap.docs[0];
+  const q = await db.collection("users").where("shortID", "==", "10").get();
+  if (!q.empty) {
+    const adminDoc = q.docs[0];
     openChat(adminDoc.data(), adminDoc.id);
   }
 }
@@ -2017,11 +2014,10 @@ document.getElementById('searchID').addEventListener('input', async function(e) 
     return;
   }
   try {
-    const q = query(collection(db, "users"), where("shortID", "==", id));
-    const snap = await getDocs(q);
+    const q = await db.collection("users").where("shortID", "==", id).get();
     const userList = document.getElementById('userList');
     userList.innerHTML = '';
-    snap.forEach(doc => {
+    q.forEach(doc => {
       const user = doc.data();
       if (doc.id === currentUser.uid || userData.blocked.includes(doc.id)) return;
       const verified = user.verification && user.verification.expiresAt > Date.now()? '<span class="verified-badge">✓</span>' : '';
@@ -2067,12 +2063,12 @@ window.backToChatList = function() {
 
 function loadChatMessages(uid) {
   const chatID = [currentUser.uid, uid].sort().join('_');
-  const chatRef = doc(db, "chats", chatID);
-  onSnapshot(chatRef, (docSnap) => {
-    if (docSnap.exists()) {
+  const chatRef = db.collection("chats").doc(chatID);
+  chatRef.onSnapshot((docSnap) => {
+    if (docSnap.exists) {
       const messages = docSnap.data().messages || [];
       displayMessages(messages, 'chatMessages', false);
-      updateDoc(chatRef, { lastMessage: messages[messages.length - 1]?.text || '' });
+      chatRef.update({ lastMessage: messages[messages.length - 1]?.text || '' });
     }
   });
 }
@@ -2128,9 +2124,9 @@ window.sendMessage = async function() {
     return;
   }
   const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-  const chatRef = doc(db, "chats", chatID);
-  await setDoc(chatRef, {
-    messages: arrayUnion({ sender: currentUser.uid, text, timestamp: Date.now() }),
+  const chatRef = db.collection("chats").doc(chatID);
+  await chatRef.set({
+    messages: firebase.firestore.FieldValue.arrayUnion({ sender: currentUser.uid, text, timestamp: Date.now() }),
     lastMessage: text
   }, { merge: true });
   input.value = '';
@@ -2144,9 +2140,9 @@ window.sendChatImage = async function(e) {
   reader.onload = async (event) => {
     const image = event.target.result;
     const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-    const chatRef = doc(db, "chats", chatID);
-    await setDoc(chatRef, {
-      messages: arrayUnion({ sender: currentUser.uid, text: '', image, timestamp: Date.now() }),
+    const chatRef = db.collection("chats").doc(chatID);
+    await chatRef.set({
+      messages: firebase.firestore.FieldValue.arrayUnion({ sender: currentUser.uid, text: '', image, timestamp: Date.now() }),
       lastMessage: '📷 صورة'
     }, { merge: true });
   };
@@ -2158,7 +2154,7 @@ function updateChatTask() {
   const today = new Date().toDateString();
   const tasks = userData.dailyTasks || {};
   const chatCount = (tasks.chatCount || 0) + 1;
-  updateDoc(doc(db, "users", currentUser.uid), {
+  db.collection("users").doc(currentUser.uid).update({
     'dailyTasks.chatCount': chatCount,
     'dailyTasks.lastChat': today
   });
@@ -2193,11 +2189,11 @@ window.sendGift = async function(giftID) {
     showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
     return;
   }
-  await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(-gift.price) });
-  await updateDoc(doc(db, "users", currentChatUser.id), { coins: increment(gift.price) });
+  await db.collection("users").doc(currentUser.uid).update({ coins: firebase.firestore.FieldValue.increment(-gift.price) });
+  await db.collection("users").doc(currentChatUser.id).update({ coins: firebase.firestore.FieldValue.increment(gift.price) });
   const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
-  await setDoc(doc(db, "chats", chatID), {
-    messages: arrayUnion({
+  await db.collection("chats").doc(chatID).set({
+    messages: firebase.firestore.FieldValue.arrayUnion({
       sender: 'system',
       text: `🎁 ${userData.displayName} أرسل ${gift.emoji} ${gift.name} لـ ${currentChatUser.displayName}`,
       timestamp: Date.now()
@@ -2211,7 +2207,7 @@ function loadPosts() {
   const postsList = document.getElementById('postsList');
   const cachedPosts = getFromCache('posts');
   if (cachedPosts) postsList.innerHTML = cachedPosts;
-  onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50)), (snap) => {
+  db.collection("posts").orderBy("createdAt", "desc").limit(50).onSnapshot((snap) => {
     postsList.innerHTML = '';
     snap.forEach(docSnap => {
       const post = docSnap.data();
@@ -2264,7 +2260,7 @@ window.createPost = async function() {
     showAlert('خطأ', 'اكتب حاجة او اختار صورة', 'error');
     return;
   }
-  await addDoc(collection(db, "posts"), {
+  await db.collection("posts").add({
     userID: currentUser.uid,
     displayName: userData.displayName,
     photoURL: userData.photoURL,
@@ -2275,13 +2271,13 @@ window.createPost = async function() {
     likes: [],
     comments: [],
     allowComments: true,
-    createdAt: serverTimestamp()
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
   closePostModal();
   showAlert('تم', 'تم نشر البوست');
   if (userData.dailyTasks?.lastPost!== new Date().toDateString()) {
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(10),
+    await db.collection("users").doc(currentUser.uid).update({
+      coins: firebase.firestore.FieldValue.increment(10),
       'dailyTasks.lastPost': new Date().toDateString()
     });
   }
@@ -2289,8 +2285,8 @@ window.createPost = async function() {
 
 window.deleteAllChats = function() {
   showConfirmModal('مسح الكل', 'متأكد عايز تمسح كل المحادثات؟ مش هتقدر ترجعهم تاني', async () => {
-    const snap = await getDocs(collection(db, "chats"));
-    const batch = writeBatch(db);
+    const snap = await db.collection("chats").get();
+    const batch = db.batch();
     snap.forEach(docSnap => {
       if (docSnap.id.includes(currentUser.uid)) {
         batch.delete(docSnap.ref);
@@ -2305,7 +2301,7 @@ window.deleteAllChats = function() {
 
 window.deleteSingleChat = function(chatID) {
   showConfirmModal('مسح المحادثة', 'متأكد عايز تمسح المحادثة دي؟', async () => {
-    await deleteDoc(doc(db, "chats", chatID));
+    await db.collection("chats").doc(chatID).delete();
     closeConfirmModal();
     showAlert('تم', 'تم مسح المحادثة');
   });
@@ -2323,14 +2319,14 @@ window.closeDeleteChatModal = function() {
 function loadDeleteChatList() {
   const list = document.getElementById('deleteChatList');
   list.innerHTML = '';
-  onSnapshot(collection(db, "chats"), (snap) => {
+  db.collection("chats").onSnapshot((snap) => {
     list.innerHTML = '';
     snap.forEach(docSnap => {
       if (docSnap.id.includes(currentUser.uid)) {
         const otherID = docSnap.id.split('_').find(id => id!== currentUser.uid);
         if (otherID) {
-          getDoc(doc(db, "users", otherID)).then(userSnap => {
-            if (userSnap.exists()) {
+          db.collection("users").doc(otherID).get().then(userSnap => {
+            if (userSnap.exists) {
               const user = userSnap.data();
               list.innerHTML += `
                 <div class="list-item">
@@ -2352,7 +2348,7 @@ function loadDeleteChatList() {
 
 function loadGroups() {
   const groupsList = document.getElementById('groupsList');
-  onSnapshot(collection(db, "groups"), (snap) => {
+  db.collection("groups").onSnapshot((snap) => {
     let groupsArray = [];
     snap.forEach(docSnap => {
       const group = docSnap.data();
@@ -2405,7 +2401,7 @@ window.createGroup = async function() {
     showAlert('خطأ', 'اكتب اسم الجروب', 'error');
     return;
   }
-  await addDoc(collection(db, "groups"), {
+  await db.collection("groups").add({
     name: name,
     maxMembers: maxMembers,
     image: image.includes('data:image')? image : '',
@@ -2417,7 +2413,7 @@ window.createGroup = async function() {
     private: isPrivate,
     messages: [],
     welcomedUsers: [],
-    createdAt: serverTimestamp()
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
   closeCreateGroupModal();
   showAlert('تم', 'تم انشاء الجروب');
@@ -2428,8 +2424,8 @@ window.openGroupChat = async function(groupID) {
   currentChatUser = null;
   document.getElementById('page3').classList.remove('active');
   document.getElementById('groupChatPage').classList.add('active');
-  const docSnap = await getDoc(doc(db, "groups", groupID));
-  if (docSnap.exists()) {
+  const docSnap = await db.collection("groups").doc(groupID).get();
+  if (docSnap.exists) {
     currentGroupData = docSnap.data();
     const group = currentGroupData;
     document.getElementById('groupChatName').innerText = group.name;
@@ -2438,13 +2434,13 @@ window.openGroupChat = async function(groupID) {
     const isAdmin = group.admins?.includes(currentUser.uid);
     document.getElementById('groupSettingsBtn').style.display = isOwner? 'block' : 'none';
     if (!group.welcomedUsers?.includes(currentUser.uid)) {
-      await updateDoc(doc(db, "groups", groupID), {
-        messages: arrayUnion({
+      await db.collection("groups").doc(groupID).update({
+        messages: firebase.firestore.FieldValue.arrayUnion({
           sender: 'system',
           text: `مرحباً ${userData.displayName} انضم للجروب 🎉`,
           timestamp: Date.now()
         }),
-        welcomedUsers: arrayUnion(currentUser.uid)
+        welcomedUsers: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
       });
     }
   }
@@ -2459,8 +2455,8 @@ window.backToGroups = function() {
 }
 
 function loadGroupMessages(groupID) {
-  onSnapshot(doc(db, "groups", groupID), (docSnap) => {
-    if (docSnap.exists()) {
+  db.collection("groups").doc(groupID).onSnapshot((docSnap) => {
+    if (docSnap.exists) {
       currentGroupData = docSnap.data();
       const messages = docSnap.data().messages || [];
       displayMessages(messages, 'groupChatMessages', true);
@@ -2477,9 +2473,9 @@ window.sendGroupMessage = async function() {
     showAlert('مكتوم', `انت مكتوم لحد ${new Date(muteEnd).toLocaleTimeString('ar-EG')}`, 'error');
     return;
   }
-  const groupRef = doc(db, "groups", currentGroup);
-  await updateDoc(groupRef, {
-    messages: arrayUnion({
+  const groupRef = db.collection("groups").doc(currentGroup);
+  await groupRef.update({
+    messages: firebase.firestore.FieldValue.arrayUnion({
       sender: currentUser.uid,
       senderName: userData.displayName,
       text,
@@ -2495,9 +2491,9 @@ window.sendGroupImage = async function(e) {
   const reader = new FileReader();
   reader.onload = async (event) => {
     const image = event.target.result;
-    const groupRef = doc(db, "groups", currentGroup);
-    await updateDoc(groupRef, {
-      messages: arrayUnion({
+    const groupRef = db.collection("groups").doc(currentGroup);
+    await groupRef.update({
+      messages: firebase.firestore.FieldValue.arrayUnion({
         sender: currentUser.uid,
         senderName: userData.displayName,
         text: '',
@@ -2512,8 +2508,8 @@ window.sendGroupImage = async function(e) {
 
 window.openGroupSettings = async function() {
   if (!currentGroup) return;
-  const groupSnap = await getDoc(doc(db, "groups", currentGroup));
-  if (!groupSnap.exists()) return;
+  const groupSnap = await db.collection("groups").doc(currentGroup).get();
+  if (!groupSnap.exists) return;
   const group = groupSnap.data();
   if (group.owner!== currentUser.uid) {
     showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
@@ -2536,7 +2532,7 @@ window.clearGroupChat = async function() {
     return;
   }
   showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل الجروب؟', async () => {
-    await updateDoc(doc(db, "groups", currentGroup), { messages: [] });
+    await db.collection("groups").doc(currentGroup).update({ messages: [] });
     closeConfirmModal();
     showAlert('تم مسح رسايل الجروب', 'تم');
   });
@@ -2561,7 +2557,7 @@ window.saveGroupSettings = async function() {
   const bio = document.getElementById('editGroupBio').value.trim();
   const maxMembers = parseInt(document.getElementById('editGroupMaxMembers').value);
   const image = document.getElementById('editGroupImagePreview').src;
-  await updateDoc(doc(db, "groups", currentGroup), {
+  await db.collection("groups").doc(currentGroup).update({
     name: name,
     bio: bio,
     maxMembers: maxMembers,
@@ -2575,8 +2571,8 @@ function loadGroupMembers(members, admins, owner) {
   const list = document.getElementById('groupMembersList');
   list.innerHTML = '';
   members?.forEach(uid => {
-    getDoc(doc(db, "users", uid)).then(userSnap => {
-      if (userSnap.exists()) {
+    db.collection("users").doc(uid).get().then(userSnap => {
+      if (userSnap.exists) {
         const user = userSnap.data();
         const isAdmin = admins?.includes(uid);
         const isOwner = owner === uid;
@@ -2606,15 +2602,14 @@ window.addMemberToGroup = async function() {
     showAlert('خطأ', `الجروب وصل للحد الأقصى ${currentGroupData.maxMembers} عضو`, 'error');
     return;
   }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
+  const q = await db.collection("users").where("shortID", "==", id).get();
+  if (q.empty) {
     showAlert('خطأ', 'الايدي غلط', 'error');
     return;
   }
-  const userID = snap.docs[0].id;
-  await updateDoc(doc(db, "groups", currentGroup), {
-    members: arrayUnion(userID)
+  const userID = q.docs[0].id;
+  await db.collection("groups").doc(currentGroup).update({
+    members: firebase.firestore.FieldValue.arrayUnion(userID)
   });
   document.getElementById('addMemberID').value = '';
   showAlert('تم', 'تم اضافة العضو');
@@ -2627,16 +2622,16 @@ window.removeMemberFromGroup = async function(uid) {
     showAlert('ممنوع', 'انت مشرف', 'error');
     return;
   }
-  await updateDoc(doc(db, "groups", currentGroup), {
-    members: arrayRemove(uid),
-    admins: arrayRemove(uid)
+  await db.collection("groups").doc(currentGroup).update({
+    members: firebase.firestore.FieldValue.arrayRemove(uid),
+    admins: firebase.firestore.FieldValue.arrayRemove(uid)
   });
   showAlert('تم', 'تم طرد العضو');
 }
 
 window.deleteGroup = function() {
   showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائي؟', async () => {
-    await deleteDoc(doc(db, "groups", currentGroup));
+    await db.collection("groups").doc(currentGroup).delete();
     closeConfirmModal();
     closeGroupSettings();
     backToGroups();
@@ -2655,15 +2650,14 @@ window.closePromoteModal = function() {
 window.promoteToAdmin = async function() {
   const id = document.getElementById('promoteUserID').value.trim().toUpperCase();
   if (!id ||!currentGroup) return;
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
+  const q = await db.collection("users").where("shortID", "==", id).get();
+  if (q.empty) {
     showAlert('خطأ', 'الايدي غلط', 'error');
     return;
   }
-  const userID = snap.docs[0].id;
-  await updateDoc(doc(db, "groups", currentGroup), {
-    admins: arrayUnion(userID)
+  const userID = q.docs[0].id;
+  await db.collection("groups").doc(currentGroup).update({
+    admins: firebase.firestore.FieldValue.arrayUnion(userID)
   });
   document.getElementById('promoteUserID').value = '';
   closePromoteModal();
@@ -2674,15 +2668,14 @@ window.promoteToAdmin = async function() {
 window.demoteAdmin = async function() {
   const id = document.getElementById('promoteUserID').value.trim().toUpperCase();
   if (!id ||!currentGroup) return;
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
+  const q = await db.collection("users").where("shortID", "==", id).get();
+  if (q.empty) {
     showAlert('خطأ', 'الايدي غلط', 'error');
     return;
   }
-  const userID = snap.docs[0].id;
-  await updateDoc(doc(db, "groups", currentGroup), {
-    admins: arrayRemove(userID)
+  const userID = q.docs[0].id;
+  await db.collection("groups").doc(currentGroup).update({
+    admins: firebase.firestore.FieldValue.arrayRemove(userID)
   });
   document.getElementById('promoteUserID').value = '';
   closePromoteModal();
@@ -2708,15 +2701,14 @@ window.muteUser = async function() {
     showAlert('ممنوع', 'انت مشرف', 'error');
     return;
   }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
+  const q = await db.collection("users").where("shortID", "==", id).get();
+  if (q.empty) {
     showAlert('خطأ', 'الايدي غلط', 'error');
     return;
   }
-  const userID = snap.docs[0].id;
+  const userID = q.docs[0].id;
   const muteUntil = Date.now() + (duration * 1000);
-  await updateDoc(doc(db, "groups", currentGroup), {
+  await db.collection("groups").doc(currentGroup).update({
     [`muted.${userID}`]: muteUntil
   });
   document.getElementById('muteUserID').value = '';
@@ -2728,18 +2720,17 @@ window.giveVerification = async function() {
   if (userData.shortID!== '10') return;
   const id = document.getElementById('verifyUserID').value.trim().toUpperCase();
   const duration = document.getElementById('verifyDuration').value;
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
+  const q = await db.collection("users").where("shortID", "==", id).get();
+  if (q.empty) {
     showAlert('خطأ', 'الايدي غلط', 'error');
     return;
   }
-  const userID = snap.docs[0].id;
+  const userID = q.docs[0].id;
   let expiresAt = null;
   if (duration!== 'permanent') {
     expiresAt = Date.now() + parseInt(duration) * 24 * 60 * 60 * 1000;
   }
-  await updateDoc(doc(db, "users", userID), {
+  await db.collection("users").doc(userID).update({
     verification: {
       givenAt: Date.now(),
       expiresAt: expiresAt,
@@ -2750,13 +2741,13 @@ window.giveVerification = async function() {
 }
 
 window.toggleLike = async function(postID) {
-  const postRef = doc(db, "posts", postID);
-  const postSnap = await getDoc(postRef);
+  const postRef = db.collection("posts").doc(postID);
+  const postSnap = await postRef.get();
   const post = postSnap.data();
   if (post.likes.includes(currentUser.uid)) {
-    await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
+    await postRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
   } else {
-    await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+    await postRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
   }
 }
 
@@ -2768,8 +2759,8 @@ window.addComment = async function(postID) {
   const input = document.getElementById(`commentInput-${postID}`);
   const text = input.value.trim();
   if (!text) return;
-  await updateDoc(doc(db, "posts", postID), {
-    comments: arrayUnion({
+  await db.collection("posts").doc(postID).update({
+    comments: firebase.firestore.FieldValue.arrayUnion({
       userID: currentUser.uid,
       displayName: userData.displayName,
       text: text,
@@ -2782,7 +2773,7 @@ window.addComment = async function(postID) {
 window.deletePostByAdmin = async function(postID) {
   if (userData.shortID!== '10') return;
   showConfirmModal('مسح البوست', 'متأكد عايز تمسح البوست ده؟', async () => {
-    await deleteDoc(doc(db, "posts", postID));
+    await db.collection("posts").doc(postID).delete();
     closeConfirmModal();
     showAlert('تم', 'تم مسح البوست');
   });
@@ -2803,14 +2794,14 @@ window.saveProfileChanges = async function() {
   const bio = document.getElementById('profileBioInput').value.trim();
   const pass = document.getElementById('newPassword').value.trim();
   if (name) {
-    await updateProfile(currentUser, { displayName: name });
-    await updateDoc(doc(db, "users", currentUser.uid), { displayName: name });
+    await currentUser.updateProfile({ displayName: name });
+    await db.collection("users").doc(currentUser.uid).update({ displayName: name });
   }
   if (bio) {
-    await updateDoc(doc(db, "users", currentUser.uid), { bio: bio });
+    await db.collection("users").doc(currentUser.uid).update({ bio: bio });
   }
   if (pass) {
-    await updatePassword(currentUser, pass);
+    await currentUser.updatePassword(pass);
   }
   closeEditProfileModal();
   showAlert('تم', 'تم حفظ التغييرات');
@@ -2822,7 +2813,7 @@ window.updatePhoto = async function(e) {
   const reader = new FileReader();
   reader.onload = async (event) => {
     const url = event.target.result;
-    await updateDoc(doc(db, "users", currentUser.uid), { photoURL: url });
+    await db.collection("users").doc(currentUser.uid).update({ photoURL: url });
     document.getElementById('profileImg').src = url;
   };
   reader.readAsDataURL(file);
@@ -2847,11 +2838,11 @@ window.viewUserProfile = async function() {
 window.toggleFollow = async function() {
   const isFollowing = userData.following.includes(currentChatUser.id);
   if (isFollowing) {
-    await updateDoc(doc(db, "users", currentUser.uid), { following: arrayRemove(currentChatUser.id) });
-    await updateDoc(doc(db, "users", currentChatUser.id), { followers: arrayRemove(currentUser.uid) });
+    await db.collection("users").doc(currentUser.uid).update({ following: firebase.firestore.FieldValue.arrayRemove(currentChatUser.id) });
+    await db.collection("users").doc(currentChatUser.id).update({ followers: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
   } else {
-    await updateDoc(doc(db, "users", currentUser.uid), { following: arrayUnion(currentChatUser.id) });
-    await updateDoc(doc(db, "users", currentChatUser.id), { followers: arrayUnion(currentUser.uid) });
+    await db.collection("users").doc(currentUser.uid).update({ following: firebase.firestore.FieldValue.arrayUnion(currentChatUser.id) });
+    await db.collection("users").doc(currentChatUser.id).update({ followers: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
   }
   viewUserProfile();
 }
@@ -2859,9 +2850,9 @@ window.toggleFollow = async function() {
 window.toggleBlock = async function() {
   const isBlocked = userData.blocked.includes(currentChatUser.id);
   if (isBlocked) {
-    await updateDoc(doc(db, "users", currentUser.uid), { blocked: arrayRemove(currentChatUser.id) });
+    await db.collection("users").doc(currentUser.uid).update({ blocked: firebase.firestore.FieldValue.arrayRemove(currentChatUser.id) });
   } else {
-    await updateDoc(doc(db, "users", currentUser.uid), { blocked: arrayUnion(currentChatUser.id) });
+    await db.collection("users").doc(currentUser.uid).update({ blocked: firebase.firestore.FieldValue.arrayUnion(currentChatUser.id) });
   }
   viewUserProfile();
 }
@@ -2872,8 +2863,8 @@ window.openFollowers = async function() {
   const followersList = document.getElementById('followersList');
   followersList.innerHTML = '';
   for (let uid of userData.followers || []) {
-    const userSnap = await getDoc(doc(db, "users", uid));
-    if (userSnap.exists()) {
+    const userSnap = await db.collection("users").doc(uid).get();
+    if (userSnap.exists) {
       const user = userSnap.data();
       followersList.innerHTML += `
         <div class="list-item">
@@ -2923,8 +2914,8 @@ window.claimDailyLogin = async function() {
     showAlert('خطأ', 'انت استلمت مكافأة اليوم خلاص', 'error');
     return;
   }
-  await updateDoc(doc(db, "users", currentUser.uid), {
-    coins: increment(20),
+  await db.collection("users").doc(currentUser.uid).update({
+    coins: firebase.firestore.FieldValue.increment(20),
     'dailyTasks.lastLogin': today
   });
   userData.coins += 20;
@@ -2954,8 +2945,8 @@ window.claimDailyChat = async function() {
     showAlert('خطأ', 'ابعت 5رسايل الاول', 'error');
     return;
   }
-  await updateDoc(doc(db, "users", currentUser.uid), {
-    coins: increment(15),
+  await db.collection("users").doc(currentUser.uid).update({
+    coins: firebase.firestore.FieldValue.increment(15),
     'dailyTasks.lastChat': today
   });
   userData.coins += 15;
@@ -2973,14 +2964,13 @@ window.sendCoinsToUser = async function() {
     showAlert('خطأ', 'دخل بيانات صح', 'error');
     return;
   }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
+  const q = await db.collection("users").where("shortID", "==", id).get();
+  if (q.empty) {
     showAlert('خطأ', 'الايدي مش موجود', 'error');
     return;
   }
-  const userID = snap.docs[0].id;
-  await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+  const userID = q.docs[0].id;
+  await db.collection("users").doc(userID).update({ coins: firebase.firestore.FieldValue.increment(amount) });
   showAlert('تم', `تم ارسال ${amount} كوينز لـ ${id}`);
 }
 
@@ -3000,13 +2990,13 @@ window.sendBroadcast = async function() {
       reader.readAsDataURL(imageFile);
     });
   }
-  const snap = await getDocs(collection(db, "users"));
-  const batch = writeBatch(db);
+  const snap = await db.collection("users").get();
+  const batch = db.batch();
   snap.forEach(docSnap => {
     if (docSnap.id!== currentUser.uid) {
       const chatID = [currentUser.uid, docSnap.id].sort().join('_');
-      batch.set(doc(db, "chats", chatID), {
-        messages: arrayUnion({
+      batch.set(db.collection("chats").doc(chatID), {
+        messages: firebase.firestore.FieldValue.arrayUnion({
           sender: currentUser.uid,
           text: text,
           image: imageUrl,
@@ -3026,9 +3016,8 @@ window.sendBroadcast = async function() {
 async function updateOnlineCount() {
   const now = Date.now();
   const fiveMinAgo = now - 5 * 60 * 1000;
-  const q = query(collection(db, "users"), where("lastActive", ">", fiveMinAgo));
-  const snap = await getDocs(q);
-  document.getElementById('onlineCount').innerText = snap.size;
+  const q = await db.collection("users").where("lastActive", ">", fiveMinAgo).get();
+  document.getElementById('onlineCount').innerText = q.size;
 }
 
 window.openPostModal = function() {
@@ -3068,12 +3057,12 @@ window.sendFeedback = async function() {
     showAlert('خطأ', 'اكتب الملاحظة الاول', 'error');
     return;
   }
-  await addDoc(collection(db, "feedback"), {
+  await db.collection("feedback").add({
     userID: currentUser.uid,
     shortID: userData.shortID,
     displayName: userData.displayName,
     text: text,
-    createdAt: serverTimestamp()
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
   closeFeedbackModal();
   showAlert('تم', 'شكراً على ملاحظتك! وصلتلي');
@@ -3100,12 +3089,8 @@ window.switchPage = function(pageID) {
 }
 
 window.logout = async function() {
-  await signOut(auth);
+  await auth.signOut();
 }
 </script>
 </body>
-</html>
-    
-  </body>
-  
 </html>
