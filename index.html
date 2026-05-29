@@ -59,12 +59,15 @@ body {
   overflow: hidden;
   transition: height 0.3s ease;
 }
-.pull-refresh.loaded { height: 0 !important; } /* اخفاء اوتوماتيك */
-.auth-page {
-  background: linear-gradient(135deg, #00a884 0%, #111b21 100%);
-  justify-content: center;
+.pull-refresh {
+  height: 0;
+  display: flex;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  overflow: hidden;
+  transition: height 0.3s ease;
 }
 .auth-box {
   background: var(--bg-secondary);
