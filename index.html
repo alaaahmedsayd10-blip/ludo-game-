@@ -1242,16 +1242,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 let currentUser = null;
 let userData = {
-  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: '', verification: null, backgrounds: ['none'], customBg: null, bannedUntil: null
+  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: '', verification: null
 };
 let currentChatUser = null;
+let currentEditPostID = null;
+let currentChatBg = 'none';
 let currentGroup = null;
-let currentGroupData = null;
-let selectedMessageDiv = null;
+let startY = 0;
+let isRefreshing = false;
+let activeTimeInterval = null;
 let confirmCallback = null;
 
 const emojis = ['❤️', '😂', '😮', '😢', '👍', '👎', '🔥', '🎉'];
@@ -1262,10 +1264,11 @@ const gifts = [
   {id:4, emoji:'👑', name:'تاج', price:100}
 ];
 const chatBgs = [
-  {id:'none', name:'بدون خلفية', url:'none', price:0},
-  {id:'bg1', name:'سادة داكن', url:'https://i.imgur.com/8QfXzQk.jpg', price:20},
-  {id:'bg2', name:'طبيعة', url:'https://i.imgur.com/3QpT8Xl.jpg', price:30},
-  {id:'bg3', name:'نيون', url:'https://i.imgur.com/5X8Y9Qm.jpg', price:40}
+  {id: 'none', url: 'none', price: 0, name: 'عادي'},
+  {id: 'bg1', url: 'https://b.top4top.io/p_37990dsp70.jpg', price: 100, name: 'طبيعة'},
+  {id: 'bg2', url: 'https://j.top4top.io/p_37990ivw30.jpg', price: 100, name: 'عيد سعيد '},
+  {id: 'bg3', url: 'https://c.top4top.io/p_37999pnnd0.jpg', price: 100, name: 'بحر'},
+  {id: 'bg4', url: 'https://e.top4top.io/p_3799kahxt0.jpg', price: 100, name: 'مدينة'}
 ];
 const COUNTRIES = {
   EG: '🇪🇬', SA: '🇸🇦', AE: '🇦🇪', MA: '🇲🇦', DZ: '🇩🇿', IQ: '🇮🇶', SY: '🇸🇾',
