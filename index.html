@@ -10,17 +10,6 @@
     
   <body>
   <!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Untitled</title>
-    
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -855,7 +844,7 @@ body {
       <span>📃</span>المنشورات
     </button>
     <button class="nav-btn" onclick="switchPage('page3')">
-      <span>👥</span>الغرف
+      <span>👥</span>الجروبات
     </button>
   </div>
 </div>
@@ -878,7 +867,8 @@ body {
       <span>📃</span>المنشورات
     </button>
     <button class="nav-btn" onclick="switchPage('page3')">
-      <span>👥</span>الغرف</button>
+      <span>👥</span>الجروبات
+    </button>
   </div>
 </div>
 
@@ -898,7 +888,8 @@ body {
       <span>📃</span>المنشورات
     </button>
     <button class="nav-btn active" onclick="switchPage('page3')">
-      <span>👥</span>الغرف</button>
+      <span>👥</span>الجروبات
+    </button>
   </div>
 </div>
 
@@ -1186,8 +1177,8 @@ body {
 
 <div id="createGroupModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:18px; font-size: 22px;">إنشاء غرفه/h3>
-    <input id="groupName" type="text" placeholder="اسم الغرفه">
+    <h3 style="margin-bottom:18px; font-size: 22px;">إنشاء جروب</h3>
+    <input id="groupName" type="text" placeholder="اسم الجروب">
     <input type="file" id="groupImage" accept="image/*" onchange="previewGroupImage(event)">
     <img id="groupImagePreview" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:14px;display:none;margin-top:12px;">
     <label style="display:flex;align-items:center;gap:12px;margin:12px 0;">
@@ -1201,10 +1192,10 @@ body {
 
 <div id="groupSettingsModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:18px; font-size: 22px;">إعدادات الغرفه</h3>
+    <h3 style="margin-bottom:18px; font-size: 22px;">إعدادات الجروب</h3>
 
     <div style="margin-bottom:20px;">
-      <label>صورة الغرفه</label>
+      <label>صورة الجروب</label>
       <input type="file" id="editGroupImage" accept="image/*" onchange="previewEditGroupImage(event)">
       <img id="editGroupImagePreview" src="" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;margin-top:10px;">
     </div>
@@ -1216,7 +1207,7 @@ body {
 
     <div style="margin-bottom:20px;">
       <label>نبذة الجروب</label>
-      <textarea id="editGroupBio" placeholder="وصف االغرفه style="height:80px;resize:none;"></textarea>
+      <textarea id="editGroupBio" placeholder="وصف الجروب" style="height:80px;resize:none;"></textarea>
     </div>
 
     <button class="btn btn-primary" onclick="saveGroupSettings()">حفظ التغييرات</button>
@@ -1227,7 +1218,7 @@ body {
     <div id="groupMembersList" style="max-height:250px;overflow-y:auto;margin-bottom:15px;"></div>
     <input id="addMemberID" type="text" placeholder="ID العضو للإضافة">
     <button class="btn btn-primary" onclick="addMemberToGroup()">إضافة عضو</button>
-    <button class="btn btn-danger" onclick="deleteGroup()">حذف االغرفه/button>
+    <button class="btn btn-danger" onclick="deleteGroup()">حذف الجروب</button>
     <button class="btn btn-secondary" onclick="closeGroupSettings()">إغلاق</button>
   </div>
 </div>
@@ -2173,7 +2164,7 @@ window.createGroup = async function() {
   const isPrivate = document.getElementById('groupPrivate').checked;
 
   if (!name) {
-    showAlert('خطأ', 'اكتب اسم االغرفه, 'error');
+    showAlert('خطأ', 'اكتب اسم الجروب', 'error');
     return;
   }
 
@@ -2189,7 +2180,7 @@ window.createGroup = async function() {
   });
 
   closeCreateGroupModal();
-  showAlert('تم', 'تم انشاء الغرفه');
+  showAlert('تم', 'تم انشاء الجروب');
 }
 
 window.openGroupChat = function(groupID) {
@@ -2288,7 +2279,7 @@ window.openGroupSettings = async function() {
 
   const group = groupSnap.data();
   if (group.owner!== currentUser.uid) {
-    showAlert('انت مش صاحب الغرفه', 'خطأ', 'error');
+    showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
     return;
   }
 
@@ -2304,13 +2295,13 @@ window.clearGroupChat = function() {
     if (!docSnap.exists()) return;
     const group = docSnap.data();
     if (group.owner!== currentUser.uid) {
-      showAlert('انت مش صاحب الغرفه', 'خطأ', 'error');
+      showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
       return;
     }
-    showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل االغرفه', async () => {
+    showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل الجروب؟', async () => {
       await updateDoc(doc(db, "groups", currentGroup), { messages: [] });
       closeConfirmModal();
-      showAlert('تم مسح رسايل االغرفه, 'تم');
+      showAlert('تم مسح رسايل الجروب', 'تم');
     });
   });
 }
@@ -2395,12 +2386,12 @@ window.removeMemberFromGroup = async function(uid) {
 }
 
 window.deleteGroup = function() {
-  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الغرفه نهائي؟', async () => {
+  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائي؟', async () => {
     await deleteDoc(doc(db, "groups", currentGroup));
     closeConfirmModal();
     closeGroupSettings();
     backToGroups();
-    showAlert('تم', 'تم حذف الغرفه');
+    showAlert('تم', 'تم حذف الجروب');
   });
 }
 
@@ -2813,8 +2804,4 @@ window.logout = async function() {
 }
 </script>
 </body>
-</html>
-    
-  </body>
-  
 </html>
