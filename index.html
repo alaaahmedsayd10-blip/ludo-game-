@@ -42,11 +42,13 @@
   --shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   overscroll-behavior-y: contain;
 }
 
@@ -3089,6 +3091,68 @@ window.switchPage = function(pageID) {
 window.logout = async function() {
   await auth.signOut();
 }
+<script>
+
+// كود إعدام أي لودر في الكون 💀
+
+(function killAllLoaders() {
+
+  // 1. امسح أي div عامل نفسه لودر
+
+  const loaderSelectors = [
+
+    '#loadingOverlay', '#loader', '#globalLoader', '#splash', 
+
+    '.spinner-overlay', '.loading-screen', '.loader-full', 
+
+    '.splash-screen', '[class*="loading"]', '[id*="loading"]'
+
+  ];
+
+  
+
+  loaderSelectors.forEach(sel => {
+
+    document.querySelectorAll(sel).forEach(el => {
+
+      el.style.display = 'none';
+
+      el.style.opacity = '0';
+
+      el.style.pointerEvents = 'none';
+
+      el.remove();
+
+    });
+
+  });
+
+  // 2. قول لمواقع الـ build إنك خلصت تحميل
+
+  if(window.Android) window.Android.hideSplashScreen();
+
+  if(window.webkit?.messageHandlers?.hideSplashScreen) 
+
+    window.webkit.messageHandlers.hideSplashScreen.postMessage('');
+
+  if(window.parent !== window) window.parent.postMessage('hideLoader', '*');
+
+  
+
+  // 3. لو لسه فيه body عليه overflow hidden شيله
+
+  document.body.style.overflow = 'auto';
+
+  document.documentElement.style.overflow = 'auto';
+
+})();
+
+// اضربه كل نص ثانية لمدة 5 ثواني عشان لو اللودر اتأخر
+
+let killInterval = setInterval(killAllLoaders, 500);
+
+setTimeout(() => clearInterval(killInterval), 5000);
+
 </script>
 </body>
 </html>
