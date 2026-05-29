@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -359,7 +381,7 @@ body {
   flex-direction: column;
   gap: 10px;
 }
- .bg-item {
+.bg-item {
   background: var(--bg-input);
   border-radius: 14px;
   overflow: hidden;
@@ -418,6 +440,15 @@ body {
   background: var(--bg-tertiary);
   border-radius: 6px 18px 18px 18px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.message img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+.message a {
+  color: var(--blue);
+  text-decoration: underline;
 }
 .message-gift {
   align-self: center;
@@ -824,7 +855,7 @@ body {
       <span>📃</span>المنشورات
     </button>
     <button class="nav-btn" onclick="switchPage('page3')">
-      <span>👥</span>الجروبات
+      <span>👥</span>الغرف
     </button>
   </div>
 </div>
@@ -847,8 +878,7 @@ body {
       <span>📃</span>المنشورات
     </button>
     <button class="nav-btn" onclick="switchPage('page3')">
-      <span>👥</span>الجروبات
-    </button>
+      <span>👥</span>الغرف</button>
   </div>
 </div>
 
@@ -868,8 +898,7 @@ body {
       <span>📃</span>المنشورات
     </button>
     <button class="nav-btn active" onclick="switchPage('page3')">
-      <span>👥</span>الجروبات
-    </button>
+      <span>👥</span>الغرف</button>
   </div>
 </div>
 
@@ -882,59 +911,35 @@ body {
     <button class="header-btn" onclick="openBgModal()">🖼️</button>
   </div>
 <div id="bgModal" class="modal">
-
   <div class="modal-box">
-
     <h3 style="margin-bottom:18px; font-size: 22px;">خلفيات الشات</h3>
-
     <p style="color:var(--text-secondary); margin-bottom:15px;">
-
       عندك <span id="bgCoinsShow" style="color:var(--gold); font-weight:700;">0</span> 🪙
-
     </p>
-
     <div id="bgList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; max-height:400px; overflow-y:auto;">
-
-      <!-- رفع خلفية مخصصة -->
-
       <div class="bg-item" style="border:2px dashed var(--green);">
-
         <div style="height:120px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; background:var(--bg-tertiary);">
-
           <span style="font-size:30px;">📤</span>
-
           <span style="font-size:13px;">رفع صورة من عندك</span>
-
         </div>
-
         <div class="bg-item-info">
-
           <div class="bg-item-name">خلفية مخصصة</div>
-
           <div class="bg-item-price">200 🪙</div>
-
           <input type="file" id="customBgInput" accept="image/*" style="display:none" onchange="uploadCustomBg(event)">
-
           <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
-
         </div>
-
       </div>
-
-      <!-- باقي الخلفيات هتولد هنا بالـ JS -->
-
     </div>
-
     <button class="btn btn-secondary" onclick="closeBgModal()" style="margin-top:15px;">إغلاق</button>
-
   </div>
-
 </div>
   <div class="chat-area" id="chatArea">
     <div id="chatMessages" class="chat-messages"></div>
     <div id="giftBox" class="gift-box"></div>
     <div class="chat-input">
       <input id="messageInput" type="text" placeholder="اكتب رسالة...">
+      <input type="file" id="chatImageInput" accept="image/*" style="display:none" onchange="sendChatImage(event)">
+      <button onclick="document.getElementById('chatImageInput').click()">📷</button>
       <button onclick="sendMessage()">➤</button>
     </div>
   </div>
@@ -953,11 +958,12 @@ body {
     <div id="groupChatMessages" class="chat-messages"></div>
     <div class="chat-input">
       <input id="groupMessageInput" type="text" placeholder="اكتب رسالة...">
+      <input type="file" id="groupImageInput" accept="image/*" style="display:none" onchange="sendGroupImage(event)">
+      <button onclick="document.getElementById('groupImageInput').click()">📷</button>
       <button onclick="sendGroupMessage()">➤</button>
     </div>
   </div>
 </div>
-
 <div id="profilePage" class="page profile-page">
   <div class="header">
     <button class="header-btn" onclick="backToPage1()">←</button>
@@ -970,7 +976,7 @@ body {
     <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="updatePhoto(event)">
     <div class="profile-name" id="profileNameDisplay"></div>
     <div class="profile-id">
-      ID: <span id="profileID"></span>
+     <span id="profileID"></span>
       <span id="adminBadge" style="display:none">🛡️</span>
       <span id="verifiedBadge" style="display:none" class="verified-badge">✓</span>
       <span id="genderIcon" class="gender-icon"></span>
@@ -1169,7 +1175,6 @@ body {
     <button class="btn btn-secondary" onclick="closeEditProfileModal()">إلغاء</button>
   </div>
 </div>
-
 <div id="deleteChatModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">مسح المحادثات</h3>
@@ -1181,8 +1186,8 @@ body {
 
 <div id="createGroupModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:18px; font-size: 22px;">إنشاء جروب</h3>
-    <input id="groupName" type="text" placeholder="اسم الجروب">
+    <h3 style="margin-bottom:18px; font-size: 22px;">إنشاء غرفه/h3>
+    <input id="groupName" type="text" placeholder="اسم الغرفه">
     <input type="file" id="groupImage" accept="image/*" onchange="previewGroupImage(event)">
     <img id="groupImagePreview" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:14px;display:none;margin-top:12px;">
     <label style="display:flex;align-items:center;gap:12px;margin:12px 0;">
@@ -1196,10 +1201,10 @@ body {
 
 <div id="groupSettingsModal" class="modal">
   <div class="modal-box">
-    <h3 style="margin-bottom:18px; font-size: 22px;">إعدادات الجروب</h3>
+    <h3 style="margin-bottom:18px; font-size: 22px;">إعدادات الغرفه</h3>
 
     <div style="margin-bottom:20px;">
-      <label>صورة الجروب</label>
+      <label>صورة الغرفه</label>
       <input type="file" id="editGroupImage" accept="image/*" onchange="previewEditGroupImage(event)">
       <img id="editGroupImagePreview" src="" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;margin-top:10px;">
     </div>
@@ -1211,7 +1216,7 @@ body {
 
     <div style="margin-bottom:20px;">
       <label>نبذة الجروب</label>
-      <textarea id="editGroupBio" placeholder="وصف الجروب" style="height:80px;resize:none;"></textarea>
+      <textarea id="editGroupBio" placeholder="وصف االغرفه style="height:80px;resize:none;"></textarea>
     </div>
 
     <button class="btn btn-primary" onclick="saveGroupSettings()">حفظ التغييرات</button>
@@ -1222,7 +1227,7 @@ body {
     <div id="groupMembersList" style="max-height:250px;overflow-y:auto;margin-bottom:15px;"></div>
     <input id="addMemberID" type="text" placeholder="ID العضو للإضافة">
     <button class="btn btn-primary" onclick="addMemberToGroup()">إضافة عضو</button>
-    <button class="btn btn-danger" onclick="deleteGroup()">حذف الجروب</button>
+    <button class="btn btn-danger" onclick="deleteGroup()">حذف االغرفه/button>
     <button class="btn btn-secondary" onclick="closeGroupSettings()">إغلاق</button>
   </div>
 </div>
@@ -1251,6 +1256,7 @@ body {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, addDoc, deleteDoc, orderBy, serverTimestamp, arrayUnion, arrayRemove, increment, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",
@@ -1265,10 +1271,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 let currentUser = null;
 let userData = {
-  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: '', verification: null
+  displayName: '', photoURL: '', language: 'ar', theme: 'dark', bio: '', followers: [], following: [], blocked: [], lastActive: Date.now(), coins: 0, dailyTasks: {}, gender: '', country: '', verification: null, backgrounds: ['none'], customBg: null
 };
 let currentChatUser = null;
 let currentEditPostID = null;
@@ -1306,39 +1313,26 @@ const COUNTRIES = {
 
 const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
 
-  
- window.uploadCustomBg = async function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const price = 200; // سعر الخلفية المخصصة
-  if (userData.coins < price) {
-    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = async (event) => {
-    const url = event.target.result;
-
-    // خصم الكوينز وحفظ الخلفية
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      coins: increment(-price),
-      customBg: { id: 'custom', url: url, name: 'خلفية مخصصة', price: price }
-    });
-
-    userData.coins -= price;
-    userData.customBg = { id: 'custom', url: url, name: 'خلفية مخصصة', price: price };
-
-    document.getElementById('bgCoinsShow').innerText = userData.coins;
-    document.getElementById('profileCoins').innerText = userData.coins;
-
-    applyBgToChat(userData.customBg);
-    closeBgModal();
-    showAlert('تم', 'تم رفع وتطبيق الخلفية المخصصة');
-  };
-  reader.readAsDataURL(file);
+// ===== دوال الكاش للسرعة =====
+function saveToCache(key, data) {
+  localStorage.setItem('chatapp_' + key, JSON.stringify({data, time: Date.now()}));
 }
+
+function getFromCache(key, maxAge = 60000) {
+  const cached = localStorage.getItem('chatapp_' + key);
+  if (!cached) return null;
+  const parsed = JSON.parse(cached);
+  const {data, time} = parsed;
+  if (Date.now() - time > maxAge) return null;
+  return data;
+}
+
+// دالة لتحويل اللينكات لـ clickable
+function linkify(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+}
+
 // ===== المودالات =====
 window.showAlert = function(title, message, type = 'success') {
   document.getElementById('alertTitle').innerText = title;
@@ -1369,7 +1363,40 @@ document.getElementById('confirmYesBtn').addEventListener('click', () => {
   if (confirmCallback) confirmCallback();
 });
 
- window.openBgModal = function() {
+// ===== الخلفيات + رفع خلفية بـ 200 كوينز =====
+window.uploadCustomBg = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const price = 200;
+  if (userData.coins < price) {
+    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const url = event.target.result;
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      coins: increment(-price),
+      customBg: { id: 'custom', url: url, name: 'خلفية مخصصة', price: price }
+    });
+
+    userData.coins -= price;
+    userData.customBg = { id: 'custom', url: url, name: 'خلفية مخصصة', price: price };
+
+    document.getElementById('bgCoinsShow').innerText = userData.coins;
+    document.getElementById('profileCoins').innerText = userData.coins;
+
+    applyBgToChat(userData.customBg);
+    closeBgModal();
+    showAlert('تم', 'تم رفع وتطبيق الخلفية المخصصة');
+  };
+  reader.readAsDataURL(file);
+}
+
+window.openBgModal = function() {
   document.getElementById('bgModal').classList.add('show');
   document.getElementById('bgCoinsShow').innerText = userData.coins || 0;
   loadBgModal();
@@ -1381,19 +1408,18 @@ window.closeBgModal = function() {
 
 function loadBgModal() {
   const list = document.getElementById('bgList');
-  list.innerHTML = '';
   const currentBg = userData.customBg?.id || 'none';
 
   chatBgs.forEach(bg => {
     const isActive = bg.id === currentBg;
     const hasBg = userData.backgrounds?.includes(bg.id) || bg.id === 'none';
-    
+
     list.innerHTML += `
-      <div class="bg-item ${isActive ? 'active' : ''}" onclick="selectBg('${bg.id}', ${bg.price}, ${hasBg})">
-        ${bg.url !== 'none' ? `<img src="${bg.url}">` : `<div style="height:120px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">بدون خلفية</div>`}
+      <div class="bg-item ${isActive? 'active' : ''}" onclick="selectBg('${bg.id}', ${bg.price}, ${hasBg})">
+        ${bg.url!== 'none'? `<img src="${bg.url}">` : `<div style="height:120px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">بدون خلفية</div>`}
         <div class="bg-item-info">
           <div class="bg-item-name">${bg.name}</div>
-          <div class="bg-item-price">${hasBg ? 'مملوكة' : bg.price + ' 🪙'}</div>
+          <div class="bg-item-price">${hasBg? 'مملوكة' : bg.price + ' 🪙'}</div>
         </div>
       </div>
     `;
@@ -1402,7 +1428,7 @@ function loadBgModal() {
 
 window.selectBg = async function(bgID, price, hasBg) {
   const bg = chatBgs.find(b => b.id === bgID);
-  
+
   if (!hasBg && userData.coins < price) {
     showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
     return;
@@ -1444,16 +1470,21 @@ function loadChatBg(uid) {
     applyBgToChat(userData.customBg);
   }
 }
-// ===== المصادقة =====
+
+// ===== المصادقة السريعة =====
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
     document.getElementById('authPage').classList.remove('active');
     document.getElementById('page1').classList.add('active');
-    loadUserData();
-    loadChats();
-    loadPosts();
-    loadGroups();
+
+    Promise.all([
+      loadUserData(),
+      loadChats(),
+      loadPosts(),
+      loadGroups()
+    ]);
+
     applySettings();
     setupPullRefresh();
     startActiveTracking();
@@ -1551,7 +1582,7 @@ function updateProfileUI() {
     document.getElementById('profileNameDisplay').innerHTML += ' <span class="verified-badge">✓</span>';
   }
 }
-  window.openProfile = function() {
+window.openProfile = function() {
   document.getElementById('page1').classList.remove('active');
   document.getElementById('profilePage').classList.add('active');
 }
@@ -1681,7 +1712,7 @@ async function checkCustomBgExpiry() {
 
 async function checkVerificationExpiry() {
   if (userData.verification && userData.verification.expiresAt && userData.verification.expiresAt < Date.now()) {
-    await updateDoc(doc(db, "users", currentUser.uid), { verification: null });
+    await updateDoc(doc(db,"users", currentUser.uid), { verification: null });
     userData.verification = null;
     showAlert('تنبيه', 'علامة التوثيق انتهت', 'info');
   }
@@ -1689,6 +1720,13 @@ async function checkVerificationExpiry() {
 
 function loadChats() {
   const userList = document.getElementById('userList');
+
+  // عرض من الكاش فوراً
+  const cachedChats = getFromCache('chats');
+  if (cachedChats) {
+    userList.innerHTML = cachedChats;
+  }
+
   userList.innerHTML = `
     <div class="list-item" data-userid="${currentUser.uid}" onclick="openSelfChat()">
       <img src="${userData.photoURL || 'https://via.placeholder.com/50'}">
@@ -1699,6 +1737,7 @@ function loadChats() {
       </div>
     </div>
   `;
+
   onSnapshot(collection(db, "chats"), (snap) => {
     snap.forEach(docSnap => {
       const chatID = docSnap.id;
@@ -1733,6 +1772,7 @@ function loadChats() {
         }
       }
     });
+    saveToCache('chats', userList.innerHTML);
   });
 }
 
@@ -1777,7 +1817,8 @@ document.getElementById('searchID').addEventListener('input', async function(e) 
     });
   } catch(e) { console.error(e); }
 });
-  // ===== فتح وادارة الشات =====
+
+// ===== فتح الشات =====
 window.openChat = function(user, uid) {
   currentChatUser = {...user, id: uid };
   document.getElementById('page1').classList.remove('active');
@@ -1823,7 +1864,11 @@ function displayMessages(messages) {
   messages.forEach(msg => {
     const div = document.createElement('div');
     div.className = `message ${msg.sender === currentUser.uid? 'sent' : 'received'}`;
-    div.innerText = msg.text;
+    let content = msg.text? linkify(msg.text) : '';
+    if (msg.image) {
+      content += `<br><img src="${msg.image}">`;
+    }
+    div.innerHTML = content;
     container.appendChild(div);
   });
   container.scrollTop = container.scrollHeight;
@@ -1846,6 +1891,23 @@ window.sendMessage = async function() {
   updateChatTask();
 }
 
+window.sendChatImage = async function(e) {
+  const file = e.target.files[0];
+  if (!file ||!currentChatUser) return;
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const image = event.target.result;
+    const chatID = [currentUser.uid, currentChatUser.id].sort().join('_');
+    const chatRef = doc(db, "chats", chatID);
+    await setDoc(chatRef, {
+      messages: arrayUnion({ sender: currentUser.uid, text: '', image, timestamp: Date.now() }),
+      lastMessage: '📷 صورة'
+    }, { merge: true });
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
 function updateChatTask() {
   const today = new Date().toDateString();
   const tasks = userData.dailyTasks || {};
@@ -1857,7 +1919,7 @@ function updateChatTask() {
   });
 }
 
-// ===== الخلفيات والهدايا =====
+// ===== الهدايا =====
 window.toggleGiftBox = function() {
   const box = document.getElementById('giftBox');
   box.classList.toggle('show');
@@ -1906,6 +1968,9 @@ window.sendGift = async function(giftID) {
 // ===== المنشورات =====
 function loadPosts() {
   const postsList = document.getElementById('postsList');
+  const cachedPosts = getFromCache('posts');
+  if (cachedPosts) postsList.innerHTML = cachedPosts;
+
   onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(50)), (snap) => {
     postsList.innerHTML = '';
     snap.forEach(docSnap => {
@@ -1924,7 +1989,7 @@ function loadPosts() {
               <div class="post-time">${post.createdAt?.toDate? new Date(post.createdAt.toDate()).toLocaleString('ar-EG') : ''}</div>
             </div>
           </div>
-          <div class="post-content">${post.content}</div>
+          <div class="post-content">${linkify(post.content)}</div>
           ${post.image? `<img class="post-image" src="${post.image}">` : ''}
           <div class="post-actions">
             <div class="post-action ${isLiked? 'liked' : ''}" onclick="toggleLike('${postID}')">
@@ -1938,7 +2003,7 @@ function loadPosts() {
             ${(post.comments || []).map(c => `
               <div class="comment-item">
                 <div class="comment-user">${c.displayName}</div>
-                <div>${c.text}</div>
+                <div>${linkify(c.text)}</div>
               </div>
             `).join('')}
             <div style="display:flex;gap:10px;margin-top:10px;">
@@ -1949,6 +2014,7 @@ function loadPosts() {
         </div>
       `;
     });
+    saveToCache('posts', postsList.innerHTML);
   });
 }
 
@@ -1986,7 +2052,31 @@ window.createPost = async function() {
   }
 }
 
-// ===== مسح كل المحادثات =====
+// ===== مسح المحادثات =====
+window.deleteAllChats = function() {
+  showConfirmModal('مسح الكل', 'متأكد عايز تمسح كل المحادثات؟ مش هتقدر ترجعهم تاني', async () => {
+    const snap = await getDocs(collection(db, "chats"));
+    const batch = writeBatch(db);
+    snap.forEach(docSnap => {
+      if (docSnap.id.includes(currentUser.uid)) {
+        batch.delete(docSnap.ref);
+      }
+    });
+    await batch.commit();
+    closeConfirmModal();
+    closeDeleteChatModal();
+    showAlert('تم', 'تم مسح كل المحادثات');
+  });
+}
+
+window.deleteSingleChat = function(chatID) {
+  showConfirmModal('مسح المحادثة', 'متأكد عايز تمسح المحادثة دي؟', async () => {
+    await deleteDoc(doc(db, "chats", chatID));
+    closeConfirmModal();
+    showAlert('تم', 'تم مسح المحادثة');
+  });
+}
+
 window.openDeleteChatModal = function() {
   document.getElementById('deleteChatModal').classList.add('show');
   loadDeleteChatList();
@@ -2026,40 +2116,27 @@ function loadDeleteChatList() {
   });
 }
 
-window.deleteAllChats = function() {
-  showConfirmModal('مسح الكل', 'متأكد عايز تمسح كل المحادثات؟ مش هتقدر ترجعهم تاني', async () => {
-    const snap = await getDocs(collection(db, "chats"));
-    const batch = writeBatch(db);
-    snap.forEach(docSnap => {
-      if (docSnap.id.includes(currentUser.uid)) {
-        batch.delete(docSnap.ref);
-      }
-    });
-    await batch.commit();
-    closeConfirmModal();
-    closeDeleteChatModal();
-    showAlert('تم', 'تم مسح كل المحادثات');
-  });
-}
-
-window.deleteSingleChat = function(chatID) {
-  showConfirmModal('مسح المحادثة', 'متأكد عايز تمسح المحادثة دي؟', async () => {
-    await deleteDoc(doc(db, "chats", chatID));
-    closeConfirmModal();
-    showAlert('تم', 'تم مسح المحادثة');
-  });
-}
-
-// ===== الجروبات =====
+// ===== الجروبات مرتبة بالنشاط =====
 function loadGroups() {
   const groupsList = document.getElementById('groupsList');
+
   onSnapshot(collection(db, "groups"), (snap) => {
-    groupsList.innerHTML = '';
+    let groupsArray = [];
     snap.forEach(docSnap => {
       const group = docSnap.data();
       const groupID = docSnap.id;
+      const lastMsg = group.messages?.[group.messages.length - 1]?.timestamp || group.createdAt?.toMillis() || 0;
+      groupsArray.push({id: groupID, data: group, lastMsg});
+    });
+
+    // ترتيب حسب اخر رسالة - النشيط فوق
+    groupsArray.sort((a, b) => b.lastMsg - a.lastMsg);
+
+    groupsList.innerHTML = '';
+    groupsArray.forEach(g => {
+      const group = g.data;
       groupsList.innerHTML += `
-        <div class="group-item" onclick="openGroupChat('${groupID}')">
+        <div class="group-item" onclick="openGroupChat('${g.id}')">
           <img src="${group.image || 'https://via.placeholder.com/64'}">
           <div class="group-info">
             <div class="group-name">${group.name} ${group.private? '<span class="private-badge">خاص</span>' : ''}</div>
@@ -2096,7 +2173,7 @@ window.createGroup = async function() {
   const isPrivate = document.getElementById('groupPrivate').checked;
 
   if (!name) {
-    showAlert('خطأ', 'اكتب اسم الجروب', 'error');
+    showAlert('خطأ', 'اكتب اسم االغرفه, 'error');
     return;
   }
 
@@ -2107,11 +2184,12 @@ window.createGroup = async function() {
     owner: currentUser.uid,
     members: [currentUser.uid],
     private: isPrivate,
+    messages: [],
     createdAt: serverTimestamp()
   });
 
   closeCreateGroupModal();
-  showAlert('تم', 'تم انشاء الجروب');
+  showAlert('تم', 'تم انشاء الغرفه');
 }
 
 window.openGroupChat = function(groupID) {
@@ -2151,7 +2229,11 @@ function loadGroupMessages(groupID) {
       messages.forEach(msg => {
         const div = document.createElement('div');
         div.className = `message ${msg.sender === currentUser.uid? 'sent' : 'received'}`;
-        div.innerHTML = `<strong>${msg.senderName}:</strong> ${msg.text}`;
+        let content = `<strong>${msg.senderName}:</strong> ${msg.text? linkify(msg.text) : ''}`;
+        if (msg.image) {
+          content += `<br><img src="${msg.image}">`;
+        }
+        div.innerHTML = content;
         container.appendChild(div);
       });
       container.scrollTop = container.scrollHeight;
@@ -2176,55 +2258,59 @@ window.sendGroupMessage = async function() {
 
   input.value = '';
 }
+
+window.sendGroupImage = async function(e) {
+  const file = e.target.files[0];
+  if (!file ||!currentGroup) return;
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const image = event.target.result;
+    const groupRef = doc(db, "groups", currentGroup);
+    await updateDoc(groupRef, {
+      messages: arrayUnion({
+        sender: currentUser.uid,
+        senderName: userData.displayName,
+        text: '',
+        image,
+        timestamp: Date.now()
+      })
+    });
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+// ===== باقي الدوال كلها زي ما هي =====
 window.openGroupSettings = async function() {
-
   if (!currentGroup) return;
-
   const groupSnap = await getDoc(doc(db, "groups", currentGroup));
-
   if (!groupSnap.exists()) return;
 
-  
-
   const group = groupSnap.data();
-
-  if (group.owner !== currentUser.uid) {
-
-    showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
-
+  if (group.owner!== currentUser.uid) {
+    showAlert('انت مش صاحب الغرفه', 'خطأ', 'error');
     return;
-
   }
 
   document.getElementById('editGroupName').value = group.name || '';
-
   document.getElementById('editGroupBio').value = group.bio || '';
-
   document.getElementById('editGroupImagePreview').src = group.image || '';
-
   document.getElementById('groupSettingsModal').classList.add('show');
-
 }
-// ===== اعدادات الجروب - صاحب الجروب بس =====
-// ===== مسح شات الجروب - صاحب الجروب بس =====
+
 window.clearGroupChat = function() {
   if (!currentGroup) return;
-
-  // هات بيانات الجروب واتأكد ان اليوزر ده هو صاحب الجروب
   getDoc(doc(db, "groups", currentGroup)).then(docSnap => {
     if (!docSnap.exists()) return;
     const group = docSnap.data();
-
-    if (group.owner !== currentUser.uid) {
-      showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
+    if (group.owner!== currentUser.uid) {
+      showAlert('انت مش صاحب الغرفه', 'خطأ', 'error');
       return;
     }
-
-    // لو وصل هنا يبقى هو صاحب الجروب، كمّل
-    showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل الجروب؟', async () => {
+    showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل االغرفه', async () => {
       await updateDoc(doc(db, "groups", currentGroup), { messages: [] });
       closeConfirmModal();
-      showAlert('تم مسح رسايل الجروب', 'تم');
+      showAlert('تم مسح رسايل االغرفه, 'تم');
     });
   });
 }
@@ -2309,16 +2395,15 @@ window.removeMemberFromGroup = async function(uid) {
 }
 
 window.deleteGroup = function() {
-  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائي؟', async () => {
+  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الغرفه نهائي؟', async () => {
     await deleteDoc(doc(db, "groups", currentGroup));
     closeConfirmModal();
     closeGroupSettings();
     backToGroups();
-    showAlert('تم', 'تم حذف الجروب');
+    showAlert('تم', 'تم حذف الغرفه');
   });
 }
 
-// ===== علامة التوثيق =====
 window.giveVerification = async function() {
   if (userData.shortID!== '10') return;
 
@@ -2348,7 +2433,7 @@ window.giveVerification = async function() {
 
   showAlert('تم', 'تم اعطاء علامة التوثيق');
 }
-  // ===== التفاعل مع المنشورات =====
+
 window.toggleLike = async function(postID) {
   const postRef = doc(db, "posts", postID);
   const postSnap = await getDoc(postRef);
@@ -2391,7 +2476,6 @@ window.deletePostByAdmin = async function(postID) {
   });
 }
 
-// ===== تعديل الملف الشخصي =====
 window.openEditModal = function() {
   document.getElementById('editProfileModal').classList.add('show');
   document.getElementById('profileNameInput').value = userData.displayName;
@@ -2436,7 +2520,6 @@ window.updatePhoto = async function(e) {
   reader.readAsDataURL(file);
 }
 
-// ===== المتابعة والحظر =====
 window.viewUserProfile = async function() {
   if (!currentChatUser) return;
   document.getElementById('chatPage').classList.remove('active');
@@ -2507,7 +2590,6 @@ window.backToProfile = function() {
   document.getElementById('profilePage').classList.add('active');
 }
 
-// ===== المهام اليومية =====
 window.checkDailyTasks = function() {
   const today = new Date().toDateString();
   const tasks = userData.dailyTasks || {};
@@ -2569,7 +2651,7 @@ window.claimDailyChat = async function() {
     return;
   }
   if ((tasks.chatCount || 0) < 5) {
-    showAlert('خطأ', 'ابعت 5 رسايل الاول', 'error');
+    showAlert('خطأ', 'ابعت 5رسايل الاول', 'error');
     return;
   }
   await updateDoc(doc(db, "users", currentUser.uid), {
@@ -2731,4 +2813,8 @@ window.logout = async function() {
 }
 </script>
 </body>
+</html>
+    
+  </body>
+  
 </html>
