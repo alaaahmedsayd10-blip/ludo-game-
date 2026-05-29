@@ -3092,71 +3092,37 @@ window.logout = async function() {
   await auth.signOut();
 }
 <script>
-
-// كود إعدام أي لودر في الكون 💀
-
-(function killAllLoaders() {
-
-  // 1. امسح أي div عامل نفسه لودر
-
-  const loaderSelectors = [
-
-    '#loadingOverlay', '#loader', '#globalLoader', '#splash', 
-
-    '.spinner-overlay', '.loading-screen', '.loader-full', 
-
-    '.splash-screen', '[class*="loading"]', '[id*="loading"]'
-
-  ];
-
-  
-
-  loaderSelectors.forEach(sel => {
-
-    document.querySelectorAll(sel).forEach(el => {
-
+// كود إبادة اللودر نسخة WebView Edition
+function murderLoader() {
+  // 1. موت أي div مغطي الشاشة
+  document.querySelectorAll('div').forEach(el => {
+    const s = getComputedStyle(el);
+    if(s.position === 'fixed' && s.zIndex > 900 && s.width === '100%') {
       el.style.display = 'none';
-
-      el.style.opacity = '0';
-
-      el.style.pointerEvents = 'none';
-
       el.remove();
-
-    });
-
+    }
   });
-
-  // 2. قول لمواقع الـ build إنك خلصت تحميل
-
-  if(window.Android) window.Android.hideSplashScreen();
-
-  if(window.webkit?.messageHandlers?.hideSplashScreen) 
-
-    window.webkit.messageHandlers.hideSplashScreen.postMessage('');
-
-  if(window.parent !== window) window.parent.postMessage('hideLoader', '*');
-
   
-
-  // 3. لو لسه فيه body عليه overflow hidden شيله
-
+  // 2. قول للأندرويد "خلصت يا معلم"
+  if(window.Android) {
+    Android.hideSplashScreen();
+  }
+  
+  // 3. قول لـ WebToApp/AppCreator "شيل ايدك"
+  window.parent.postMessage('loaded', '*');
+  
+  // 4. شغل الاسكرول بالعافية
   document.body.style.overflow = 'auto';
-
   document.documentElement.style.overflow = 'auto';
+}
 
-})();
-
-// اضربه كل نص ثانية لمدة 5 ثواني عشان لو اللودر اتأخر
-
-let killInterval = setInterval(killAllLoaders, 500);
-
-setTimeout(() => clearInterval(killInterval), 5000);
-
+// اضربه 4 مرات عشان الـ WebView رخم
+window.addEventListener('load', () => {
+  setTimeout(murderLoader, 500);
+  setTimeout(murderLoader, 1500);
+  setTimeout(murderLoader, 3000);
+  setTimeout(murderLoader, 5000);
+});
 </script>
 </body>
-</html>
-    
-  </body>
-  
 </html>
