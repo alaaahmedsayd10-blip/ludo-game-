@@ -201,6 +201,7 @@ body {
   object-fit: cover;
   border: 2px solid transparent;
   background: var(--bg-input);
+  loading: lazy;
 }
 .list-item:hover img { border-color: var(--green); }
 .list-item-info { flex: 1; }
@@ -257,6 +258,7 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--green);
+  loading: lazy;
 }
 .post-author { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px; }
 .post-time { font-size: 12px; color: var(--text-secondary); }
@@ -265,6 +267,7 @@ body {
   width: 100%;
   max-height: 500px;
   object-fit: cover;
+  loading: lazy;
 }
 .post-actions {
   display: flex;
@@ -345,6 +348,7 @@ body {
   overflow: hidden;
   background-size: cover;
   background-position: center;
+  will-change: transform;
 }
 .chat-messages {
   flex: 1;
@@ -370,6 +374,7 @@ body {
   width: 100%;
   height: 120px;
   object-fit: cover;
+  loading: lazy;
 }
 .bg-item-info {
   padding: 10px;
@@ -424,6 +429,7 @@ body {
   max-width: 100%;
   border-radius: 12px;
   margin-top: 8px;
+  loading: lazy;
 }
 .message a {
   color: var(--blue);
@@ -524,6 +530,7 @@ body {
   border: 4px solid var(--green);
   box-shadow: 0 8px 30px rgba(0,168,132,0.3);
   transition: 0.3s;
+  loading: lazy;
 }
 .profile-img:hover { transform: scale(1.05); }
 .profile-name {
@@ -659,6 +666,7 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--green);
+  loading: lazy;
 }
 .group-info { flex: 1; }
 .group-name { font-weight: 700; font-size: 17px; }
@@ -770,6 +778,12 @@ body {
   font-weight: 700;
 }
 .delete-btn.for-me { background: var(--bg-input); color: var(--text-primary); }
+.delete-btn.disabled {
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 .emoji-options {
   display: flex;
   gap: 8px;
@@ -947,7 +961,7 @@ body {
           <div class="bg-item-name">خلفية مخصصة</div>
           <div class="bg-item-price">200 🪙</div>
           <input type="file" id="customBgInput" accept="image/*" style="display:none" onchange="uploadCustomBg(event)">
-          <button class="btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
+          <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
         </div>
       </div>
     </div>
@@ -1188,6 +1202,7 @@ body {
 <div id="deleteChatModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">مسح المحادثات</h3>
+    <button class="delete-all-btn" onclick="deleteAllChats()">🗑️ مسح الكل</button>
     <div id="deleteChatList" style="max-height:300px;overflow-y:auto;"></div>
     <button class="btn btn-secondary" onclick="closeDeleteChatModal()" style="margin-top:15px;">إغلاق</button>
   </div>
@@ -1372,7 +1387,7 @@ const COUNTRIES = {
 const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
 const DEFAULT_AVATAR = 'https://via.placeholder.com/120/202c33/ffffff?text=👤';
 
-// ===== تعديلات إلغاء الدايرة الوهمية للـ APK - نسخة قاتلة =====
+// ===== تعديلات إلغاء الدايرة الوهمية للـ APK =====
 function saveToCache(key, data) {
   localStorage.setItem('chatapp_' + key, JSON.stringify({data, time: Date.now()}));
 }
@@ -1418,7 +1433,7 @@ function linkify(text) {
   return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
 }
 
-function createEmojiPicker(msgIndex, isGroup) {
+function createEmojiPicker(msgIndex, isGroup, message) {
   const picker = document.createElement('div');
   picker.className = 'emoji-picker';
   const deleteOptions = document.createElement('div');
@@ -1426,8 +1441,22 @@ function createEmojiPicker(msgIndex, isGroup) {
   const btnMe = document.createElement('button');
   btnMe.className = 'delete-btn for-me';
   btnMe.innerText = 'مسح من عندي';
-  btnMe.onclick = () => deleteMessage(msgIndex, isGroup, 'me'); 
+  btnMe.onclick = () => deleteMessage(msgIndex, isGroup, 'me');
+
+  const btnAll = document.createElement('button');
+  const isOwner = message.sender === currentUser.uid;
+  if (!isOwner) {
+    btnAll.className = 'delete-btn disabled';
+    btnAll.innerText = 'مسح للكل - انت مش صاحب الرسالة';
+    btnAll.disabled = true;
+  } else {
+    btnAll.className = 'delete-btn';
+    btnAll.innerText = 'مسح للكل';
+    btnAll.onclick = () => deleteMessage(msgIndex, isGroup, 'all');
+  }
+
   deleteOptions.appendChild(btnMe);
+  deleteOptions.appendChild(btnAll);
   picker.appendChild(deleteOptions);
   const emojiOptions = document.createElement('div');
   emojiOptions.className = 'emoji-options';
@@ -1442,9 +1471,9 @@ function createEmojiPicker(msgIndex, isGroup) {
   return picker;
 }
 
-function showEmojiPicker(messageDiv, msgIndex, isGroup) {
+function showEmojiPicker(messageDiv, msgIndex, isGroup, message) {
   document.querySelectorAll('.emoji-picker').forEach(p => p.remove());
-  const picker = createEmojiPicker(msgIndex, isGroup);
+  const picker = createEmojiPicker(msgIndex, isGroup, message);
   messageDiv.appendChild(picker);
   picker.classList.add('show');
   selectedMessageDiv = messageDiv;
@@ -1490,6 +1519,10 @@ async function deleteMessage(msgIndex, isGroup, type) {
     const snap = await getDoc(groupRef);
     if (snap.exists()) {
       const messages = snap.data().messages || [];
+      if (type === 'all' && messages[msgIndex].sender!== currentUser.uid) {
+        showAlert('خطأ', 'انت مش صاحب الرسالة عشان تمسحها للكل', 'error');
+        return;
+      }
       if (type === 'all') {
         messages[msgIndex] = {sender: 'system', text: 'تم حذف هذه الرسالة', timestamp: Date.now(), deleted: true};
         await updateDoc(groupRef, { messages });
@@ -1505,6 +1538,10 @@ async function deleteMessage(msgIndex, isGroup, type) {
     const snap = await getDoc(chatRef);
     if (snap.exists()) {
       const messages = snap.data().messages || [];
+      if (type === 'all' && messages[msgIndex].sender!== currentUser.uid) {
+        showAlert('خطأ', 'انت مش صاحب الرسالة عشان تمسحها للكل', 'error');
+        return;
+      }
       if (type === 'all') {
         messages[msgIndex] = {sender: 'system', text: 'تم حذف هذه الرسالة', timestamp: Date.now(), deleted: true};
         await updateDoc(chatRef, { messages });
@@ -1711,7 +1748,7 @@ function setupPullRefresh() {
         refreshEl.innerText = 'جاري التحديث...';
         setTimeout(() => {
           Promise.all([loadChats(), loadPosts(), loadGroups()])
-       .finally(() => window.stopPullRefresh());
+      .finally(() => window.stopPullRefresh());
         }, 1000);
       }
     });
@@ -2073,11 +2110,11 @@ function displayMessages(messages, containerID, isGroup) {
       div.innerHTML = content;
       let pressTimer;
       div.addEventListener('touchstart', () => {
-        pressTimer = setTimeout(() => showEmojiPicker(div, index, isGroup), 600);
+        pressTimer = setTimeout(() => showEmojiPicker(div, index, isGroup, msg), 600);
       });
       div.addEventListener('touchend', () => clearTimeout(pressTimer));
       div.addEventListener('mousedown', () => {
-        pressTimer = setTimeout(() => showEmojiPicker(div, index, isGroup), 600);
+        pressTimer = setTimeout(() => showEmojiPicker(div, index, isGroup, msg), 600);
       });
       div.addEventListener('mouseup', () => clearTimeout(pressTimer));
       div.addEventListener('mouseleave', () => clearTimeout(pressTimer));
@@ -2353,8 +2390,6 @@ function loadGroups() {
       window.stopPullRefresh();
     }, (err) => { console.error(err); window.stopPullRefresh(); });
   } catch(e) { console.error(e); window.stopPullRefresh(); }
-}
-
 window.openCreateGroupModal = function() {
   document.getElementById('createGroupModal').classList.add('show');
 }
