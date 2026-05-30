@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -501,7 +501,7 @@ body {
   cursor: pointer;
   transition: 0.3s;
 }
-gift-item:hover { transform: scale(1.05); }
+.gift-item:hover { transform: scale(1.05); }
 .gift-item div { font-size: 38px; margin-bottom: 8px; }
 .gift-price { font-size: 13px; color: var(--gold); font-weight: 700; }
 .profile-page {
@@ -947,7 +947,7 @@ gift-item:hover { transform: scale(1.05); }
           <div class="bg-item-name">خلفية مخصصة</div>
           <div class="bg-item-price">200 🪙</div>
           <input type="file" id="customBgInput" accept="image/*" style="display:none" onchange="uploadCustomBg(event)">
-          <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
+          <button class="btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
         </div>
       </div>
     </div>
@@ -1304,6 +1304,9 @@ gift-item:hover { transform: scale(1.05); }
 </div>
 
 <script type="module">
+// اقتل اللفة فوراً قبل أي حاجة
+if (window.stop) window.stop();
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, addDoc, deleteDoc, orderBy, serverTimestamp, arrayUnion, arrayRemove, increment, writeBatch, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -1318,11 +1321,7 @@ const firebaseConfig = {
   appId: "1:567693078252:web:3b5d6475a583f1f7347fc9",
   measurementId: "G-JKFYDGCFML"
 };
-// اقتل اللفة فوراً
-if (window.stop) window.stop();
-document.readyState = 'complete';
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -1374,7 +1373,7 @@ const COUNTRIES = {
 const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
 const DEFAULT_AVATAR = 'https://via.placeholder.com/120/202c33/ffffff?text=👤';
 
-// ===== تعديلات إلغاء الدايرة الوهمية للـ APK =====
+// ===== تعديلات إلغاء الدايرة الوهمية للـ APK - نسخة قاتلة =====
 function saveToCache(key, data) {
   localStorage.setItem('chatapp_' + key, JSON.stringify({data, time: Date.now()}));
 }
@@ -1392,20 +1391,27 @@ window.stopPullRefresh = function() {
     el.innerText = 'اسحب للاسفل للتحديث';
   });
   isRefreshing = false;
+  if (window.stop) window.stop();
+  document.readyState = 'complete';
 }
 window.stop = function() {
   window.stopPullRefresh();
 }
 window.addEventListener('load', function() {
-  setTimeout(() => window.stopPullRefresh(), 1000);
+  setTimeout(() => window.stopPullRefresh(), 300);
+  setTimeout(() => window.stopPullRefresh(), 800);
+  setTimeout(() => window.stopPullRefresh(), 1500);
+  setTimeout(() => window.stopPullRefresh(), 3000);
 });
 window.addEventListener('error', () => {
   window.stopPullRefresh();
 });
-setTimeout(() => {
-  if (window.stop) window.stop();
-  window.stopPullRefresh();
-}, 3000);
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => window.stopPullRefresh(), 200);
+});
+setInterval(() => {
+  if (!isRefreshing) window.stopPullRefresh();
+}, 2000);
 // ===== نهاية تعديلات الدايرة =====
 
 function linkify(text) {
@@ -1711,7 +1717,7 @@ function setupPullRefresh() {
         refreshEl.innerText = 'جاري التحديث...';
         setTimeout(() => {
           Promise.all([loadChats(), loadPosts(), loadGroups()])
-         .finally(() => window.stopPullRefresh());
+       .finally(() => window.stopPullRefresh());
         }, 1000);
       }
     });
@@ -2410,28 +2416,17 @@ window.openGroupChat = async function(groupID) {
   const docSnap = await getDoc(doc(db, "groups", groupID));
   if (docSnap.exists()) {
     currentGroupData = docSnap.data();
-    const group = currentGroupData;
-    document.getElementById('groupChatName').innerText = group.name;document.getElementById('groupChatImg').src = group.image || DEFAULT_AVATAR;
-    const isOwner = group.owner === currentUser.uid;
-    const isAdmin = group.admins?.includes(currentUser.uid);
-    document.getElementById('groupSettingsBtn').style.display = isOwner? 'block' : 'none';
-    if (group.groupBg && group.groupBg.expiresAt > Date.now()) {
-      document.getElementById('groupChatArea').style.backgroundImage = `url(${group.groupBg.url})`;
+    document.getElementById('groupChatName').innerText = currentGroupData.name;
+    document.getElementById('groupChatImg').src = currentGroupData.image || DEFAULT_AVATAR;
+    const isAdmin = currentGroupData.admins?.includes(currentUser.uid) || currentGroupData.owner === currentUser.uid;
+    document.getElementById('groupSettingsBtn').style.display = isAdmin? 'block' : 'none';
+    loadGroupMessages(groupID);
+    if (currentGroupData.groupBg) {
+      document.getElementById('groupChatArea').style.backgroundImage = `url(${currentGroupData.groupBg.url})`;
     } else {
       document.getElementById('groupChatArea').style.backgroundImage = 'none';
     }
-    if (!group.welcomedUsers?.includes(currentUser.uid)) {
-      await updateDoc(doc(db, "groups", groupID), {
-        messages: arrayUnion({
-          sender: 'system',
-          text: `مرحباً ${userData.displayName} انضم للجروب 🎉`,
-          timestamp: Date.now()
-        }),
-        welcomedUsers: arrayUnion(currentUser.uid)
-      });
-    }
   }
-  loadGroupMessages(groupID);
 }
 
 window.backToGroups = function() {
@@ -2442,15 +2437,12 @@ window.backToGroups = function() {
 }
 
 function loadGroupMessages(groupID) {
+  const groupRef = doc(db, "groups", groupID);
   try {
-    onSnapshot(doc(db, "groups", groupID), (docSnap) => {
+    onSnapshot(groupRef, (docSnap) => {
       if (docSnap.exists()) {
-        currentGroupData = docSnap.data();
         const messages = docSnap.data().messages || [];
         displayMessages(messages, 'groupChatMessages', true);
-        if (currentGroupData.groupBg && currentGroupData.groupBg.expiresAt > Date.now()) {
-          document.getElementById('groupChatArea').style.backgroundImage = `url(${currentGroupData.groupBg.url})`;
-        }
       }
       window.stopPullRefresh();
     }, (err) => { console.error(err); window.stopPullRefresh(); });
@@ -2461,9 +2453,9 @@ window.sendGroupMessage = async function() {
   const input = document.getElementById('groupMessageInput');
   const text = input.value.trim();
   if (!text ||!currentGroup) return;
-  const muteEnd = currentGroupData?.muted?.[currentUser.uid] || 0;
+  const muteEnd = currentGroupData.muted?.[currentUser.uid] || 0;
   if (muteEnd > Date.now()) {
-    showAlert('مكتوم', `انت مكتوم لحد ${new Date(muteEnd).toLocaleTimeString('ar-EG')}`, 'error');
+    showAlert('مكتوم', 'انت مكتوم في الجروب ده', 'error');
     return;
   }
   const groupRef = doc(db, "groups", currentGroup);
@@ -2471,7 +2463,7 @@ window.sendGroupMessage = async function() {
     messages: arrayUnion({
       sender: currentUser.uid,
       senderName: userData.displayName,
-      text,
+      text: text,
       timestamp: Date.now()
     })
   });
@@ -2490,7 +2482,7 @@ window.sendGroupImage = async function(e) {
         sender: currentUser.uid,
         senderName: userData.displayName,
         text: '',
-        image,
+        image: image,
         timestamp: Date.now()
       })
     });
@@ -2499,70 +2491,61 @@ window.sendGroupImage = async function(e) {
   e.target.value = '';
 }
 
-window.openGroupSettings = async function() {
-  if (!currentGroup) return;
-  const groupSnap = await getDoc(doc(db, "groups", currentGroup));
-  if (!groupSnap.exists()) return;
-  const group = groupSnap.data();
-  if (group.owner!== currentUser.uid) {
-    showAlert('انت مش صاحب الجروب', 'خطأ', 'error');
+window.clearGroupChat = function() {
+  if (currentGroupData.owner!== currentUser.uid) {
+    showAlert('خطأ', 'بس الادمن يقدر يمسح الشات', 'error');
     return;
   }
-  document.getElementById('editGroupName').value = group.name || '';
-  document.getElementById('editGroupBio').value = group.bio || '';
-  document.getElementById('editGroupImagePreview').src = group.image || '';
-  document.getElementById('editGroupMaxMembers').value = group.maxMembers || 50;
-  if (group.groupBg && group.groupBg.expiresAt > Date.now()) {
-    document.getElementById('groupBgInfo').innerText = `الخلفية الحالية هتنتهي: ${new Date(group.groupBg.expiresAt).toLocaleDateString('ar-EG')}`;
-  } else {
-    document.getElementById('groupBgInfo').innerText = 'مفيش خلفية مفعلة';
-  }
-  loadGroupMembers(group.members, group.admins, group.owner);
-  document.getElementById('groupSettingsModal').classList.add('show');
-}
-
-window.changeGroupBg = async function(e) {
-  const file = e.target.files[0];
-  if (!file ||!currentGroup) return;
-  if (userData.coins < 200) {
-    showAlert('خطأ', 'معندكش 200 كوينز', 'error');
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = async (event) => {
-    const url = event.target.result;
-    const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
-    await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(-200) });
-    await updateDoc(doc(db, "groups", currentGroup), {
-      groupBg: { url: url, expiresAt: expiresAt }
-    });
-    userData.coins -= 200;
-    document.getElementById('profileCoins').innerText = userData.coins;
-    document.getElementById('groupBgInfo').innerText = `الخلفية الحالية هتنتهي: ${new Date(expiresAt).toLocaleDateString('ar-EG')}`;
-    document.getElementById('groupChatArea').style.backgroundImage = `url(${url})`;
-    showAlert('تم', 'تم تغيير خلفية الجروب 7 أيام');
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
-
-window.clearGroupChat = async function() {
-  if (!currentGroup ||!currentGroupData) return;
-  const isOwner = currentGroupData.owner === currentUser.uid;
-  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
-  if (!isOwner &&!isAdmin) {
-    showAlert('ممنوع', 'انت مشرف', 'error');
-    return;
-  }
-  showConfirmModal('مسح الشات', 'متأكد عايز تمسح رسايل الجروب؟', async () => {
+  showConfirmModal('مسح الشات', 'متأكد عايز تمسح كل رسايل الجروب؟', async () => {
     await updateDoc(doc(db, "groups", currentGroup), { messages: [] });
     closeConfirmModal();
-    showAlert('تم مسح رسايل الجروب', 'تم');
+    showAlert('تم', 'تم مسح شات الجروب');
   });
+}
+
+window.openGroupSettings = function() {
+  if (!currentGroupData.admins?.includes(currentUser.uid) && currentGroupData.owner!== currentUser.uid) return;
+  document.getElementById('groupSettingsModal').classList.add('show');
+  loadGroupSettings();
 }
 
 window.closeGroupSettings = function() {
   document.getElementById('groupSettingsModal').classList.remove('show');
+}
+
+function loadGroupSettings() {
+  document.getElementById('editGroupName').value = currentGroupData.name;
+  document.getElementById('editGroupBio').value = currentGroupData.bio || '';
+  document.getElementById('editGroupMaxMembers').value = currentGroupData.maxMembers || 50;
+  document.getElementById('editGroupImagePreview').src = currentGroupData.image || DEFAULT_AVATAR;
+  document.getElementById('editGroupImagePreview').style.display = 'block';
+  if (currentGroupData.groupBg) {
+    const daysLeft = Math.ceil((currentGroupData.groupBg.expiresAt - Date.now()) / (1000*60*60*24));
+    document.getElementById('groupBgInfo').innerText = `الخلفية هتنتهي بعد ${daysLeft} يوم`;
+  } else {
+    document.getElementById('groupBgInfo').innerText = 'لا يوجد خلفية حالياً';
+  }
+  const membersList = document.getElementById('groupMembersList');
+  membersList.innerHTML = '';
+  currentGroupData.members.forEach(uid => {
+    getDoc(doc(db, "users", uid)).then(userSnap => {
+      if (userSnap.exists()) {
+        const user = userSnap.data();
+        const isAdmin = currentGroupData.admins?.includes(uid);
+        const isOwner = currentGroupData.owner === uid;
+        membersList.innerHTML += `
+          <div class="list-item">
+            <img src="${user.photoURL || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'" style="width:40px;height:40px;">
+            <div class="list-item-info">
+              <div class="list-item-name">${user.displayName} ${isOwner? '<span class="admin-badge">المالك</span>' : isAdmin? '<span class="mod-badge">مشرف</span>' : ''}</div>
+              <div class="list-item-id">${user.shortID}</div>
+            </div>
+            ${currentGroupData.owner === currentUser.uid &&!isOwner? `<button class="delete-chat-btn" onclick="kickMember('${uid}')">طرد</button>` : ''}
+          </div>
+        `;
+      }
+    });
+  });
 }
 
 window.previewEditGroupImage = function(e) {
@@ -2571,6 +2554,7 @@ window.previewEditGroupImage = function(e) {
   const reader = new FileReader();
   reader.onload = (event) => {
     document.getElementById('editGroupImagePreview').src = event.target.result;
+    document.getElementById('editGroupImagePreview').style.display = 'block';
   };
   reader.readAsDataURL(file);
 }
@@ -2584,83 +2568,59 @@ window.saveGroupSettings = async function() {
     name: name,
     bio: bio,
     maxMembers: maxMembers,
-    image: image.includes('data:image')? image : image
+    image: image.includes('data:image')? image : currentGroupData.image
   });
   closeGroupSettings();
   showAlert('تم', 'تم حفظ التغييرات');
 }
 
-function loadGroupMembers(members, admins, owner) {
-  const list = document.getElementById('groupMembersList');
-  list.innerHTML = '';
-  members?.forEach(uid => {
-    getDoc(doc(db, "users", uid)).then(userSnap => {
-      if (userSnap.exists()) {
-        const user = userSnap.data();
-        const isAdmin = admins?.includes(uid);
-        const isOwner = owner === uid;
-        let badges = '';
-        if (isOwner) badges = '<span class="admin-badge">مالك</span>';
-        else if (isAdmin) badges = '<span class="mod-badge">مشرف</span>';
-        list.innerHTML += `
-          <div class="list-item">
-            <img src="${user.photoURL || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'" style="width:45px;height:45px;">
-            <div class="list-item-info">
-              <div class="list-item-name">${user.displayName} ${badges}</div>
-              <div class="list-item-id">${user.shortID}</div>
-            </div>
-            ${owner === currentUser.uid &&!isOwner?
-              `<button class="delete-chat-btn" onclick="removeMemberFromGroup('${uid}')">طرد</button>` : ''}
-          </div>
-        `;
-      }
+window.changeGroupBg = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const price = 200;
+  if (userData.coins < price) {
+    showAlert('خطأ', 'معندكش كوينز كفاية', 'error');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    const url = event.target.result;
+    const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
+    await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(-price) });
+    await updateDoc(doc(db, "groups", currentGroup), {
+      groupBg: { url: url, expiresAt: expiresAt }
     });
-  });
+    userData.coins -= price;
+    document.getElementById('profileCoins').innerText = userData.coins;
+    showAlert('تم', 'تم تغيير خلفية الجروب 7 أيام');
+    closeGroupSettings();
+  };
+  reader.readAsDataURL(file);
 }
 
 window.addMemberToGroup = async function() {
   const id = document.getElementById('addMemberID').value.trim().toUpperCase();
   if (!id) return;
-  if (currentGroupData.members.length >= currentGroupData.maxMembers) {
-    showAlert('خطأ', `الجروب وصل للحد الأقصى ${currentGroupData.maxMembers} عضو`, 'error');
-    return;
-  }
   const q = query(collection(db, "users"), where("shortID", "==", id));
   const snap = await getDocs(q);
   if (snap.empty) {
-    showAlert('خطأ', 'الايدي غلط', 'error');
+    showAlert('خطأ', 'الايدي مش موجود', 'error');
     return;
   }
   const userID = snap.docs[0].id;
-  await updateDoc(doc(db, "groups", currentGroup), {
-    members: arrayUnion(userID)
-  });
-  document.getElementById('addMemberID').value = '';
-  showAlert('تم', 'تم اضافة العضو');
-}
-
-window.removeMemberFromGroup = async function(uid) {
-  const isOwner = currentGroupData.owner === currentUser.uid;
-  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
-  if (!isOwner &&!isAdmin) {
-    showAlert('ممنوع', 'انت مشرف', 'error');
+  if (currentGroupData.members.includes(userID)) {
+    showAlert('خطأ', 'العضو موجود اصلا', 'error');
+    return;
+  }
+  if (currentGroupData.members.length >= currentGroupData.maxMembers) {
+    showAlert('خطأ', 'الجروب مليان', 'error');
     return;
   }
   await updateDoc(doc(db, "groups", currentGroup), {
-    members: arrayRemove(uid),
-    admins: arrayRemove(uid)
+    members: arrayUnion(userID)
   });
-  showAlert('تم', 'تم طرد العضو');
-}
-
-window.deleteGroup = function() {
-  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائي؟', async () => {
-    await deleteDoc(doc(db, "groups", currentGroup));
-    closeConfirmModal();
-    closeGroupSettings();
-    backToGroups();
-    showAlert('تم', 'تم حذف الجروب');
-  });
+  showAlert('تم', 'تم اضافة العضو');
+  document.getElementById('addMemberID').value = '';
 }
 
 window.showPromoteModal = function() {
@@ -2673,133 +2633,126 @@ window.closePromoteModal = function() {
 
 window.promoteToAdmin = async function() {
   const id = document.getElementById('promoteUserID').value.trim().toUpperCase();
-  if (!id ||!currentGroup) return;
   const q = query(collection(db, "users"), where("shortID", "==", id));
   const snap = await getDocs(q);
   if (snap.empty) {
-    showAlert('خطأ', 'الايدي غلط', 'error');
+    showAlert('خطأ', 'الايدي مش موجود', 'error');
     return;
   }
   const userID = snap.docs[0].id;
+  if (!currentGroupData.members.includes(userID)) {
+    showAlert('خطأ', 'العضو مش في الجروب', 'error');
+    return;
+  }
   await updateDoc(doc(db, "groups", currentGroup), {
     admins: arrayUnion(userID)
   });
-  document.getElementById('promoteUserID').value = '';
-  closePromoteModal();
   showAlert('تم', 'تم ترقية العضو لمشرف');
-  openGroupSettings();
+  closePromoteModal();
 }
 
 window.demoteAdmin = async function() {
   const id = document.getElementById('promoteUserID').value.trim().toUpperCase();
-  if (!id ||!currentGroup) return;
   const q = query(collection(db, "users"), where("shortID", "==", id));
   const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي غلط', 'error');
-    return;
-  }
+  if (snap.empty) return;
   const userID = snap.docs[0].id;
   await updateDoc(doc(db, "groups", currentGroup), {
     admins: arrayRemove(userID)
   });
-  document.getElementById('promoteUserID').value = '';
+  showAlert('تم', 'تم ازالة الاشراف');
   closePromoteModal();
-  showAlert('تم', 'تم إزالة العضو من المشرفين');
-  openGroupSettings();
 }
 
-window.showMuteModal = function() {
-  document.getElementById('muteModal').classList.add('show');
-}
-
-window.closeMuteModal = function() {
-  document.getElementById('muteModal').classList.remove('show');
-}
-
-window.muteUser = async function() {
-  const id = document.getElementById('muteUserID').value.trim().toUpperCase();
-  const duration = parseInt(document.getElementById('muteDuration').value);
-  if (!id ||!currentGroup) return;
-  const isOwner = currentGroupData.owner === currentUser.uid;
-  const isAdmin = currentGroupData.admins?.includes(currentUser.uid);
-  if (!isOwner &&!isAdmin) {
-    showAlert('ممنوع', 'انت مشرف', 'error');
-    return;
-  }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي غلط', 'error');
-    return;
-  }
-  const userID = snap.docs[0].id;
-  const muteUntil = Date.now() + (duration * 1000);
+window.kickMember = async function(uid) {
   await updateDoc(doc(db, "groups", currentGroup), {
-    [`muted.${userID}`]: muteUntil
+    members: arrayRemove(uid),
+    admins: arrayRemove(uid)
   });
-  document.getElementById('muteUserID').value = '';
-  closeMuteModal();
-  showAlert('تم', `تم كتم العضو لمدة ${duration/60} دقيقة`);
+  showAlert('تم', 'تم طرد العضو');
 }
 
-window.giveVerification = async function() {
-  if (userData.shortID!== '10') return;
-  const id = document.getElementById('verifyUserID').value.trim().toUpperCase();
-  const duration = document.getElementById('verifyDuration').value;
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي غلط', 'error');
+window.deleteGroup = function() {
+  if (currentGroupData.owner!== currentUser.uid) {
+    showAlert('خطأ', 'بس المالك يقدر يحذف الجروب', 'error');
     return;
   }
-  const userID = snap.docs[0].id;
-  let expiresAt = null;
-  if (duration!== 'permanent') {
-    expiresAt = Date.now() + parseInt(duration) * 24 * 60 * 60 * 1000;
-  }
-  await updateDoc(doc(db, "users", userID), {
-    verification: {
-      givenAt: Date.now(),
-      expiresAt: expiresAt,
-      type: duration
-    }
+  showConfirmModal('حذف الجروب', 'متأكد عايز تحذف الجروب نهائياً؟', async () => {
+    await deleteDoc(doc(db, "groups", currentGroup));
+    closeConfirmModal();
+    closeGroupSettings();
+    backToGroups();
+    showAlert('تم', 'تم حذف الجروب');
   });
-  showAlert('تم', 'تم اعطاء علامة التوثيق');
+}
+
+window.viewGroupProfile = function() {
+  showAlert('معلومات الجروب', `الاسم: ${currentGroupData.name}\nالاعضاء: ${currentGroupData.members.length}\nالنوع: ${currentGroupData.private? 'خاص' : 'عام'}`);
+}
+
+window.switchPage = function(pageID) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageID).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.closest('.nav-btn').classList.add('active');
+}
+
+window.openPostModal = function() {
+  document.getElementById('postModal').classList.add('show');
+}
+
+window.closePostModal = function() {
+  document.getElementById('postModal').classList.remove('show');
+  document.getElementById('postContent').value = '';
+  document.getElementById('postImagePreview').src = '';
+  document.getElementById('postImagePreview').style.display = 'none';
+}
+
+window.previewPostImage = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    document.getElementById('postImagePreview').src = event.target.result;
+    document.getElementById('postImagePreview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
 }
 
 window.toggleLike = async function(postID) {
   const postRef = doc(db, "posts", postID);
-  const postSnap = await getDoc(postRef);
-  const post = postSnap.data();
-  if (post.likes.includes(currentUser.uid)) {
-    await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
-  } else {
-    await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+  const snap = await getDoc(postRef);
+  if (snap.exists()) {
+    const likes = snap.data().likes || [];
+    if (likes.includes(currentUser.uid)) {
+      await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
+    } else {
+      await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+    }
   }
 }
 
 window.toggleComments = function(postID) {
-  document.getElementById(`comments-${postID}`).classList.toggle('show');
+  document.getElementById('comments-' + postID).classList.toggle('show');
 }
 
 window.addComment = async function(postID) {
-  const input = document.getElementById(`commentInput-${postID}`);
+  const input = document.getElementById('commentInput-' + postID);
   const text = input.value.trim();
   if (!text) return;
-  await updateDoc(doc(db, "posts", postID), {
+  const postRef = doc(db, "posts", postID);
+  await updateDoc(postRef, {
     comments: arrayUnion({
       userID: currentUser.uid,
       displayName: userData.displayName,
       text: text,
-      createdAt: Date.now()
+      timestamp: Date.now()
     })
   });
   input.value = '';
 }
 
-window.deletePostByAdmin = async function(postID) {
-  if (userData.shortID!== '10') return;
+window.deletePostByAdmin = function(postID) {
   showConfirmModal('مسح البوست', 'متأكد عايز تمسح البوست ده؟', async () => {
     await deleteDoc(doc(db, "posts", postID));
     closeConfirmModal();
@@ -2819,8 +2772,8 @@ window.closeEditProfileModal = function() {
 
 window.saveProfileChanges = async function() {
   const name = document.getElementById('profileNameInput').value.trim();
+  const pass = document.getElementById('newPassword').value;
   const bio = document.getElementById('profileBioInput').value.trim();
-  const pass = document.getElementById('newPassword').value.trim();
   if (name) {
     await updateProfile(currentUser, { displayName: name });
     await updateDoc(doc(db, "users", currentUser.uid), { displayName: name });
@@ -2841,13 +2794,46 @@ window.updatePhoto = async function(e) {
   const reader = new FileReader();
   reader.onload = async (event) => {
     const url = event.target.result;
+    await updateProfile(currentUser, { photoURL: url });
     await updateDoc(doc(db, "users", currentUser.uid), { photoURL: url });
     document.getElementById('profileImg').src = url;
   };
   reader.readAsDataURL(file);
 }
 
-window.viewUserProfile = async function() {
+window.openFollowers = function() {
+  document.getElementById('profilePage').classList.remove('active');
+  document.getElementById('followersPage').classList.add('active');
+  loadFollowers();
+}
+
+window.backToProfile = function() {
+  document.getElementById('followersPage').classList.remove('active');
+  document.getElementById('profilePage').classList.add('active');
+}
+
+function loadFollowers() {
+  const list = document.getElementById('followersList');
+  list.innerHTML = '';
+  (userData.followers || []).forEach(uid => {
+    getDoc(doc(db, "users", uid)).then(snap => {
+      if (snap.exists()) {
+        const user = snap.data();
+        list.innerHTML += `
+          <div class="list-item" onclick="openChat(${JSON.stringify(user)}, '${uid}')">
+            <img src="${user.photoURL || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'">
+            <div class="list-item-info">
+              <div class="list-item-name">${user.displayName}</div>
+              <div class="list-item-id">${user.shortID}</div>
+            </div>
+          </div>
+        `;
+      }
+    });
+  });
+}
+
+window.viewUserProfile = function() {
   if (!currentChatUser) return;
   document.getElementById('chatPage').classList.remove('active');
   document.getElementById('userProfilePage').classList.add('active');
@@ -2857,221 +2843,42 @@ window.viewUserProfile = async function() {
   document.getElementById('viewProfileBio').innerText = currentChatUser.bio || '';
   document.getElementById('viewGenderIcon').innerText = currentChatUser.gender === 'male'? '♂️' : currentChatUser.gender === 'female'? '♀️' : '';
   document.getElementById('viewCountryFlag').innerText = COUNTRIES[currentChatUser.country] || '';
-  const isFollowing = userData.following.includes(currentChatUser.id);
+  const isFollowing = (userData.following || []).includes(currentChatUser.id);
   document.getElementById('followBtnText').innerText = isFollowing? 'إلغاء المتابعة' : 'متابعة';
-  const isBlocked = userData.blocked.includes(currentChatUser.id);
+  const isBlocked = (userData.blocked || []).includes(currentChatUser.id);
   document.getElementById('blockBtn').innerText = isBlocked? 'إلغاء الحظر' : 'حظر';
 }
 
 window.toggleFollow = async function() {
-  const isFollowing = userData.following.includes(currentChatUser.id);
+  if (!currentChatUser) return;
+  const isFollowing = (userData.following || []).includes(currentChatUser.id);
   if (isFollowing) {
     await updateDoc(doc(db, "users", currentUser.uid), { following: arrayRemove(currentChatUser.id) });
     await updateDoc(doc(db, "users", currentChatUser.id), { followers: arrayRemove(currentUser.uid) });
+    userData.following = userData.following.filter(id => id!== currentChatUser.id);
+    showAlert('تم', 'تم الغاء المتابعة');
   } else {
     await updateDoc(doc(db, "users", currentUser.uid), { following: arrayUnion(currentChatUser.id) });
     await updateDoc(doc(db, "users", currentChatUser.id), { followers: arrayUnion(currentUser.uid) });
+    userData.following = [...(userData.following || []), currentChatUser.id];
+    showAlert('تم', 'تمت المتابعة');
   }
-  viewUserProfile();
+  document.getElementById('followBtnText').innerText = isFollowing? 'متابعة' : 'إلغاء المتابعة';
 }
 
 window.toggleBlock = async function() {
-  const isBlocked = userData.blocked.includes(currentChatUser.id);
+  if (!currentChatUser) return;
+  const isBlocked = (userData.blocked || []).includes(currentChatUser.id);
   if (isBlocked) {
     await updateDoc(doc(db, "users", currentUser.uid), { blocked: arrayRemove(currentChatUser.id) });
+    userData.blocked = userData.blocked.filter(id => id!== currentChatUser.id);
+    showAlert('تم', 'تم الغاء الحظر');
   } else {
     await updateDoc(doc(db, "users", currentUser.uid), { blocked: arrayUnion(currentChatUser.id) });
+    userData.blocked = [...(userData.blocked || []), currentChatUser.id];
+    showAlert('تم', 'تم حظر المستخدم');
   }
-  viewUserProfile();
-}
-
-window.openFollowers = async function() {
-  document.getElementById('profilePage').classList.remove('active');
-  document.getElementById('followersPage').classList.add('active');
-  const followersList = document.getElementById('followersList');
-  followersList.innerHTML = '';
-  for (let uid of userData.followers || []) {
-    const userSnap = await getDoc(doc(db, "users", uid));
-    if (userSnap.exists()) {
-      const user = userSnap.data();
-      followersList.innerHTML += `
-        <div class="list-item">
-          <img src="${user.photoURL || DEFAULT_AVATAR}" onerror="this.src='${DEFAULT_AVATAR}'">
-          <div class="list-item-info">
-            <div class="list-item-name">${user.displayName} ${user.gender === 'male'? '♂️' : user.gender === 'female'? '♀️' : ''}</div>
-            <div class="list-item-id">${user.shortID}</div>
-          </div>
-        </div>
-      `;
-    }
-  }
-}
-
-window.backToProfile = function() {
-  document.getElementById('followersPage').classList.remove('active');
-  document.getElementById('profilePage').classList.add('active');
-}
-
-window.checkDailyTasks = function() {
-  const today = new Date().toDateString();
-  const tasks = userData.dailyTasks || {};
-  if (tasks.lastLogin!== today) {
-    document.getElementById('dailyLoginStatus').innerText = 'جاهز';
-    document.getElementById('dailyLoginText').innerText = 'اضغط لاستلام 20 كوينز';
-  } else {
-    document.getElementById('dailyLoginStatus').innerText = 'تم';
-    document.getElementById('dailyLoginText').innerText = 'هترجع بكره';
-  }
-  if (tasks.lastPost!== today) {
-    document.getElementById('dailyPostStatus').innerText = 'جاهز';
-  } else {
-    document.getElementById('dailyPostStatus').innerText = 'تم';
-  }
-  const chatCount = tasks.chatCount || 0;
-  document.getElementById('dailyChatStatus').innerText = `${chatCount}/5`;
-  if (chatCount >= 5 && tasks.lastChat!== today) {
-    document.getElementById('dailyChatStatus').innerText = 'جاهز';
-  } else if (tasks.lastChat === today) {
-    document.getElementById('dailyChatStatus').innerText = 'تم';
-  }
-}
-
-window.claimDailyLogin = async function() {
-  const today = new Date().toDateString();
-  if ((userData.dailyTasks?.lastLogin) === today) {
-    showAlert('خطأ', 'انت استلمت مكافأة اليوم خلاص', 'error');
-    return;
-  }
-  await updateDoc(doc(db, "users", currentUser.uid), {
-    coins: increment(20),
-    'dailyTasks.lastLogin': today
-  });
-  userData.coins += 20;
-  userData.dailyTasks = {...userData.dailyTasks, lastLogin: today};
-  document.getElementById('profileCoins').innerText = userData.coins;
-  checkDailyTasks();
-  showAlert('مبروك', 'خدت 20 كوينز');
-}
-
-window.claimDailyPost = async function() {
-  const today = new Date().toDateString();
-  if ((userData.dailyTasks?.lastPost) === today) {
-    showAlert('خطأ', 'انت خدت مكافأة البوست اليوم', 'error');
-    return;
-  }
-  showAlert('معلومة', 'انشر بوست الاول عشان تستلم المكافأة', 'info');
-}
-
-window.claimDailyChat = async function() {
-  const today = new Date().toDateString();
-  const tasks = userData.dailyTasks || {};
-  if (tasks.lastChat === today) {
-    showAlert('خطأ', 'انت خدت مكافأة الشات اليوم', 'error');
-    return;
-  }
-  if ((tasks.chatCount || 0) < 5) {
-    showAlert('خطأ', 'ابعت 5رسايل الاول', 'error');
-    return;
-  }
-  await updateDoc(doc(db, "users", currentUser.uid), {
-    coins: increment(15),
-    'dailyTasks.lastChat': today
-  });
-  userData.coins += 15;
-  userData.dailyTasks = {...userData.dailyTasks, lastChat: today};
-  document.getElementById('profileCoins').innerText = userData.coins;
-  checkDailyTasks();
-  showAlert('مبروك', 'خدت 15 كوينز');
-}
-
-window.sendCoinsToUser = async function() {
-  if (userData.shortID!== '10') return;
-  const id = document.getElementById('sendCoinsID').value.trim().toUpperCase();
-  const amount = parseInt(document.getElementById('sendCoinsAmount').value);
-  if (!id ||!amount || amount <= 0) {
-    showAlert('خطأ', 'دخل بيانات صح', 'error');
-    return;
-  }
-  const q = query(collection(db, "users"), where("shortID", "==", id));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    showAlert('خطأ', 'الايدي مش موجود', 'error');
-    return;
-  }
-  const userID = snap.docs[0].id;
-  await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
-  showAlert('تم', `تم ارسال ${amount} كوينز لـ ${id}`);
-}
-
-window.sendBroadcast = async function() {
-  if (userData.shortID!== '10') return;
-  const text = document.getElementById('broadcastText').value.trim();
-  const imageFile = document.getElementById('broadcastImage').files[0];
-  if (!text &&!imageFile) {
-    showAlert('خطأ', 'اكتب رسالة او اختار صورة', 'error');
-    return;
-  }
-  let imageUrl = '';
-  if (imageFile) {
-    const reader = new FileReader();
-    imageUrl = await new Promise(resolve => {
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(imageFile);
-    });
-  }
-  const snap = await getDocs(collection(db, "users"));
-  const batch = writeBatch(db);
-  snap.forEach(docSnap => {
-    if (docSnap.id!== currentUser.uid) {
-      const chatID = [currentUser.uid, docSnap.id].sort().join('_');
-      batch.set(doc(db, "chats", chatID), {
-        messages: arrayUnion({
-          sender: currentUser.uid,
-          text: text,
-          image: imageUrl,
-          timestamp: Date.now(),
-          isBroadcast: true
-        }),
-        lastMessage: text || '📷 صورة'
-      }, { merge: true });
-    }
-  });
-  await batch.commit();
-  document.getElementById('broadcastText').value = '';
-  document.getElementById('broadcastImage').value = '';
-  showAlert('تم', 'تم ارسال الإعلان لكل المستخدمين');
-}
-
-async function updateOnlineCount() {
-  const now = Date.now();
-  const fiveMinAgo = now - 5 * 60 * 1000;
-  try {
-    const q = query(collection(db, "users"), where("lastActive", ">", fiveMinAgo));
-    const snap = await getDocs(q);
-    document.getElementById('onlineCount').innerText = snap.size;
-  } catch(e) { console.error(e); }
-}
-
-window.openPostModal = function() {
-  document.getElementById('postModal').classList.add('show');
-}
-
-window.closePostModal = function() {
-  document.getElementById('postModal').classList.remove('show');
-  document.getElementById('postContent').value = '';
-  document.getElementById('postImage').value = '';
-  document.getElementById('postImagePreview').style.display = 'none';
-}
-
-window.previewPostImage = function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    document.getElementById('postImagePreview').src = event.target.result;
-    document.getElementById('postImagePreview').style.display = 'block';
-  };
-  reader.readAsDataURL(file);
+  document.getElementById('blockBtn').innerText = isBlocked? 'حظر' : 'إلغاء الحظر';
 }
 
 window.openFeedbackModal = function() {
@@ -3080,24 +2887,20 @@ window.openFeedbackModal = function() {
 
 window.closeFeedbackModal = function() {
   document.getElementById('feedbackModal').classList.remove('show');
-  document.getElementById('feedbackText').value = '';
 }
 
 window.sendFeedback = async function() {
   const text = document.getElementById('feedbackText').value.trim();
-  if (!text) {
-    showAlert('خطأ', 'اكتب الملاحظة الاول', 'error');
-    return;
-  }
+  if (!text) return;
   await addDoc(collection(db, "feedback"), {
     userID: currentUser.uid,
-    shortID: userData.shortID,
     displayName: userData.displayName,
     text: text,
-    createdAt: serverTimestamp()
+    timestamp: serverTimestamp()
   });
   closeFeedbackModal();
-  showAlert('تم', 'شكراً على ملاحظتك! وصلتلي');
+  showAlert('تم', 'شكراً على ملاحظاتك');
+  document.getElementById('feedbackText').value = '';
 }
 
 window.openPolicy = function() {
@@ -3109,15 +2912,151 @@ window.closePolicy = function() {
   document.getElementById('policyModal').classList.remove('show');
 }
 
-window.switchPage = function(pageID) {
-  document.querySelectorAll('.page').forEach(p => {
-    if (p.id === 'authPage' || p.id === 'chatPage' || p.id === 'profilePage' ||
-        p.id === 'userProfilePage' || p.id === 'followersPage' || p.id === 'groupChatPage') return;
-    p.classList.remove('active');
+function checkDailyTasks() {
+  const today = new Date().toDateString();
+  const tasks = userData.dailyTasks || {};
+  if (tasks.lastLogin === today) {
+    document.getElementById('dailyLoginStatus').innerText = 'تم';
+    document.getElementById('dailyLoginText').innerText = 'استلمت مكافأتك اليوم';
+  } else {
+    document.getElementById('dailyLoginStatus').innerText = 'جاهز';
+    document.getElementById('dailyLoginText').innerText = 'اضغط لاستلام 20 كوينز';
+  }
+  if (tasks.lastPost === today) {
+    document.getElementById('dailyPostStatus').innerText = 'تم';
+  }
+  const chatCount = tasks.chatCount || 0;
+  document.getElementById('dailyChatStatus').innerText = chatCount >= 5? 'تم' : `${chatCount}/5`;
+}
+
+window.claimDailyLogin = async function() {
+  const today = new Date().toDateString();
+  if (userData.dailyTasks?.lastLogin === today) {
+    showAlert('خطأ', 'استلمت مكافأتك خلاص', 'error');
+    return;
+  }
+  await updateDoc(doc(db, "users", currentUser.uid), {
+    coins: increment(20),
+    'dailyTasks.lastLogin': today
   });
-  document.getElementById(pageID).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.closest('.nav-btn').classList.add('active');
+  userData.coins += 20;
+  document.getElementById('profileCoins').innerText = userData.coins;
+  showAlert('مبروك', 'استلمت 20 كوينز');
+  checkDailyTasks();
+}
+
+window.claimDailyPost = async function() {
+  const today = new Date().toDateString();
+  if (userData.dailyTasks?.lastPost === today) {
+    showAlert('خطأ', 'استلمت مكافأة البوست خلاص', 'error');
+    return;
+  }
+  showAlert('معلومة', 'انشر بوست الاول عشان تستلم 10 كوينز', 'info');
+}
+
+window.claimDailyChat = async function() {
+  const tasks = userData.dailyTasks || {};
+  const chatCount = tasks.chatCount || 0;
+  const today = new Date().toDateString();
+  if (chatCount < 5) {
+    showAlert('خطأ', `ابعت ${5 - chatCount} رسايل كمان`, 'error');
+    return;
+  }
+  if (tasks.lastChatReward === today) {
+    showAlert('خطأ', 'استلمت مكافأة الشات خلاص', 'error');
+    return;
+  }
+  await updateDoc(doc(db, "users", currentUser.uid), {
+    coins: increment(15),
+    'dailyTasks.lastChatReward': today
+  });
+  userData.coins += 15;
+  document.getElementById('profileCoins').innerText = userData.coins;
+  showAlert('مبروك', 'استلمت 15 كوينز');
+  checkDailyTasks();
+}
+
+window.sendCoinsToUser = async function() {
+  if (userData.shortID!== '10') return;
+  const id = document.getElementById('sendCoinsID').value.trim().toUpperCase();
+  const amount = parseInt(document.getElementById('sendCoinsAmount').value);
+  if (!id ||!amount) return;
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي مش موجود', 'error');
+    return;
+  }
+  const userID = snap.docs[0].id;
+  await updateDoc(doc(db, "users", userID), { coins: increment(amount) });
+  showAlert('تم', `تم ارسال ${amount} كوينز`);
+  document.getElementById('sendCoinsID').value = '';
+  document.getElementById('sendCoinsAmount').value = '';
+}
+
+window.sendBroadcast = async function() {
+  if (userData.shortID!== '10') return;
+  const text = document.getElementById('broadcastText').value.trim();
+  const imageFile = document.getElementById('broadcastImage').files[0];
+  if (!text &&!imageFile) return;
+  let imageUrl = '';
+  if (imageFile) {
+    const reader = new FileReader();
+    imageUrl = await new Promise(resolve => {
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(imageFile);
+    });
+  }
+  const usersSnap = await getDocs(collection(db, "users"));
+  const batch = writeBatch(db);
+  usersSnap.forEach(userDoc => {
+    const userRef = doc(db, "chats", `broadcast_${userDoc.id}`);
+    batch.set(userRef, {
+      messages: arrayUnion({
+        sender: 'system',
+        text: `📢 إعلان: ${text}`,
+        image: imageUrl,
+        timestamp: Date.now()
+      }),
+      lastMessage: '📢 إعلان جديد'
+    }, { merge: true });
+  });
+  await batch.commit();
+  showAlert('تم', 'تم ارسال الإعلان للكل');
+  document.getElementById('broadcastText').value = '';
+  document.getElementById('broadcastImage').value = '';
+}
+
+window.giveVerification = async function() {
+  if (userData.shortID!== '10') return;
+  const id = document.getElementById('verifyUserID').value.trim().toUpperCase();
+  const duration = document.getElementById('verifyDuration').value;
+  if (!id) return;
+  const q = query(collection(db, "users"), where("shortID", "==", id));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    showAlert('خطأ', 'الايدي مش موجود', 'error');
+    return;
+  }
+  const userID = snap.docs[0].id;
+  let expiresAt;
+  if (duration === 'permanent') {
+    expiresAt = Date.now() + 100 * 365 * 24 * 60 * 60 * 1000;
+  } else {
+    expiresAt = Date.now() + parseInt(duration) * 24 * 60 * 60 * 1000;
+  }
+  await updateDoc(doc(db, "users", userID), {
+    verification: { expiresAt: expiresAt }
+  });
+  showAlert('تم', 'تم اعطاء علامة التوثيق');
+  document.getElementById('verifyUserID').value = '';
+}
+
+async function updateOnlineCount() {
+  const fiveMinAgo = Date.now() - 5 * 60 * 1000;
+  const q = query(collection(db, "users"), where("lastActive", ">", fiveMinAgo));
+  const snap = await getDocs(q);
+  document.getElementById('onlineCount').innerText = snap.size;
 }
 
 window.logout = async function() {
