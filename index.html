@@ -31,7 +31,6 @@
   --shadow: 0 8px 32px rgba(0,0,0,0.3);
   --radius: 16px;
 }
-
 [data-theme="light"] {
   --bg-primary: #f0f2f5;
   --bg-secondary: #ffffff;
@@ -41,7 +40,6 @@
   --text-secondary: #667781;
   --shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -51,7 +49,6 @@ body {
   overflow: hidden;
   overscroll-behavior-y: contain;
 }
-
 .page { 
   display: none; 
   height: 100vh; 
@@ -63,7 +60,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 .page.active { display: flex; }
-  
 .pull-refresh {
   height: 0;
   display: flex;
@@ -74,7 +70,6 @@ body {
   overflow: hidden;
   transition: height 0.3s ease;
 }
-
 .auth-page {
   background: linear-gradient(135deg, #00a884 0%, #111b21 100%);
   justify-content: center;
@@ -115,7 +110,6 @@ body {
   border-color: var(--green);
   box-shadow: 0 0 0 4px rgba(0,168,132,0.1);
 }
-
 .btn {
   width: 100%;
   padding: 16px;
@@ -144,7 +138,6 @@ body {
 .btn-secondary:hover { background: rgba(0,168,132,0.1); }
 .btn-danger { background: var(--red); color: white; }
 .btn-gold { background: linear-gradient(135deg, var(--gold), #ffed4e); color: #000; }
-
 .header {
   background: var(--bg-tertiary);
   padding: 14px 18px;
@@ -181,7 +174,6 @@ body {
   color: white;
   transform: scale(1.05);
 }
-
 .search-box {
   padding: 14px 18px;
   background: var(--bg-secondary);
@@ -198,7 +190,6 @@ body {
   transition: 0.3s;
 }
 .search-box input:focus { border-color: var(--green); }
-
 .list {
   flex: 1;
   overflow-y: auto;
@@ -255,7 +246,6 @@ body {
 }
 .gender-icon { font-size: 16px; margin-left: 5px; }
 .country-flag { font-size: 16px; }
-
 .post-card {
   background: var(--bg-tertiary);
   margin: 14px;
@@ -308,7 +298,6 @@ body {
 }
 .post-action:hover { background: var(--bg-input); }
 .post-action.liked { color: var(--red); }
-
 .admin-delete-btn {
   position: absolute;
   top: 12px;
@@ -324,7 +313,6 @@ body {
   font-weight: 700;
 }
 .admin-delete-btn.show { display: block; }
-
 .comment-box {
   padding: 14px;
   background: var(--bg-primary);
@@ -344,7 +332,6 @@ body {
   margin-bottom: 4px;
   color: var(--green);
 }
-
 .fab {
   position: fixed;
   bottom: 85px;
@@ -362,7 +349,6 @@ body {
   transition: 0.3s;
 }
 .fab:hover { transform: scale(1.1) rotate(90deg); }
-
 .chat-area {
   flex: 1;
   display: flex;
@@ -508,7 +494,6 @@ body {
   transition: 0.3s;
 }
 .chat-input button:hover { transform: scale(1.1); }
-
 .gift-box {
   background: var(--bg-primary);
   padding: 16px;
@@ -530,7 +515,6 @@ body {
 .gift-item:hover { transform: scale(1.05); }
 .gift-item div { font-size: 38px; margin-bottom: 8px; }
 .gift-price { font-size: 13px; color: var(--gold); font-weight: 700; }
-
 .profile-page {
   background: var(--bg-secondary);
   overflow-y: auto;
@@ -571,7 +555,6 @@ body {
   justify-content: center;
   gap: 10px;
 }
-
 .profile-section {
   background: var(--bg-tertiary);
   margin: 14px;
@@ -600,7 +583,6 @@ body {
   transition: 0.3s;
 }
 .profile-section input:focus, .profile-section textarea:focus { border-color: var(--green); }
-
 .help-item {
   display: flex;
   align-items: center;
@@ -615,7 +597,6 @@ body {
 .help-item-icon { font-size: 26px; color: var(--text-secondary); }
 .help-item-text h4 { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
 .help-item-text p { font-size: 13px; color: var(--text-secondary); }
-
 .modal {
   position: fixed;
   top: 0; left: 0;
@@ -640,7 +621,6 @@ body {
   box-shadow: var(--shadow);
   border: 1px solid var(--bg-input);
 }
-
 .nav-bar {
   background: var(--bg-tertiary);
   padding: 12px;
@@ -665,7 +645,6 @@ body {
 }
 .nav-btn.active { color: var(--green); transform: scale(1.1); }
 .nav-btn span { font-size: 28px; }
-
 .group-container {
   display: flex;
   flex-direction: column;
@@ -696,7 +675,6 @@ body {
 .group-name { font-weight: 700; font-size: 17px; }
 .group-members { font-size: 13px; color: var(--text-secondary); }
 .group-actions { display: flex; gap: 10px; }
-
 .delete-chat-btn {
   background: var(--red);
   border: none;
@@ -728,7 +706,6 @@ body {
   padding: 8px;
   border-radius: 10px;
 }
-
 .alert-modal-icon {
   width: 70px;
   height: 70px;
@@ -742,7 +719,6 @@ body {
 .alert-modal-icon.success { background: rgba(0,168,132,0.2); color: var(--green); }
 .alert-modal-icon.error { background: rgba(231,76,60,0.2); color: var(--red); }
 .alert-modal-icon.info { background: rgba(83,189,235,0.2); color: var(--blue); }
-
 .muted-badge {
   background: var(--red);
   color: white;
@@ -759,7 +735,6 @@ body {
   font-size: 11px;
   font-weight: 700;
 }
-
 .delete-all-btn {
   background: linear-gradient(135deg, var(--red), #c0392b);
   border: none;
@@ -772,8 +747,6 @@ body {
   width: 100%;
   margin-bottom: 15px;
 }
-
-/* ايموشنات + مسح */
 .emoji-picker {
   position: absolute;
   bottom: 100%;
@@ -905,13 +878,10 @@ body {
     <button class="header-btn" onclick="openDeleteChatModal()">🗑️</button>
     <button class="header-btn" onclick="openProfile()">⚙️</button>
   </div>
-
   <div class="search-box">
     <input id="searchID" type="text" placeholder="بحث بالـ ID">
   </div>
-
   <div id="userList" class="list"></div>
-
   <div class="nav-bar">
     <button class="nav-btn active" onclick="switchPage('page1')">
       <span>💬</span>الدردشات
@@ -930,11 +900,8 @@ body {
   <div class="header">
     <h2>المنشورات</h2>
   </div>
-
   <div id="postsList" class="list"></div>
-
   <button class="fab" onclick="openPostModal()">+</button>
-
   <div class="nav-bar">
     <button class="nav-btn" onclick="switchPage('page1')">
       <span>💬</span>الدردشات
@@ -953,9 +920,7 @@ body {
     <h2>الجروبات</h2>
     <button class="header-btn" onclick="openCreateGroupModal()">➕</button>
   </div>
-
   <div id="groupsList" class="group-container"></div>
-
   <div class="nav-bar">
     <button class="nav-btn" onclick="switchPage('page1')">
       <span>💬</span>الدردشات
@@ -985,7 +950,8 @@ body {
     </p>
     <div id="bgList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; max-height:400px; overflow-y:auto;">
       <div class="bg-item" style="border:2px dashed var(--green);">
-        <div style="height:120px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; background:var(--bg-tertiary);"><span style="font-size:30px;">📤</span>
+        <div style="height:120px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; background:var(--bg-tertiary);">
+          <span style="font-size:30px;">📤</span>
           <span style="font-size:13px;">رفع صورة من عندك</span>
         </div>
         <div class="bg-item-info">
@@ -1019,7 +985,6 @@ body {
     <button class="header-btn" id="groupSettingsBtn" onclick="openGroupSettings()">⚙️</button>
     <button class="header-btn" onclick="clearGroupChat()">🗑️</button>
   </div>
-
   <div class="chat-area" id="groupChatArea">
     <div id="groupChatMessages" class="chat-messages"></div>
     <div class="chat-input">
@@ -1030,12 +995,12 @@ body {
     </div>
   </div>
 </div>
+
 <div id="profilePage" class="page profile-page">
   <div class="header">
     <button class="header-btn" onclick="backToPage1()">←</button>
     <h2>الاعدادات</h2>
   </div>
-
   <div class="profile-header">
     <button class="header-btn" style="position:absolute; top:18px; left:18px; font-size:22px;" onclick="openEditModal()">✏️</button>
     <img id="profileImg" class="profile-img" src="" onerror="this.src='https://via.placeholder.com/120'" onclick="document.getElementById('fileInput').click()">
@@ -1054,12 +1019,10 @@ body {
     </div>
     <div id="profileBioDisplay" style="font-size:15px; color:var(--text-secondary); margin-top:12px; padding:0 25px;"></div>
   </div>
-
   <div class="profile-section">
     <label>الكوينز</label>
     <div style="font-size: 28px; font-weight: 700; color: var(--gold);">🪙 <span id="profileCoins">0</span></div>
   </div>
-
   <div class="profile-section" id="adminPanel" style="display:none;border:2px solid var(--gold)">
     <label style="color:var(--gold)">🛡️ لوحة التحكم</label>
     <div style="margin-bottom:15px;">
@@ -1083,7 +1046,6 @@ body {
     </select>
     <button class="btn btn-primary" onclick="giveVerification()">إعطاء التوثيق</button>
   </div>
-
   <div class="profile-section">
     <label>المهام اليومية</label>
     <div id="dailyTasks">
@@ -1097,7 +1059,6 @@ body {
         </div>
         <span id="dailyLoginStatus">جاهز</span>
       </div>
-
       <div class="help-item" onclick="claimDailyPost()">
         <div class="help-item-left">
           <div class="help-item-icon">📱</div>
@@ -1108,7 +1069,6 @@ body {
         </div>
         <span id="dailyPostStatus">جاهز</span>
       </div>
-
       <div class="help-item" onclick="claimDailyChat()">
         <div class="help-item-left">
           <div class="help-item-icon">💬</div>
@@ -1121,7 +1081,6 @@ body {
       </div>
     </div>
   </div>
-
   <div class="profile-section">
     <label>اللغة</label>
     <select id="languageSelect" onchange="changeLanguage()">
@@ -1129,7 +1088,6 @@ body {
       <option value="en">English</option>
     </select>
   </div>
-
   <div class="profile-section">
     <label>المظهر</label>
     <select id="themeSelect" onchange="changeTheme()">
@@ -1137,7 +1095,6 @@ body {
       <option value="light">فاتح</option>
     </select>
   </div>
-
   <div class="profile-section">
     <label>المساعدة والملاحظات</label>
     <div class="help-item" onclick="openAdminChat()">
@@ -1149,7 +1106,6 @@ body {
         </div>
       </div>
     </div>
-
     <div class="help-item" onclick="openFeedbackModal()">
       <div class="help-item-left">
         <div class="help-item-icon">📝</div>
@@ -1159,7 +1115,6 @@ body {
         </div>
       </div>
     </div>
-
     <div class="help-item" onclick="openPolicy()">
       <div class="help-item-left">
         <div class="help-item-icon">📜</div>
@@ -1170,7 +1125,6 @@ body {
       </div>
     </div>
   </div>
-
   <div style="padding: 20px;">
     <button class="btn btn-danger" onclick="logout()">تسجيل خروج</button>
   </div>
@@ -1241,6 +1195,7 @@ body {
     <button class="btn btn-secondary" onclick="closeEditProfileModal()">إلغاء</button>
   </div>
 </div>
+
 <div id="deleteChatModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">مسح المحادثات</h3>
@@ -1274,23 +1229,19 @@ body {
 <div id="groupSettingsModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">إعدادات الجروب</h3>
-
     <div style="margin-bottom:20px;">
       <label>صورة الجروب</label>
       <input type="file" id="editGroupImage" accept="image/*" onchange="previewEditGroupImage(event)">
       <img id="editGroupImagePreview" src="" onerror="this.style.display='none'" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;margin-top:10px;">
     </div>
-
     <div style="margin-bottom:20px;">
       <label>اسم الجروب</label>
       <input id="editGroupName" type="text" placeholder="الاسم الجديد">
     </div>
-
     <div style="margin-bottom:20px;">
       <label>نبذة الجروب</label>
       <textarea id="editGroupBio" placeholder="وصف الجروب" style="height:80px;resize:none;"></textarea>
     </div>
-
     <div style="margin-bottom:20px;">
       <label>الحد الأقصى للأعضاء</label>
       <select id="editGroupMaxMembers">
@@ -1300,18 +1251,14 @@ body {
         <option value="200">200 عضو</option>
       </select>
     </div>
-
     <div style="margin-bottom:20px;" id="groupBgSection">
       <label>خلفية الجروب - 200 كوينز 7 أيام</label>
       <input type="file" id="groupBgInput" accept="image/*" onchange="changeGroupBg(event)">
       <button class="btn btn-gold" onclick="document.getElementById('groupBgInput').click()">تغيير خلفية الجروب</button>
       <div id="groupBgInfo" style="font-size:12px;color:var(--text-secondary);margin-top:8px;"></div>
     </div>
-
     <button class="btn btn-primary" onclick="saveGroupSettings()">حفظ التغييرات</button>
-
     <hr style="margin:20px 0;border-color:var(--bg-input)">
-
     <h4 style="margin-bottom:12px;">الأعضاء</h4>
     <div id="groupMembersList" style="max-height:250px;overflow-y:auto;margin-bottom:15px;"></div>
     <input id="addMemberID" type="text" placeholder="ID العضو للإضافة">
@@ -1434,10 +1381,10 @@ const COUNTRIES = {
 const POLICY_URL = "https://www.termsfeed.com/live/a9c99ddb-80e3-4633-a464-aa9c96f72e44";
 const DEFAULT_AVATAR = 'https://via.placeholder.com/120/202c33/ffffff?text=👤';
 
+// ===== تعديلات إلغاء الدايرة الوهمية للـ APK =====
 function saveToCache(key, data) {
   localStorage.setItem('chatapp_' + key, JSON.stringify({data, time: Date.now()}));
 }
-
 function getFromCache(key, maxAge = 60000) {
   const cached = localStorage.getItem('chatapp_' + key);
   if (!cached) return null;
@@ -1446,7 +1393,6 @@ function getFromCache(key, maxAge = 60000) {
   if (Date.now() - time > maxAge) return null;
   return data;
 }
-
 window.stopPullRefresh = function() {
   document.querySelectorAll('.pull-refresh').forEach(el => {
     el.style.height = '0';
@@ -1454,14 +1400,20 @@ window.stopPullRefresh = function() {
   });
   isRefreshing = false;
 }
-
 window.stop = function() {
   window.stopPullRefresh();
 }
-
 window.addEventListener('load', function() {
+  setTimeout(() => window.stopPullRefresh(), 1000);
+});
+window.addEventListener('error', () => {
   window.stopPullRefresh();
 });
+setTimeout(() => {
+  if (window.stop) window.stop();
+  window.stopPullRefresh();
+}, 3000);
+// ===== نهاية تعديلات الدايرة =====
 
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -1471,27 +1423,21 @@ function linkify(text) {
 function createEmojiPicker(msgIndex, isGroup) {
   const picker = document.createElement('div');
   picker.className = 'emoji-picker';
-
   const deleteOptions = document.createElement('div');
   deleteOptions.className = 'delete-options';
-
   const btnMe = document.createElement('button');
   btnMe.className = 'delete-btn for-me';
   btnMe.innerText = 'مسح من عندي';
   btnMe.onclick = () => deleteMessage(msgIndex, isGroup, 'me');
-
   const btnAll = document.createElement('button');
   btnAll.className = 'delete-btn';
   btnAll.innerText = 'مسح للكل';
   btnAll.onclick = () => deleteMessage(msgIndex, isGroup, 'all');
-
   deleteOptions.appendChild(btnMe);
   deleteOptions.appendChild(btnAll);
   picker.appendChild(deleteOptions);
-
   const emojiOptions = document.createElement('div');
   emojiOptions.className = 'emoji-options';
-
   emojis.forEach(emoji => {
     const span = document.createElement('span');
     span.className = 'emoji-option';
@@ -1728,7 +1674,7 @@ onAuthStateChanged(auth, async (user) => {
       loadChats(),
       loadPosts(),
       loadGroups()
-    ]);
+    ]).finally(() => window.stopPullRefresh());
     applySettings();
     setupPullRefresh();
     startActiveTracking();
@@ -1771,10 +1717,8 @@ function setupPullRefresh() {
         refreshEl.style.height = '60px';
         refreshEl.innerText = 'جاري التحديث...';
         setTimeout(() => {
-          loadChats();
-          loadPosts();
-          loadGroups();
-          window.stopPullRefresh();
+          Promise.all([loadChats(), loadPosts(), loadGroups()])
+           .finally(() => window.stopPullRefresh());
         }, 1000);
       }
     });
@@ -1800,7 +1744,7 @@ function loadUserData() {
         checkVerificationExpiry();
       }
     });
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error(e); window.stopPullRefresh(); }
 }
 
 function updateProfileUI() {
@@ -1887,6 +1831,7 @@ window.login = async function() {
     await signInWithEmailAndPassword(auth, email, pass);
   } catch(e) {
     document.getElementById('loginError').innerText = 'غلط في الايميل او كلمة السر';
+    window.stopPullRefresh();
   }
 }
 
@@ -1936,6 +1881,7 @@ window.signup = async function() {
     document.getElementById('signupSuccess').style.display = 'block';
   } catch(e) {
     document.getElementById('signupError').innerText = 'الايميل مستخدم قبل كده';
+    window.stopPullRefresh();
   }
 }
 
@@ -2021,8 +1967,9 @@ function loadChats() {
         }
       });
       saveToCache('chats', userList.innerHTML);
-    });
-  } catch(e) { console.error(e); }
+      window.stopPullRefresh();
+    }, (err) => { console.error(err); window.stopPullRefresh(); });
+  } catch(e) { console.error(e); window.stopPullRefresh(); }
 }
 
 window.openSelfChat = function() {
@@ -2103,8 +2050,9 @@ function loadChatMessages(uid) {
         displayMessages(messages, 'chatMessages', false);
         updateDoc(chatRef, { lastMessage: messages[messages.length - 1]?.text || '' });
       }
-    });
-  } catch(e) { console.error(e); }
+      window.stopPullRefresh();
+    }, (err) => { console.error(err); window.stopPullRefresh(); });
+  } catch(e) { console.error(e); window.stopPullRefresh(); }
 }
 
 function displayMessages(messages, containerID, isGroup) {
@@ -2285,8 +2233,9 @@ function loadPosts() {
         `;
       });
       saveToCache('posts', postsList.innerHTML);
-    });
-  } catch(e) { console.error(e); }
+      window.stopPullRefresh();
+    }, (err) => { console.error(err); window.stopPullRefresh(); });
+  } catch(e) { console.error(e); window.stopPullRefresh(); }
 }
 
 window.createPost = async function() {
@@ -2410,8 +2359,9 @@ function loadGroups() {
         `;
       });
       saveToCache('groups', groupsList.innerHTML);
-    });
-  } catch(e) { console.error(e); }
+      window.stopPullRefresh();
+    }, (err) => { console.error(err); window.stopPullRefresh(); });
+  } catch(e) { console.error(e); window.stopPullRefresh(); }
 }
 
 window.openCreateGroupModal = function() {
@@ -2470,8 +2420,7 @@ window.openGroupChat = async function(groupID) {
   if (docSnap.exists()) {
     currentGroupData = docSnap.data();
     const group = currentGroupData;
-    document.getElementById('groupChatName').innerText = group.name;
-    document.getElementById('groupChatImg').src = group.image || DEFAULT_AVATAR;
+    document.getElementById('groupChatName').innerText = group.name;document.getElementById('groupChatImg').src = group.image || DEFAULT_AVATAR;
     const isOwner = group.owner === currentUser.uid;
     const isAdmin = group.admins?.includes(currentUser.uid);
     document.getElementById('groupSettingsBtn').style.display = isOwner? 'block' : 'none';
@@ -2512,8 +2461,9 @@ function loadGroupMessages(groupID) {
           document.getElementById('groupChatArea').style.backgroundImage = `url(${currentGroupData.groupBg.url})`;
         }
       }
-    });
-  } catch(e) { console.error(e); }
+      window.stopPullRefresh();
+    }, (err) => { console.error(err); window.stopPullRefresh(); });
+  } catch(e) { console.error(e); window.stopPullRefresh(); }
 }
 
 window.sendGroupMessage = async function() {
@@ -3184,8 +3134,4 @@ window.logout = async function() {
 }
 </script>
 </body>
-</html>
-    
-  </body>
-  
 </html>
