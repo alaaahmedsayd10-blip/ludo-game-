@@ -1188,7 +1188,6 @@ body {
 <div id="deleteChatModal" class="modal">
   <div class="modal-box">
     <h3 style="margin-bottom:18px; font-size: 22px;">مسح المحادثات</h3>
-    <button class="delete-all-btn" onclick="deleteAllChats()">🗑️ مسح الكل</button>
     <div id="deleteChatList" style="max-height:300px;overflow-y:auto;"></div>
     <button class="btn btn-secondary" onclick="closeDeleteChatModal()" style="margin-top:15px;">إغلاق</button>
   </div>
@@ -1427,13 +1426,8 @@ function createEmojiPicker(msgIndex, isGroup) {
   const btnMe = document.createElement('button');
   btnMe.className = 'delete-btn for-me';
   btnMe.innerText = 'مسح من عندي';
-  btnMe.onclick = () => deleteMessage(msgIndex, isGroup, 'me');
-  const btnAll = document.createElement('button');
-  btnAll.className = 'delete-btn';
-  btnAll.innerText = 'مسح للكل';
-  btnAll.onclick = () => deleteMessage(msgIndex, isGroup, 'all');
+  btnMe.onclick = () => deleteMessage(msgIndex, isGroup, 'me'); 
   deleteOptions.appendChild(btnMe);
-  deleteOptions.appendChild(btnAll);
   picker.appendChild(deleteOptions);
   const emojiOptions = document.createElement('div');
   emojiOptions.className = 'emoji-options';
