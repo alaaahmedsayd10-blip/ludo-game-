@@ -58,7 +58,8 @@ body {
   color: var(--text-primary);
   height: 100vh;
   overflow: hidden;
-  overscroll-behavior-y: contain;
+  overscroll-behavior: none;
+  touch-action: pan-y;
 }
 .page { 
   display: none; 
@@ -523,7 +524,7 @@ body {
   cursor: pointer;
   transition: 0.3s;
 }
-gift-item:hover { transform: scale(1.05); }
+.gift-item:hover { transform: scale(1.05); }
 .gift-item div { font-size: 38px; margin-bottom: 8px; }
 .gift-price { font-size: 13px; color: var(--gold); font-weight: 700; }
 .profile-page {
@@ -969,7 +970,7 @@ gift-item:hover { transform: scale(1.05); }
           <div class="bg-item-name">خلفية مخصصة</div>
           <div class="bg-item-price">200 🪙</div>
           <input type="file" id="customBgInput" accept="image/*" style="display:none" onchange="uploadCustomBg(event)">
-          <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click()">اختر صورة</button>
+          <button class="btn btn-primary" style="margin-top:8px; padding:8px; width:100%;" onclick="document.getElementById('customBgInput').click().click()">
         </div>
       </div>
     </div>
@@ -1410,12 +1411,13 @@ window.stopPullRefresh = function() {
     el.innerText = 'اسحب للاسفل للتحديث';
   });
   isRefreshing = false;
+  document.body.style.overflow = 'hidden';
 }
 window.stop = function() {
   window.stopPullRefresh();
 }
 window.addEventListener('load', function() {
-  setTimeout(() => window.stopPullRefresh(), 1000);
+  setTimeout(() => window.stopPullRefresh(), 500);
 });
 window.addEventListener('error', () => {
   window.stopPullRefresh();
@@ -1423,7 +1425,13 @@ window.addEventListener('error', () => {
 setTimeout(() => {
   if (window.stop) window.stop();
   window.stopPullRefresh();
-}, 3000);
+}, 1000);
+document.addEventListener('touchmove', function(e) {
+  if (e.target.closest('.list,.chat-messages,.group-container')) return;
+  if (window.scrollY === 0 && e.touches[0].clientY > 100) {
+    e.preventDefault();
+  }
+}, { passive: false });
 // ===== نهاية تعديلات الدايرة =====
 
 function linkify(text) {
@@ -1607,7 +1615,7 @@ function loadBgModal() {
   list.innerHTML = `
     <div class="bg-item" style="border:2px dashed var(--green);">
       <div style="height:120px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; background:var(--bg-tertiary);">
-        <span style="font-size:30px;">📤</span>
+        <spanstyle="font-size:30px;">📤</span>
         <span style="font-size:13px;">رفع صورة من عندك</span>
       </div>
       <div class="bg-item-info">
@@ -1729,7 +1737,7 @@ function setupPullRefresh() {
         refreshEl.innerText = 'جاري التحديث...';
         setTimeout(() => {
           Promise.all([loadChats(), loadPosts(), loadGroups()])
-          .finally(() => window.stopPullRefresh());
+         .finally(() => window.stopPullRefresh());
         }, 1000);
       }
     });
@@ -3145,8 +3153,4 @@ window.logout = async function() {
 }
 </script>
 </body>
-</html>
-    
-  </body>
-  
 </html>
