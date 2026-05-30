@@ -2390,6 +2390,7 @@ function loadGroups() {
       window.stopPullRefresh();
     }, (err) => { console.error(err); window.stopPullRefresh(); });
   } catch(e) { console.error(e); window.stopPullRefresh(); }
+}
 window.openCreateGroupModal = function() {
   document.getElementById('createGroupModal').classList.add('show');
 }
