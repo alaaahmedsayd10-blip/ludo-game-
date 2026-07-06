@@ -7,12 +7,10 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:#0a0a0a;color:#fff;font-family:'Cairo',sans-serif;min-height:100vh;display:flex;flex-direction:column}
-  /* الشريط المتحرك متواصل */
 .marquee{background:linear-gradient(90deg,#ff4444,#ffb800);color:#000;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap}
 .marquee span{display:inline-block;animation:marquee 15s linear infinite}
   @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-
-  header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
+header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
 .logo-area{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
 .logo-area img{width:70px;height:70px;border-radius:12px;background:#222;object-fit:cover;border:2px solid #ffb800}
 .logo{font-size:20px;font-weight:600;color:#ffb800;letter-spacing:1px}
@@ -22,7 +20,6 @@
 .dist-btn{background:#00ff88!important}
 .empty{width:110px}
 .container{max-width:1200px;margin:30px auto;padding:0 20px;flex:1}
-  /* صندوق الاشعارات للكل */
 .notif-box{background:#1a1a1a;border:2px solid #ffb800;padding:15px;border-radius:10px;margin-bottom:20px;display:none;position:relative}
 .notif-box h3{color:#ffb800;margin-bottom:10px}
 .notif-close{position:absolute;top:10px;left:10px;background:#ff4444;border:none;color:white;border-radius:50%;width:25px;height:25px;cursor:pointer}
@@ -33,6 +30,7 @@
 .game-card p{text-align:center;padding:15px;font-weight:bold;font-size:18px}
 .checkout{display:none;background:#141414;padding:30px;border-radius:15px;margin-top:30px;border:1px solid #333}
 input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:10px 0;font-size:16px}
+input.error{border-color:#ff4444!important;box-shadow:0 0 10px rgba(255,68,68,0.3)}
 .packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin:20px 0}
 .pack{background:#1a1a1a;padding:18px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333}
 .pack.selected{border-color:#ffb800;background:#222}
@@ -41,12 +39,14 @@ input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:999}
 .modal-content{background:#141414;padding:30px;border-radius:15px;width:90%;max-width:450px;border:1px solid #333}
 #toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:1000}
+#toast.error{background:#ff4444;color:white}
+.badge{background:#00ff88;color:#000;padding:4px 10px;border-radius:5px;font-size:12px;margin-right:5px}
+.guest-alert{background:#1a1a1a;border:1px solid #ffb800;padding:10px;border-radius:8px;margin-bottom:15px;text-align:center;color:#ffb800}
 footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:50px;text-align:center}
 </style>
 </head>
 <body>
-  <!-- الشريط المتحرك -->
-  <div class="marquee"><span id="marqueeText">🎁 عروض اليوم: اشحن 660 UC واحصل على 100 UC هدية!</span></div>
+  <div class="marquee"><span id="marqueeText">🎁 عروض اليوم: </span></div>
 
   <header>
     <div class="auth-btns">
@@ -64,7 +64,6 @@ footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:5
   </header>
 
   <div class="container">
-    <!-- صندوق الاشعارات للكل -->
     <div class="notif-box" id="notifBox">
       <button class="notif-close" onclick="document.getElementById('notifBox').style.display='none'">X</button>
       <h3>📢 اشعار</h3>
@@ -73,31 +72,16 @@ footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:5
 
     <h2 style="text-align:center;margin-bottom:30px">🎮 اختر اللعبة واشحن فوراً</h2>
     <div class="games-grid" id="games"></div>
-    <div class="checkout" id="checkout">
-      <h2 id="gameTitle"></h2>
-      <input type="text" id="playerId" placeholder="ادخل Player ID الخاص بك">
-      <input type="email" id="customerEmail" placeholder="ايميلك عشان نبعتلك حالة الطلب">
-      <h3>اختر الباقة <span id="discountBadge"></span></h3>
-      <div class="packs" id="packs"></div>
-      <h3 id="totalPrice" style="color:#ffb800"></h3>
-      <div class="payment-box">
-        <h3>طريقة الدفع: تحويل كاش</h3>
-        <p>1. حول المبلغ على رقم: <b style="color:#ffb800">0114829377</b></p>
-        <input type="text" id="walletNumber" placeholder="رقم المحفظة اللي حولت منه">
-        <label>ارفع اسكرين التحويل *</label>
-        <input type="file" id="proof" accept="image/*">
-      </div>
-      <button class="btn" onclick="placeOrder()">تأكيد الطلب</button>
-    </div>
+    <div class="checkout" id="checkout"></div>
   </div>
-<h2 style="text-align:center;margin-bottom:30px">ESh7NLI CASH</h2>
+
   <footer>
     <div class="social-icons">
-      <a href="https://www.facebook.com/share/18woALTmCM/" target="_blank">f</a>
-      <a href="https://wa.me/201148029377" target="_blank">W</a>
+      <a href="https://www.facebook.com/share/18woALTmCM/" target="_blank">Facebook</a>
+      <a href="https://wa.me/201148029377" target="_blank">WhatsApp</a>
     </div>
     <p>ESh7NLI CASH © 2026 - جميع الحقوق محفوظة</p>
-    <p>للدعم: 01148029377</p>
+    <p>للدعم:زور مواقعنا🔔</p>
   </footer>
 
   <div class="modal" id="loginModal"><div class="modal-content"><h2>تسجيل الدخول</h2><input type="email" id="loginEmail" placeholder="الايميل"><input type="password" id="loginPass" placeholder="كلمة السر"><button class="btn" onclick="login()">دخول</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
@@ -149,38 +133,34 @@ const games = [
   {name:'League of Legends', img:'https://i.top4top.io/p_3839hke8j0.jpg', packs:[{n:'1350 RP',p:150},{n:'2800 RP',p:300},{n:'6500 RP',p:650}]}
 ];
 
-
 games.forEach(g=>{
-  document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}" onerror="this.src='https://placehold.co/220x150/222/ffb800?text=${g.name}'"><p>${g.name}</p></div>`;
+  document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}"><p>${g.name}</p></div>`;
 });
 
-function showToast(msg, color='#00ff88'){const t=document.getElementById('toast');t.innerText=msg;t.style.background=color;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
+function showToast(msg, type='success'){
+  const t=document.getElementById('toast');
+  t.innerText=msg;
+  t.className = type=='error'? 'error' : '';
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',3000)
+}
 
-// جلب الشريط المتحرك
+function validateEmail(email){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 onSnapshot(doc(db,"settings","marquee"), (snap)=>{
   if(snap.exists()) document.getElementById('marqueeText').innerText = snap.data().text;
 });
 
-// جلب الاشعار للكل مسجل او لا
 onSnapshot(doc(db,"settings","global_notification"), (snap)=>{
-  if(snap.exists()){
+  if(snap.exists() && snap.data().text!= ''){
     document.getElementById('notifBox').style.display = 'block';
     document.getElementById('notifText').innerText = snap.data().text;
+  } else {
+    document.getElementById('notifBox').style.display = 'none';
   }
 });
-
-// تنبيهات حالة الطلب للمسجل
-if(currentUser){
-  onSnapshot(query(collection(db,"orders"), where("uid","==",currentUser.uid)), (snap)=>{
-    snap.docChanges().forEach(change=>{
-      if(change.type === "modified"){
-        const o = change.doc.data();
-        if(o.status === 'done') showToast('✅ تم قبول طلبك وتم شحنه');
-        if(o.status === 'cancelled') showToast('❌ تم رفض طلبك', '#ff4444');
-      }
-    })
-  });
-}
 
 onAuthStateChanged(auth, async user => {
   currentUser = user;
@@ -192,52 +172,132 @@ onAuthStateChanged(auth, async user => {
     const snap = await getDoc(doc(db,"users",user.uid));
     userData = snap.data() || {};
     document.getElementById('distBtn').style.display = userData.role==='distributor'?'none':'inline';
+  } else {
+    userData = {};
   }
 });
 
+// التعديل المهم: الشحن بقى للكل
 window.selectGame = (name)=>{
-  if(!currentUser) return showToast('سجل دخول الاول','#ff4444');
   currentGame = games.find(g=>g.name==name);
   document.getElementById('checkout').style.display='block';
-  document.getElementById('gameTitle').innerText = 'شحن ' + name;
-  let packsHtml='';
-  let discount = userData.discount? userData.discount / 100 : 0;
+  let guestAlert = !currentUser ? `<div class="guest-alert">⚠️ انت بتشحن كـ زائر. سجل حساب عشان تتابع طلباتك</div>` : '';
+  document.getElementById('checkout').innerHTML = `
+    ${guestAlert}
+    <h2 id="gameTitle">شحن ${name}</h2>
+    <input type="text" id="playerId" placeholder="ادخل Player ID الخاص بك">
+    <input type="email" id="customerEmail" placeholder="ايميلك عشان نبعتلك حالة الطلب *">
+    <h3>اختر الباقة <span id="discountBadge"></span></h3>
+    <div class="packs" id="packs"></div>
+    <h3 id="totalPrice" style="color:#ffb800"></h3>
+    <div class="payment-box">
+      <h3>طريقة الدفع: تحويل كاش</h3>
+      <p>1. حول المبلغ على رقم: <b style="color:#ffb800">01148029377</b></p>
+      <input type="text" id="walletNumber" placeholder="رقم المحفظة اللي حولت منه">
+      <label>ارفع اسكرين التحويل *</label>
+      <input type="file" id="proof" accept="image/*">
+    </div>
+    <button class="btn" onclick="placeOrder()">تأكيد الطلب</button>
+  `;
+  let packsHtml=''; let discount = userData.discount? userData.discount / 100 : 0;
   currentGame.packs.forEach(p=>{
     let price = userData.role==='distributor'? Math.round(p.p*(1-discount)) : p.p;
-    packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" data-original="${p.p}" onclick="selectPack(this)">${p.n}<br><b>${price} جنيه</b> ${userData.role==='distributor'?`<s style='font-size:12px;color:#aaa'>${p.p}</s>`:''}</div>`;
+    packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" onclick="selectPack(this)">${p.n}<br><b>${price} جنيه</b></div>`;
   });
   document.getElementById('packs').innerHTML = packsHtml;
   document.getElementById('discountBadge').innerHTML = userData.role==='distributor'?`<span class="badge">خصم ${userData.discount}%</span>`:'';
   window.scrollTo(0,document.body.scrollHeight);
 }
 
-window.selectPack = (el)=>{document.querySelectorAll('.pack').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPack = {name:el.dataset.n, price:el.dataset.p, original:el.dataset.original};document.getElementById('totalPrice').innerText = 'الاجمالي: ' + selectedPack.price + ' جنيه';}
+window.selectPack = (el)=>{document.querySelectorAll('.pack').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPack = {name:el.dataset.n, price:el.dataset.p};document.getElementById('totalPrice').innerText = 'الاجمالي: ' + selectedPack.price + ' جنيه';}
 
+// نظام الطلب للزوار والمسجلين
 window.placeOrder = async ()=>{
-  const id = document.getElementById('playerId').value;
-  const email = document.getElementById('customerEmail').value;
+  const idInput = document.getElementById('playerId');
+  const emailInput = document.getElementById('customerEmail');
+  const walletInput = document.getElementById('walletNumber');
   const proof = document.getElementById('proof').files[0];
-  if(!id) return showToast('دخل الـ ID','#ff4444');
-  if(!email) return showToast('دخل الايميل','#ff4444');
-  if(!selectedPack) return showToast('اختار باقة','#ff4444');
-  if(!proof) return showToast('ارفع اسكرين التحويل','#ff4444');
+
+  [idInput,emailInput,walletInput].forEach(i=>i.classList.remove('error'));
+
+  let hasError = false;
+  if(!idInput.value.trim()){idInput.classList.add('error');hasError=true;}
+  if(!emailInput.value.trim() ||!validateEmail(emailInput.value)){emailInput.classList.add('error');hasError=true;}
+  if(!selectedPack){showToast('⚠️ اختار باقة الاول','#ff4444');hasError=true;}
+  if(!walletInput.value.trim()){walletInput.classList.add('error');hasError=true;}
+  if(!proof){showToast('⚠️ لازم ترفع اسكرين التحويل','#ff4444');hasError=true;}
+
+  if(hasError) return showToast('⚠️ من فضلك املى كل البيانات المطلوبة','#ff4444');
+
   const reader = new FileReader();
   reader.onload = async (e)=>{
     await addDoc(collection(db,"orders"),{
-      uid:currentUser?currentUser.uid:null, email:email, userRole:userData.role||'guest', game:currentGame.name, playerId:id,
-      package:selectedPack, walletNumber:document.getElementById('walletNumber').value, proof:e.target.result,
+      uid: currentUser ? currentUser.uid : null, // null لو زائر
+      email:emailInput.value.trim(),
+      userRole: userData.role || 'guest', // guest لو مش مسجل
+      game:currentGame.name, playerId:idInput.value.trim(),
+      package:selectedPack, walletNumber:walletInput.value.trim(), proof:e.target.result,
       status:"pending_payment", createdAt:serverTimestamp()
     });
-    showToast('✅ تم استلام طلبك. هنراجعه خلال 10 دقايق');
-    document.getElementById('checkout').style.display='none';
+
+    document.getElementById('checkout').innerHTML = `
+      <div style="text-align:center;padding:20px">
+        <h2 style="color:#00ff88;margin-bottom:15px;font-size:28px">✅ تم استلام طلبك بنجاح</h2>
+        <p style="font-size:18px;margin-bottom:10px">سيتم التواصل معك خلال دقائق</p>
+        <p style="color:#ffb800;margin-bottom:15px">عبر الواتساب او البريد الإلكتروني: <b>${emailInput.value}</b></p>
+        <div style="background:#1a1a1a;border:2px solid #ff4444;border-radius:10px;padding:20px;margin:25px 0">
+          <p style="color:#ff4444;font-weight:bold">⚠️ لو الشحن اتأخر اكتر من 15 دقيقة</p>
+          <a href="https://wa.me/201148029377" target="_blank" style="display:inline-block;background:#00ff88;color:#000;padding:14px 30px;border-radius:8px;text-decoration:none;font-weight:bold">📱 01148029377</a>
+        </div>
+        <button class="btn" onclick="location.reload()">طلب جديد</button>
+      </div>
+    `;
   }
   reader.readAsDataURL(proof);
 }
 
+window.login=async()=>{
+  const email = document.getElementById('loginEmail');
+  const pass = document.getElementById('loginPass');
+  [email,pass].forEach(i=>i.classList.remove('error'));
+  if(!email.value.trim() ||!pass.value.trim()){
+    [email,pass].forEach(i=>{if(!i.value.trim())i.classList.add('error')});
+    return showToast('⚠️ من فضلك املى الايميل وكلمة السر','#ff4444');
+  }
+  try{
+    await signInWithEmailAndPassword(auth,email.value,pass.value);
+    showToast('تم تسجيل الدخول');closeModal();
+  }catch(e){showToast('⚠️ الايميل او كلمة السر غلط','#ff4444')}
+}
+
+window.register=async()=>{
+  const name = document.getElementById('regName');
+  const email = document.getElementById('regEmail');
+  const pass = document.getElementById('regPass');
+  [name,email,pass].forEach(i=>i.classList.remove('error'));
+  let hasError=false;
+  if(!name.value.trim()){name.classList.add('error');hasError=true;}
+  if(!email.value.trim() ||!validateEmail(email.value)){email.classList.add('error');hasError=true;}
+  if(!pass.value.trim() || pass.value.length<6){pass.classList.add('error');hasError=true;}
+  if(hasError) return showToast('⚠️ املى كل البيانات. كلمة السر 6 حروف على الاقل','#ff4444');
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email.value,pass.value);
+    await setDoc(doc(db,"users",cred.user.uid),{name:name.value,email:email.value,role:email.value===ADMIN_EMAIL?"admin":"user"});
+    showToast('تم انشاء الحساب');closeModal();
+  }catch(e){showToast('⚠️ الايميل مستخدم من قبل','#ff4444')}
+}
+
 window.submitDist = async ()=>{
-  if(!currentUser) return showToast('سجل دخول الاول عشان تقدم','#ff4444');
+  if(!currentUser) return showToast('⚠️ لازم تسجل حساب الاول عشان تقدم كـ موزع','#ff4444');
+  const phone = document.getElementById('distPhone');
+  const exp = document.getElementById('distExp');
+  [phone,exp].forEach(i=>i.classList.remove('error'));
+  if(!phone.value.trim() ||!exp.value.trim()){
+    [phone,exp].forEach(i=>{if(!i.value.trim())i.classList.add('error')});
+    return showToast('⚠️ املى رقم الواتساب والخبرة','#ff4444');
+  }
   await addDoc(collection(db,"distributor_requests"),{
-    uid:currentUser.uid, email:currentUser.email, name:userData.name, phone:document.getElementById('distPhone').value, exp:document.getElementById('distExp').value, status:"pending", createdAt:serverTimestamp()
+    uid:currentUser.uid, email:currentUser.email, name:userData.name, phone:phone.value, exp:exp.value, status:"pending", createdAt:serverTimestamp()
   });
   showToast('تم ارسال طلبك. هنراجعه ونرد عليك');
   closeModal();
@@ -247,8 +307,6 @@ window.showLogin=()=>document.getElementById('loginModal').style.display='flex';
 window.showRegister=()=>document.getElementById('registerModal').style.display='flex';
 window.showDistForm=()=>document.getElementById('distModal').style.display='flex';
 window.closeModal=()=>document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
-window.login=async()=>{await signInWithEmailAndPassword(auth,document.getElementById('loginEmail').value,document.getElementById('loginPass').value);showToast('تم تسجيل الدخول');closeModal();}
-window.register=async()=>{const cred=await createUserWithEmailAndPassword(auth,document.getElementById('regEmail').value,document.getElementById('regPass').value);await setDoc(doc(db,"users",cred.user.uid),{name:document.getElementById('regName').value,email:document.getElementById('regEmail').value,role:document.getElementById('regEmail').value===ADMIN_EMAIL?"admin":"user"});showToast('تم انشاء الحساب');closeModal();}
 window.logout=()=>signOut(auth);
 </script>
 </body>
