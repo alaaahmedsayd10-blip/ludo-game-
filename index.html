@@ -7,44 +7,47 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:#0a0a0a;color:#fff;font-family:'Cairo',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+  /* الشريط المتحرك متواصل */
+.marquee{background:linear-gradient(90deg,#ff4444,#ffb800);color:#000;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap}
+.marquee span{display:inline-block;animation:marquee 15s linear infinite}
+  @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
   header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
 .logo-area{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
 .logo-area img{width:70px;height:70px;border-radius:12px;background:#222;object-fit:cover;border:2px solid #ffb800}
 .logo{font-size:20px;font-weight:600;color:#ffb800;letter-spacing:1px}
 .auth-btns{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
-  header button{background:#ffb800;color:#000;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:bold;transition:0.2s;font-size:13px;width:110px}
-  header button:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(255,184,0,0.4)}
+  header button{background:#ffb800;color:#000;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;width:110px}
 .admin-btn{background:#ff4444!important;color:white!important}
 .dist-btn{background:#00ff88!important}
 .empty{width:110px}
 .container{max-width:1200px;margin:30px auto;padding:0 20px;flex:1}
+  /* صندوق الاشعارات للكل */
+.notif-box{background:#1a1a1a;border:2px solid #ffb800;padding:15px;border-radius:10px;margin-bottom:20px;display:none;position:relative}
+.notif-box h3{color:#ffb800;margin-bottom:10px}
+.notif-close{position:absolute;top:10px;left:10px;background:#ff4444;border:none;color:white;border-radius:50%;width:25px;height:25px;cursor:pointer}
 .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px}
 .game-card{background:#141414;border-radius:15px;overflow:hidden;cursor:pointer;border:2px solid #2a2a2a;transition:0.3s}
-.game-card:hover{border-color:#ffb800;transform:translateY(-8px);box-shadow:0 10px 30px rgba(255,184,0,0.2)}
+.game-card:hover{border-color:#ffb800;transform:translateY(-8px)}
 .game-card img{width:100%;height:150px;object-fit:cover}
 .game-card p{text-align:center;padding:15px;font-weight:bold;font-size:18px}
 .checkout{display:none;background:#141414;padding:30px;border-radius:15px;margin-top:30px;border:1px solid #333}
-  input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:10px 0;font-size:16px}
+input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:10px 0;font-size:16px}
 .packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin:20px 0}
-.pack{background:#1a1a1a;padding:18px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333;transition:0.2s}
-.pack:hover{border-color:#ffb800}
-.pack.selected{border-color:#ffb800;background:#222;box-shadow:0 0 15px rgba(255,184,0,0.3)}
-.btn{width:100%;padding:16px;background:linear-gradient(90deg,#ffb800,#ff9500);color:#000;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px;transition:0.2s}
-.btn:hover{opacity:0.9;transform:scale(1.02)}
+.pack{background:#1a1a1a;padding:18px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333}
+.pack.selected{border-color:#ffb800;background:#222}
+.btn{width:100%;padding:16px;background:linear-gradient(90deg,#ffb800,#ff9500);color:#000;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px}
 .payment-box{background:#1a1a1a;padding:20px;border-radius:10px;margin:15px 0;border:1px solid #ffb800}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:999}
 .modal-content{background:#141414;padding:30px;border-radius:15px;width:90%;max-width:450px;border:1px solid #333}
-  #toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:1000;animation:slideIn 0.3s}
-  @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
-.badge{background:#00ff88;color:#000;padding:4px 10px;border-radius:5px;font-size:12px;margin-right:5px}
-  footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:50px;text-align:center}
-.social-icons{display:flex;justify-content:center;gap:25px;margin-bottom:15px}
-.social-icons a{width:50px;height:50px;background:#1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffb800;font-size:24px;text-decoration:none;transition:0.3s;border:2px solid #333}
-.social-icons a:hover{background:#ffb800;color:#000;transform:translateY(-5px);box-shadow:0 5px 20px rgba(255,184,0,0.4)}
-  footer p{color:#888;font-size:14px}
+#toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:1000}
+footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:50px;text-align:center}
 </style>
 </head>
 <body>
+  <!-- الشريط المتحرك -->
+  <div class="marquee"><span id="marqueeText">🎁 عروض اليوم: اشحن 660 UC واحصل على 100 UC هدية!</span></div>
+
   <header>
     <div class="auth-btns">
       <button id="loginBtn" onclick="showLogin()">دخول</button>
@@ -61,6 +64,13 @@
   </header>
 
   <div class="container">
+    <!-- صندوق الاشعارات للكل -->
+    <div class="notif-box" id="notifBox">
+      <button class="notif-close" onclick="document.getElementById('notifBox').style.display='none'">X</button>
+      <h3>📢 اشعار</h3>
+      <p id="notifText"></p>
+    </div>
+
     <h2 style="text-align:center;margin-bottom:30px">🎮 اختر اللعبة واشحن فوراً</h2>
     <div class="games-grid" id="games"></div>
     <div class="checkout" id="checkout">
@@ -72,14 +82,14 @@
       <h3 id="totalPrice" style="color:#ffb800"></h3>
       <div class="payment-box">
         <h3>طريقة الدفع: تحويل كاش</h3>
-        <p>1. حول المبلغ على رقم: <b style="color:#ffb800">01148029377</b></p>
+        <p>1. حول المبلغ على رقم: <b style="color:#ffb800">0114829377</b></p>
         <input type="text" id="walletNumber" placeholder="رقم المحفظة اللي حولت منه">
         <label>ارفع اسكرين التحويل *</label>
         <input type="file" id="proof" accept="image/*">
       </div>
       <button class="btn" onclick="placeOrder()">تأكيد الطلب</button>
     </div>
-   </div>
+  </div>
 <h2 style="text-align:center;margin-bottom:30px">الموقع في مرحلت التطور</h2>
   <footer>
     <div class="social-icons">
@@ -99,11 +109,11 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, getDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286",storageBucket: "game-af286.firebasestorage.app",messagingSenderId: "567693078252",appId: "1:567693078252:web:3b5d6475a583f1f7347fc9"};
 const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
-await setPersistence(auth, browserLocalPersistence); // ده اللي بيحفظ الجلسة
+await setPersistence(auth, browserLocalPersistence);
 const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
 let currentUser = null; let userData = {}; let currentGame = null; let selectedPack = null;
 
@@ -139,11 +149,38 @@ const games = [
   {name:'League of Legends', img:'https://i.top4top.io/p_3839hke8j0.jpg', packs:[{n:'1350 RP',p:150},{n:'2800 RP',p:300},{n:'6500 RP',p:650}]}
 ];
 
+
 games.forEach(g=>{
   document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}" onerror="this.src='https://placehold.co/220x150/222/ffb800?text=${g.name}'"><p>${g.name}</p></div>`;
 });
 
 function showToast(msg, color='#00ff88'){const t=document.getElementById('toast');t.innerText=msg;t.style.background=color;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
+
+// جلب الشريط المتحرك
+onSnapshot(doc(db,"settings","marquee"), (snap)=>{
+  if(snap.exists()) document.getElementById('marqueeText').innerText = snap.data().text;
+});
+
+// جلب الاشعار للكل مسجل او لا
+onSnapshot(doc(db,"settings","global_notification"), (snap)=>{
+  if(snap.exists()){
+    document.getElementById('notifBox').style.display = 'block';
+    document.getElementById('notifText').innerText = snap.data().text;
+  }
+});
+
+// تنبيهات حالة الطلب للمسجل
+if(currentUser){
+  onSnapshot(query(collection(db,"orders"), where("uid","==",currentUser.uid)), (snap)=>{
+    snap.docChanges().forEach(change=>{
+      if(change.type === "modified"){
+        const o = change.doc.data();
+        if(o.status === 'done') showToast('✅ تم قبول طلبك وتم شحنه');
+        if(o.status === 'cancelled') showToast('❌ تم رفض طلبك', '#ff4444');
+      }
+    })
+  });
+}
 
 onAuthStateChanged(auth, async user => {
   currentUser = user;
