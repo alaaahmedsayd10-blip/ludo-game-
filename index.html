@@ -1,64 +1,218 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>لوحة الادمن</title>
-<style>body{background:#0a0a0a;color:white;font-family:Cairo;padding:20px} h1{color:#ff4444}.tabs button{padding:10px 20px;background:#222;border:none;color:white;cursor:pointer;margin:5px}.tabs.active{background:#ff4444}.card{background:#1a1a1a;padding:15px;margin:10px 0;border-radius:10px;border-left:4px solid orange}.btn{padding:8px 15px;background:#00ff88;color:#000;border:none;border-radius:8px;cursor:pointer;margin:3px;font-weight:bold}.btn.red{background:#ff4444;color:white}.btn.blue{background:#00aaff;color:white} img{max-width:200px;border-radius:10px;margin-top:10px} input{padding:6px;border-radius:5px;border:1px solid #333;background:#222;color:white;width:70px}</style>
-</head><body>
-<h1>📊 لوحة تحكم الادمن</h1>
-<div class="tabs"><button class="active" onclick="showTab('orders')">الطلبات</button><button onclick="showTab('dist')">طلبات الموزعين</button><button onclick="showTab('users')">الموزعين</button></div>
-<div id="orders"></div><div id="dist" style="display:none"></div><div id="users" style="display:none"></div>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>ESh7NLI CASH - شحن الالعاب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'Cairo',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+  header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
+.logo-area{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
+.logo-area img{width:70px;height:70px;border-radius:12px;background:#222;object-fit:cover;border:2px solid #ffb800}
+.logo{font-size:20px;font-weight:600;color:#ffb800;letter-spacing:1px}
+.auth-btns{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+  header button{background:#ffb800;color:#000;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:bold;transition:0.2s;font-size:13px;width:110px}
+  header button:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(255,184,0,0.4)}
+.admin-btn{background:#ff4444!important;color:white!important}
+.dist-btn{background:#00ff88!important}
+.empty{width:110px}
+.container{max-width:1200px;margin:30px auto;padding:0 20px;flex:1}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px}
+.game-card{background:#141414;border-radius:15px;overflow:hidden;cursor:pointer;border:2px solid #2a2a2a;transition:0.3s}
+.game-card:hover{border-color:#ffb800;transform:translateY(-8px);box-shadow:0 10px 30px rgba(255,184,0,0.2)}
+.game-card img{width:100%;height:150px;object-fit:cover}
+.game-card p{text-align:center;padding:15px;font-weight:bold;font-size:18px}
+.checkout{display:none;background:#141414;padding:30px;border-radius:15px;margin-top:30px;border:1px solid #333}
+  input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:10px 0;font-size:16px}
+.packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin:20px 0}
+.pack{background:#1a1a1a;padding:18px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333;transition:0.2s}
+.pack:hover{border-color:#ffb800}
+.pack.selected{border-color:#ffb800;background:#222;box-shadow:0 0 15px rgba(255,184,0,0.3)}
+.btn{width:100%;padding:16px;background:linear-gradient(90deg,#ffb800,#ff9500);color:#000;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px;transition:0.2s}
+.btn:hover{opacity:0.9;transform:scale(1.02)}
+.payment-box{background:#1a1a1a;padding:20px;border-radius:10px;margin:15px 0;border:1px solid #ffb800}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:999}
+.modal-content{background:#141414;padding:30px;border-radius:15px;width:90%;max-width:450px;border:1px solid #333}
+  #toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:1000;animation:slideIn 0.3s}
+  @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.badge{background:#00ff88;color:#000;padding:4px 10px;border-radius:5px;font-size:12px;margin-right:5px}
+  footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:50px;text-align:center}
+.social-icons{display:flex;justify-content:center;gap:25px;margin-bottom:15px}
+.social-icons a{width:50px;height:50px;background:#1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffb800;font-size:24px;text-decoration:none;transition:0.3s;border:2px solid #333}
+.social-icons a:hover{background:#ffb800;color:#000;transform:translateY(-5px);box-shadow:0 5px 20px rgba(255,184,0,0.4)}
+  footer p{color:#888;font-size:14px}
+</style>
+</head>
+<body>
+  <header>
+    <div class="auth-btns">
+      <button id="loginBtn" onclick="showLogin()">دخول</button>
+      <button id="regBtn" onclick="showRegister()">تسجيل</button>
+      <button id="distBtn" class="dist-btn" onclick="showDistForm()">تقديم موزع</button>
+      <button id="adminPanelBtn" class="admin-btn" style="display:none" onclick="window.location='admin.html'">لوحة الادمن</button>
+      <button id="logoutBtn" style="display:none" onclick="logout()">خروج</button>
+    </div>
+    <div class="logo-area">
+      <img id="siteLogo" src="https://k.top4top.io/p_3839dix1p0.png" alt="logo">
+      <div class="logo">ESh7NLI CASH</div>
+    </div>
+    <div class="empty"></div>
+  </header>
+
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:30px">🎮 اختر اللعبة واشحن فوراً</h2>
+    <div class="games-grid" id="games">
+      
+    </div>
+    <div class="checkout" id="checkout">
+      <h2 id="gameTitle"></h2>
+      <input type="text" id="playerId" placeholder="ادخل Player ID الخاص بك">
+      <input type="email" id="customerEmail" placeholder="ايميلك عشان نبعتلك حالة الطلب">
+      <h3>اختر الباقة <span id="discountBadge"></span></h3>
+      <div class="packs" id="packs"></div>
+      <h3 id="totalPrice" style="color:#ffb800"></h3>
+      <div class="payment-box">
+        <h3>طريقة الدفع: تحويل كاش</h3>
+        <p>1. حول المبلغ على رقم: <b style="color:#ffb800">01148029377</b></p>
+        <input type="text" id="walletNumber" placeholder="رقم المحفظة اللي حولت منه">
+        <label>ارفع اسكرين التحويل *</label>
+        <input type="file" id="proof" accept="image/*">
+      </div>
+      <button class="btn" onclick="placeOrder()">تأكيد الطلب</button>
+    </div>
+  </div>
+<h2 style="text-align:center;margin-bottom:30px">معظم الالعاب في صيانه</h2>
+  <footer>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/18woALTmCM/" target="_blank">f</a>
+      <a href="https://wa.me/201148029377" target="_blank">W</a>
+    </div>
+    <p>ESh7NLI CASH © 2026 - جميع الحقوق محفوظة</p>
+    <p>للدعم: 01148029377</p>
+  </footer>
+
+  <div class="modal" id="loginModal"><div class="modal-content"><h2>تسجيل الدخول</h2><input type="email" id="loginEmail" placeholder="الايميل"><input type="password" id="loginPass" placeholder="كلمة السر"><button class="btn" onclick="login()">دخول</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
+  <div class="modal" id="registerModal"><div class="modal-content"><h2>انشاء حساب جديد</h2><input type="text" id="regName" placeholder="الاسم"><input type="email" id="regEmail" placeholder="الايميل"><input type="password" id="regPass" placeholder="كلمة السر"><button class="btn" onclick="register()">تسجيل</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
+  <div class="modal" id="distModal"><div class="modal-content"><h2>تقديم على موزع</h2><input type="text" id="distPhone" placeholder="رقم الواتساب"><textarea id="distExp" placeholder="عندك خبرة في الشحن؟"></textarea><button class="btn" onclick="submitDist()">ارسال الطلب</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
+
+  <div id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286",storageBucket: "game-af286.firebasestorage.app",messagingSenderId: "567693078252",appId: "1:567693078252:web:3b5d6475a583f1f7347fc9"};
-const app=initializeApp(firebaseConfig); const db=getFirestore(app); const auth=getAuth(app);
+const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
+let currentUser = null; let userData = {}; let currentGame = null; let selectedPack = null;
 
-onAuthStateChanged(auth, user => {
-  if(!user || user.email!== ADMIN_EMAIL) return document.body.innerHTML = 'انت مش الادمن';
+const games = [
+  // PUBG MOBILE
+  {name:'PUBG Mobile', img:'https://l.top4top.io/p_3839txe7h0.jpg', packs:[
+    {n:'60 UC',p:60},{n:'120 UC',p:115},{n:'325 UC',p:270},{n:'660 UC',p:510},
+    {n:'985 UC',p:780},{n:'1800 UC',p:1290},{n:'3850 UC',p:2550},{n:'8100 UC',p:5100},
+    {n:'حزمة الشراء الاول',p:70},{n:'حزمة مواد ترقية الاسلحة',p:170},{n:'حزمة الشعر الخرافي',p:270},
+    {n:'برايم',p:65},{n:'برايم بلس',p:470}
+  ]},
 
-  onSnapshot(query(collection(db,"orders"),orderBy("createdAt","desc")),(snap)=>{
-    let html='';
-    snap.forEach(d=>{const o=d.data();
-    html+=`<div class="card"><b>${o.game}</b> ${o.userRole==='distributor'?'<span style="background:#00ff88;color:#000;padding:3px 8px;border-radius:5px">موزع</span>':''}<br>ID: ${o.playerId}<br>${o.package.name} - ${o.package.price}ج<br>العميل: ${o.email}<br>رقم الكاش: ${o.walletNumber}<br>الحالة:${o.status}<br><img src="${o.proof}"><br><button class="btn" onclick="upd('${d.id}','done')">✅ تم الشحن</button><button class="btn red" onclick="upd('${d.id}','cancelled')">❌ رفض</button></div>`});
-    document.getElementById('orders').innerHTML=html;
-  });
+  // FREE FIRE
+  {name:'Free Fire', img:'https://i.top4top.io/p_3839hhvmk0.jpg', packs:[
+    {n:'110 Diamond',p:60},{n:'231 Diamond',p:115},{n:'341 Diamond',p:170},
+    {n:'583 Diamond',p:280},{n:'1188 Diamond',p:540},{n:'2420 Diamond',p:1050},
+    {n:'Weekly Membership',p:130},{n:'Monthly Membership',p:550},{n:'Booyah Pass',p:75}
+  ]},
 
-  onSnapshot(collection(db,"distributor_requests"),(snap)=>{
-    let html='';
-    snap.forEach(d=>{const o=d.data();
-    html+=`<div class="card"><b>${o.name}</b> - ${o.email}<br>واتساب: ${o.phone}<br>الخبرة: ${o.exp}<br>الحالة:${o.status}<br>
-    نسبة الخصم: <input type="number" id="disc_${d.id}" value="15" min="0" max="50"> %
-    <br><button class="btn" onclick="approveDist('${d.id}','${o.uid}')">✅ قبول</button><button class="btn red" onclick="updDist('${d.id}','rejected')">❌ رفض</button></div>`});
-    document.getElementById('dist').innerHTML=html;
-  });
+  // MOBILE LEGENDS
+  {name:'Mobile Legends', img:'https://b.top4top.io/p_38391pai70.jpg', packs:[
+    {n:'86 Diamonds',p:75},{n:'112 Diamonds',p:95},{n:'172 Diamonds',p:145},
+    {n:'223 Diamonds',p:199},{n:'257 Diamonds',p:219},{n:'570 Diamonds',p:465},
+    {n:'705 Diamonds',p:566},{n:'1166 Diamonds',p:920},{n:'2200 Diamonds',p:1655}
+  ]},
 
-  onSnapshot(query(collection(db,"users"),where("role","==","distributor")),(snap)=>{
-    let html='';
-    snap.forEach(d=>{const o=d.data();
-    html+=`<div class="card"><b>${o.name}</b> - ${o.email}<br>
-    نسبة الخصم الحالية: ${o.discount || 0}%
-    <input type="number" id="edit_disc_${d.id}" value="${o.discount || 15}" min="0" max="50"> %
-    <button class="btn blue" onclick="updateDiscount('${d.id}')">💾 حفظ الخصم</button></div>`});
-    document.getElementById('users').innerHTML=html;
-  });
+  // العاب تانية
+  {name:'Call of Duty Mobile', img:'https://h.top4top.io/p_3839xkbia0.jpg', packs:[{n:'80 CP',p:30},{n:'400 CP',p:150},{n:'800 CP',p:300}]},
+  {name:'Clash of Clans', img:'https://l.top4top.io/p_3839i425o0.jpg', packs:[{n:'120 Gems',p:40},{n:'500 Gems',p:150},{n:'1200 Gems',p:350}]},
+  {name:'Brawl Stars', img:'https://g.top4top.io/p_3839vu46j0.jpg', packs:[{n:'30 Gems',p:20},{n:'170 Gems',p:90},{n:'360 Gems',p:180}]},
+  {name:'Clash Royale', img:'https://d.top4top.io/p_3839jhs8o0.jpg', packs:[{n:'80 Gems',p:30},{n:'500 Gems',p:150},{n:'1200 Gems',p:350}]},
+  {name:'Roblox', img:'https://f.top4top.io/p_3839nlkg60.jpg', packs:[{n:'400 Robux',p:100},{n:'800 Robux',p:200},{n:'1700 Robux',p:400}]},
+  {name:'League of Legends', img:'https://i.top4top.io/p_3839hke8j0.jpg', packs:[{n:'1350 RP',p:150},{n:'2800 RP',p:300},{n:'6500 RP',p:650}]}
+];
+
+games.forEach(g=>{
+  document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}" onerror="this.src='https://placehold.co/220x150/222/ffb800?text=${g.name}'"><p>${g.name}</p></div>`;
 });
 
-window.upd=async(id,s)=>{await updateDoc(doc(db,"orders",id),{status:s})}
-window.updDist=async(id,s)=>{await updateDoc(doc(db,"distributor_requests",id),{status:s})}
+function showToast(msg, color='#00ff88'){const t=document.getElementById('toast');t.innerText=msg;t.style.background=color;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
 
-window.approveDist=async(id,uid)=>{
-  const discount = document.getElementById(`disc_${id}`).value;
-  await updateDoc(doc(db,"distributor_requests",id),{status:'approved'});
-  await updateDoc(doc(db,"users",uid),{role:'distributor', discount: Number(discount)});
-  alert('تم قبول الموزع بخصم ' + discount + '%');
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  document.getElementById('logoutBtn').style.display = user? 'inline' : 'none';
+  document.getElementById('loginBtn').style.display = user? 'none' : 'inline';
+  document.getElementById('regBtn').style.display = user? 'none' : 'inline';
+  document.getElementById('adminPanelBtn').style.display = user && user.email === ADMIN_EMAIL? 'inline' : 'none';
+  if(user){
+    const snap = await getDoc(doc(db,"users",user.uid));
+    userData = snap.data() || {};
+    document.getElementById('distBtn').style.display = userData.role==='distributor'?'none':'inline';
+  }
+});
+
+window.selectGame = (name)=>{
+  currentGame = games.find(g=>g.name==name);
+  document.getElementById('checkout').style.display='block';
+  document.getElementById('gameTitle').innerText = 'شحن ' + name;
+  let packsHtml='';
+  let discount = userData.discount? userData.discount / 100 : 0;
+  currentGame.packs.forEach(p=>{
+    let price = userData.role==='distributor'? Math.round(p.p*(1-discount)) : p.p;
+    packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" data-original="${p.p}" onclick="selectPack(this)">${p.n}<br><b>${price} جنيه</b> ${userData.role==='distributor'?`<s style='font-size:12px;color:#aaa'>${p.p}</s>`:''}</div>`;
+  });
+  document.getElementById('packs').innerHTML = packsHtml;
+  document.getElementById('discountBadge').innerHTML = userData.role==='distributor'?`<span class="badge">خصم ${userData.discount}%</span>`:'';
+  window.scrollTo(0,document.body.scrollHeight);
 }
 
-window.updateDiscount=async(uid)=>{
-  const discount = document.getElementById(`edit_disc_${uid}`).value;
-  await updateDoc(doc(db,"users",uid),{discount: Number(discount)});
-  alert('تم تحديث الخصم لـ ' + discount + '%');
+window.selectPack = (el)=>{document.querySelectorAll('.pack').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPack = {name:el.dataset.n, price:el.dataset.p, original:el.dataset.original};document.getElementById('totalPrice').innerText = 'الاجمالي: ' + selectedPack.price + ' جنيه';}
+
+window.placeOrder = async ()=>{
+  const id = document.getElementById('playerId').value;
+  const email = document.getElementById('customerEmail').value;
+  const proof = document.getElementById('proof').files[0];
+  if(!id) return showToast('دخل الـ ID','#ff4444');
+  if(!email) return showToast('دخل الايميل','#ff4444');
+  if(!selectedPack) return showToast('اختار باقة','#ff4444');
+  if(!proof) return showToast('ارفع اسكرين التحويل','#ff4444');
+  const reader = new FileReader();
+  reader.onload = async (e)=>{
+    await addDoc(collection(db,"orders"),{
+      uid:currentUser?currentUser.uid:null, email:email, userRole:userData.role||'guest', game:currentGame.name, playerId:id,
+      package:selectedPack, walletNumber:document.getElementById('walletNumber').value, proof:e.target.result,
+      status:"pending_payment", createdAt:serverTimestamp()
+    });
+    showToast('✅ تم استلام طلبك. هنراجعه خلال 10 دقايق');
+    document.getElementById('checkout').style.display='none';
+  }
+  reader.readAsDataURL(proof);
 }
 
-window.showTab=(t)=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.getElementById('orders').style.display=t=='orders'?'block':'none';document.getElementById('dist').style.display=t=='dist'?'block':'none';document.getElementById('users').style.display=t=='users'?'block':'none';}
-</script></body></html>
+window.submitDist = async ()=>{
+  if(!currentUser) return showToast('سجل دخول الاول عشان تقدم','#ff4444');
+  await addDoc(collection(db,"distributor_requests"),{
+    uid:currentUser.uid, email:currentUser.email, name:userData.name, phone:document.getElementById('distPhone').value, exp:document.getElementById('distExp').value, status:"pending", createdAt:serverTimestamp()
+  });
+  showToast('تم ارسال طلبك. هنراجعه ونرد عليك');
+  closeModal();
+}
+
+window.showLogin=()=>document.getElementById('loginModal').style.display='flex';
+window.showRegister=()=>document.getElementById('registerModal').style.display='flex';
+window.showDistForm=()=>document.getElementById('distModal').style.display='flex';
+window.closeModal=()=>document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+window.login=async()=>{await signInWithEmailAndPassword(auth,document.getElementById('loginEmail').value,document.getElementById('loginPass').value);showToast('تم تسجيل الدخول');closeModal();}
+window.register=async()=>{const cred=await createUserWithEmailAndPassword(auth,document.getElementById('regEmail').value,document.getElementById('regPass').value);await setDoc(doc(db,"users",cred.user.uid),{name:document.getElementById('regName').value,email:document.getElementById('regEmail').value,role:document.getElementById('regEmail').value===ADMIN_EMAIL?"admin":"user"});showToast('تم انشاء الحساب');closeModal();}
+window.logout=()=>signOut(auth);
+</script>
+</body>
+</html>
