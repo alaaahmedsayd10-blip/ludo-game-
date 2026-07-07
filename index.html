@@ -158,7 +158,17 @@ const games = [
     {n:'86 Diamonds',p:75},{n:'112 Diamonds',p:95},{n:'172 Diamonds',p:145},
     {n:'223 Diamonds',p:199},{n:'257 Diamonds',p:219},{n:'570 Diamonds',p:465},
     {n:'705 Diamonds',p:566},{n:'1166 Diamonds',p:920},{n:'2200 Diamonds',p:1655}
-  ];
+  ]},
+
+  // العاب تانية
+  {name:'Call of Duty Mobile', img:'https://h.top4top.io/p_3839xkbia0.jpg', packs:[{n:'80 CP',p:30},{n:'400 CP',p:150},{n:'800 CP',p:300}]},
+  {name:'Clash of Clans', img:'https://l.top4top.io/p_3839i425o0.jpg', packs:[{n:'120 Gems',p:40},{n:'500 Gems',p:150},{n:'1200 Gems',p:350}]},
+  {name:'Brawl Stars', img:'https://g.top4top.io/p_3839vu46j0.jpg', packs:[{n:'30 Gems',p:20},{n:'170 Gems',p:90},{n:'360 Gems',p:180}]},
+  {name:'Clash Royale', img:'https://d.top4top.io/p_3839jhs8o0.jpg', packs:[{n:'80 Gems',p:30},{n:'500 Gems',p:150},{n:'1200 Gems',p:350}]},
+  {name:'Roblox', img:'https://f.top4top.io/p_3839nlkg60.jpg', packs:[{n:'400 Robux',p:100},{n:'800 Robux',p:200},{n:'1700 Robux',p:400}]},
+  {name:'League of Legends', img:'https://i.top4top.io/p_3839hke8j0.jpg', packs:[{n:'1350 RP',p:150},{n:'2800 RP',p:300},{n:'6500 RP',p:650}]}
+];
+
 
 games.forEach(g=>{
   document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}"><p>${g.name}</p></div>`;
