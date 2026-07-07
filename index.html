@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>ESh7NLI CASH - شحن الالعاب</title>
+<title>ESh7NLI CASH - شحن كاش</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -20,6 +20,12 @@ header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;
 .dist-btn{background:#00ff88!important}
 .empty{width:110px}
 .container{max-width:1200px;margin:30px auto;padding:0 20px;flex:1}
+
+/* الصورة الاعلانية الشمال */
+.ad-banner-left{position:fixed;top:150px;left:20px;width:150px;z-index:50}
+.ad-banner-left img{width:100%;border-radius:10px;border:2px solid #ffb800;cursor:pointer;transition:0.3s}
+.ad-banner-left img:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(255,184,0,0.5)}
+
 .notif-box{background:#1a1a1a;border:2px solid #ffb800;padding:15px;border-radius:10px;margin-bottom:20px;display:none;position:relative}
 .notif-box h3{color:#ffb800;margin-bottom:10px}
 .notif-close{position:absolute;top:10px;left:10px;background:#ff4444;border:none;color:white;border-radius:50%;width:25px;height:25px;cursor:pointer}
@@ -29,6 +35,8 @@ header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;
 .game-card img{width:100%;height:150px;object-fit:cover}
 .game-card p{text-align:center;padding:15px;font-weight:bold;font-size:18px}
 .checkout{display:none;background:#141414;padding:30px;border-radius:15px;margin-top:30px;border:1px solid #333}
+.page{display:none}
+.page.active{display:block}
 input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:10px 0;font-size:16px}
 input.error{border-color:#ff4444!important;box-shadow:0 0 10px rgba(255,68,68,0.3)}
 .packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin:20px 0}
@@ -41,18 +49,20 @@ input.error{border-color:#ff4444!important;box-shadow:0 0 10px rgba(255,68,68,0.
 #toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:1000}
 #toast.error{background:#ff4444;color:white}
 .badge{background:#00ff88;color:#000;padding:4px 10px;border-radius:5px;font-size:12px;margin-right:5px}
-.guest-alert{background:#1a1a1a;border:1px solid #ffb800;padding:10px;border-radius:8px;margin-bottom:15px;text-align:center;color:#ffb800}
 footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:50px;text-align:center}
+.dist-info{background:#1a1a1a;padding:25px;border-radius:15px;border:1px solid #00ff88;margin-bottom:20px}
+.dist-info h2{color:#00ff88;margin-bottom:15px}
 </style>
 </head>
 <body>
-  <div class="marquee"><span id="marqueeText">🎁 عروض اليوم: </span></div>
+  <div class="marquee"><span id="marqueeText">مرحبا بكم في موقع ESh7NLI CASH</span></div>
 
   <header>
     <div class="auth-btns">
+      <button id="homeBtn" onclick="showPage('home')">الرئيسية</button>
+      <button id="distPageBtn" class="dist-btn" onclick="showPage('distributor')">كن موزع</button>
       <button id="loginBtn" onclick="showLogin()">دخول</button>
       <button id="regBtn" onclick="showRegister()">تسجيل</button>
-      <button id="distBtn" class="dist-btn" onclick="showDistForm()">تقديم موزع</button>
       <button id="adminPanelBtn" class="admin-btn" style="display:none" onclick="window.location='admin.html'">لوحة الادمن</button>
       <button id="logoutBtn" style="display:none" onclick="logout()">خروج</button>
     </div>
@@ -70,9 +80,30 @@ footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:5
       <p id="notifText"></p>
     </div>
 
-    <h2 style="text-align:center;margin-bottom:30px">🎮 اختر اللعبة واشحن فوراً</h2>
-    <div class="games-grid" id="games"></div>
-    <div class="checkout" id="checkout"></div>
+    <!-- صفحة الرئيسية -->
+    <div class="page active" id="home">
+      <h2 style="text-align:center;margin-bottom:30px">🎮 اختر اللعبة واشحن فوراً</h2>
+      <div class="games-grid" id="games"></div>
+      <div class="checkout" id="checkout"></div>
+    </div>
+
+    <!-- صفحة الموزع -->
+    <div class="page" id="distributor">
+      <div class="dist-info">
+        <h2>💼 كن موزع معانا</h2>
+        <p>• خصومات تصل الى 50% على كل الشحنات</p>
+        <p>• لوحة تحكم خاصة بيك</p>
+        <p>• سحب ارباحك اسبوعياً</p>
+        <p>• دعم فني 24 ساعة</p>
+      </div>
+      <h2>قدم طلبك دلوقتي</h2>
+      <input type="text" id="distName" placeholder="الاسم">
+      <input type="email" id="distEmail" placeholder="الايميل">
+      <input type="text" id="distPhone" placeholder="رقم الواتساب">
+      <textarea id="distExp" placeholder="عندك خبرة في الشحن؟ احكي لنا" rows="4"></textarea>
+      <button class="btn" onclick="submitDist()">ارسال الطلب</button>
+    </div>
+
   </div>
 
   <footer>
@@ -81,12 +112,11 @@ footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:5
       <a href="https://wa.me/201148029377" target="_blank">WhatsApp</a>
     </div>
     <p>ESh7NLI CASH © 2026 - جميع الحقوق محفوظة</p>
-    <p>للدعم:زور مواقعنا🔔</p>
+    <p>للدعم: 01148029377</p>
   </footer>
 
   <div class="modal" id="loginModal"><div class="modal-content"><h2>تسجيل الدخول</h2><input type="email" id="loginEmail" placeholder="الايميل"><input type="password" id="loginPass" placeholder="كلمة السر"><button class="btn" onclick="login()">دخول</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
   <div class="modal" id="registerModal"><div class="modal-content"><h2>انشاء حساب جديد</h2><input type="text" id="regName" placeholder="الاسم"><input type="email" id="regEmail" placeholder="الايميل"><input type="password" id="regPass" placeholder="كلمة السر"><button class="btn" onclick="register()">تسجيل</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
-  <div class="modal" id="distModal"><div class="modal-content"><h2>تقديم على موزع</h2><input type="text" id="distPhone" placeholder="رقم الواتساب"><textarea id="distExp" placeholder="عندك خبرة في الشحن؟"></textarea><button class="btn" onclick="submitDist()">ارسال الطلب</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
 
   <div id="toast"></div>
 
@@ -149,6 +179,12 @@ function validateEmail(email){
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+window.showPage = (pageId)=>{
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0,0);
+}
+
 onSnapshot(doc(db,"settings","marquee"), (snap)=>{
   if(snap.exists()) document.getElementById('marqueeText').innerText = snap.data().text;
 });
@@ -171,22 +207,25 @@ onAuthStateChanged(auth, async user => {
   if(user){
     const snap = await getDoc(doc(db,"users",user.uid));
     userData = snap.data() || {};
-    document.getElementById('distBtn').style.display = userData.role==='distributor'?'none':'inline';
   } else {
     userData = {};
   }
 });
 
-// التعديل المهم: الشحن بقى للكل
+// الشحن لازم تسجيل الاول
 window.selectGame = (name)=>{
+  if(!currentUser){
+    showToast('⚠️ سجل حساب الاول عشان تشحن','#ff4444');
+    showLogin();
+    return;
+  }
+
   currentGame = games.find(g=>g.name==name);
   document.getElementById('checkout').style.display='block';
-  let guestAlert = !currentUser ? `<div class="guest-alert">⚠️ انت بتشحن كـ زائر. سجل حساب عشان تتابع طلباتك</div>` : '';
   document.getElementById('checkout').innerHTML = `
-    ${guestAlert}
     <h2 id="gameTitle">شحن ${name}</h2>
     <input type="text" id="playerId" placeholder="ادخل Player ID الخاص بك">
-    <input type="email" id="customerEmail" placeholder="ايميلك عشان نبعتلك حالة الطلب *">
+    <input type="email" id="customerEmail" placeholder="ايميلك عشان نبعتلك حالة الطلب *" value="${currentUser.email}" readonly>
     <h3>اختر الباقة <span id="discountBadge"></span></h3>
     <div class="packs" id="packs"></div>
     <h3 id="totalPrice" style="color:#ffb800"></h3>
@@ -199,7 +238,9 @@ window.selectGame = (name)=>{
     </div>
     <button class="btn" onclick="placeOrder()">تأكيد الطلب</button>
   `;
-  let packsHtml=''; let discount = userData.discount? userData.discount / 100 : 0;
+  
+  let packsHtml=''; 
+  let discount = userData.discount ? userData.discount / 100 : 0;
   currentGame.packs.forEach(p=>{
     let price = userData.role==='distributor'? Math.round(p.p*(1-discount)) : p.p;
     packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" onclick="selectPack(this)">${p.n}<br><b>${price} جنيه</b></div>`;
@@ -211,7 +252,6 @@ window.selectGame = (name)=>{
 
 window.selectPack = (el)=>{document.querySelectorAll('.pack').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPack = {name:el.dataset.n, price:el.dataset.p};document.getElementById('totalPrice').innerText = 'الاجمالي: ' + selectedPack.price + ' جنيه';}
 
-// نظام الطلب للزوار والمسجلين
 window.placeOrder = async ()=>{
   const idInput = document.getElementById('playerId');
   const emailInput = document.getElementById('customerEmail');
@@ -232,9 +272,9 @@ window.placeOrder = async ()=>{
   const reader = new FileReader();
   reader.onload = async (e)=>{
     await addDoc(collection(db,"orders"),{
-      uid: currentUser ? currentUser.uid : null, // null لو زائر
+      uid: currentUser.uid,
       email:emailInput.value.trim(),
-      userRole: userData.role || 'guest', // guest لو مش مسجل
+      userRole: userData.role || 'user',
       game:currentGame.name, playerId:idInput.value.trim(),
       package:selectedPack, walletNumber:walletInput.value.trim(), proof:e.target.result,
       status:"pending_payment", createdAt:serverTimestamp()
@@ -289,23 +329,35 @@ window.register=async()=>{
 
 window.submitDist = async ()=>{
   if(!currentUser) return showToast('⚠️ لازم تسجل حساب الاول عشان تقدم كـ موزع','#ff4444');
+  const name = document.getElementById('distName');
+  const email = document.getElementById('distEmail');
   const phone = document.getElementById('distPhone');
   const exp = document.getElementById('distExp');
-  [phone,exp].forEach(i=>i.classList.remove('error'));
-  if(!phone.value.trim() ||!exp.value.trim()){
-    [phone,exp].forEach(i=>{if(!i.value.trim())i.classList.add('error')});
-    return showToast('⚠️ املى رقم الواتساب والخبرة','#ff4444');
-  }
+  
+  [name,email,phone,exp].forEach(i=>i.classList.remove('error'));
+  
+  let hasError=false;
+  if(!name.value.trim()){name.classList.add('error');hasError=true;}
+  if(!email.value.trim() ||!validateEmail(email.value)){email.classList.add('error');hasError=true;}
+  if(!phone.value.trim()){phone.classList.add('error');hasError=true;}
+  if(!exp.value.trim()){exp.classList.add('error');hasError=true;}
+  
+  if(hasError) return showToast('⚠️ املى كل البيانات','#ff4444');
+
   await addDoc(collection(db,"distributor_requests"),{
-    uid:currentUser.uid, email:currentUser.email, name:userData.name, phone:phone.value, exp:exp.value, status:"pending", createdAt:serverTimestamp()
+    name:name.value, email:email.value, phone:phone.value, exp:exp.value, 
+    uid: currentUser.uid,
+    status:"pending", createdAt:serverTimestamp()
   });
-  showToast('تم ارسال طلبك. هنراجعه ونرد عليك');
-  closeModal();
+  showToast('✅ تم ارسال طلبك. هنراجعه ونرد عليك خلال 24 ساعة');
+  document.getElementById('distName').value='';
+  document.getElementById('distEmail').value='';
+  document.getElementById('distPhone').value='';
+  document.getElementById('distExp').value='';
 }
 
 window.showLogin=()=>document.getElementById('loginModal').style.display='flex';
 window.showRegister=()=>document.getElementById('registerModal').style.display='flex';
-window.showDistForm=()=>document.getElementById('distModal').style.display='flex';
 window.closeModal=()=>document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
 window.logout=()=>signOut(auth);
 </script>
