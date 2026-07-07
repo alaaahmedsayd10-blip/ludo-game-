@@ -1,250 +1,365 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>لوحة الادمن</title>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>ESh7NLI CASH - شحن كاش</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-body{background:#0a0a0a;color:white;font-family:Cairo;padding:20px}
-h1{color:#ff4444}
-.tabs button{padding:10px 20px;background:#222;border:none;color:white;cursor:pointer;margin:5px;border-radius:8px}
-.tabs button.active{background:#ff4444}
-.card{background:#1a1a1a;padding:15px;margin:10px 0;border-radius:10px;border-left:4px solid orange;position:relative}
-.btn{padding:8px 15px;background:#00ff88;color:#000;border:none;border-radius:8px;cursor:pointer;margin:3px;font-weight:bold}
-.btn.red{background:#ff4444;color:white}
-.btn.blue{background:#00aaff;color:white}
-.btn.gray{background:#555;color:white}
-img{max-width:200px;border-radius:10px;margin-top:10px}
-input,textarea{padding:10px;border-radius:5px;border:1px solid #333;background:#222;color:white;width:100%;margin:5px 0}
-input[type="number"]{width:70px}
-.setting-box{background:#141414;padding:20px;border-radius:10px;margin:20px 0;border:1px solid #333}
-.del-btn{position:absolute;top:10px;left:10px;background:#ff0000;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:12px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#fff;font-family:'Cairo',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+.marquee{background:linear-gradient(90deg,#ff4444,#ffb800);color:#000;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap}
+.marquee span{display:inline-block;animation:marquee 15s linear infinite}
+  @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
+.logo-area{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
+.logo-area img{width:70px;height:70px;border-radius:12px;background:#222;object-fit:cover;border:2px solid #ffb800}
+.logo{font-size:20px;font-weight:600;color:#ffb800;letter-spacing:1px}
+.auth-btns{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+  header button{background:#ffb800;color:#000;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;width:110px}
+.admin-btn{background:#ff4444!important;color:white!important}
+.dist-btn{background:#00ff88!important}
+.empty{width:110px}
+.container{max-width:1200px;margin:30px auto;padding:0 20px;flex:1}
 
-/* مودال المسح الاحترافي */
-.modal-del{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:9999}
-.modal-del-content{background:#141414;padding:30px;border-radius:15px;width:90%;max-width:400px;border:2px solid #ff4444;text-align:center}
-.modal-del-content h2{color:#ff4444;margin-bottom:15px}
-.modal-del-content p{color:#ccc;margin-bottom:20px}
-.modal-btns{display:flex;gap:10px;justify-content:center}
+/* الصورة الاعلانية الشمال */
+.ad-banner-left{position:fixed;top:150px;left:20px;width:150px;z-index:50}
+.ad-banner-left img{width:100%;border-radius:10px;border:2px solid #ffb800;cursor:pointer;transition:0.3s}
+.ad-banner-left img:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(255,184,0,0.5)}
 
-/* Toast احترافي */
-#toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:10000;animation:slideIn 0.3s}
+.notif-box{background:#1a1a1a;border:2px solid #ffb800;padding:15px;border-radius:10px;margin-bottom:20px;display:none;position:relative}
+.notif-box h3{color:#ffb800;margin-bottom:10px}
+.notif-close{position:absolute;top:10px;left:10px;background:#ff4444;border:none;color:white;border-radius:50%;width:25px;height:25px;cursor:pointer}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px}
+.game-card{background:#141414;border-radius:15px;overflow:hidden;cursor:pointer;border:2px solid #2a2a2a;transition:0.3s}
+.game-card:hover{border-color:#ffb800;transform:translateY(-8px)}
+.game-card img{width:100%;height:150px;object-fit:cover}
+.game-card p{text-align:center;padding:15px;font-weight:bold;font-size:18px}
+.checkout{display:none;background:#141414;padding:30px;border-radius:15px;margin-top:30px;border:1px solid #333}
+.page{display:none}
+.page.active{display:block}
+input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:10px 0;font-size:16px}
+input.error{border-color:#ff4444!important;box-shadow:0 0 10px rgba(255,68,68,0.3)}
+.packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin:20px 0}
+.pack{background:#1a1a1a;padding:18px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333}
+.pack.selected{border-color:#ffb800;background:#222}
+.btn{width:100%;padding:16px;background:linear-gradient(90deg,#ffb800,#ff9500);color:#000;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px}
+.payment-box{background:#1a1a1a;padding:20px;border-radius:10px;margin:15px 0;border:1px solid #ffb800}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:999}
+.modal-content{background:#141414;padding:30px;border-radius:15px;width:90%;max-width:450px;border:1px solid #333}
+#toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:1000}
 #toast.error{background:#ff4444;color:white}
-@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
-.login-box{background:#141414;padding:30px;border-radius:15px;max-width:400px;margin:100px auto;border:1px solid #333;text-align:center}
+.badge{background:#00ff88;color:#000;padding:4px 10px;border-radius:5px;font-size:12px;margin-right:5px}
+footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:50px;text-align:center}
+.dist-info{background:#1a1a1a;padding:25px;border-radius:15px;border:1px solid #00ff88;margin-bottom:20px}
+.dist-info h2{color:#00ff88;margin-bottom:15px}
 </style>
-</head><body>
-<div id="app">جاري التحميل...</div>
-<div id="toast"></div>
+</head>
+<body>
+  <div class="marquee"><span id="marqueeText">مرحبا بكم في موقع ESh7NLI CASH</span></div>
 
-<!-- مودال تأكيد المسح -->
-<div class="modal-del" id="deleteModal">
-  <div class="modal-del-content">
-    <h2>⚠️ تأكيد الحذف</h2>
-    <p id="deleteText">هل انت متأكد انك عايز تمسح ده؟</p>
-    <div class="modal-btns">
-      <button class="btn red" id="confirmDeleteBtn">🗑️ نعم امسح</button>
-      <button class="btn gray" onclick="closeDeleteModal()">الغاء</button>
+  <header>
+    <div class="auth-btns">
+      <button id="homeBtn" onclick="showPage('home')">الرئيسية</button>
+      <button id="distPageBtn" class="dist-btn" onclick="showPage('distributor')">كن موزع</button>
+      <button id="loginBtn" onclick="showLogin()">دخول</button>
+      <button id="regBtn" onclick="showRegister()">تسجيل</button>
+      <button id="adminPanelBtn" class="admin-btn" style="display:none" onclick="window.location='admin.html'">لوحة الادمن</button>
+      <button id="logoutBtn" style="display:none" onclick="logout()">خروج</button>
     </div>
+    <div class="logo-area">
+      <img id="siteLogo" src="https://k.top4top.io/p_3839dix1p0.png" alt="logo">
+      <div class="logo">ESh7NLI CASH</div>
+    </div>
+    <div class="empty"></div>
+  </header>
+
+  <div class="container">
+    <div class="notif-box" id="notifBox">
+      <button class="notif-close" onclick="document.getElementById('notifBox').style.display='none'">X</button>
+      <h3>📢 اشعار</h3>
+      <p id="notifText"></p>
+    </div>
+
+    <!-- صفحة الرئيسية -->
+    <div class="page active" id="home">
+      <h2 style="text-align:center;margin-bottom:30px">🎮 اختر اللعبة واشحن فوراً</h2>
+      <div class="games-grid" id="games"></div>
+      <div class="checkout" id="checkout"></div>
+    </div>
+
+    <!-- صفحة الموزع -->
+    <div class="page" id="distributor">
+      <div class="dist-info">
+        <h2>💼 كن موزع معانا</h2>
+        <p>• خصومات تصل الى 50% على كل الشحنات</p>
+        <p>• لوحة تحكم خاصة بيك</p>
+        <p>• سحب ارباحك اسبوعياً</p>
+        <p>• دعم فني 24 ساعة</p>
+      </div>
+      <h2>قدم طلبك دلوقتي</h2>
+      <input type="text" id="distName" placeholder="الاسم">
+      <input type="email" id="distEmail" placeholder="الايميل">
+      <input type="text" id="distPhone" placeholder="رقم الواتساب">
+      <textarea id="distExp" placeholder="عندك خبرة في الشحن؟ احكي لنا" rows="4"></textarea>
+      <button class="btn" onclick="submitDist()">ارسال الطلب</button>
+    </div>
+
   </div>
-</div>
+
+  <footer>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/18woALTmCM/" target="_blank">Facebook</a>
+      <a href="https://wa.me/201148029377" target="_blank">WhatsApp</a>
+    </div>
+    <p>ESh7NLI CASH © 2026 - جميع الحقوق محفوظة</p>
+    <p>للدعم: 01148029377</p>
+  </footer>
+
+  <div class="modal" id="loginModal"><div class="modal-content"><h2>تسجيل الدخول</h2><input type="email" id="loginEmail" placeholder="الايميل"><input type="password" id="loginPass" placeholder="كلمة السر"><button class="btn" onclick="login()">دخول</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
+  <div class="modal" id="registerModal"><div class="modal-content"><h2>انشاء حساب جديد</h2><input type="text" id="regName" placeholder="الاسم"><input type="email" id="regEmail" placeholder="الايميل"><input type="password" id="regPass" placeholder="كلمة السر"><button class="btn" onclick="register()">تسجيل</button><button class="btn" style="background:#444" onclick="closeModal()">اغلاق</button></div></div>
+
+  <div id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, query, orderBy, where, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, getDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286",storageBucket: "game-af286.firebasestorage.app",messagingSenderId: "567693078252",appId: "1:567693078252:web:3b5d6475a583f1f7347fc9"};
-const app=initializeApp(firebaseConfig); const db=getFirestore(app); const auth=getAuth(app);
+const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 await setPersistence(auth, browserLocalPersistence);
 const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
+let currentUser = null; let userData = {}; let currentGame = null; let selectedPack = null;
 
-let deleteAction = null;
+const games = [
+  // PUBG MOBILE
+  {name:'PUBG Mobile', img:'https://l.top4top.io/p_3839txe7h0.jpg', packs:[
+    {n:'60 UC',p:60},{n:'120 UC',p:115},{n:'325 UC',p:270},{n:'660 UC',p:510},
+    {n:'985 UC',p:780},{n:'1800 UC',p:1290},{n:'3850 UC',p:2550},{n:'8100 UC',p:5100},
+    {n:'حزمة الشراء الاول',p:70},{n:'حزمة مواد ترقية الاسلحة',p:170},{n:'حزمة الشعر الخرافي',p:270},
+    {n:'برايم',p:65},{n:'برايم بلس',p:470}
+  ]},
+
+  // FREE FIRE
+  {name:'Free Fire', img:'https://i.top4top.io/p_3839hhvmk0.jpg', packs:[
+    {n:'110 Diamond',p:60},{n:'231 Diamond',p:115},{n:'341 Diamond',p:170},
+    {n:'583 Diamond',p:280},{n:'1188 Diamond',p:540},{n:'2420 Diamond',p:1050},
+    {n:'Weekly Membership',p:130},{n:'Monthly Membership',p:550},{n:'Booyah Pass',p:75}
+  ]},
+
+  // MOBILE LEGENDS
+  {name:'Mobile Legends', img:'https://b.top4top.io/p_38391pai70.jpg', packs:[
+    {n:'86 Diamonds',p:75},{n:'112 Diamonds',p:95},{n:'172 Diamonds',p:145},
+    {n:'223 Diamonds',p:199},{n:'257 Diamonds',p:219},{n:'570 Diamonds',p:465},
+    {n:'705 Diamonds',p:566},{n:'1166 Diamonds',p:920},{n:'2200 Diamonds',p:1655}
+  ]},
+
+  // العاب تانية
+  {name:'Call of Duty Mobile', img:'https://h.top4top.io/p_3839xkbia0.jpg', packs:[{n:'80 CP',p:30},{n:'400 CP',p:150},{n:'800 CP',p:300}]},
+  {name:'Clash of Clans', img:'https://l.top4top.io/p_3839i425o0.jpg', packs:[{n:'120 Gems',p:40},{n:'500 Gems',p:150},{n:'1200 Gems',p:350}]},
+  {name:'Brawl Stars', img:'https://g.top4top.io/p_3839vu46j0.jpg', packs:[{n:'30 Gems',p:20},{n:'170 Gems',p:90},{n:'360 Gems',p:180}]},
+  {name:'Clash Royale', img:'https://d.top4top.io/p_3839jhs8o0.jpg', packs:[{n:'80 Gems',p:30},{n:'500 Gems',p:150},{n:'1200 Gems',p:350}]},
+  {name:'Roblox', img:'https://f.top4top.io/p_3839nlkg60.jpg', packs:[{n:'400 Robux',p:100},{n:'800 Robux',p:200},{n:'1700 Robux',p:400}]},
+  {name:'League of Legends', img:'https://i.top4top.io/p_3839hke8j0.jpg', packs:[{n:'1350 RP',p:150},{n:'2800 RP',p:300},{n:'6500 RP',p:650}]}
+];
+
+games.forEach(g=>{
+  document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}"><p>${g.name}</p></div>`;
+});
 
 function showToast(msg, type='success'){
   const t=document.getElementById('toast');
   t.innerText=msg;
-  t.className = type=='error' ? 'error' : '';
+  t.className = type=='error'? 'error' : '';
   t.style.display='block';
   setTimeout(()=>t.style.display='none',3000)
 }
 
-onAuthStateChanged(auth, async user => {
-  const appDiv = document.getElementById('app');
-  if(!user) {
-    appDiv.innerHTML = `
-    <div class="login-box">
-      <h1>🔐 تسجيل دخول الادمن</h1>
-      <input type="email" id="adminEmail" placeholder="ايميل الادمن" value="${ADMIN_EMAIL}">
-      <input type="password" id="adminPass" placeholder="كلمة السر">
-      <button class="btn" onclick="adminLogin()">دخول</button>
-      <button class="btn gray" onclick="location.href='/'">الرجوع للرئيسية</button>
-    </div>`;
-    return;
-  }
+function validateEmail(email){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-  const userDoc = await getDoc(doc(db,"users",user.uid));
-  const isAdmin = user.email === ADMIN_EMAIL || userDoc.data()?.role === 'admin';
-  
-  if(!isAdmin) {
-    appDiv.innerHTML = `
-    <div class="login-box">
-      <h1>⛔ انت مش الادمن</h1>
-      <p>الايميل الحالي: ${user.email}</p>
-      <p>UID: ${user.uid}</p>
-      <button class="btn red" onclick="logout()">تسجيل خروج</button>
-    </div>`;
-    return;
-  }
+window.showPage = (pageId)=>{
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0,0);
+}
 
-  loadAdminPanel();
+onSnapshot(doc(db,"settings","marquee"), (snap)=>{
+  if(snap.exists()) document.getElementById('marqueeText').innerText = snap.data().text;
 });
 
-function loadAdminPanel(){
-  const appDiv = document.getElementById('app');
-  appDiv.innerHTML = `
-  <h1>📊 لوحة تحكم الادمن</h1>
-  <button class="btn red" onclick="logout()" style="float:left">تسجيل خروج</button>
-  <div class="tabs">
-    <button class="active" onclick="showTab('orders')">الطلبات</button>
-    <button onclick="showTab('dist')">طلبات الموزعين</button>
-    <button onclick="showTab('users')">الموزعين</button>
-    <button onclick="showTab('settings')">⚙️ الاعدادات</button>
-  </div>
-  <div id="orders"></div><div id="dist" style="display:none"></div><div id="users" style="display:none"></div><div id="settings" style="display:none"></div>
-  `;
-
-  // الطلبات
-  onSnapshot(query(collection(db,"orders"),orderBy("createdAt","desc")),(snap)=>{
-    let html='';
-    snap.forEach(d=>{const o=d.data();
-    html+=`<div class="card">
-    <button class="del-btn" onclick="openDeleteModal('order','${d.id}','الطلب بتاع ${o.email} للعبة ${o.game}')">🗑️ مسح</button>
-    <b>${o.game}</b> ${o.userRole==='distributor'?'<span style="background:#00ff88;color:#000;padding:3px 8px;border-radius:5px">موزع</span>':o.userRole==='guest'?'<span style="background:#ffb800;color:#000;padding:3px 8px;border-radius:5px">زائر</span>':''}<br>
-    ID: ${o.playerId}<br>${o.package.name} - ${o.package.price}ج<br>
-    العميل: ${o.email}<br>رقم الكاش: ${o.walletNumber}<br>الحالة:${o.status}<br>
-    <img src="${o.proof}"><br>
-    <button class="btn" onclick="upd('${d.id}','done')">✅ تم الشحن</button>
-    <button class="btn red" onclick="upd('${d.id}','cancelled')">❌ رفض</button>
-    </div>`});
-    document.getElementById('orders').innerHTML=html;
-  });
-
-  // طلبات الموزعين
-  onSnapshot(collection(db,"distributor_requests"),(snap)=>{
-    let html='';
-    snap.forEach(d=>{const o=d.data();
-    html+=`<div class="card">
-    <button class="del-btn" onclick="openDeleteModal('dist','${d.id}','طلب موزع: ${o.name}')">🗑️ مسح</button>
-    <b>${o.name}</b> - ${o.email}<br>واتساب: ${o.phone}<br>الخبرة: ${o.exp}<br>الحالة:${o.status}<br>
-    نسبة الخصم: <input type="number" id="disc_${d.id}" value="15" min="0" max="50"> %
-    <br><button class="btn" onclick="approveDist('${d.id}','${o.uid}')">✅ قبول</button>
-    <button class="btn red" onclick="updDist('${d.id}','rejected')">❌ رفض</button>
-    </div>`});
-    document.getElementById('dist').innerHTML=html;
-  });
-
-  // الموزعين
-  onSnapshot(query(collection(db,"users"),where("role","==","distributor")),(snap)=>{
-    let html='';
-    snap.forEach(d=>{const o=d.data();
-    html+=`<div class="card">
-    <button class="del-btn" onclick="openDeleteModal('user','${d.id}','الموزع: ${o.name}')">🗑️ مسح</button>
-    <b>${o.name}</b> - ${o.email}<br>
-    نسبة الخصم الحالية: ${o.discount || 0}%
-    <input type="number" id="edit_disc_${d.id}" value="${o.discount || 15}" min="0" max="50"> %
-    <button class="btn blue" onclick="updateDiscount('${d.id}')">💾 حفظ الخصم</button>
-    </div>`});
-    document.getElementById('users').innerHTML=html;
-  });
-
-  getDoc(doc(db,"settings","marquee")).then(snap=>{
-    if(snap.exists() && document.getElementById('marqueeInput')) document.getElementById('marqueeInput').value = snap.data().text;
-  });
-  getDoc(doc(db,"settings","global_notification")).then(snap=>{
-    if(snap.exists() && document.getElementById('globalNotifInput')) document.getElementById('globalNotifInput').value = snap.data().text;
-  });
-
-  document.getElementById('settings').innerHTML = `
-  <div class="setting-box">
-    <h2>🎁 التحكم في الشريط المتحرك</h2>
-    <input type="text" id="marqueeInput" placeholder="اكتب العرض هنا">
-    <button class="btn" onclick="saveMarquee()">حفظ الشريط</button>
-  </div>
-  <div class="setting-box">
-    <h2>📢 اشعار للكل</h2>
-    <p>ده هيظهر لكل الناس فوق في صندوق</p>
-    <textarea id="globalNotifInput" rows="3" placeholder="اكتب الاشعار هنا"></textarea>
-    <button class="btn" onclick="saveGlobalNotif()">نشر الاشعار</button>
-  </div>
-  `;
-}
-
-// فنكشنز التحديث
-window.upd=async(id,s)=>{
-  await updateDoc(doc(db,"orders",id),{status:s});
-  showToast(s=='done' ? '✅ تم الشحن بنجاح' : '❌ تم رفض الطلب', s=='done' ? 'success' : 'error');
-}
-window.updDist=async(id,s)=>{
-  await updateDoc(doc(db,"distributor_requests",id),{status:s});
-  showToast('❌ تم رفض طلب الموزع','error');
-}
-window.approveDist=async(id,uid)=>{
-  const discount = document.getElementById(`disc_${id}`).value;
-  await updateDoc(doc(db,"distributor_requests",id),{status:'approved'});
-  await updateDoc(doc(db,"users",uid),{role:'distributor', discount: Number(discount)});
-  showToast('✅ تم قبول الموزع بخصم ' + discount + '%');
-}
-window.updateDiscount=async(uid)=>{
-  const discount = document.getElementById(`edit_disc_${uid}`).value;
-  await updateDoc(doc(db,"users",uid),{discount: Number(discount)});
-  showToast('✅ تم تحديث الخصم لـ ' + discount + '%');
-}
-
-// نظام المودال
-window.openDeleteModal = (type,id,text)=>{
-  document.getElementById('deleteText').innerText = `هل انت متأكد انك عايز تمسح: ${text} ؟`;
-  document.getElementById('deleteModal').style.display = 'flex';
-  
-  if(type=='order') deleteAction = ()=>deleteOrder(id);
-  if(type=='dist') deleteAction = ()=>deleteDistRequest(id);
-  if(type=='user') deleteAction = ()=>deleteDistributor(id);
-  
-  document.getElementById('confirmDeleteBtn').onclick = async ()=>{
-    await deleteAction();
-    closeDeleteModal();
+onSnapshot(doc(db,"settings","global_notification"), (snap)=>{
+  if(snap.exists() && snap.data().text!= ''){
+    document.getElementById('notifBox').style.display = 'block';
+    document.getElementById('notifText').innerText = snap.data().text;
+  } else {
+    document.getElementById('notifBox').style.display = 'none';
   }
-}
-window.closeDeleteModal = ()=>{document.getElementById('deleteModal').style.display = 'none'; deleteAction = null;}
+});
 
-// فنكشنز المسح
-window.deleteOrder=async(id)=>{await deleteDoc(doc(db,"orders",id));showToast('✅ تم مسح الطلب');}
-window.deleteDistRequest=async(id)=>{await deleteDoc(doc(db,"distributor_requests",id));showToast('✅ تم مسح طلب الموزع');}
-window.deleteDistributor=async(id)=>{await updateDoc(doc(db,"users",id),{role:'user', discount: 0});showToast('✅ تم ازالة رتبة الموزع');}
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  document.getElementById('logoutBtn').style.display = user? 'inline' : 'none';
+  document.getElementById('loginBtn').style.display = user? 'none' : 'inline';
+  document.getElementById('regBtn').style.display = user? 'none' : 'inline';
+  document.getElementById('adminPanelBtn').style.display = user && user.email === ADMIN_EMAIL? 'inline' : 'none';
+  if(user){
+    const snap = await getDoc(doc(db,"users",user.uid));
+    userData = snap.data() || {};
+  } else {
+    userData = {};
+  }
+});
 
-window.saveMarquee = async ()=>{
-  const text = document.getElementById('marqueeInput').value;
-  await setDoc(doc(db,"settings","marquee"), {text});
-  showToast('✅ تم حفظ الشريط المتحرك');
-}
-window.saveGlobalNotif = async ()=>{
-  const text = document.getElementById('globalNotifInput').value;
-  await setDoc(doc(db,"settings","global_notification"), {text});
-  showToast('✅ تم نشر الاشعار للكل');
+// الشحن لازم تسجيل الاول
+window.selectGame = (name)=>{
+  if(!currentUser){
+    showToast('⚠️ سجل حساب الاول عشان تشحن','#ff4444');
+    showLogin();
+    return;
+  }
+
+  currentGame = games.find(g=>g.name==name);
+  document.getElementById('checkout').style.display='block';
+  document.getElementById('checkout').innerHTML = `
+    <h2 id="gameTitle">شحن ${name}</h2>
+    <input type="text" id="playerId" placeholder="ادخل Player ID الخاص بك">
+    <input type="email" id="customerEmail" placeholder="ايميلك عشان نبعتلك حالة الطلب *" value="${currentUser.email}" readonly>
+    <h3>اختر الباقة <span id="discountBadge"></span></h3>
+    <div class="packs" id="packs"></div>
+    <h3 id="totalPrice" style="color:#ffb800"></h3>
+    <div class="payment-box">
+      <h3>طريقة الدفع: تحويل كاش</h3>
+      <p>1. حول المبلغ على رقم: <b style="color:#ffb800">01148029377</b></p>
+      <input type="text" id="walletNumber" placeholder="رقم المحفظة اللي حولت منه">
+      <label>ارفع اسكرين التحويل *</label>
+      <input type="file" id="proof" accept="image/*">
+    </div>
+    <button class="btn" onclick="placeOrder()">تأكيد الطلب</button>
+  `;
+  
+  let packsHtml=''; 
+  let discount = userData.discount ? userData.discount / 100 : 0;
+  currentGame.packs.forEach(p=>{
+    let price = userData.role==='distributor'? Math.round(p.p*(1-discount)) : p.p;
+    packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" onclick="selectPack(this)">${p.n}<br><b>${price} جنيه</b></div>`;
+  });
+  document.getElementById('packs').innerHTML = packsHtml;
+  document.getElementById('discountBadge').innerHTML = userData.role==='distributor'?`<span class="badge">خصم ${userData.discount}%</span>`:'';
+  window.scrollTo(0,document.body.scrollHeight);
 }
 
-window.showTab=(t)=>{
-  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  ['orders','dist','users','settings'].forEach(id=>document.getElementById(id).style.display=id==t?'block':'none');
+window.selectPack = (el)=>{document.querySelectorAll('.pack').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPack = {name:el.dataset.n, price:el.dataset.p};document.getElementById('totalPrice').innerText = 'الاجمالي: ' + selectedPack.price + ' جنيه';}
+
+window.placeOrder = async ()=>{
+  const idInput = document.getElementById('playerId');
+  const emailInput = document.getElementById('customerEmail');
+  const walletInput = document.getElementById('walletNumber');
+  const proof = document.getElementById('proof').files[0];
+
+  [idInput,emailInput,walletInput].forEach(i=>i.classList.remove('error'));
+
+  let hasError = false;
+  if(!idInput.value.trim()){idInput.classList.add('error');hasError=true;}
+  if(!emailInput.value.trim() ||!validateEmail(emailInput.value)){emailInput.classList.add('error');hasError=true;}
+  if(!selectedPack){showToast('⚠️ اختار باقة الاول','#ff4444');hasError=true;}
+  if(!walletInput.value.trim()){walletInput.classList.add('error');hasError=true;}
+  if(!proof){showToast('⚠️ لازم ترفع اسكرين التحويل','#ff4444');hasError=true;}
+
+  if(hasError) return showToast('⚠️ من فضلك املى كل البيانات المطلوبة','#ff4444');
+
+  const reader = new FileReader();
+  reader.onload = async (e)=>{
+    await addDoc(collection(db,"orders"),{
+      uid: currentUser.uid,
+      email:emailInput.value.trim(),
+      userRole: userData.role || 'user',
+      game:currentGame.name, playerId:idInput.value.trim(),
+      package:selectedPack, walletNumber:walletInput.value.trim(), proof:e.target.result,
+      status:"pending_payment", createdAt:serverTimestamp()
+    });
+
+    document.getElementById('checkout').innerHTML = `
+      <div style="text-align:center;padding:20px">
+        <h2 style="color:#00ff88;margin-bottom:15px;font-size:28px">✅ تم استلام طلبك بنجاح</h2>
+        <p style="font-size:18px;margin-bottom:10px">سيتم التواصل معك خلال دقائق</p>
+        <p style="color:#ffb800;margin-bottom:15px">عبر الواتساب او البريد الإلكتروني: <b>${emailInput.value}</b></p>
+        <div style="background:#1a1a1a;border:2px solid #ff4444;border-radius:10px;padding:20px;margin:25px 0">
+          <p style="color:#ff4444;font-weight:bold">⚠️ لو الشحن اتأخر اكتر من 15 دقيقة</p>
+          <a href="https://wa.me/201148029377" target="_blank" style="display:inline-block;background:#00ff88;color:#000;padding:14px 30px;border-radius:8px;text-decoration:none;font-weight:bold">📱 01148029377</a>
+        </div>
+        <button class="btn" onclick="location.reload()">طلب جديد</button>
+      </div>
+    `;
+  }
+  reader.readAsDataURL(proof);
 }
 
-window.adminLogin = async ()=>{
-  const email = document.getElementById('adminEmail').value;
-  const pass = document.getElementById('adminPass').value;
+window.login=async()=>{
+  const email = document.getElementById('loginEmail');
+  const pass = document.getElementById('loginPass');
+  [email,pass].forEach(i=>i.classList.remove('error'));
+  if(!email.value.trim() ||!pass.value.trim()){
+    [email,pass].forEach(i=>{if(!i.value.trim())i.classList.add('error')});
+    return showToast('⚠️ من فضلك املى الايميل وكلمة السر','#ff4444');
+  }
   try{
-    await signInWithEmailAndPassword(auth,email,pass);
-    showToast('تم تسجيل الدخول');
-  }catch(e){
-    showToast('⚠️ الايميل او كلمة السر غلط','#ff4444');
-  }
+    await signInWithEmailAndPassword(auth,email.value,pass.value);
+    showToast('تم تسجيل الدخول');closeModal();
+  }catch(e){showToast('⚠️ الايميل او كلمة السر غلط','#ff4444')}
 }
 
-window.logout = ()=>signOut(auth);
-</script></body></html>
+window.register=async()=>{
+  const name = document.getElementById('regName');
+  const email = document.getElementById('regEmail');
+  const pass = document.getElementById('regPass');
+  [name,email,pass].forEach(i=>i.classList.remove('error'));
+  let hasError=false;
+  if(!name.value.trim()){name.classList.add('error');hasError=true;}
+  if(!email.value.trim() ||!validateEmail(email.value)){email.classList.add('error');hasError=true;}
+  if(!pass.value.trim() || pass.value.length<6){pass.classList.add('error');hasError=true;}
+  if(hasError) return showToast('⚠️ املى كل البيانات. كلمة السر 6 حروف على الاقل','#ff4444');
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email.value,pass.value);
+    await setDoc(doc(db,"users",cred.user.uid),{name:name.value,email:email.value,role:email.value===ADMIN_EMAIL?"admin":"user"});
+    showToast('تم انشاء الحساب');closeModal();
+  }catch(e){showToast('⚠️ الايميل مستخدم من قبل','#ff4444')}
+}
+
+window.submitDist = async ()=>{
+  if(!currentUser) return showToast('⚠️ لازم تسجل حساب الاول عشان تقدم كـ موزع','#ff4444');
+  const name = document.getElementById('distName');
+  const email = document.getElementById('distEmail');
+  const phone = document.getElementById('distPhone');
+  const exp = document.getElementById('distExp');
+  
+  [name,email,phone,exp].forEach(i=>i.classList.remove('error'));
+  
+  let hasError=false;
+  if(!name.value.trim()){name.classList.add('error');hasError=true;}
+  if(!email.value.trim() ||!validateEmail(email.value)){email.classList.add('error');hasError=true;}
+  if(!phone.value.trim()){phone.classList.add('error');hasError=true;}
+  if(!exp.value.trim()){exp.classList.add('error');hasError=true;}
+  
+  if(hasError) return showToast('⚠️ املى كل البيانات','#ff4444');
+
+  await addDoc(collection(db,"distributor_requests"),{
+    name:name.value, email:email.value, phone:phone.value, exp:exp.value, 
+    uid: currentUser.uid,
+    status:"pending", createdAt:serverTimestamp()
+  });
+  showToast('✅ تم ارسال طلبك. هنراجعه ونرد عليك خلال 24 ساعة');
+  document.getElementById('distName').value='';
+  document.getElementById('distEmail').value='';
+  document.getElementById('distPhone').value='';
+  document.getElementById('distExp').value='';
+}
+
+window.showLogin=()=>document.getElementById('loginModal').style.display='flex';
+window.showRegister=()=>document.getElementById('registerModal').style.display='flex';
+window.closeModal=()=>document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+window.logout=()=>signOut(auth);
+</script>
+</body>
+</html>
