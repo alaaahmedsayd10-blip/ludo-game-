@@ -2,74 +2,103 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ESh7NLI CASH - شحن كاش</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:#0a0a0a;color:#fff;font-family:'Cairo',sans-serif;min-height:100vh;display:flex;flex-direction:column}
-  
-  /* Loader الدائري */
-  .loader{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:none;justify-content:center;align-items:center;z-index:9999}
-  .spinner{width:60px;height:60px;border:5px solid #333;border-top:5px solid #ffb800;border-radius:50%;animation:spin 1s linear infinite}
-  @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-  
-.marquee{background:linear-gradient(90deg,#ff4444,#ffb800);color:#000;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:#0a0a0a;color:#fff;font-family:'Cairo',sans-serif;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+
+.marquee{background:linear-gradient(90deg,#ff4444,#ffb800);color:#000;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap;font-size:14px}
 .marquee span{display:inline-block;animation:marquee 15s linear infinite}
   @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
-.logo-area{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
-.logo-area img{width:70px;height:70px;border-radius:12px;background:#222;object-fit:cover;border:2px solid #ffb800}
-.logo{font-size:20px;font-weight:600;color:#ffb800;letter-spacing:1px}
-.auth-btns{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
-  header button{background:#ffb800;color:#000;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;width:110px}
+header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:12px 4%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
+.logo-area{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.logo-area img{width:55px;height:55px;border-radius:10px;background:#222;object-fit:cover;border:2px solid #ffb800}
+.logo{font-size:16px;font-weight:700;color:#ffb800;letter-spacing:0.5px}
+.auth-btns{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  header button{background:#ffb800;color:#000;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:12px;width:95px}
 .admin-btn{background:#ff4444!important;color:white!important}
 .dist-btn{background:#00ff88!important}
-.empty{width:110px}
-.container{max-width:1200px;margin:30px auto;padding:0 20px;flex:1}
+.empty{width:95px}
+.container{max-width:100%;margin:20px auto;padding:0 12px;flex:1;width:100%}
 
-.notif-box{background:#1a1a1a;border:2px solid #ffb800;padding:15px;border-radius:10px;margin-bottom:20px;display:none;position:relative}
-.notif-box h3{color:#ffb800;margin-bottom:10px}
-.notif-close{position:absolute;top:10px;left:10px;background:#ff4444;border:none;color:white;border-radius:50%;width:25px;height:25px;cursor:pointer}
-.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px}
-.game-card{background:#141414;border-radius:15px;overflow:hidden;cursor:pointer;border:2px solid #2a2a2a;transition:0.3s}
-.game-card:hover{border-color:#ffb800;transform:translateY(-8px)}
-.game-card img{width:100%;height:150px;object-fit:cover}
-.game-card p{text-align:center;padding:15px;font-weight:bold;font-size:18px}
-.checkout{display:none;background:#141414;padding:30px;border-radius:15px;margin-top:30px;border:1px solid #333}
+.games-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.game-card{background:#141414;border-radius:12px;overflow:hidden;cursor:pointer;border:2px solid #2a2a2a;transition:0.2s}
+.game-card:active{border-color:#ffb800;transform:scale(0.97)}
+.game-card img{width:100%;height:120px;object-fit:cover}
+.game-card p{text-align:center;padding:10px;font-weight:bold;font-size:14px}
+.checkout{display:none;background:#141414;padding:20px 15px;border-radius:15px;margin-top:20px;border:1px solid #333}
 .page{display:none}
 .page.active{display:block}
-input,select,textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:10px 0;font-size:16px}
-input.error{border-color:#ff4444!important;box-shadow:0 0 10px rgba(255,68,68,0.3)}
-.packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin:20px 0}
-.pack{background:#1a1a1a;padding:18px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333}
+input,select,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:8px 0;font-size:15px}
+input.error{border-color:#ff4444!important}
+.packs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:15px 0}
+.pack{background:#1a1a1a;padding:14px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333;font-size:13px}
 .pack.selected{border-color:#ffb800;background:#222}
-.btn{width:100%;padding:16px;background:linear-gradient(90deg,#ffb800,#ff9500);color:#000;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:10px}
-.payment-box{background:#1a1a1a;padding:20px;border-radius:10px;margin:15px 0;border:1px solid #ffb800}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:999}
-.modal-content{background:#141414;padding:30px;border-radius:15px;width:90%;max-width:450px;border:1px solid #333}
-.modal-content .btn-secondary{background:#444;color:#fff;margin-top:10px}
-#toast{position:fixed;bottom:20px;right:20px;background:#00ff88;color:#000;padding:15px 25px;border-radius:10px;font-weight:bold;display:none;z-index:1000}
+.btn{width:100%;padding:14px;background:linear-gradient(90deg,#ffb800,#ff9500);color:#000;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:10px}
+.payment-box{background:#1a1a1a;padding:15px;border-radius:10px;margin:12px 0;border:1px solid #ffb800;font-size:14px}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:999;padding:20px}
+.modal-content{background:#141414;padding:25px 20px;border-radius:15px;width:100%;max-width:400px;border:1px solid #333}
+.modal-content.btn-secondary{background:#444;color:#fff;margin-top:10px}
+#toast{position:fixed;bottom:20px;right:10px;left:10px;background:#00ff88;color:#000;padding:14px;border-radius:10px;font-weight:bold;display:none;z-index:1000;text-align:center;font-size:14px}
 #toast.error{background:#ff4444;color:white}
-.badge{background:#00ff88;color:#000;padding:4px 10px;border-radius:5px;font-size:12px;margin-right:5px}
-footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:50px;text-align:center}
-.dist-info{background:#1a1a1a;padding:25px;border-radius:15px;border:1px solid #00ff88;margin-bottom:20px}
-.dist-info h2{color:#00ff88;margin-bottom:15px}
+.badge{background:#00ff88;color:#000;padding:3px 8px;border-radius:5px;font-size:11px;margin-right:5px}
+footer{background:#000;border-top:2px solid #ffb800;padding:20px 4%;margin-top:40px;text-align:center;font-size:13px}
+
+/* صندوق فوايد الموزع - للكل */
+.dist-benefits{background:#111;border-left:4px solid #00ff88;padding:20px;border-radius:12px;margin-bottom:20px}
+.dist-benefits h2{color:#00ff88;margin-bottom:15px;font-size:20px;text-align:center}
+.dist-benefits ul{list-style:none;padding-right:0}
+.dist-benefits li{padding:12px 0;border-bottom:1px solid #2a2a2a;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.dist-benefits li:last-child{border:none}
+
+/* لوحة تحكم الموزع */
+.dist-dashboard{background:#1a1a1a;border:2px solid #ffb800;padding:20px;border-radius:15px;margin-bottom:20px}
+.dist-dashboard h2{color:#ffb800;margin-bottom:15px;font-size:18px}
+.stat-box{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
+.stat{background:#0a0a0a;padding:15px;border-radius:10px;text-align:center}
+.stat h4{color:#00ff88;font-size:12px;margin-bottom:5px}
+.stat p{font-size:20px;font-weight:bold}
+
+/* ايقونات الدعم */
+.dist-support{background:#1a1a1a;border:1px solid #ffb800;padding:20px;border-radius:15px;margin-top:20px;text-align:center}
+.dist-support h3{color:#ffb800;margin-bottom:15px;font-size:18px}
+.support-icons{display:flex;gap:15px;justify-content:center}
+.support-btn{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:white;background:#222;padding:15px;border-radius:12px;width:45%;transition:0.3s}
+.support-btn:hover{transform:scale(1.05);background:#2a2a2a}
+.support-btn img{width:40px;height:40px}
+.support-btn span{font-weight:bold;font-size:14px}
+.whatsapp{background:#25D366!important}
+.facebook{background:#1877F2!important}
+
+@media(min-width:768px){
+.games-grid{grid-template-columns:repeat(4,1fr);gap:20px}
+.packs{grid-template-columns:repeat(4,1fr)}
+.container{max-width:1200px;padding:0 20px}
+.logo-area img{width:70px;height:70px}
+.logo{font-size:20px}
+  header button{width:110px;font-size:13px;padding:7px 14px}
+.empty{width:110px}
+.game-card img{height:150px}
+.game-card p{font-size:18px;padding:15px}
+.stat-box{grid-template-columns:repeat(4,1fr)}
+.support-btn{width:200px}
+}
 </style>
 </head>
 <body>
-  <!-- Loader -->
-  <div class="loader" id="loader"><div class="spinner"></div></div>
 
-  <div class="marquee"><span id="marqueeText">سجل حساب الان وقدم علي موزع للحصول علي عرض مميز يمكن الشحن بي خصم 7٪ هذا العرض لفتره محدوده</span></div>
+  <div class="marquee"><span id="marqueeText">سجل حساب الان وقدم علي موزع للحصول علي عرض مميز يمكن الشحن بي خصم 7٪</span></div>
 
   <header>
     <div class="auth-btns">
-      <button id="homeBtn" onclick="showLoaderThen(()=>showPage('home'))">الرئيسية</button>
-      <button id="distPageBtn" class="dist-btn" onclick="showLoaderThen(()=>showPage('distributor'))">كن موزع</button>
-      <button id="loginBtn" onclick="showLoaderThen(showLogin)">دخول</button>
-      <button id="regBtn" onclick="showLoaderThen(showRegister)">تسجيل</button>
-      <button id="adminPanelBtn" class="admin-btn" style="display:none" onclick="showLoaderThen(()=>window.location='admin.html')">لوحة الادمن</button>
-      <button id="logoutBtn" style="display:none" onclick="handleLogout()">خروج</button>
+      <button id="homeBtn" onclick="showPage('home')">الرئيسية</button>
+      <button id="distPageBtn" class="dist-btn" onclick="showPage('distributor')">كن موزع</button>
+      <button id="loginBtn" onclick="showLogin()">دخول</button>
+      <button id="regBtn" onclick="showRegister()">تسجيل</button>
+      <button id="adminPanelBtn" class="admin-btn" style="display:none" onclick="window.location='admin.html'">الادمن</button>
+      <button id="logoutBtn" style="display:none" onclick="logout()">خروج</button>
     </div>
     <div class="logo-area">
       <img id="siteLogo" src="https://k.top4top.io/p_3839dix1p0.png" alt="logo">
@@ -79,59 +108,87 @@ footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:5
   </header>
 
   <div class="container">
-    <div class="notif-box" id="notifBox">
-      <button class="notif-close" onclick="document.getElementById('notifBox').style.display='none'">X</button>
-      <h3>📢 اشعار</h3>
-      <p id="notifText"></p>
-    </div>
-
     <div class="page active" id="home">
-      <h2 style="text-align:center;margin-bottom:30px">🎮 اختر اللعبة واشحن فوراً</h2>
+      <h2 style="text-align:center;margin-bottom:20px;font-size:18px">🎮 اختر اللعبة واشحن فوراً</h2>
       <div class="games-grid" id="games"></div>
       <div class="checkout" id="checkout"></div>
     </div>
 
     <div class="page" id="distributor">
-      <div class="dist-info">
-        <h2>💼 كن موزع معانا</h2>
-        <p>• خصومات تصل الى 50% على كل الشحنات</p>
-        <p>• لوحة تحكم خاصة بيك</p>
-        <p>• سحب ارباحك اسبوعياً</p>
-        <p>• دعم فني 24 ساعة</p>
+      <!-- 1. صندوق المميزات - بيظهر للكل -->
+      <div class="dist-benefits">
+        <h2>💼 مميزات حسابك كموزع</h2>
+        <ul>
+          <li>خصومات تصل الى 50% على جميع الشحنات <span>✅</span></li>
+          <li>لوحة تحكم خاصة بيك لمتابعة الطلبات والارباح <span>✅</span></li>
+          <li>سحب ارباحك اسبوعياً على فودافون كاش <span>✅</span></li>
+          <li>دعم فني 24 ساعة لحل اي مشكلة <span>✅</span></li>
+        </ul>
       </div>
-      <h2>قدم طلبك دلوقتي</h2>
+
+      <!-- 2. لوحة تحكم الموزع - بتظهر للموزعين بس -->
+      <div class="dist-dashboard" id="distDashboard" style="display:none">
+        <h2>📊 لوحة تحكم الموزع</h2>
+        <div class="stat-box">
+          <div class="stat">
+            <h4>اجمالي الطلبات</h4>
+            <p id="totalOrders">0</p>
+          </div>
+          <div class="stat">
+            <h4>الطلبات المكتملة</h4>
+            <p id="completedOrders">0</p>
+          </div>
+          <div class="stat">
+            <h4>الارباح الكلية</h4>
+            <p id="totalEarnings">0 ج</p>
+          </div>
+          <div class="stat">
+            <h4>الرصيد الحالي</h4>
+            <p id="currentBalance">0 ج</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. ايقونات الدعم - للموزعين بس -->
+      <div class="dist-support" id="distSupport" style="display:none">
+        <h3>📞 الدعم الفني</h3>
+        <div class="support-icons">
+          <a href="https://wa.me/201148029377" target="_blank" class="support-btn whatsapp">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="واتساب">
+            <span>واتساب الدعم</span>
+          </a>
+          <a href="https://www.facebook.com/share/1Edt8oo4es/" target="_blank" class="support-btn facebook">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="فيسبوك">
+            <span>فيسبوك الدعم</span>
+          </a>
+        </div>
+      </div>
+
+      <h2 style="font-size:18px;margin-bottom:10px">قدم طلب موزع</h2>
       <input type="text" id="distName" placeholder="الاسم">
       <input type="email" id="distEmail" placeholder="الايميل">
       <input type="text" id="distPhone" placeholder="رقم الواتساب">
-      <textarea id="distExp" placeholder="عندك خبرة في الشحن؟ احكي لنا" rows="4"></textarea>
+      <textarea id="distExp" placeholder="عندك خبرة؟" rows="3"></textarea>
       <button class="btn" onclick="submitDist()">ارسال الطلب</button>
     </div>
 
   </div>
 
   <footer>
-    <div class="social-icons">
-      <a href="https://www.facebook.com/share/18woALTmCM/" target="_blank">Facebook</a>
-      <a href="https://wa.me/201148029377" target="_blank">WhatsApp</a>
-    </div>
-    <p>ESh7NLI CASH © 2026 - جميع الحقوق محفوظة</p>
-    <p>للدعم: 01148029377</p>
+    <p>ESh7NLI CASH © 2026 - جميع الحقوق محفوظة - للدعم: 01148029377</p>
   </footer>
 
-  <!-- مودال تسجيل الدخول -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <h2 style="text-align:center;margin-bottom:20px">تسجيل الدخول</h2>
       <input type="email" id="loginEmail" placeholder="الايميل">
       <input type="password" id="loginPass" placeholder="كلمة السر">
       <button class="btn" onclick="login()">دخول</button>
-      <!-- كلمة انشاء حساب تحت دخول -->
       <button class="btn btn-secondary" onclick="switchToRegister()">إنشاء حساب</button>
       <button class="btn btn-secondary" onclick="closeModal()">اغلاق</button>
     </div>
   </div>
 
-  <!-- مودال التسجيل -->
   <div class="modal" id="registerModal">
     <div class="modal-content">
       <h2 style="text-align:center;margin-bottom:20px">انشاء حساب جديد</h2>
@@ -148,7 +205,7 @@ footer{background:#000;border-top:2px solid #ffb800;padding:30px 5%;margin-top:5
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, getDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286",storageBucket: "game-af286.firebasestorage.app",messagingSenderId: "567693078252",appId: "1:567693078252:web:3b5d6475a583f1f7347fc9"};
 const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
@@ -240,12 +297,6 @@ games.forEach(g=>{
   document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}"><p>${g.name}</p></div>`;
 });
 
-function showLoader(){
-  document.getElementById('loader').style.display='flex';
-  setTimeout(()=>{document.getElementById('loader').style.display='none'},3000);
-}
-window.showLoaderThen = (fn)=>{showLoader(); setTimeout(fn,500);}
-
 function showToast(msg, type='success'){
   const t=document.getElementById('toast');
   t.innerText=msg;
@@ -261,21 +312,11 @@ function validateEmail(email){
 window.showPage = (pageId)=>{
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
+  if(pageId==='distributor' && userData.role==='distributor'){
+    loadDashboard();
+  }
   window.scrollTo(0,0);
 }
-
-onSnapshot(doc(db,"settings","marquee"), (snap)=>{
-  if(snap.exists()) document.getElementById('marqueeText').innerText = snap.data().text;
-});
-
-onSnapshot(doc(db,"settings","global_notification"), (snap)=>{
-  if(snap.exists() && snap.data().text!= ''){
-    document.getElementById('notifBox').style.display = 'block';
-    document.getElementById('notifText').innerText = snap.data().text;
-  } else {
-    document.getElementById('notifBox').style.display = 'none';
-  }
-});
 
 onAuthStateChanged(auth, async user => {
   currentUser = user;
@@ -286,81 +327,108 @@ onAuthStateChanged(auth, async user => {
   if(user){
     const snap = await getDoc(doc(db,"users",user.uid));
     userData = snap.data() || {};
+    // لو موزع اظهر لوحة التحكم والدعم
+    if(userData.role==='distributor'){
+      document.getElementById('distDashboard').style.display='block';
+      document.getElementById('distSupport').style.display='block';
+    }
   } else {
-    userData = {};
+    userData = {role:'guest', discount:0};
   }
 });
+
+// تحميل بيانات لوحة تحكم الموزع
+async function loadDashboard(){
+  const q = query(collection(db,"orders"), where("uid","==",currentUser.uid));
+  onSnapshot(q,(snap)=>{
+    let total = snap.size;
+    let completed = 0;
+    let earnings = 0;
+    snap.forEach(doc=>{
+      if(doc.data().status==='done'){
+        completed++;
+        earnings += doc.data().package.price * 0.1; // 10% عمولة مثال
+      }
+    });
+    document.getElementById('totalOrders').innerText = total;
+    document.getElementById('completedOrders').innerText = completed;
+    document.getElementById('totalEarnings').innerText = earnings + ' ج';
+    document.getElementById('currentBalance').innerText = earnings + ' ج';
+  });
+}
 
 window.selectGame = (name)=>{
   currentGame = games.find(g=>g.name==name);
   document.getElementById('checkout').style.display='block';
+
+  let userRole = userData?.role || 'guest';
+  let userDiscount = userData?.discount || 0;
+
   document.getElementById('checkout').innerHTML = `
-    <h2 id="gameTitle">شحن ${name}</h2>
-    <input type="text" id="playerId" placeholder="ادخل Player ID الخاص بك">
-    <input type="email" id="customerEmail" placeholder="ايميلك عشان نبعتلك حالة الطلب *" value="${currentUser?currentUser.email:''}">
-    <h3>اختر الباقة <span id="discountBadge"></span></h3>
+    <h2 style="font-size:18px;margin-bottom:15px">شحن ${name}</h2>
+    <input type="text" id="playerId" placeholder="ادخل Player ID">
+    <input type="email" id="customerEmail" placeholder="ايميلك *" value="${currentUser?currentUser.email:''}">
+    <h3 style="font-size:16px;margin-top:10px">اختر الباقة ${userRole==='distributor'?`<span class="badge">خصم ${userDiscount}%</span>`:''}</h3>
     <div class="packs" id="packs"></div>
-    <h3 id="totalPrice" style="color:#ffb800"></h3>
+    <h3 id="totalPrice" style="color:#ffb800;font-size:16px"></h3>
     <div class="payment-box">
-      <h3>طريقة الدفع: تحويل كاش</h3>
-      <p>1. حول المبلغ على رقم: <b style="color:#ffb800">01148029377</b></p>
-      <input type="text" id="walletNumber" placeholder="رقم المحفظة اللي حولت منه">
-      <label>ارفع اسكرين التحويل *</label>
+      <h3 style="font-size:15px">الدفع: كاش</h3>
+      <p>حول على: <b style="color:#ffb800">01148029377</b></p>
+      <input type="text" id="walletNumber" placeholder="رقم المحفظة">
+      <label style="font-size:13px">ارفع اسكرين التحويل *</label>
       <input type="file" id="proof" accept="image/*">
     </div>
     <button class="btn" onclick="placeOrder()">تأكيد الطلب</button>
   `;
-  let packsHtml=''; 
-  let discount = userData.discount? userData.discount / 100 : 0;
+
+  let packsHtml='';
+  let discount = userDiscount / 100;
   currentGame.packs.forEach(p=>{
-    let price = userData.role==='distributor'? Math.round(p.p*(1-discount)) : p.p;
-    packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" onclick="selectPack(this)">${p.n}<br><b>${price} جنيه</b></div>`;
+    let price = userRole==='distributor'? Math.round(p.p*(1-discount)) : p.p;
+    packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" onclick="selectPack(this)">${p.n}<br><b>${price} ج</b></div>`;
   });
   document.getElementById('packs').innerHTML = packsHtml;
-  document.getElementById('discountBadge').innerHTML = userData.role==='distributor'?`<span class="badge">خصم ${userData.discount}%</span>`:'';
   window.scrollTo(0,document.body.scrollHeight);
 }
 
 window.selectPack = (el)=>{document.querySelectorAll('.pack').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPack = {name:el.dataset.n, price:el.dataset.p};document.getElementById('totalPrice').innerText = 'الاجمالي: ' + selectedPack.price + ' جنيه';}
 
 window.placeOrder = async ()=>{
+  if(!currentUser){
+    return showToast('⚠️ قم بإنشاء حساب في الموقع لكي تشحن','#ff4444');
+  }
+
   const idInput = document.getElementById('playerId');
   const emailInput = document.getElementById('customerEmail');
   const walletInput = document.getElementById('walletNumber');
   const proof = document.getElementById('proof').files[0];
+
   [idInput,emailInput,walletInput].forEach(i=>i.classList.remove('error'));
   let hasError = false;
   if(!idInput.value.trim()){idInput.classList.add('error');hasError=true;}
   if(!emailInput.value.trim() ||!validateEmail(emailInput.value)){emailInput.classList.add('error');hasError=true;}
   if(!selectedPack){showToast('⚠️ اختار باقة الاول','#ff4444');hasError=true;}
   if(!walletInput.value.trim()){walletInput.classList.add('error');hasError=true;}
-  if(!proof){showToast('⚠️ لازم ترفع اسكرين التحويل','#ff4444');hasError=true;}
-  if(hasError) return showToast('⚠️ من فضلك املى كل البيانات المطلوبة','#ff4444');
-  showLoader();
+  if(!proof){showToast('⚠️ ارفع اسكرين التحويل','#ff4444');hasError=true;}
+  if(hasError) return showToast('⚠️ املى كل البيانات','#ff4444');
+
   const reader = new FileReader();
   reader.onload = async (e)=>{
     await addDoc(collection(db,"orders"),{
-      uid: currentUser? currentUser.uid : null,
+      uid: currentUser.uid,
       email:emailInput.value.trim(),
-      userRole: userData.role || 'guest',
+      userRole: userData?.role || 'user',
       game:currentGame.name, playerId:idInput.value.trim(),
       package:selectedPack, walletNumber:walletInput.value.trim(), proof:e.target.result,
       status:"pending_payment", createdAt:serverTimestamp()
     });
-    setTimeout(()=>{
-      document.getElementById('checkout').innerHTML = `
-        <div style="text-align:center;padding:20px">
-          <h2 style="color:#00ff88;margin-bottom:15px;font-size:28px">✅ تم استلام طلبك بنجاح</h2>
-          <p style="font-size:18px;margin-bottom:10px">سيتم التواصل معك خلال دقائق</p>
-          <p style="color:#ffb800;margin-bottom:15px">عبر الواتساب او البريد الإلكتروني: <b>${emailInput.value}</b></p>
-          <div style="background:#1a1a1a;border:2px solid #ff4444;border-radius:10px;padding:20px;margin:25px 0">
-            <p style="color:#ff4444;font-weight:bold">⚠️ لو الشحن اتأخر اكتر من 15 دقيقة</p>
-            <a href="https://wa.me/201148029377" target="_blank" style="display:inline-block;background:#00ff88;color:#000;padding:14px 30px;border-radius:8px;text-decoration:none;font-weight:bold">📱 01148029377</a>
-          </div>
-          <button class="btn" onclick="location.reload()">طلب جديد</button>
-        </div>
-      `;
-    },1000)
+    document.getElementById('checkout').innerHTML = `
+      <div style="text-align:center;padding:20px">
+        <h2 style="color:#00ff88;margin-bottom:15px;font-size:22px">✅ تم استلام طلبك</h2>
+        <p>هنكلمك خلال دقائق على: <b>${emailInput.value}</b></p>
+        <button class="btn" onclick="location.reload()">طلب جديد</button>
+      </div>
+    `;
   }
   reader.readAsDataURL(proof);
 }
@@ -368,73 +436,39 @@ window.placeOrder = async ()=>{
 window.login=async()=>{
   const email = document.getElementById('loginEmail');
   const pass = document.getElementById('loginPass');
-  [email,pass].forEach(i=>i.classList.remove('error'));
-  if(!email.value.trim() ||!pass.value.trim()){
-    [email,pass].forEach(i=>{if(!i.value.trim())i.classList.add('error')});
-    return showToast('⚠️ من فضلك املى الايميل وكلمة السر','#ff4444');
-  }
-  showLoader();
   try{
     await signInWithEmailAndPassword(auth,email.value,pass.value);
-    showToast('تم تسجيل الدخول');
-    setTimeout(()=>{closeModal(); location.reload();},1500);
-  }catch(e){showToast('⚠️ الايميل او كلمة السر غلط','#ff4444')}
+    showToast('تم الدخول');closeModal(); setTimeout(()=>location.reload(),800);
+  }catch(e){showToast('⚠️ بيانات غلط','#ff4444')}
 }
 
 window.register=async()=>{
   const name = document.getElementById('regName');
   const email = document.getElementById('regEmail');
   const pass = document.getElementById('regPass');
-  [name,email,pass].forEach(i=>i.classList.remove('error'));
-  let hasError=false;
-  if(!name.value.trim()){name.classList.add('error');hasError=true;}
-  if(!email.value.trim() ||!validateEmail(email.value)){email.classList.add('error');hasError=true;}
-  if(!pass.value.trim() || pass.value.length<6){pass.classList.add('error');hasError=true;}
-  if(hasError) return showToast('⚠️ املى كل البيانات. كلمة السر 6 حروف على الاقل','#ff4444');
-  showLoader();
   try{
     const cred=await createUserWithEmailAndPassword(auth,email.value,pass.value);
-    await setDoc(doc(db,"users",cred.user.uid),{name:name.value,email:email.value,role:email.value===ADMIN_EMAIL?"admin":"user"});
-    showToast('تم انشاء الحساب');
-    setTimeout(()=>{closeModal(); location.reload();},1500);
-  }catch(e){showToast('⚠️ الايميل مستخدم من قبل','#ff4444')}
-}
-
-window.handleLogout = async ()=>{
-  showLoader();
-  await signOut(auth);
-  setTimeout(()=>location.reload(),1500);
+    await setDoc(doc(db,"users",cred.user.uid),{name:name.value,email:email.value,role:'user'});
+    showToast('تم التسجيل');closeModal(); setTimeout(()=>location.reload(),800);
+  }catch(e){showToast('⚠️ الايميل مستخدم','#ff4444')}
 }
 
 window.submitDist = async ()=>{
+  if(!currentUser) return showToast('⚠️ لازم تسجل الاول','#ff4444');
   const name = document.getElementById('distName');
-  const email = document.getElementById('distEmail');
-  const phone = document.getElementById('distPhone');
-  const exp = document.getElementById('distExp');
-  [name,email,phone,exp].forEach(i=>i.classList.remove('error'));
-  let hasError=false;
-  if(!name.value.trim()){name.classList.add('error');hasError=true;}
-  if(!email.value.trim() ||!validateEmail(email.value)){email.classList.add('error');hasError=true;}
-  if(!phone.value.trim()){phone.classList.add('error');hasError=true;}
-  if(!exp.value.trim()){exp.classList.add('error');hasError=true;}
-  if(hasError) return showToast('⚠️ املى كل البيانات','#ff4444');
-  showLoader();
   await addDoc(collection(db,"distributor_requests"),{
-    name:name.value, email:email.value, phone:phone.value, exp:exp.value,
-    uid: currentUser? currentUser.uid : null,
-    status:"pending", createdAt:serverTimestamp()
+    name:name.value, email:document.getElementById('distEmail').value,
+    phone:document.getElementById('distPhone').value, exp:document.getElementById('distExp').value,
+    uid: currentUser.uid, status:"pending", createdAt:serverTimestamp()
   });
-  setTimeout(()=>showToast('✅ تم ارسال طلبك. هنراجعه ونرد عليك خلال 24 ساعة'),1000);
-  document.getElementById('distName').value='';
-  document.getElementById('distEmail').value='';
-  document.getElementById('distPhone').value='';
-  document.getElementById('distExp').value='';
+  showToast('✅ تم الارسال');
 }
 
 window.showLogin=()=>document.getElementById('loginModal').style.display='flex';
 window.showRegister=()=>document.getElementById('registerModal').style.display='flex';
 window.closeModal=()=>document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
 window.switchToRegister=()=>{closeModal(); setTimeout(showRegister,300);}
+window.logout=()=>{signOut(auth).then(()=>location.reload())};
 </script>
 </body>
 </html>
