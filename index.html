@@ -84,12 +84,11 @@ footer{background:#000;border-top:2px solid #ffb800;padding:20px 4%;margin-top:4
 .game-card p{font-size:18px;padding:15px}
 .stat-box{grid-template-columns:repeat(4,1fr)}
 .support-btn{width:200px}
-}
 </style>
 </head>
 <body>
 
-  <div class="marquee"><span id="marqueeText">سجل حساب الان وقدم علي موزع للحصول علي عرض مميز يمكن الشحن بي خصم 7٪</span></div>
+  <div class="marquee"><span id="marqueeText">قم بتسجل حساب لتحصل علي خصم كبير🎁</span></div>
 
   <header>
     <div class="auth-btns">
@@ -106,6 +105,9 @@ footer{background:#000;border-top:2px solid #ffb800;padding:20px 4%;margin-top:4
     </div>
     <div class="empty"></div>
   </header>
+
+  <!-- صندوق الاشعار العام -->
+  <div id="globalNotif" style="display:none;background:linear-gradient(90deg,#00ff88,#00cc66);color:#000;padding:12px;text-align:center;font-weight:bold;font-size:14px"></div>
 
   <div class="container">
     <div class="page active" id="home">
@@ -212,6 +214,26 @@ const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db =
 await setPersistence(auth, browserLocalPersistence);
 const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
 let currentUser = null; let userData = {}; let currentGame = null; let selectedPack = null;
+
+// جلب الشريط المتحرك والاشعار من الادمن
+async function loadSettings(){
+  const marqueeSnap = await getDoc(doc(db,"settings","marquee"));
+  if(marqueeSnap.exists()){
+    document.getElementById('marqueeText').innerText = marqueeSnap.data().text;
+  } else {
+    document.getElementById('marqueeText').innerText = 'سجل حساب الان وقدم علي موزع للحصول علي عرض مميز';
+  }
+
+  const notifSnap = await getDoc(doc(db,"settings","global_notification"));
+  if(notifSnap.exists() && notifSnap.data().text){
+    document.getElementById('globalNotif').innerText = '📢 ' + notifSnap.data().text;
+    document.getElementById('globalNotif').style.display = 'block';
+  } else {
+    document.getElementById('globalNotif').style.display = 'none';
+  }
+}
+
+loadSettings(); // شغلها اول ما الصفحة تفتح
 
 const games = [
   {name:'PUBG Mobile', img:'https://l.top4top.io/p_3839txe7h0.jpg', packs:[
@@ -347,13 +369,13 @@ async function loadDashboard(){
     snap.forEach(doc=>{
       if(doc.data().status==='done'){
         completed++;
-        earnings += doc.data().package.price * 0.1; // 10% عمولة مثال
+        earnings += doc.data().package.price * 0.1; // 10% عمولة
       }
     });
     document.getElementById('totalOrders').innerText = total;
     document.getElementById('completedOrders').innerText = completed;
-    document.getElementById('totalEarnings').innerText = earnings + ' ج';
-    document.getElementById('currentBalance').innerText = earnings + ' ج';
+    document.getElementById('totalEarnings').innerText = earnings.toFixed(2) + ' ج';
+    document.getElementById('currentBalance').innerText = earnings.toFixed(2) + ' ج';
   });
 }
 
