@@ -1,493 +1,591 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>لوحة الادمن</title>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ESh7NLI CASH - شحن كاش</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-*{box-sizing:border-box}
-body{background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);color:white;font-family:'Cairo',sans-serif;padding:20px;min-height:100vh}
-h1{color:#ffb800;font-weight:900;margin-bottom:20px}
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:25px}
-.tabs button{padding:12px 24px;background:#1a1a1a;border:2px solid #333;color:white;cursor:pointer;border-radius:12px;font-weight:700;transition:0.3s}
-.tabs button.active{background:linear-gradient(90deg,#ff4444,#ff9500);border-color:#ff9500;box-shadow:0 0 15px rgba(255,149,0,0.3)}
-.card{background:linear-gradient(135deg,#1a1a1a 0%,#242424 100%);padding:20px;margin:15px 0;border-radius:15px;border:2px solid #333;transition:0.3s}
-.card:hover{border-color:#ffb800;transform:translateY(-3px)}
-.btn{padding:10px 18px;background:linear-gradient(90deg,#00ff88,#00cc66);color:#000;border:none;border-radius:10px;cursor:pointer;margin:4px;font-weight:700;font-size:13px;transition:0.2s}
-.btn:hover{transform:scale(1.05)}
-.btn.red{background:linear-gradient(90deg,#ff4444,#cc0000);color:white}
-.btn.blue{background:linear-gradient(90deg,#00aaff,#0066cc);color:white}
-.btn.gray{background:#444;color:white}
-.btn.purple{background:linear-gradient(90deg,#9c27b0,#6a1b9a);color:white}
-.btn.orange{background:linear-gradient(90deg,#ff9500,#ff6600);color:white}
-.btn.darkred{background:#8B0000;color:white}
-.btn.green{background:linear-gradient(90deg,#00ff88,#00cc66);color:#000}
-img{max-width:250px;border-radius:10px;margin-top:10px;border:2px solid #333;cursor:pointer}
-input,textarea{padding:12px;border-radius:8px;border:2px solid #333;background:#1a1a1a;color:white;width:100%;margin:6px 0;font-family:Cairo}
-input[type="number"]{width:80px}
-.setting-box{background:linear-gradient(135deg,#141414 0%,#1e1e1e 100%);padding:25px;border-radius:15px;margin:20px 0;border:2px solid #333}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:25px 0}
-.stat-card{background:linear-gradient(135deg,#141414 0%,#1e1e1e 100%);padding:25px;border-radius:15px;text-align:center;border:2px solid #ffb800;box-shadow:0 5px 20px rgba(255,184,0,0.1)}
-.stat-card h3{color:#ffb800;margin-bottom:10px;font-size:14px}
-.stat-card p{font-size:36px;font-weight:900;color:#00ff88}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:#0a0a0a;color:#fff;font-family:'Cairo',sans-serif;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
 
-/* مودال */
-.modal-del{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(5px)}
-.modal-del-content{background:linear-gradient(135deg,#141414 0%,#1e1e1e 100%);padding:35px;border-radius:20px;width:90%;max-width:450px;border:3px solid #ff4444;text-align:center;box-shadow:0 0 30px rgba(255,68,68,0.3)}
-.modal-del-content h2{color:#ff4444;margin-bottom:15px;font-size:24px}
-.modal-btns{display:flex;gap:12px;justify-content:center}
+.marquee{background:linear-gradient(90deg,#ff4444,#ffb800);color:#000;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap;font-size:14px}
+.marquee span{display:inline-block;animation:marquee 15s linear infinite}
+  @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+header{background:linear-gradient(90deg, #000 0%, #1a1a1a 100%);padding:12px 4%;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #ffb800;position:sticky;top:0;z-index:100}
+.logo-area{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.logo-area img{width:55px;height:55px;border-radius:10px;background:#222;object-fit:cover;border:2px solid #ffb800}
+.logo{font-size:16px;font-weight:700;color:#ffb800;letter-spacing:0.5px}
+.auth-btns{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  header button{background:#ffb800;color:#000;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:12px;width:95px}
+.admin-btn{background:#ff4444!important;color:white!important}
+.dist-btn{background:#00ff88!important}
+.contest-btn{background:#9c27b0!important;color:white!important}
+.empty{width:95px}
+.container{max-width:100%;margin:20px auto;padding:0 12px;flex:1;width:100%}
 
-/* Toast */
-#toast{position:fixed;bottom:25px;right:25px;background:linear-gradient(90deg,#00ff88,#00cc66);color:#000;padding:16px 28px;border-radius:12px;font-weight:700;display:none;z-index:10000;animation:slideIn 0.3s;box-shadow:0 5px 20px rgba(0,255,136,0.3)}
-#toast.error{background:linear-gradient(90deg,#ff4444,#cc0000);color:white}
-@keyframes slideIn{from{transform:translateX(120%)}to{transform:translateX(0)}}
-.login-box{background:linear-gradient(135deg,#141414 0%,#1e1e1e 100%);padding:40px;border-radius:20px;max-width:450px;margin:100px auto;border:2px solid #333;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.games-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.game-card{background:#141414;border-radius:12px;overflow:hidden;cursor:pointer;border:2px solid #2a2a2a;transition:0.2s}
+.game-card:active{border-color:#ffb800;transform:scale(0.97)}
+.game-card img{width:100%;height:120px;object-fit:cover}
+.game-card p{text-align:center;padding:10px;font-weight:bold;font-size:14px}
+.checkout{display:none;background:#141414;padding:20px 15px;border-radius:15px;margin-top:20px;border:1px solid #333}
+.page{display:none}
+.page.active{display:block}
+input,select,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:white;margin:8px 0;font-size:15px}
+input.error{border-color:#ff4444!important}
+.packs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:15px 0}
+.pack{background:#1a1a1a;padding:14px;border-radius:10px;text-align:center;cursor:pointer;border:2px solid #333;font-size:13px}
+.pack.selected{border-color:#ffb800;background:#222}
+.btn{width:100%;padding:14px;background:linear-gradient(90deg,#ffb800,#ff9500);color:#000;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:10px}
+.btn:disabled{background:#555;color:#aaa;cursor:not-allowed}
+.payment-box{background:#1a1a1a;padding:15px;border-radius:10px;margin:12px 0;border:1px solid #ffb800;font-size:14px}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:999;padding:20px}
+.modal-content{background:#141414;padding:25px 20px;border-radius:15px;width:100%;max-width:400px;border:1px solid #333}
+.modal-content.btn-secondary{background:#444;color:#fff;margin-top:10px}
+#toast{position:fixed;bottom:20px;right:10px;left:10px;background:#00ff88;color:#000;padding:14px;border-radius:10px;font-weight:bold;display:none;z-index:1000;text-align:center;font-size:14px}
+#toast.error{background:#ff4444;color:white}
+.badge{background:#00ff88;color:#000;padding:3px 8px;border-radius:5px;font-size:11px;margin-right:5px}
+.badge-admin{background:#1877f2;color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-right:5px}
+footer{background:#000;border-top:2px solid #ffb800;padding:20px 4%;margin-top:40px;text-align:center;font-size:13px}
 
-/* الحسابات */
-.user-card{background:linear-gradient(135deg,#1a1a1a 0%,#242424 100%);padding:18px;border-radius:15px;margin:12px 0;border-left:5px solid #00aaff;transition:0.3s}
-.user-card:hover{border-color:#ffb800}
-.user-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.online-dot{width:12px;height:12px;background:#00ff88;border-radius:50%;display:inline-block;margin-left:6px;box-shadow:0 0 8px #00ff88}
-.offline-dot{width:12px;height:12px;background:#555;border-radius:50%;display:inline-block;margin-left:6px}
-.banned{border-left-color:#ff4444!important}
-.search-box{display:flex;gap:12px;margin-bottom:18px}
+/* صندوق فوايد الموزع */
+.dist-benefits{background:#111;border-left:4px solid #00ff88;padding:20px;border-radius:12px;margin-bottom:20px}
+.dist-benefits h2{color:#00ff88;margin-bottom:15px;font-size:20px;text-align:center}
+.dist-benefits ul{list-style:none;padding-right:0}
+.dist-benefits li{padding:12px 0;border-bottom:1px solid #2a2a2a;font-size:15px;display:flex;justify-content:space-between;align-items:center}
 
-/* طلبات الموزعين */
-.dist-request{background:linear-gradient(135deg,#1a1a1a 0%,#242424 100%);padding:25px;border-radius:15px;margin-bottom:18px;border-left:5px solid #ffb800}
-.dist-request p{margin:6px 0;color:#ccc}
+/* لوحة تحكم الموزع */
+.dist-dashboard{background:#1a1a1a;border:2px solid #ffb800;padding:20px;border-radius:15px;margin-bottom:20px}
+.stat-box{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
+.stat{background:#0a0a0a;padding:15px;border-radius:10px;text-align:center}
+.stat h4{color:#00ff88;font-size:12px;margin-bottom:5px}
+.stat p{font-size:20px;font-weight:bold}
 
-/* كروت الموزعين الجديدة */
-.dist-card{background:linear-gradient(135deg,#1a1a1a 0%,#242424 100%);padding:25px;border-radius:18px;margin-bottom:18px;border:2px solid #333;transition:0.3s}
-.dist-card:hover{border-color:#00ff88;transform:translateY(-4px);box-shadow:0 8px 25px rgba(0,255,136,0.15)}
-.dist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.dist-info p{margin:5px 0;font-size:14px}
-.dist-badge{background:linear-gradient(90deg,#00ff88,#00cc66);color:#000;padding:6px 14px;border-radius:25px;font-size:13px;font-weight:900}
-.dist-actions{display:flex;gap:10px;flex-wrap:wrap}
-.dist-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px;padding-top:15px;border-top:2px solid #333}
-.dist-stat{text-align:center}
-.dist-stat h4{color:#ffb800;font-size:12px;margin-bottom:4px}
-.dist-stat p{font-size:18px;font-weight:900;color:#00ff88}
+/* ايقونات الدعم */
+.dist-support{background:#1a1a1a;border:1px solid #ffb800;padding:20px;border-radius:15px;margin-top:20px;text-align:center}
+.support-icons{display:flex;gap:15px;justify-content:center}
+.support-btn{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:white;background:#222;padding:15px;border-radius:12px;width:45%;transition:0.3s}
+.support-btn img{width:40px;height:40px}
 
-/* كروت الطلبات الجديدة */
-.order-card{background:linear-gradient(135deg,#1a1a1a 0%,#242424 100%);padding:20px;border-radius:15px;margin-bottom:15px;border-left:5px solid #ffb800}
-.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.order-info p{margin:5px 0;font-size:14px}
-.order-proof{margin:12px 0;padding:12px;background:#0a0a0a;border-radius:10px;border:1px solid #333}
-.order-proof img{max-width:100%;border-radius:8px;cursor:pointer}
-.order-actions{display:flex;gap:8px;margin-top:12px}
+/* صندوق المسابقات */
+.contest-wrapper{display:flex;justify-content:center}
+.contest-section{background:#111;border:2px solid #9c27b0;padding:15px;border-radius:12px;margin-bottom:20px;width:100%;max-width:600px}
+.contest-section h2{color:#9c27b0;margin-bottom:15px;text-align:center}
+.post-box{background:#242526;color:#e4e6eb;border-radius:8px;padding:15px;margin-bottom:15px}
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.post-header img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #ffb800}
+.post-img{width:100%;border-radius:8px;margin-top:10px}
+.post-text a{color:#00aaff;text-decoration:underline}
+.login-required{text-align:center;padding:40px 20px;color:#aaa;font-size:16px}
+.login-required button{width:auto;padding:12px 30px;margin-top:15px}
 
-/* بوستات المسابقات */
-.contest-post{background:linear-gradient(135deg,#242526 0%,#2e2f30 100%);padding:18px;border-radius:12px;margin-bottom:18px;border:2px solid #3a3b3c}
-.post-box-admin{background:linear-gradient(135deg,#1a1a1a 0%,#242424 100%);padding:25px;border-radius:15px;margin-bottom:25px;border:3px solid #9c27b0}
-.post-header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
-.post-header img{width:45px;height:45px;border-radius:50%;border:3px solid #ffb800}
-.badge-verified{background:linear-gradient(90deg,#1877f2,#0d5cb6);padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
+/* شاشة الحظر الاحترافية */
+.ban-screen{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#0a0a0a 0%,#1a0000 100%);z-index:99999;justify-content:center;align-items:center;padding:20px}
+.ban-box{background:#141414;border:2px solid #ff4444;border-radius:20px;padding:40px 30px;text-align:center;max-width:500px;width:100%;box-shadow:0 0 30px rgba(255,68,68,0.3)}
+.ban-icon{font-size:80px;margin-bottom:20px;animation:shake 0.5s infinite alternate}
+@keyframes shake{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.ban-box h1{color:#ff4444;font-size:28px;margin-bottom:15px}
+.ban-timer{background:#222;padding:15px;border-radius:10px;margin:20px 0;border:1px solid #ff4444}
+.ban-timer #banCountdown{font-size:24px;color:#ff4444;font-weight:bold}
+
+@media(min-width:768px){
+.games-grid{grid-template-columns:repeat(4,1fr);gap:20px}
+.packs{grid-template-columns:repeat(4,1fr)}
+.container{max-width:1200px;padding:0 20px}
+.logo-area img{width:70px;height:70px}
+.logo{font-size:20px}
+header button{width:110px;font-size:13px;padding:7px 14px}
+.empty{width:110px}
+.game-card img{height:150px}
+.game-card p{font-size:18px;padding:15px}
+.stat-box{grid-template-columns:repeat(4,1fr)}
+.support-btn{width:200px}
 </style>
-</head><body>
-<div id="app">جاري التحميل...</div>
-<div id="toast"></div>
+</head>
+<body>
 
-<div class="modal-del" id="deleteModal">
-  <div class="modal-del-content">
-    <h2>⚠️ تأكيد الحذف</h2>
-    <p id="deleteText">هل انت متأكد؟</p>
-    <div class="modal-btns">
-      <button class="btn red" id="confirmDeleteBtn">🗑️ نعم امسح</button>
-      <button class="btn gray" onclick="closeDeleteModal()">الغاء</button>
+  <div class="marquee"><span id="marqueeText">قم بتسجل حساب لتحصل علي خصم كبير🎁</span></div>
+
+  <header>
+    <div class="auth-btns">
+      <button id="homeBtn" onclick="showPage('home')">الرئيسية</button>
+      <button id="contestBtn" class="contest-btn" onclick="showPage('contests')">🎁 مسابقات</button>
+      <button id="distPageBtn" class="dist-btn" onclick="showPage('distributor')">كن موزع</button>
+      <button id="loginBtn" onclick="showLogin()">دخول</button>
+      <button id="regBtn" onclick="showRegister()">تسجيل</button>
+      <button id="adminPanelBtn" class="admin-btn" style="display:none" onclick="window.location='admin.html'">الادمن</button>
+      <button id="logoutBtn" style="display:none" onclick="logout()">خروج</button>
+    </div>
+    <div class="logo-area">
+      <img id="siteLogo" src="https://k.top4top.io/p_3839dix1p0.png" alt="logo">
+      <div class="logo">ESh7NLI CASH</div>
+    </div>
+    <div class="empty"></div>
+  </header>
+
+  <div id="globalNotif" style="display:none;background:linear-gradient(90deg,#00ff88,#00cc66);color:#000;padding:12px;text-align:center;font-weight:bold;font-size:14px"></div>
+
+  <div class="container">
+    <div class="page active" id="home">
+      <h2 style="text-align:center;margin-bottom:20px;font-size:18px">🎮 اختر اللعبة واشحن فوراً</h2>
+      <div class="games-grid" id="games"></div>
+      <div class="checkout" id="checkout"></div>
+    </div>
+
+    <div class="page" id="contests">
+      <div class="contest-wrapper">
+        <div class="contest-section">
+          <h2>🎁 مسابقات وجوائز</h2>
+          <div id="contestFeed"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="distributor">
+      <div class="dist-benefits">
+        <h2>💼 مميزات حسابك كموزع</h2>
+        <ul>
+          <li>خصومات تصل الى 50% على جميع الشحنات <span>✅</span></li>
+          <li>لوحة تحكم خاصة بيك لمتابعة الطلبات والارباح <span>✅</span></li>
+          <li>سحب ارباحك اسبوعياً على فودافون كاش <span>✅</span></li>
+          <li>دعم فني 24 ساعة لحل اي مشكلة <span>✅</span></li>
+        </ul>
+      </div>
+      <div class="dist-dashboard" id="distDashboard" style="display:none">
+        <h2>📊 لوحة تحكم الموزع</h2>
+        <div class="stat-box">
+          <div class="stat"><h4>اجمالي الطلبات</h4><p id="totalOrders">0</p></div>
+          <div class="stat"><h4>الطلبات المكتملة</h4><p id="completedOrders">0</p></div>
+          <div class="stat"><h4>الارباح الكلية</h4><p id="totalEarnings">0 ج</p></div>
+          <div class="stat"><h4>الرصيد الحالي</h4><p id="currentBalance">0 ج</p></div>
+        </div>
+      </div>
+      <div class="dist-support" id="distSupport" style="display:none">
+        <h3>📞 الدعم الفني</h3>
+        <div class="support-icons">
+          <a href="https://wa.me/201148029377" target="_blank" class="support-btn whatsapp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"><span>واتساب الدعم</span></a>
+          <a href="https://www.facebook.com/share/1Edt8oo4es/" target="_blank" class="support-btn facebook"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"><span>فيسبوك الدعم</span></a>
+        </div>
+      </div>
+      <h2 style="font-size:18px;margin-bottom:10px">قدم طلب موزع</h2>
+      <input type="text" id="distName" placeholder="الاسم">
+      <input type="email" id="distEmail" placeholder="الايميل">
+      <input type="text" id="distPhone" placeholder="رقم الواتساب">
+      <textarea id="distExp" placeholder="عندك خبرة؟" rows="3"></textarea>
+      <button class="btn" onclick="submitDist()">ارسال الطلب</button>
     </div>
   </div>
-</div>
+
+  <footer><p>ESh7NLI CASH © 2026 - جميع الحقوق محفوظة - للدعم: 01148029377</p></footer>
+
+  <!-- شاشة الحظر -->
+  <div class="ban-screen" id="banScreen">
+    <div class="ban-box">
+      <div class="ban-icon">🚫</div>
+      <h1 id="banTitle">تم ايقاف حسابك مؤقتاً</h1>
+      <p id="banText">تم ايقاف وصولك للموقع بسبب مخالفة قوانين الاستخدام</p>
+      <div class="ban-timer" id="banTimerBox">
+        <h3>⏰ الحظر هينتهي خلال:</h3>
+        <div id="banCountdown">جاري التحميل...</div>
+      </div>
+      <div style="margin-top:20px">
+        <a href="https://wa.me/201148029377" target="_blank" class="btn" style="background:#25D366;color:white;text-decoration:none;display:inline-block;width:auto;padding:12px 25px">📱 واتساب الدعم</a>
+      </div>
+      <button class="btn gray" onclick="logout()" style="margin-top:15px">تسجيل خروج</button>
+    </div>
+  </div>
+
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <h2 style="text-align:center;margin-bottom:20px">تسجيل الدخول</h2>
+      <input type="email" id="loginEmail" placeholder="الايميل">
+      <input type="password" id="loginPass" placeholder="كلمة السر">
+      <button class="btn" onclick="login()">دخول</button>
+      <button class="btn btn-secondary" onclick="switchToRegister()">إنشاء حساب</button>
+      <button class="btn btn-secondary" onclick="closeModal()">اغلاق</button>
+    </div>
+  </div>
+
+  <div class="modal" id="registerModal">
+    <div class="modal-content">
+      <h2 style="text-align:center;margin-bottom:20px">انشاء حساب جديد</h2>
+      <input type="text" id="regName" placeholder="الاسم">
+      <input type="email" id="regEmail" placeholder="الايميل">
+      <input type="password" id="regPass" placeholder="كلمة السر">
+      <button class="btn" onclick="register()">تسجيل</button>
+      <button class="btn btn-secondary" onclick="closeModal()">اغلاق</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, query, orderBy, where, getDoc, setDoc, deleteDoc, getDocs, writeBatch, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, getDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286",storageBucket: "game-af286.firebasestorage.app",messagingSenderId: "567693078252",appId: "1:567693078252:web:3b5d6475a583f1f7347fc9"};
-const app=initializeApp(firebaseConfig); const db=getFirestore(app); const auth=getAuth(app);
+const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 await setPersistence(auth, browserLocalPersistence);
 const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
 const SITE_LOGO = "https://k.top4top.io/p_3839dix1p0.png";
 const ADMIN_NAME = "ESh7NLI CASH";
-let deleteAction = null;
-let onlineUsers = new Set();
-let allUsersData = [];
-let uploadedContestImage = "";
-let onlineInterval = null;
+let currentUser = null; let userData = {}; let currentGame = null; let selectedPack = null;
+let isSubmitting = false; // منع الدبل كليك
+
+async function loadSettings(){
+  const marqueeSnap = await getDoc(doc(db,"settings","marquee"));
+  if(marqueeSnap.exists()){document.getElementById('marqueeText').innerText = marqueeSnap.data().text;}
+  const notifSnap = await getDoc(doc(db,"settings","global_notification"));
+  if(notifSnap.exists() && notifSnap.data().text){
+    document.getElementById('globalNotif').innerText = '📢 ' + notifSnap.data().text;
+    document.getElementById('globalNotif').style.display = 'block';
+  }
+}
+loadSettings();
+
+const games = [
+  {name:'PUBG Mobile', img:'https://l.top4top.io/p_3839txe7h0.jpg', packs:[
+    {n:'120 UC',p:110},
+    {n:'325 UC',p:250},
+    {n:'660 UC',p:500},
+    {n:'1800 UC',p:1180},
+    {n:'3850 UC',p:2475},
+    {n:'8100 UC',p:4950},
+    {n:'16200 UC',p:9900},
+    {n:'32400 UC',p:19800},
+    {n:'40500 UC',p:39600}
+  ]},
+  {name:'Free Fire', img:'https://i.top4top.io/p_3839hhvmk0.jpg', packs:[
+    {n:'50 جوهره',p:30},
+    {n:'100 جوهره',p:60},
+    {n:'210 جوهره',p:110},
+    {n:'310 جوهره',p:160},
+    {n:'520 جوهره',p:260},
+    {n:'1060 جوهره',p:510},
+    {n:'2200 جوهره',p:1010}
+ ]},
+  {name:'Blood Strike', img:'https://k.top4top.io/p_3840xhfzn0.jpg', packs:[
+    {n:'50 + 1 ميدالية ذهبية',p:24.79},
+    {n:'100 + 5 ذهبيات',p:44.59},
+    {n:'300 + 20 ذهب',p:126.49},
+    {n:'500 + 40 ذهبا',p:207.49},
+    {n:'1000 + 100 ذهب',p:409.99}
+   ]},
+  {name:'Marvel Rivals', img:'https://a.top4top.io/p_38402r2mr0.jpg', packs:[
+    {n:'100 الشبكات',p:53.04},
+    {n:'500 الشبكات',p:247.16},
+    {n:'2180 الشبكات',p:975.10},
+    {n:'5680 الشبكات',p:2430.99},
+    {n:'11680 الشبكات',p:4857.47}
+  ]},
+  {name:'Delta Force', img:'https://k.top4top.io/p_38406ctsw0.jpg', packs:[
+    {n:'60 عملة دلتا',p:54.52},
+    {n:'120 عملة دلتا',p:104.04},
+    {n:'300 + 21 عملة دلتا',p:252.60},
+    {n:'660 + 68 عملة دلتا',p:500.20},
+    {n:'1320 + 207 عملات دلتا',p:995.40}
+  ]},
+  {name:'Age of Empires Mobile', img:'https://l.top4top.io/p_3840nq13i0.jpg', packs:[
+    {n:'400 عملة إمبراطورية',p:57.49},
+    {n:'99 عملة أبيكس',p:57.49},
+    {n:'2100 عملة إمبراطورية',p:252.10},
+    {n:'499 عملة أبيكس',p:252.10},
+    {n:'4400 عملة إمبراطورية',p:499.70},
+    {n:'999 عملة Apex',p:499.70},
+   ]},
+  {name:'StarMaker عالمي', img:'https://c.top4top.io/p_3840ul3u60.jpg', packs:[
+    {n:'60 قطعة نقدية + 5 قطع إضافية',p:54.52},
+    {n:'300 قطعة نقدية + 25 قطعة نقدية إضافية',p:252.10},
+    {n:'420 قطعة نقدية + 40 قطعة إضافية',p:351.14},
+    {n:'600 قطعة نقدية + 60 قطعة إضافية',p:499.70},
+    {n:'1000 قطعة نقدية + 110 مكافأة',p:836.44},
+    {n:'1200 قطعة نقدية + 150 قطعة نقدية إضافية',p:1014.71}
+  ]},
+  {name:'Xena', img:'https://a.top4top.io/p_3840x7vp90.jpeg', packs:[
+    {n:'3350 عملات معدنية',p:29.26},
+    {n:'6700 عملات معدنية',p:54.02},
+    {n:'33500 عملات معدنية',p:252.10},
+    {n:'67500 عملات معدنية',p:499.70},
+    {n:'202500 عملات معدنية',p:1490.10},
+    {n:'406800 عملات معدنية',p:2975.70}
+  ]},
+  {name:'ZEPETO ZEMs', img:'https://d.top4top.io/p_3840k5a1n0.jpg', packs:[
+    {n:'14 زيم',p:54.02},
+    {n:'28 زيم',p:100.57},
+    {n:'128 زيم',p:413.04},
+    {n:'323 زيم',p:1037.49},
+    {n:'1000 زيم',p:3109.40}
+  ]},
+ {name:'Mobile Legends', img:'https://f.top4top.io/p_3842nhu1n0.jpg', packs:[
+    {n:'79 جوهره',p:74.09},
+    {n:'112 جوهره',p:96.12},
+    {n:'172 جوهره',p:143.19},
+    {n:'223 جوهره',p:187.25},
+    {n:'257 جوهره',p:211.28}
+ ]},
+  // العاب تانية
+  {name:'Call of Duty Mobile', img:'https://h.top4top.io/p_3839xkbia0.jpg', packs:[{n:'80 CP',p:50},{n:'420 CP',p:230},{n:'2400 CP',p:1150}]},
+  {name:'HONOR KINGS', img:'https://l.top4top.io/p_3840g3frc0.jpg', packs:[{n:'80 توكن',p:55},{n:'240 توكن',p:155},{n:'830 توكن',p:505}]},
+  {name:'Clash Royale', img:'https://d.top4top.io/p_3839jhs8o0.jpg', packs:[{n:'80 Gems',p:30},{n:'500 Gems',p:150},{n:'1200 Gems',p:350}]},
+  {name:'LORDS Mobile', img:'https://k.top4top.io/p_3840dt3oj0.jpg', packs:[{n:'195 جوهره',p:100},{n:'395 جوهره',p:195},{n:'785 جوهره',p:385}]}
+];
+
+games.forEach(g=>{document.getElementById('games').innerHTML += `<div class="game-card" onclick="selectGame('${g.name}')"><img src="${g.img}"><p>${g.name}</p></div>`;});
 
 function showToast(msg, type='success'){
   const t=document.getElementById('toast');
   t.innerText=msg;
   t.className = type=='error'? 'error' : '';
   t.style.display='block';
-  setTimeout(()=>t.style.display='none',3500)
+  setTimeout(()=>t.style.display='none',3000)
+}
+
+function validateEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);}
+
+function linkify(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+}
+
+document.addEventListener('dblclick', function(e) {
+  if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A'){
+    location.reload();
+  }
+});
+
+window.showPage = (pageId)=>{
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  if(pageId==='contests'){loadContestPosts();}
+  if(pageId==='distributor' && userData.role==='distributor'){loadDashboard();}
+  window.scrollTo(0,0);
 }
 
 onAuthStateChanged(auth, async user => {
-  const appDiv = document.getElementById('app');
-  if(!user) {
-    if(onlineInterval) clearInterval(onlineInterval);
-    appDiv.innerHTML = `<div class="login-box"><h1>🔐 تسجيل دخول الادمن</h1><input type="email" id="adminEmail" placeholder="ايميل الادمن" value="${ADMIN_EMAIL}"><input type="password" id="adminPass" placeholder="كلمة السر"><button class="btn" onclick="adminLogin()">دخول</button></div>`;
-    return;
-  }
-  await updateDoc(doc(db,"users",user.uid),{lastSeen: new Date()});
-  onlineInterval = setInterval(async ()=>{if(auth.currentUser) await updateDoc(doc(db,"users",user.uid),{lastSeen: new Date()});}, 30000);
+  currentUser = user;
+  document.getElementById('logoutBtn').style.display = user? 'inline' : 'none';
+  document.getElementById('loginBtn').style.display = user? 'none' : 'inline';
+  document.getElementById('regBtn').style.display = user? 'none' : 'inline';
+  document.getElementById('adminPanelBtn').style.display = user && user.email === ADMIN_EMAIL? 'inline' : 'none';
+  
+  if(user){
+    const snap = await getDoc(doc(db,"users",user.uid));
+    userData = snap.data() || {};
+    
+    const banScreen = document.getElementById('banScreen');
+    const container = document.querySelector('.container');
+    
+    if(userData.banUntil && userData.banUntil.toDate() > new Date()){
+      container.style.display = 'none';
+      banScreen.style.display = 'flex';
+      function updateCountdown(){
+        let distance = userData.banUntil.toDate().getTime() - new Date().getTime();
+        if(distance < 0){location.reload(); return;}
+        let d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let s = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById('banCountdown').innerHTML = `${d} يوم ${h} ساعة ${m} دقيقة ${s} ثانية`;
+      }
+      updateCountdown(); setInterval(updateCountdown, 1000);
+      return;
+    }
+    if(userData.disabled){
+      container.style.display = 'none';
+      banScreen.style.display = 'flex';
+      document.getElementById('banTitle').innerText = '⛔ حسابك موقف نهائي';
+      document.getElementById('banText').innerText = 'تم ايقاف حسابك نهائياً من قبل الادارة';
+      document.getElementById('banTimerBox').style.display = 'none';
+      return;
+    }
+    banScreen.style.display = 'none'; container.style.display = 'block';
 
-  const userDoc = await getDoc(doc(db,"users",user.uid));
-  const isAdmin = user.email === ADMIN_EMAIL || userDoc.data()?.role === 'admin';
-  if(!isAdmin) {
-    appDiv.innerHTML = `<div class="login-box"><h1>⛔ انت مش الادمن</h1><p>${user.email}</p><button class="btn red" onclick="logout()">خروج</button></div>`;
-    return;
+    if(userData.role==='distributor'){
+      document.getElementById('distDashboard').style.display='block';
+      document.getElementById('distSupport').style.display='block';
+    }
+  } else {
+    userData = {role:'guest', discount:0};
+    document.getElementById('banScreen').style.display = 'none';
   }
-  loadAdminPanel();
 });
 
-function loadAdminPanel(){
-  document.getElementById('app').innerHTML = `
-  <h1>📊 لوحة تحكم الادمن ESh7NLI CASH</h1>
-  <button class="btn red" onclick="logout()" style="float:left">تسجيل خروج</button>
-  <div class="tabs">
-    <button class="active" onclick="showTab('orders')">📦 الطلبات</button>
-    <button onclick="showTab('distRequests')">📝 طلبات الموزعين</button>
-    <button onclick="showTab('distManage')">👑 ادارة الموزعين</button>
-    <button onclick="showTab('users')">👥 الحسابات</button>
-    <button onclick="showTab('contests')">🎁 المسابقات والجوائز</button>
-    <button onclick="showTab('settings')">⚙️ الاعدادات</button>
-  </div>
-  <div id="orders"></div>
-  <div id="distRequests" style="display:none"></div>
-  <div id="distManage" style="display:none"></div>
-  <div id="users" style="display:none"></div>
-  <div id="contests" style="display:none"></div>
-  <div id="settings" style="display:none"></div>
-  `;
-  loadOrders(); loadDistRequests(); loadDistManage(); loadAllUsers(); loadContests(); loadSettings();
-}
-
-// الطلبات - تم اضافة معرف المنطقة لموبايل ليجند
-function loadOrders(){
-  document.getElementById('orders').innerHTML = `<button class="btn darkred" onclick="openDeleteModal('deleteAllOrders','all','كل الطلبات')">🗑️ مسح كل الطلبات</button><div id="ordersList"></div>`;
-  onSnapshot(query(collection(db,"orders"),orderBy("createdAt","desc")),(snap)=>{
-    let html='';
-    if(snap.empty){html='<p style="text-align:center;color:#aaa;padding:40px">مفيش طلبات حاليا</p>';}
-    snap.forEach(d=>{
-      const o=d.data();
-      html+=`
-      <div class="order-card">
-        <div class="order-header">
-          <div class="order-info">
-            <h3>🎮 ${o.game}</h3>
-            <p><b>الايميل:</b> ${o.email}</p>
-            <p><b>معرف المستخدم:</b> ${o.playerId}</p>
-            ${o.game === 'Mobile Legends' && o.zoneId ? `<p><b>معرف المنطقة:</b> <span style="color:#ffb800">${o.zoneId}</span></p>` : ''}
-            <p><b>الباقة:</b> ${o.package.name} - <span style="color:#ffb800">${o.package.price}ج</span></p>
-            <p><b>رقم المحفظة:</b> <span style="color:#00ff88">${o.walletNumber || 'غير موجود'}</span></p>
-            <p><b>الحالة:</b> ${o.status=='pending_payment'?'⏳ معلق':o.status=='done'?'✅ تم':'❌ ملغي'}</p>
-          </div>
-        </div>
-        ${o.proof?`<div class="order-proof"><p><b>📸 اسكرين التحويل:</b></p><img src="${o.proof}" onclick="window.open('${o.proof}','_blank')"></div>`:''}
-        <div class="order-actions">
-          <button class="btn green" onclick="upd('${d.id}','done')">✅ تم الدفع</button>
-          <button class="btn red" onclick="upd('${d.id}','cancelled')">❌ رفض</button>
-          <button class="btn gray" onclick="openDeleteModal('order','${d.id}','الطلب')">🗑️ مسح</button>
-        </div>
+function loadContestPosts(){
+  if(!currentUser){
+    document.getElementById('contestFeed').innerHTML = `
+      <div class="login-required">
+        <h3>🔒 سجل حساب اولا لكي تظهر المسابقات</h3>
+        <button class="btn" onclick="showRegister()">تسجيل حساب جديد</button>
       </div>`;
-    });
-    document.getElementById('ordersList').innerHTML=html;
-  });
-}
-
-window.deleteAllOrders = async ()=>{
-  const batch = writeBatch(db);
-  const ordersSnap = await getDocs(collection(db,"orders"));
-  ordersSnap.forEach(d=>{batch.delete(doc(db,"orders",d.id));});
-  await batch.commit(); showToast('✅ تم مسح كل الطلبات');
-}
-
-function loadDistRequests(){
-  onSnapshot(query(collection(db,"distributor_requests"), where("status","==","pending")), (snap)=>{
-    let html = '<h2>📝 طلبات الموزعين المعلقة</h2>';
-    if(snap.empty){html += '<p style="color:#aaa">مفيش طلبات جديدة</p>';}
-    snap.forEach(d=>{
-      const o = d.data();
-      html += `
-      <div class="dist-request">
-        <p><b>الاسم:</b> ${o.name}</p>
-        <p><b>الايميل:</b> ${o.email}</p>
-        <p><b>الواتساب:</b> ${o.phone}</p>
-        <p><b>الخبرة:</b> ${o.exp || 'لا يوجد'}</p>
-        <p><b>تاريخ الطلب:</b> ${o.createdAt?.toDate().toLocaleString('ar-EG')}</p>
-        <div style="margin-top:10px">
-          <input type="number" id="disc_${d.id}" value="15" placeholder="نسبة الخصم %" style="width:120px">
-          <button class="btn green" onclick="approveDist('${d.id}','${o.uid}')">✅ قبول</button>
-          <button class="btn red" onclick="rejectDist('${d.id}')">❌ رفض</button>
-        </div>
-      </div>`;
-    });
-    document.getElementById('distRequests').innerHTML = html;
-  });
-}
-
-window.approveDist = async (id, uid)=>{
-  const discount = document.getElementById(`disc_${id}`).value;
-  await updateDoc(doc(db,"distributor_requests",id),{status:'approved'});
-  await updateDoc(doc(db,"users",uid),{role:'distributor', discount:Number(discount)});
-  showToast('✅ تم قبول الموزع');
-}
-
-window.rejectDist = async (id)=>{
-  await updateDoc(doc(db,"distributor_requests",id),{status:'rejected'});
-  showToast('❌ تم رفض الطلب');
-}
-
-async function loadDistManage(){
-  const usersSnap = await getDocs(query(collection(db,"users"), where("role","==","distributor")));
-  let html = '<h2>👑 ادارة الموزعين</h2>';
-  if(usersSnap.empty){html += '<p style="color:#aaa">مفيش موزعين</p>';}
-
-  usersSnap.forEach(d=>{
-    let u = d.data();
-    let isDisabled = u.disabled;
-    let lastSeen = u.lastSeen? u.lastSeen.toDate().toLocaleString('ar-EG') : 'غير معروف';
-
-    html += `
-    <div class="dist-card ${isDisabled?'banned':''}">
-      <div class="dist-header">
-        <div class="dist-info">
-          <h3>${u.name} <span class="${isOnline(u.lastSeen)?'online-dot':'offline-dot'}"></span></h3>
-          <p>📧 ${u.email}</p>
-          <p>📱 ${u.phone || 'لا يوجد'}</p>
-          <p>🕒 اخر ظهور: ${lastSeen}</p>
-        </div>
-        <span class="dist-badge">خصم ${u.discount||0}%</span>
-      </div>
-
-      <div class="dist-stats">
-        <div class="dist-stat">
-          <h4>الحالة</h4>
-          <p>${isDisabled?'⛔ موقف':'✅ شغال'}</p>
-        </div>
-        <div class="dist-stat">
-          <h4>الخصم الحالي</h4>
-          <p>${u.discount||0}%</p>
-        </div>
-        <div class="dist-stat">
-          <h4>النوع</h4>
-          <p>موزع</p>
-        </div>
-      </div>
-
-      <div class="dist-actions">
-        <button class="btn purple" onclick="editDiscount('${d.id}',${u.discount||0})">💰 تعديل الخصم</button>
-        <button class="btn ${isDisabled?'green':'gray'}" onclick="toggleDisableDist('${d.id}',${isDisabled})">${isDisabled?'تشغيل':'ايقاف'}</button>
-        <button class="btn red" onclick="removeDistributor('${d.id}','${u.name}')">❌ مسح الموزع</button>
-      </div>
-    </div>`;
-  });
-  document.getElementById('distManage').innerHTML = html;
-}
-
-function isOnline(timestamp){
-  if(!timestamp) return false;
-  return (new Date() - timestamp.toDate()) < 60000;
-}
-
-window.editDiscount = async (uid, oldDiscount)=>{
-  let newDiscount = prompt("نسبة الخصم الجديدة %:", oldDiscount);
-  if(newDiscount!== null &&!isNaN(newDiscount)){
-    await updateDoc(doc(db,"users",uid),{discount:Number(newDiscount)});
-    showToast(`✅ تم تعديل الخصم الى ${newDiscount}%`);
-    loadDistManage();
+    return;
   }
-}
-
-window.removeDistributor = async (uid, name)=>{
-  if(confirm(`هل متأكد انك عايز تشيل دور الموزع من ${name}؟`)){
-    await updateDoc(doc(db,"users",uid),{role:'user', discount:0});
-    showToast(`✅ تم مسح الموزع ${name}`);
-    loadDistManage();
-  }
-}
-
-window.toggleDisableDist = async (uid, state)=>{
-  await updateDoc(doc(db,"users",uid),{disabled:!state});
-  showToast(state?'✅ تم تشغيل الموزع':'⛔ تم ايقاف الموزع');
-  loadDistManage();
-}
-
-async function loadAllUsers(){
-  const usersSnap = await getDocs(collection(db,"users"));
-  allUsersData = []; let distCount = 0; onlineUsers.clear();
-
-  usersSnap.forEach(d=>{
-    let u = d.data(); u.id = d.id; allUsersData.push(u);
-    let isOnline = u.lastSeen && (new Date() - u.lastSeen.toDate()) < 60000;
-    if(isOnline) onlineUsers.add(d.id);
-    if(u.role==='distributor') distCount++;
-  });
-
-  let html = `
-  <div class="stats">
-    <div class="stat-card"><h3>اجمالي الحسابات</h3><p>${usersSnap.size}</p></div>
-    <div class="stat-card"><h3>المتصلين الان</h3><p>${onlineUsers.size}</p></div>
-    <div class="stat-card"><h3>الموزعين</h3><p>${distCount}</p></div>
-    <div class="stat-card"><h3>طلبات معلقة</h3><p id="pendingDist">0</p></div>
-  </div>
-  <div class="search-box">
-    <input type="text" id="userSearch" placeholder="🔍 ابحث بالاسم او الايميل" onkeyup="searchUsers()">
-    <button class="btn darkred" onclick="openDeleteModal('deleteAll','all','كل الحسابات')">🗑️ مسح الكل</button>
-  </div>
-  <div id="usersList"></div>`;
-
-  document.getElementById('users').innerHTML = html;
-  renderUsersList(allUsersData);
-
-  const pendingSnap = await getDocs(query(collection(db,"distributor_requests"), where("status","==","pending")));
-  document.getElementById('pendingDist').innerText = pendingSnap.size;
-}
-
-window.searchUsers = ()=>{
-  let search = document.getElementById('userSearch').value.toLowerCase();
-  let filtered = allUsersData.filter(u => u.name?.toLowerCase().includes(search) || u.email?.toLowerCase().includes(search));
-  renderUsersList(filtered);
-}
-
-function renderUsersList(users){
-  let html = '';
-  users.forEach(u=>{
-    let isOnline = u.lastSeen && (new Date() - u.lastSeen.toDate()) < 60000;
-    let isBanned = u.banUntil && u.banUntil.toDate() > new Date();
-    let isDisabled = u.disabled;
-    let banDate = isBanned? u.banUntil.toDate().toLocaleString('ar-EG') : '';
-
-    html += `
-    <div class="user-card ${isBanned||isDisabled?'banned':''}">
-      <div class="user-header">
-        <div>
-          <b id="name_${u.id}">${u.name}</b>
-          <span class="${isOnline?'online-dot':'offline-dot'}"></span>
-          ${u.role==='admin'?'<span style="background:#ff4444;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700">ADMIN</span>':''}
-          ${u.role==='distributor'?'<span style="background:linear-gradient(90deg,#00ff88,#00cc66);color:#000;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700">موزع</span>':''}
-          ${isBanned?`<span style="background:#ff4444;padding:3px 8px;border-radius:5px;font-size:11px">محظور حتى ${banDate}</span>`:''}
-          ${isDisabled?'<span style="background:#555;padding:3px 8px;border-radius:5px;font-size:11px">موقف نهائي</span>':''}
-        </div>
-        <div>
-          <button class="btn orange" onclick="editName('${u.id}','${u.name}')">✏️ اسم</button>
-          <button class="btn blue" onclick="resetPass('${u.email}')">📧 باسورد</button>
-          <button class="btn ${isDisabled?'green':'gray'}" onclick="toggleDisable('${u.id}',${isDisabled})">${isDisabled?'فك الايقاف':'ايقاف نهائي'}</button>
-          <input type="number" id="ban_${u.id}" placeholder="ساعات" style="width:70px">
-          <button class="btn red" onclick="banUser('${u.id}',document.getElementById('ban_${u.id}').value)">🚫 حظر</button>
-          <button class="btn ${isBanned?'green':'red'}" onclick="unbanUser('${u.id}')">${isBanned?'فك الحظر':'حذف الحظر'}</button>
-          <button class="btn red" onclick="openDeleteModal('userFull','${u.id}','${u.name}')">🗑️ مسح</button>
-        </div>
-      </div>
-      <p style="font-size:12px;color:#aaa;margin-top:8px">الايميل: ${u.email} | UID: ${u.id}</p>
-    </div>`;
-  });
-  document.getElementById('usersList').innerHTML = html || '<p>مفيش نتائج</p>';
-}
-
-window.editName = async (uid, oldName)=>{
-  let newName = prompt("الاسم الجديد:", oldName);
-  if(newName) {await updateDoc(doc(db,"users",uid),{name:newName}); showToast('✅ تم تغيير الاسم'); loadAllUsers();}
-}
-window.resetPass = async (email)=>{await sendPasswordResetEmail(auth,email); showToast('📧 تم ارسال رابط تغيير الباسورد');}
-window.toggleDisable = async (uid, state)=>{await updateDoc(doc(db,"users",uid),{disabled:!state}); showToast(state?'✅ تم فك الايقاف':'⛔ تم الايقاف النهائي'); loadAllUsers();}
-window.banUser = async (uid, hours)=>{
-  if(!hours) return showToast('اكتب عدد الساعات','error');
-  let banUntil = new Date(); banUntil.setHours(banUntil.getHours() + Number(hours));
-  await updateDoc(doc(db,"users",uid),{banUntil: banUntil});
-  showToast(`✅ تم حظر المستخدم ${hours} ساعة`); loadAllUsers();
-}
-window.unbanUser = async (uid)=>{await updateDoc(doc(db,"users",uid),{banUntil: null}); showToast('✅ تم فك الحظر'); loadAllUsers();}
-window.deleteAllUsers = async ()=>{
-  const batch = writeBatch(db);
-  const usersSnap = await getDocs(collection(db,"users"));
-  usersSnap.forEach(d=>{if(d.data().email!== ADMIN_EMAIL){batch.delete(doc(db,"users",d.id));}});
-  await batch.commit(); showToast('✅ تم مسح كل الحسابات'); loadAllUsers();
-}
-
-function loadContests(){
-  document.getElementById('contests').innerHTML = `
-  <div class="post-box-admin">
-    <h2>📢 نشر مسابقة جديدة</h2>
-    <textarea id="contestText" placeholder="اكتب نص المسابقة..." rows="3"></textarea>
-    <input type="file" id="contestImage" accept="image/*" onchange="previewContestImg(event)">
-    <img id="contestImgPreview" style="display:none;max-width:300px">
-    <button class="btn purple" onclick="addContestPost()">نشر البوست</button>
-  </div>
-  <h3>كل البوستات:</h3>
-  <div id="contestList"></div>`;
-
-  onSnapshot(query(collection(db,"contest_posts"),orderBy("createdAt","desc")),(snap)=>{
-    let html='';
-    snap.forEach(d=>{
-      let p=d.data();
-      html+=`
-      <div class="contest-post">
+  
+  const q = query(collection(db,"contest_posts"), orderBy("createdAt","desc"));
+  onSnapshot(q,(snap)=>{
+    document.getElementById('contestFeed').innerHTML = "";
+    if(snap.empty){
+      document.getElementById('contestFeed').innerHTML = '<p style="text-align:center;color:#aaa">مفيش مسابقات حاليا</p>';
+      return;
+    }
+    snap.forEach(docSnap=>{
+      let p = docSnap.data();
+      document.getElementById('contestFeed').innerHTML += `
+      <div class="post-box">
         <div class="post-header">
           <img src="${SITE_LOGO}">
-          <div><b>${ADMIN_NAME}</b> <span class="badge-verified">✅ موثق</span></div>
+          <div><b>${ADMIN_NAME}</b> <span class="badge-admin">✅ موثق</span></div>
         </div>
-        <p style="white-space:pre-line;margin:12px 0">${p.text}</p>
-        ${p.image?`<img src="${p.image}">`:''}
-        <br><button class="btn red" onclick="openDeleteModal('contest','${d.id}','البوست')">🗑️ مسح</button>
+        <p class="post-text" style="white-space:pre-line">${linkify(p.text)}</p>
+        ${p.image? `<img src="${p.image}" class="post-img">` : ""}
       </div>`;
     });
-    document.getElementById('contestList').innerHTML=html||'<p style="text-align:center;color:#aaa">مفيش بوستات</p>';
   });
 }
 
-window.previewContestImg = (e)=>{
-  let reader = new FileReader();
-  reader.onload = function(){uploadedContestImage = reader.result; document.getElementById('contestImgPreview').src = uploadedContestImage; document.getElementById('contestImgPreview').style.display='block';}
-  reader.readAsDataURL(e.target.files[0]);
-}
-
-window.addContestPost = async ()=>{
-  let text = document.getElementById("contestText").value;
-  if(text.trim() == "" && uploadedContestImage == "") return showToast("اكتب نص او ارفع صورة",'error');
-  await addDoc(collection(db,"contest_posts"),{
-    uid: auth.currentUser.uid, name: ADMIN_NAME, role: "admin", logo: SITE_LOGO,
-    text: text, image: uploadedContestImage, createdAt: serverTimestamp()
+async function loadDashboard(){
+  const q = query(collection(db,"orders"), where("uid","==",currentUser.uid));
+  onSnapshot(q,(snap)=>{
+    let total = snap.size; let completed = 0; let earnings = 0;
+    snap.forEach(doc=>{if(doc.data().status==='done'){completed++; earnings += doc.data().package.price * 0.1;}});
+    document.getElementById('totalOrders').innerText = total;
+    document.getElementById('completedOrders').innerText = completed;
+    document.getElementById('totalEarnings').innerText = earnings.toFixed(2) + ' ج';
+    document.getElementById('currentBalance').innerText = earnings.toFixed(2) + ' ج';
   });
-  document.getElementById("contestText").value = ""; document.getElementById("contestImgPreview").style.display='none'; uploadedContestImage="";
-  showToast("✅ تم النشر");
 }
 
-function loadSettings(){
-  getDoc(doc(db,"settings","marquee")).then(snap=>{if(snap.exists()) document.getElementById('marqueeInput').value = snap.data().text;});
-  getDoc(doc(db,"settings","global_notification")).then(snap=>{if(snap.exists()) document.getElementById('globalNotifInput').value = snap.data().text;});
+window.selectGame = (name)=>{
+  currentGame = games.find(g=>g.name==name);
+  document.getElementById('checkout').style.display='block';
+  let userRole = userData?.role || 'guest'; let userDiscount = userData?.discount || 0;
+  
+  // لو اللعبة موبايل ليجند نعرض خانتين
+  let idFields = '';
+  if(name === 'Mobile Legends'){
+    idFields = `
+      <input type="text" id="playerId" placeholder="معرف المستخدم">
+      <input type="text" id="zoneId" placeholder="معرف المنطقة">
+    `;
+  } else {
+    idFields = `<input type="text" id="playerId" placeholder="ادخل Player ID">`;
+  }
 
-  document.getElementById('settings').innerHTML = `
-  <div class="setting-box">
-    <h2>🎁 التحكم في الشريط المتحرك</h2>
-    <input type="text" id="marqueeInput" placeholder="اكتب العرض هنا">
-    <button class="btn" onclick="saveMarquee()">حفظ الشريط</button>
-  </div>
-  <div class="setting-box">
-    <h2>📢 اشعار للكل</h2>
-    <p>ده هيظهر لكل الناس فوق في صندوق</p>
-    <textarea id="globalNotifInput" rows="3" placeholder="اكتب الاشعار هنا"></textarea>
-    <button class="btn" onclick="saveGlobalNotif()">نشر الاشعار</button>
-  </div>
+  document.getElementById('checkout').innerHTML = `
+    <h2 style="font-size:18px;margin-bottom:15px">شحن ${name}</h2>
+    ${idFields}
+    <input type="email" id="customerEmail" placeholder="ايميلك *" value="${currentUser?currentUser.email:''}">
+    <h3 style="font-size:16px;margin-top:10px">اختر الباقة ${userRole==='distributor'?`<span class="badge">خصم ${userDiscount}%</span>`:''}</h3>
+    <div class="packs" id="packs"></div>
+    <h3 id="totalPrice" style="color:#ffb800;font-size:16px"></h3>
+    <div class="payment-box"><h3 style="font-size:15px">الدفع: كاش</h3><p>حول على: <b style="color:#ffb800">01148029377</b></p><input type="text" id="walletNumber" placeholder="رقم المحفظة"><label style="font-size:13px">ارفع اسكرين التحويل *</label><input type="file" id="proof" accept="image/*"></div>
+    <button class="btn" id="submitBtn" onclick="placeOrder()">تأكيد الطلب</button>
   `;
+  let packsHtml=''; let discount = userDiscount / 100;
+  currentGame.packs.forEach(p=>{let price = userRole==='distributor'? Math.round(p.p*(1-discount)) : p.p; packsHtml += `<div class="pack" data-n="${p.n}" data-p="${price}" onclick="selectPack(this)">${p.n}<br><b>${price} ج</b></div>`;});
+  document.getElementById('packs').innerHTML = packsHtml;
+  window.scrollTo(0,document.body.scrollHeight);
 }
 
-window.upd=async(id,s)=>{await updateDoc(doc(db,"orders",id),{status:s});showToast('✅ تم تحديث حالة الطلب');}
+window.selectPack = (el)=>{document.querySelectorAll('.pack').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPack = {name:el.dataset.n, price:el.dataset.p};document.getElementById('totalPrice').innerText = 'الاجمالي: ' + selectedPack.price + ' جنيه';}
 
-window.openDeleteModal=(type,id,text)=>{
-  document.getElementById('deleteText').innerText=`هل متأكد من مسح: ${text}؟`;
-  document.getElementById('deleteModal').style.display='flex';
-  if(type=='userFull') deleteAction=()=>deleteUserFull(id);
-  if(type=='contest') deleteAction=()=>deleteDoc(doc(db,"contest_posts",id));
-  if(type=='order') deleteAction=()=>deleteDoc(doc(db,"orders",id));
-  if(type=='deleteAll') deleteAction=()=>deleteAllUsers();
-  if(type=='deleteAllOrders') deleteAction=()=>deleteAllOrders();
-  document.getElementById('confirmDeleteBtn').onclick=async()=>{await deleteAction();closeDeleteModal();loadAllUsers();loadDistManage();loadOrders();}
+window.placeOrder = async ()=>{
+  if(isSubmitting){return showToast('⏳ انتظر لحد ما طلبك يتم','#ff4444');}
+  if(!currentUser){return showToast('⚠️ قم بإنشاء حساب في الموقع لكي تشحن','#ff4444');}
+
+  const submitBtn = document.getElementById('submitBtn');
+  const idInput = document.getElementById('playerId');
+  const zoneInput = document.getElementById('zoneId'); // ل موبايل ليجند
+  const emailInput = document.getElementById('customerEmail');
+  const walletInput = document.getElementById('walletNumber');
+  const proof = document.getElementById('proof').files[0];
+
+  [idInput,emailInput,walletInput].forEach(i=>{ if(i) i.classList.remove('error'); });
+  if(zoneInput) zoneInput.classList.remove('error');
+
+  let hasError = false;
+
+  if(!idInput.value.trim()){idInput.classList.add('error');hasError=true;}
+  if(currentGame.name === 'Mobile Legends' &&!zoneInput.value.trim()){zoneInput.classList.add('error');hasError=true;}
+  if(!emailInput.value.trim() ||!validateEmail(emailInput.value)){emailInput.classList.add('error');hasError=true;}
+  if(!selectedPack){showToast('⚠️ اختار باقة الاول','#ff4444');hasError=true;}
+  if(!walletInput.value.trim()){walletInput.classList.add('error');hasError=true;}
+  if(!proof){showToast('⚠️ ارفع اسكرين التحويل','#ff4444');hasError=true;}
+  if(hasError) return showToast('⚠️ املى كل البيانات','#ff4444');
+
+  isSubmitting = true;
+  submitBtn.disabled = true;
+  submitBtn.innerText = 'جاري الارسال...';
+
+  const reader = new FileReader();
+  reader.onload = async (e)=>{
+    try{
+      let orderData = {
+        uid: currentUser.uid,
+        email:emailInput.value.trim(),
+        userRole: userData?.role || 'user',
+        game:currentGame.name,
+        playerId:idInput.value.trim(),
+        package:selectedPack,
+        walletNumber:walletInput.value.trim(),
+        proof:e.target.result,
+        status:"pending_payment",
+        createdAt:serverTimestamp()
+      };
+
+      // لو موبايل ليجند ضيف معرف المنطقة
+      if(currentGame.name === 'Mobile Legends'){
+        orderData.zoneId = zoneInput.value.trim();
+      }
+
+      await addDoc(collection(db,"orders"), orderData);
+
+      document.getElementById('checkout').innerHTML = `<div style="text-align:center;padding:20px"><h2 style="color:#00ff88;margin-bottom:15px;font-size:22px">✅ تم استلام طلبك</h2><p>هنكلمك خلال دقائق على: <b>${emailInput.value}</b></p><button class="btn" onclick="location.reload()">طلب جديد</button></div>`;
+
+    }catch(err){
+      showToast('⚠️ حصل خطأ جرب تاني','#ff4444');
+      isSubmitting = false;
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'تأكيد الطلب';
+    }
+  }
+  reader.readAsDataURL(proof);
 }
-window.closeDeleteModal=()=>{document.getElementById('deleteModal').style.display='none';}
-window.deleteUserFull=async(uid)=>{await deleteDoc(doc(db,"users",uid));showToast('✅ تم مسح الحساب');loadAllUsers();}
-window.saveMarquee=async()=>{await setDoc(doc(db,"settings","marquee"),{text:document.getElementById('marqueeInput').value});showToast('تم حفظ الشريط');}
-window.saveGlobalNotif=async()=>{await setDoc(doc(db,"settings","global_notification"),{text:document.getElementById('globalNotifInput').value});showToast('تم نشر الاشعار');}
-window.showTab=(t)=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');['orders','distRequests','distManage','users','contests','settings'].forEach(id=>document.getElementById(id).style.display=id==t?'block':'none');}
-window.adminLogin=async()=>{try{await signInWithEmailAndPassword(auth,document.getElementById('adminEmail').value,document.getElementById('adminPass').value);showToast('تم الدخول');}catch(e){showToast('بيانات غلط','error');}}
-window.logout=()=>{if(onlineInterval) clearInterval(onlineInterval); signOut(auth);}
-</script></body></html>
+
+window.login=async()=>{
+  const email = document.getElementById('loginEmail');
+  const pass = document.getElementById('loginPass');
+  try{await signInWithEmailAndPassword(auth,email.value,pass.value); showToast('تم الدخول');closeModal(); setTimeout(()=>location.reload(),800);}catch(e){showToast('⚠️ بيانات غلط','#ff4444')}
+}
+
+window.register=async()=>{
+  const name = document.getElementById('regName');
+  const email = document.getElementById('regEmail');
+  const pass = document.getElementById('regPass');
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email.value,pass.value);
+    await setDoc(doc(db,"users",cred.user.uid),{name:name.value,email:email.value,role:'user'});
+    showToast('تم التسجيل');closeModal(); setTimeout(()=>location.reload(),800);
+  }catch(e){showToast('⚠️ الايميل مستخدم','#ff4444')}
+}
+
+window.submitDist = async ()=>{
+  if(!currentUser) return showToast('⚠️ لازم تسجل الاول','#ff4444');
+  const name = document.getElementById('distName');
+  await addDoc(collection(db,"distributor_requests"),{
+    name:name.value, email:document.getElementById('distEmail').value,
+    phone:document.getElementById('distPhone').value, exp:document.getElementById('distExp').value,
+    uid: currentUser.uid, status:"pending", createdAt:serverTimestamp()
+  });
+  showToast('✅ تم الارسال');
+}
+
+window.showLogin=()=>document.getElementById('loginModal').style.display='flex';
+window.showRegister=()=>document.getElementById('registerModal').style.display='flex';
+window.closeModal=()=>document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+window.switchToRegister=()=>{closeModal(); setTimeout(showRegister,300);}
+window.logout=()=>{signOut(auth).then(()=>location.reload())};
+</script>
+</body>
+</html>
