@@ -89,6 +89,10 @@ footer{background:#000;border-top:2px solid #ffb800;padding:20px 4%;margin-top:4
 .ban-timer{background:#222;padding:15px;border-radius:10px;margin:20px 0;border:1px solid #ff4444}
 .ban-timer #banCountdown{font-size:24px;color:#ff4444;font-weight:bold}
 
+.marquee{background:linear-gradient(90deg,#ff4444,#ffb800);color:#000;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap;font-size:14px}
+.marquee span{display:inline-block;animation:marquee 15s linear infinite}
+@keyframes marquee{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
 @media(min-width:768px){
 .games-grid{grid-template-columns:repeat(4,1fr);gap:20px}
 .packs{grid-template-columns:repeat(4,1fr)}
