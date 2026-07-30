@@ -1,339 +1,335 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>highrise 24/7</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8"><title>لوحة تحكم Highrise</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
-  *{box-sizing:border-box;font-family:'Cairo',sans-serif}
-  body{margin:0;background:radial-gradient(1000px 500px at 20% -10%,#16203a 0%,transparent 60%),var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
+:root{
+  --bg:#05070a; --card:#0d111a; --border:#1e2636; --text:#eef2fa; --muted:#8a94a6;
+  --primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b; --info:#38bdf8;
+  --glass: rgba(13,17,26,0.6);
+}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif}
+body{background:radial-gradient(800px 400px at 80% -10%,#16203a 0%,transparent 60%),var(--bg);color:var(--text);margin:0;padding:24px}
+h1{color:var(--primary);font-weight:900;font-size:32px;text-shadow:0 0 20px rgba(79,124,255,0.3)}
 
-.sidebar{width:55px;background:#0a0f16;border-right:1px solid var(--border);height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;align-items:center;padding:15px 0;gap:12px;z-index:10;overflow-y:auto}
-.sidebar::-webkit-scrollbar{width:4px}
-.sidebar::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
+/* Stats Cards */
+.stats{display:flex;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+.stat-card{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--border);padding:20px;border-radius:18px;flex:1;min-width:220px;transition:.3s}
+.stat-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 0 20px rgba(79,124,255,0.2)}
+.stat-card h3{margin:0;font-size:14px;color:var(--muted)}
+.stat-card p{margin:10px 0 0;font-size:36px;font-weight:900;color:var(--primary)}
 
-.sidebar-icon{width:38px;height:38px;border-radius:50%;background:#1e2636;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s;flex-shrink:0}
-.sidebar-icon:hover{transform:scale(1.1);border-color:var(--primary)}
-.sidebar-icon img{width:100%;height:100%;object-fit:cover}
+/* Tabs */
+.tabs{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;background:var(--glass);padding:8px;border-radius:16px;border:1px solid var(--border)}
+.tabs button{padding:12px 20px;background:transparent;border:none;color:var(--muted);cursor:pointer;border-radius:12px;font-weight:700;transition:.2s}
+.tabs button:hover{background:rgba(79,124,255,0.1);color:var(--text)}
+.tabs button.active{background:var(--primary);color:#fff;box-shadow:0 4px 15px rgba(79,124,255,0.4)}
 
-.container{max-width:1400px;margin:0 auto;padding:20px;margin-left:70px;width:calc(100% - 70px);flex:1}
-.card{background:linear-gradient(180deg,#121827,#0d121b);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:20px}
-  input, select{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0;font-size:16px}
-  select option{background:#0a0f16}
-.btn{padding:12px 20px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-weight:800;cursor:pointer;transition:.2s}
-.btn:hover:not(:disabled){transform:translateY(-2px)}
-.btn.success{background:var(--success)}.btn.danger{background:var(--danger)}.btn.ghost{background:transparent;border:1px solid var(--border)}.btn.warn{background:var(--warn);color:#000}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.page{display:none}.page.active{display:block}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1b2030;border:1px solid var(--border);padding:12px 18px;border-radius:12px;z-index:999;font-weight:700}
-.servers{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-.server-box{background:var(--card);border:1px solid var(--border);padding:20px;border-radius:16px;cursor:pointer}
-.server-type-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(79,124,255,.2);color:var(--primary);margin-right:8px}
-.badge{font-size:12px;padding:6px 12px;border-radius:20px;font-weight:800}.badge.on{background:rgba(34,197,94,.2);color:var(--success)}.badge.off{background:rgba(239,68,68,.2);color:var(--danger)}.badge.pending{background:rgba(245,158,11,.2);color:var(--warn)}.badge.banned{background:rgba(239,68,68,.3);color:#fff}
-.log{background:#05070a;border:1px solid #0f131b;padding:14px;height:220px;overflow-y:auto;font-family:monospace;font-size:13px;border-radius:12px}
-.auth-wrap{max-width:440px;margin:80px auto}.actions{display:flex;gap:12px}
-.banned-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999}
-.server-page-icon{width:55px;height:55px;border-radius:50%;overflow:hidden;border:2px solid var(--primary);margin-bottom:15px;cursor:pointer;transition:.2s}
-.server-page-icon:hover{transform:scale(1.1)}
-.server-page-icon img{width:100%;height:100%;object-fit:cover}
+/* Cards */
+.card{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--border);padding:20px;margin:14px 0;border-radius:18px;transition:.3s}
+.card:hover{border-color:var(--primary);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.req-item{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.req-info{flex:1}
+.req-info p{margin:6px 0;color:var(--muted)}
+.req-info b{color:var(--text)}
+a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
 
-.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:10000;transition:opacity 0.5s ease}
-.loading-screen.hide{opacity:0;pointer-events:none}
-.loader{width:60px;height:60px;border:4px solid var(--border);border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px}
-@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.loading-text{font-size:22px;font-weight:800;color:var(--primary)}
+/* Buttons */
+.btn{padding:10px 18px;border:none;border-radius:12px;cursor:pointer;margin:4px;font-weight:800;transition:.2s;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.btn:hover{transform:translateY(-2px)}
+.btn.green{background:linear-gradient(135deg,var(--success),#16a34a);color:#000}
+.btn.red{background:linear-gradient(135deg,var(--danger),#dc2626);color:white}
+.btn.blue{background:linear-gradient(135deg,var(--primary),#3b82f6);color:white}
+.btn.orange{background:linear-gradient(135deg,var(--warn),#d97706);color:#000}
+.btn.gray{background:#374151;color:white}
+.header-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.header-actions h2{margin:0}
 
-.header-actions{display:flex;gap:10px;align-items:center}
-.note-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-weight:800;cursor:pointer;position:relative;transition:.2s}
-.note-icon:hover{background:var(--primary)}
-.note-popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:320px;display:none;z-index:100;text-align:right;line-height:1.8;font-size:14px}
-.note-popup.show{display:block}
-.note-popup h4{margin:0 0 10px 0;color:var(--primary)}
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,var(--success),#16a34a);color:#000;padding:14px 24px;border-radius:14px;display:none;font-weight:800;box-shadow:0 8px 25px rgba(34,197,94,0.4);z-index:999}
 
-footer{text-align:center;padding:20px;margin-left:55px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16}
+/* Login */
+.login-box{background:var(--glass);backdrop-filter:blur(20px);padding:40px;border-radius:24px;max-width:440px;margin:100px auto;border:1px solid var(--border);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#05070a;color:white;margin:10px 0;font-size:16px}
+input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,124,255,0.2)}
 
-/* للموبايل */
-@media(max-width: 768px){
-.sidebar{width:50px}
-.sidebar-icon{width:34px;height:34px}
-.container{margin-left:60px;width:calc(100% - 60px);padding:16px}
-footer{margin-left:50px}
-.note-popup{width:280px}
+/* Badge */
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800}
+
+/* ====== POPUP MODAL احترافي ====== */
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;z-index:1000}
+.modal-box{background:var(--card);border:1px solid var(--border);padding:30px;border-radius:20px;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:pop .3s}
+@keyframes pop{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-box h3{margin-top:0;color:var(--primary)}
+.modal-box textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#05070a;color:white;min-height:100px;resize:none}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 </style>
 </head>
 <body>
+<div id="app">جاري التحميل...</div>
+<div class="toast" id="toast"></div>
 
-  <div id="loadingScreen" class="loading-screen">
-    <div class="loader"></div>
-    <div class="loading-text">Highrise Bot</div>
-  </div>
-
-  <div class="sidebar">
-    <a id="icon1" href="#" target="_blank"><div class="sidebar-icon"><img id="icon1-img" src=""></div></a>
-    <a id="icon2" href="#" target="_blank"><div class="sidebar-icon"><img id="icon2-img" src=""></div></a>
-    <a id="icon3" href="#" target="_blank"><div class="sidebar-icon"><img id="icon3-img" src=""></div></a>
-  </div>
-
-<div class="container">
-  <div id="loginPage" class="page active"><div class="auth-wrap"><div class="card">
-    <h2 style="text-align:center">تسجيل دخول</h2><input id="loginEmail" type="email" placeholder="البريد الالكتروني"><input id="loginPassword" type="password" placeholder="كلمة السر">
-    <div class="actions"><button class="btn" onclick="signIn()" style="flex:1">دخول</button><button class="btn ghost" id="goToSignupBtn" style="flex:1">انشاء حساب</button></div>
-  </div></div></div>
-
-  <div id="signupPage" class="page"><div class="auth-wrap"><div class="card">
-    <h2 style="text-align:center">انشاء حساب جديد</h2><input id="signupUsername" type="text" placeholder="اسم المستخدم"><input id="signupEmail" type="email" placeholder="البريد الالكتروني"><input id="signupPassword" type="password" placeholder="كلمة السر"><input id="signupConfirmPassword" type="password" placeholder="تأكيد كلمة السر">
-    <div class="actions"><button class="btn" onclick="signUp()" style="flex:1">انشاء</button><button class="btn ghost" id="goToLoginBtn" style="flex:1">رجوع</button></div>
-  </div></div></div>
-
-  <div id="dashboardPage" class="page">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-      <h2>مرحبا, <span id="userName"></span></h2>
-      <div class="header-actions">
-        <div class="note-icon" id="noteBtn">!</div>
-        <button class="btn ghost" onclick="logout()">خروج</button>
-      </div>
-    </div>
-    <div class="note-popup" id="notePopup">
-      <h4>مرحبا بك في موقع هاي رايز لتثبيت البوتات</h4>
-      <p><b>معلومة لتثبيت البوت الخاص بك اتبع القوانين ولا تخالف</b></p>
-      <p><b>القانون الاول:</b> يجب ان يكون البوت الخاص بك مضاف في الغرفه في اللعبه</p>
-      <p><b>ثانيا:</b> عندما تقوم بي فتح سرفر هنا يجيب ان تقوم بي رفع الملف الخاص بي البوت وتقوم بي رفع الملف وتنظر حتي قبول الطلب</p>
-      <p>وشكرا لكم وحظا سعيد للجميع</p>
-    </div>
-    <button id="newServerBtn" class="btn" onclick="showCreateServer()">+ انشاء سيرفر جديد</button><h3>السيرفرات</h3><div class="servers" id="serversList"></div>
-
-    <div id="createServerBox" class="card" style="display:none">
-      <h3>انشاء سيرفر</h3>
-      <input id="serverName" placeholder="اسم السيرفر">
-      <select id="serverType">
-        <option value="">اختر نوع الخادم</option>
-        <option value="python"> خادم بايثون Python</option>
-        <option value="nodejs"> خادم Node.js</option>
-      </select>
-      <div style="display:flex;gap:10px">
-        <button class="btn" onclick="createServer()" style="flex:1">انشاء</button>
-        <button class="btn ghost" onclick="showCreateServer()" style="flex:1">الغاء</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="serverPage" class="page"><button class="btn ghost" onclick="goBack()">← رجوع</button>
-    <div class="card" style="margin-top:20px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
-      <h2 id="serverTitle"></h2><span id="serverStatus" class="badge"></span>
-    </div>
-      <p style="color:#aaa;margin-top:10px">نوع الخادم: <span id="serverTypeLabel"></span></p>
-      <h4>Console</h4><div class="log" id="logBox"></div>
-      <div style="margin:20px 0;display:flex;gap:10px;flex-wrap:wrap">
-        <button id="startBtn" class="btn success" onclick="requestAction('start')">طلب تشغيل</button>
-        <button id="stopBtn" class="btn danger" onclick="requestAction('stop')">طلب ايقاف</button>
-        <button id="deleteBtn" class="btn warn" onclick="requestDeleteServer()">طلب حذف السيرفر</button>
-      </div>
-      <p id="deleteCooldown" style="display:none;color:var(--warn);font-weight:700"></p>
-      <p id="pendingNote" style="display:none;color:var(--warn);font-weight:700">⏳ الطلب قيد المراجعة. انتظر موافقة Highrise خلال 24 ساعة</p>
-      <h4>رفع الملف</h4>
-      <a id="serverPageIconLink" href="#" target="_blank">
-        <div class="server-page-icon"><img id="serverPageIconImg" src=""></div>
-      </a>
-      <h4>ارسال رابط ل Highrise</h4><input id="linkInput" placeholder="الصق رابط ملف البوت هنا"><button class="btn" onclick="sendLink()">📤 ارسال الرابط</button>
-      <p id="linkStatus" style="display:none;color:var(--success);font-weight:700;margin-top:10px">✅ تم رفع ملف البوت بنجاح</p>
+<!-- POPUP MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3 id="modalTitle">تأكيد</h3>
+    <p id="modalText"></p>
+    <textarea id="modalInput" placeholder="اكتب السبب هنا..." style="display:none"></textarea>
+    <div class="modal-actions">
+      <button class="btn gray" onclick="closeModal()">الغاء</button>
+      <button class="btn" id="modalConfirmBtn">تأكيد</button>
     </div>
   </div>
 </div>
 
-<footer>
-  جميع الحقوق محفوظة © Highrise Bot 2026
-</footer>
-
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, where, doc, updateDoc, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs, serverTimestamp, addDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
-  const app = initializeApp(firebaseConfig);const auth = getAuth();const db = getFirestore();
-  let currentUser = null;let currentServerId = null;let serverCount = 0; let lastDeleteTime = null; let hasLink = false;
+const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
+const app=initializeApp(firebaseConfig); const db=getFirestore(app); const auth=getAuth(app);
+const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
 
-  const loadingScreen = document.getElementById('loadingScreen');
-  function showLoading(callback){
-    loadingScreen.classList.remove('hide');
-    setTimeout(()=>{ loadingScreen.classList.add('hide'); if(callback) callback(); }, 3000);
+let modalCallback = null;
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.innerText=`${type==='success'?'✅':type==='warn'?'⚠️':'❌'} ${msg}`;
+  t.style.background= type==='success'?'linear-gradient(135deg,var(--success),#16a34a)':type==='warn'?'linear-gradient(135deg,var(--warn),#d97706)':'linear-gradient(135deg,var(--danger),#dc2626)';
+  t.style.display='block';setTimeout(()=>t.style.display='none',3500)
+}
+
+function openModal(title,text,needInput=false,confirmText='تأكيد',confirmColor='red',callback){
+  document.getElementById('modalTitle').innerText=title;
+  document.getElementById('modalText').innerText=text;
+  document.getElementById('modalInput').style.display=needInput?'block':'none';
+  document.getElementById('modalInput').value='';
+  const btn=document.getElementById('modalConfirmBtn');
+  btn.innerText=confirmText;
+  btn.className=`btn ${confirmColor}`;
+  modalCallback=callback;
+  document.getElementById('modal').style.display='flex';
+}
+window.closeModal=()=>{document.getElementById('modal').style.display='none';modalCallback=null;}
+
+document.getElementById('modalConfirmBtn').onclick=()=>{
+  if(modalCallback) modalCallback(document.getElementById('modalInput').value);
+  closeModal();
+}
+
+onAuthStateChanged(auth, user => {
+  const appDiv = document.getElementById('app');
+  if(!user) {
+    appDiv.innerHTML = `<div class="login-box"><h1>🔐 لوحة تحكم Highrise</h1><input type="email" id="adminEmail" placeholder="البريد الالكتروني" value="${ADMIN_EMAIL}"><input type="password" id="adminPass" placeholder="كلمة السر"><button class="btn blue" onclick="adminLogin()" style="width:100%">دخول</button></div>`;
+    return;
   }
-  function hideLoading(){ loadingScreen.classList.add('hide'); }
+  if(user.email!== ADMIN_EMAIL){appDiv.innerHTML = `<div class="login-box"><h1>⛔ دخول غير مصرح</h1><p>هذا الحساب ليس حساب الموقع</p><button class="btn red" onclick="logout()">خروج</button></div>`; return;}
+  loadAdminPanel();
+});
 
-  const sidebarIcons = [
-    { img: "https://d.top4top.io/p_3863cef2q0.png", link: "https://discord.gg/highrise" },
-    { img: "https://f.top4top.io/p_38631ldbs0.png", link: "https://highrise.game/ar-EG" },
-    { img: "https://e.top4top.io/p_3863ub5et0.png", link: "https://replit.com/" }
-  ];
-  const serverPageIcon = { img: "https://l.top4top.io/p_3863dou250.png", link: "https://app.mediafire.com/" };
+function loadAdminPanel(){
+  document.getElementById('app').innerHTML = `
+  <h1>📊 لوحة تحكم Highrise</h1>
+  <button class="btn red" onclick="logout()" style="float:left">🚪 خروج</button>
+  <div class="stats">
+    <div class="stat-card"><h3>👥 عدد المستخدمين</h3><p id="userCount">0</p></div>
+    <div class="stat-card"><h3>🖥️ عدد السيرفرات</h3><p id="serverCount">0</p></div>
+  </div>
+  <div class="tabs">
+    <button class="active" onclick="showTab('users',this)">👥 المستخدمين</button>
+    <button onclick="showTab('servers',this)">🖥️ السيرفرات</button>
+    <button onclick="showTab('actionReq',this)">⚡ طلبات التشغيل</button>
+    <button onclick="showTab('linkReq',this)">🔗 طلبات الروابط</button>
+    <button onclick="showTab('deleteReq',this)">🗑️ طلبات الحذف</button>
+  </div>
+  <div id="users"></div><div id="servers" style="display:none"></div>
+  <div id="actionReq" style="display:none"></div><div id="linkReq" style="display:none"></div>
+  <div id="deleteReq" style="display:none"></div>
+  `;
+  loadUsers(); loadServers(); loadActionRequests(); loadLinkRequests(); loadDeleteRequests();
+}
 
-  document.getElementById('icon1-img').src = sidebarIcons[0].img; document.getElementById('icon1').href = sidebarIcons[0].link;
-  document.getElementById('icon2-img').src = sidebarIcons[1].img; document.getElementById('icon2').href = sidebarIcons[1].link;
-  document.getElementById('icon3-img').src = sidebarIcons[2].img; document.getElementById('icon3').href = sidebarIcons[2].link;
-  document.getElementById('serverPageIconImg').src = serverPageIcon.img; document.getElementById('serverPageIconLink').href = serverPageIcon.link;
+function loadUsers(){
+  onSnapshot(collection(db,"users"),(snap)=>{
+    document.getElementById('userCount').innerText=snap.size;
+    let html='<div class="header-actions"><h2>ادارة المستخدمين</h2></div>';
+    snap.forEach(d=>{const u=d.data();
+      html+=`<div class="card req-item">
+        <div class="req-info">
+          <p><b>الاسم:</b> ${u.username || 'بدون اسم'}</p>
+          <p><b>الايميل:</b> ${u.email}</p>
+          <p><b>الحالة:</b> ${u.banned?`<span class="badge" style="background:rgba(239,68,68,0.2);color:var(--danger)">🔨 محظور</span>`:`<span class="badge" style="background:rgba(34,197,94,0.2);color:var(--success)">✅ نشط</span>`}</p>
+        </div>
+        <div>
+          ${!u.banned?`<button class="btn orange" onclick="showBanModal('${d.id}','${u.email}','warning')">⚠️ تحذير</button>
+          <button class="btn red" onclick="showBanModal('${d.id}','${u.email}','ban')">🚫 حظر</button>`:`
+          <button class="btn green" onclick="unbanUser('${d.id}')">✅ فك الحظر</button>`}
+          <button class="btn gray" onclick="showDeleteUserModal('${d.id}','${u.email}')">🗑️ حذف</button>
+        </div>
+      </div>`;
+    });
+    document.getElementById('users').innerHTML=html||'<div class="card"><p>مفيش مستخدمين</p></div>';
+  });
+}
 
-  const loginEmail = document.getElementById('loginEmail');const loginPassword = document.getElementById('loginPassword');
-  const signupUsername = document.getElementById('signupUsername');const signupEmail = document.getElementById('signupEmail');
-  const signupPassword = document.getElementById('signupPassword');const signupConfirmPassword = document.getElementById('signupConfirmPassword');
-  const userName = document.getElementById('userName');const serversList = document.getElementById('serversList');
-  const newServerBtn = document.getElementById('newServerBtn');const serverName = document.getElementById('serverName'); const serverType = document.getElementById('serverType');
-  const createServerBox = document.getElementById('createServerBox');const serverTitle = document.getElementById('serverTitle'); const serverTypeLabel = document.getElementById('serverTypeLabel');
-  const serverStatus = document.getElementById('serverStatus');const logBox = document.getElementById('logBox');
-  const startBtn = document.getElementById('startBtn');const stopBtn = document.getElementById('stopBtn'); const deleteBtn = document.getElementById('deleteBtn');
-  const pendingNote = document.getElementById('pendingNote'); const deleteCooldown = document.getElementById('deleteCooldown'); const linkInput = document.getElementById('linkInput');
-  const noteBtn = document.getElementById('noteBtn');const notePopup = document.getElementById('notePopup'); const linkStatus = document.getElementById('linkStatus');
-
-  noteBtn.onclick = () => notePopup.classList.toggle('show');
-  document.addEventListener('click', e => {if(!noteBtn.contains(e.target) &&!notePopup.contains(e.target)) notePopup.classList.remove('show')});
-
-  function toast(msg){const t=document.createElement('div');t.className='toast';t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
-  function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
-  window.goBack = () => showPage('dashboardPage');
-
-  document.getElementById('goToSignupBtn').addEventListener('click', () => showPage('signupPage'));
-  document.getElementById('goToLoginBtn').addEventListener('click', () => showPage('loginPage'));
-
-  onAuthStateChanged(auth, async user => {
-    try{
-      if(user){
-        const userDoc = await getDoc(doc(db,"users",user.uid));
-        if(userDoc.exists() && userDoc.data().banned){document.body.innerHTML=`<div class="banned-screen"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||'بدون سبب'}</p><button class="btn danger" onclick="signOut(auth)">خروج</button></div>`;return;}
-        currentUser=user; userName.innerText=userDoc.data().username || user.email.split('@')[0];
-        lastDeleteTime = userDoc.data().lastDeleteTime || null;
-        if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{
-          showPage('dashboardPage');loadServers();hideLoading();
-        }
-      } else { showPage('loginPage'); hideLoading(); }
-    }catch(e){
-      console.error(e); hideLoading(); toast('خطأ في الاتصال ب Firebase')
+// ====== دوال الحظر والتحذير الاحترافية ======
+window.showBanModal=(uid,email,type)=>{
+  const title = type==='warning'?'⚠️ ارسال تحذير':'🚫 حظر مستخدم';
+  const text = type==='warning'?`هل تريد ارسال تحذير للمستخدم ${email}؟`:`هل تريد حظر المستخدم ${email}؟`;
+  const color = type==='warning'?'orange':'red';
+  openModal(title,text,true,color==='orange'?'ارسال التحذير':'تأكيد الحظر',color,async(reason)=>{
+    if(!reason){showToast('يجب كتابة السبب','danger');return;}
+    if(type==='warning'){
+      await addDoc(collection(db,"notifications"),{uid,reason,type:"warning",time:serverTimestamp()});
+      showToast(`تم ارسال تحذير لـ ${email}`,'warn')
+    }else{
+      await updateDoc(doc(db,"users",uid),{banned:true,banReason:reason});
+      showToast(`تم حظر ${email}`,'danger')
     }
   });
+}
 
-  window.signUp=async()=>{
-    const username = signupUsername.value.trim(); const email = signupEmail.value.trim();
-    const password = signupPassword.value; const confirmPassword = signupConfirmPassword.value;
-    if(!username ||!email ||!password) return toast('املا كل الحقول');
-    if(password!== confirmPassword) return toast('كلمة السر مش مطابقة');
-    if(password.length < 6) return toast('كلمة السر لازم 6 حروف اقل حاجة');
-    try{
-      showLoading();
-      const res = await createUserWithEmailAndPassword(auth,email,password);
-      await setDoc(doc(db,"users",res.user.uid),{username: username,email: email,createdAt: serverTimestamp(),banned: false, lastDeleteTime: null});
-      currentUser = res.user; userName.innerText = username;
-      showPage('dashboardPage');loadServers();hideLoading(); toast('تم انشاء الحساب بنجاح');
-    }catch(e){hideLoading(); if(e.code==='auth/email-already-in-use') toast('الايميل ده مستخدم قبل كده'); else toast('خطأ: '+e.message)}
-  }
+window.unbanUser=async(uid)=>{
+  openModal('✅ فك الحظر','هل تريد فك حظر هذا المستخدم؟',false,'فك الحظر','green',async()=>{
+    await updateDoc(doc(db,"users",uid),{banned:false,banReason:null});
+    showToast('تم فك الحظر')
+  });
+}
 
-  window.signIn=async()=>{
-    try{
-      showLoading();
-      const res = await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);
-      const userDoc = await getDoc(doc(db,"users",res.user.uid));
-      userName.innerText = userDoc.data().username || res.user.email.split('@')[0];
-      lastDeleteTime = userDoc.data().lastDeleteTime || null;
-      showPage('dashboardPage');loadServers();hideLoading(); toast('مرحبا')
-    }catch(e){hideLoading(); toast('خطأ في البيانات')}
-  }
-  window.logout=()=>signOut(auth);
+window.showDeleteUserModal=(uid,email)=>{
+  openModal('🗑️ حذف حساب نهائي',`تحذير: سيتم حذف حساب ${email} وجميع سيرفراته. هذا الاجراء لا يمكن التراجع عنه!`,false,'نعم احذف','red',async()=>{
+    const servers = await getDocs(query(collection(db,"servers"),where("uid","==",uid)));
+    servers.forEach(s=>deleteDoc(doc(db,"servers",s.id)));
+    await deleteDoc(doc(db,"users",uid));
+    showToast(`تم حذف ${email} نهائيا`,'danger')
+  });
+}
 
-  async function loadServers(){
-    const q=query(collection(db,"servers"),where("uid","==",currentUser.uid));
-    onSnapshot(q,snap=>{
-      serverCount=snap.size;serversList.innerHTML='';
-      snap.forEach(d=>{const s=d.data();const statusClass=s.status==='شغال'?'on':s.pendingAction?'pending':'off';
-        const typeText = s.type==='python'?' بايثون':s.type==='nodejs'?' Node.js':'';
-        serversList.innerHTML+=`<div class="server-box" onclick="openServerPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${s.name}</h4><span class="server-type-badge">${typeText}</span></div><span class="badge ${statusClass}">${s.pendingAction||s.status||'متوقف'}</span></div></div>`});
-
-      if(serverCount >= 4){ newServerBtn.style.display = 'none'; createServerBox.style.display = 'none'; }
-      else { newServerBtn.style.display = 'block'; }
+function loadServers(){
+  onSnapshot(collection(db,"servers"),(snap)=>{
+    document.getElementById('serverCount').innerText=snap.size;
+    let html='<div class="header-actions"><h2>جميع السيرفرات</h2></div>';
+    snap.forEach(d=>{const s=d.data();
+      html+=`<div class="card req-item"><div class="req-info">
+        <h3 style="margin:0 0 8px">${s.name}</h3>
+        <p><b>الحالة:</b> <span class="badge" style="background:${s.status==='شغال'?'rgba(34,197,94,0.2)':'rgba(239,68,68,0.2)'};color:${s.status==='شغال'?'var(--success)':'var(--danger)'}">${s.pendingAction||s.status}</span></p>
+        <p><b>المالك:</b> ${s.uid}</p>
+      </div><div>
+        <button class="btn blue" onclick="editServerName('${d.id}','${s.name}')">✏️ تعديل</button>
+        <button class="btn red" onclick="showDeleteServerModal('${d.id}')">🗑️ حذف</button>
+      </div></div>`;
     });
-  }
+    document.getElementById('servers').innerHTML=html||'<div class="card"><p>مفيش سيرفرات</p></div>';
+  });
+}
 
-  window.showCreateServer=()=>{
-    if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');
-    createServerBox.style.display=createServerBox.style.display==='none'?'block':'none';
-    serverName.value=''; serverType.value='';
-  }
+window.editServerName=async(id,oldName)=>{
+  openModal('✏️ تعديل اسم السيرفر','ادخل الاسم الجديد:',true,'حفظ','blue',(newName)=>{
+    if(newName) updateDoc(doc(db,"servers",id),{name:newName}).then(()=>showToast('تم تعديل الاسم'))
+  });
+  document.getElementById('modalInput').value=oldName;
+}
+window.showDeleteServerModal=(id)=>{
+  openModal('🗑️ حذف سيرفر','هل انت متاكد من حذف هذا السيرفر نهائيا؟',false,'نعم احذف','red',async()=>{
+    await deleteDoc(doc(db,"servers",id));showToast('تم حذف السيرفر','danger')
+  });
+}
 
-  window.createServer=async()=>{
-    if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');
-    const name=serverName.value.trim();
-    const type=serverType.value;
-    if(!name)return toast('اكتب اسم السيرفر');
-    if(!type)return toast('اختر نوع الخادم');
-
-    await addDoc(collection(db,"servers"),{
-      uid:currentUser.uid,
-      name,
-      type,
-      status:'متوقف',
-      log:`> تم انشاء السيرفر - النوع: ${type==='python'?'بايثون':'Node.js'}`,
-      createdAt:serverTimestamp(),
-      hasLink:false
+// ====== الطلبات مع سلة احترافية ======
+function loadActionRequests(){
+  onSnapshot(query(collection(db,"action_requests"),where("status","==","pending")),(snap)=>{
+    let html=`<div class="header-actions"><h2>طلبات التشغيل والايقاف</h2>${!snap.empty?`<button class="btn red" onclick="showDeleteAllModal('action_requests')">🗑️ مسح الكل</button>`:''}</div>`;
+    if(snap.empty) html+='<div class="card"><p>🎉 لا يوجد طلبات معلقة</p></div>';
+    snap.forEach(d=>{const r=d.data();
+      html+=`<div class="card req-item"><div class="req-info">
+        <p><b>المستخدم:</b> ${r.userEmail}</p><p><b>السيرفر:</b> ${r.serverName}</p><p><b>الطلب:</b> ${r.action==='start'?'🔌 تشغيل':'⏹️ ايقاف'}</p>
+      </div><div>
+        <button class="btn green" onclick="approveAction('${d.id}','${r.serverId}','${r.action}')">✅ موافقة</button>
+        <button class="btn red" onclick="rejectAction('${d.id}','${r.serverId}')">❌ رفض</button>
+        <button class="btn gray" onclick="showDeleteOneModal('action_requests','${d.id}')">🗑️</button>
+      </div></div>`;
     });
-    showCreateServer(); toast('✅ تم انشاء السيرفر')
-  }
+    document.getElementById('actionReq').innerHTML=html;
+  });
+}
+window.approveAction=async(reqId,serverId,action)=>{
+  const newStatus=action==='start'?'شغال':'متوقف';
+  await updateDoc(doc(db,"servers",serverId),{status:newStatus,pendingAction:null,log:`> تم ${action==='start'?'تشغيل':'ايقاف'} السيرفر بواسطة Highrise`});
+  await updateDoc(doc(db,"action_requests",reqId),{status:'approved'});showToast('تمت الموافقة على الطلب');
+}
+window.rejectAction=async(reqId,serverId)=>{
+  await updateDoc(doc(db,"servers",serverId),{pendingAction:null,log:'> تم رفض الطلب بواسطة Highrise'});
+  await updateDoc(doc(db,"action_requests",reqId),{status:'rejected'});showToast('تم رفض الطلب','warn');
+}
 
-  window.openServerPage=(id)=>{
-    currentServerId=id;showPage('serverPage');hasLink=false;linkStatus.style.display='none';
-    onSnapshot(doc(db,"servers",id),snap=>{
-      if(!snap.exists())return;const s=snap.data();
-      serverTitle.innerText=s.name;
-      serverTypeLabel.innerText = s.type==='python'?' بايثون Python':s.type==='nodejs'?' Node.js':'غير محدد';
-      serverStatus.innerText=s.pendingAction||s.status;
-      serverStatus.className='badge '+(s.status==='شغال'?'on':s.pendingAction?'pending':'off');
-      logBox.innerHTML=(s.log||'> جاهز').split('\n').map(l=>`<div>${l}</div>`).join('');
-      const isPending=s.pendingAction!=null;startBtn.disabled=isPending;stopBtn.disabled=isPending;pendingNote.style.display=isPending?'block':'none';
-
-      if(s.log && s.log.includes('تم ارسال رابط ل Highrise')){
-        hasLink = true; linkStatus.style.display = 'block';
-      }
-
-      if(lastDeleteTime){
-        const last = lastDeleteTime.toDate();
-        const diffDays = (new Date() - last) / (1000 * 60 * 60 * 24);
-        if(diffDays < 7){
-          deleteBtn.disabled = true;
-          deleteCooldown.style.display = 'block';
-          deleteCooldown.innerText = `⏳ تقدر تطلب حذف سيرفر بعد ${(7 - diffDays).toFixed(1)} يوم`;
-        } else { deleteBtn.disabled = false; deleteCooldown.style.display = 'none'; }
-      } else { deleteBtn.disabled = false; deleteCooldown.style.display = 'none'; }
-    })
-  }
-
-  window.requestAction=async(action)=>{
-    if(!hasLink){
-      return toast('⚠️ خطأ: قم برفع ملف البوت اولاً قبل طلب التشغيل');
-    }
-    const snap=await getDoc(doc(db,"servers",currentServerId));
-    if(snap.data().pendingAction)return toast('انتظر موافقة Highrise خلال 24 ساعه');
-    await addDoc(collection(db,"action_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:snap.data().name,action:action,status:'pending',time:serverTimestamp()});
-    await updateDoc(doc(db,"servers",currentServerId),{pendingAction:'بانتظار موافقة Highrise',log:(snap.data().log||'') + `\n> تم ارسال طلب ${action==='start'?'تشغيل':'ايقاف'} ل Highrise`});
-    toast('✅ تم ارسال الطلب ل Highrise')
-  }
-
-  window.requestDeleteServer = async() => {
-    if(deleteBtn.disabled) return toast('لازم تستني 7 ايام بين كل حذف');
-    const snap = await getDoc(doc(db,"servers",currentServerId));
-    if(!snap.exists()) return toast('السيرفر مش موجود');
-    await addDoc(collection(db,"delete_requests"),{
-      uid: currentUser.uid, userEmail: currentUser.email, serverId: currentServerId, serverName: snap.data().name,
-      status: 'pending', time: serverTimestamp()
+function loadLinkRequests(){
+  onSnapshot(query(collection(db,"link_requests"),where("status","==","pending")),(snap)=>{
+    let html=`<div class="header-actions"><h2>طلبات الروابط</h2>${!snap.empty?`<button class="btn red" onclick="showDeleteAllModal('link_requests')">🗑️ مسح الكل</button>`:''}</div>`;
+    if(snap.empty) html+='<div class="card"><p>🎉 لا يوجد روابط معلقة</p></div>';
+    snap.forEach(d=>{const r=d.data();
+      html+=`<div class="card req-item"><div class="req-info">
+        <p><b>المستخدم:</b> ${r.userEmail}</p><p><b>السيرفر:</b> ${r.serverName}</p><p><b>الرابط:</b> <a href="${r.link}" target="_blank">🔗 ${r.link}</a></p>
+      </div><div>
+        <button class="btn green" onclick="approveLink('${d.id}')">✅ استلام</button>
+        <button class="btn red" onclick="rejectLink('${d.id}')">❌ رفض</button>
+        <button class="btn gray" onclick="showDeleteOneModal('link_requests','${d.id}')">🗑️</button>
+      </div></div>`;
     });
-    toast('تم ارسال طلب الحذف ');
-    deleteBtn.disabled = true;
-  }
+    document.getElementById('linkReq').innerHTML=html;
+  });
+}
+window.approveLink=async(id)=>{await updateDoc(doc(db,"link_requests",id),{status:'done'});showToast('تم اعتماد الرابط')}
+window.rejectLink=async(id)=>{await updateDoc(doc(db,"link_requests",id),{status:'rejected'});showToast('تم رفض الرابط','warn')}
 
-  window.sendLink=async()=>{
-    const link=linkInput.value.trim(); if(!link||!link.startsWith('http'))return toast('⚠️ الرجاء ادخال رابط صحيح لملف البوت');
-    const serverSnap = await getDoc(doc(db,"servers",currentServerId));
-    await addDoc(collection(db,"link_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:serverSnap.data().name,link:link,status:'pending',time:serverTimestamp()});
-    await updateDoc(doc(db,"servers",currentServerId),{log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise\n> ${link}`,hasLink:true});
-    linkInput.value=''; hasLink = true; linkStatus.style.display = 'block';
-    toast('✅ تم استلام ملف البوت بنجاح. يمكنك الان طلب التشغيل')
-  }
+function loadDeleteRequests(){
+  onSnapshot(query(collection(db,"delete_requests"),where("status","==","pending")),(snap)=>{
+    let html=`<div class="header-actions"><h2>طلبات حذف السيرفرات</h2>${!snap.empty?`<button class="btn red" onclick="showDeleteAllModal('delete_requests')">🗑️ مسح الكل</button>`:''}</div>`;
+    if(snap.empty) html+='<div class="card"><p>🎉 لا يوجد طلبات حذف</p></div>';
+    snap.forEach(d=>{const r=d.data();
+      html+=`<div class="card req-item"><div class="req-info">
+        <p><b>المستخدم:</b> ${r.userEmail}</p><p><b>السيرفر:</b> ${r.serverName}</p><p><b>التاريخ:</b> ${r.time?.toDate().toLocaleString('ar-EG') || '---'}</p>
+      </div><div>
+        <button class="btn green" onclick="approveDelete('${d.id}','${r.serverId}','${r.uid}')">✅ موافقة ومسح</button>
+        <button class="btn red" onclick="rejectDelete('${d.id}')">❌ رفض</button>
+        <button class="btn gray" onclick="showDeleteOneModal('delete_requests','${d.id}')">🗑️</button>
+      </div></div>`;
+    });
+    document.getElementById('deleteReq').innerHTML=html;
+  });
+}
+
+window.approveDelete=async(reqId,serverId,userId)=>{
+  openModal('🗑️ حذف السيرفر','هل انت متاكد من حذف السيرفر وتفعيل الكول داون 7 ايام؟',false,'نعم احذف','red',async()=>{
+    await deleteDoc(doc(db,"servers",serverId));
+    await updateDoc(doc(db,"users",userId),{lastDeleteTime: serverTimestamp()});
+    await updateDoc(doc(db,"delete_requests",reqId),{status:'approved'});
+    showToast('تم حذف السيرفر','danger')
+  });
+}
+window.rejectDelete=async(reqId)=>{await updateDoc(doc(db,"delete_requests",reqId),{status:'rejected'});showToast('تم رفض طلب الحذف','warn')}
+
+// ====== دوال السلة بالـ Popup ======
+window.showDeleteOneModal=(collectionName,id)=>{
+  openModal('🗑️ حذف طلب','هل انت متاكد من حذف هذا الطلب نهائيا؟',false,'نعم احذف','red',async()=>{
+    await deleteDoc(doc(db,collectionName,id));showToast('تم حذف الطلب','danger')
+  });
+}
+window.showDeleteAllModal=(collectionName)=>{
+  const names={'action_requests':'طلبات التشغيل','link_requests':'طلبات الروابط','delete_requests':'طلبات الحذف'};
+  openModal('🗑️ مسح الكل',`هل انت متاكد من حذف جميع ${names[collectionName]} المعلقة؟`,false,'نعم امسح الكل','red',async()=>{
+    const snap = await getDocs(query(collection(db,collectionName),where("status","==","pending")));
+    const batch = writeBatch(db);
+    snap.forEach(d=>batch.delete(doc(db,collectionName,d.id)));
+    await batch.commit();
+    showToast(`تم مسح جميع ${names[collectionName]}`,'danger')
+  });
+}
+
+window.showTab=(t,btn)=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['users','servers','actionReq','linkReq','deleteReq'].forEach(id=>document.getElementById(id).style.display=id==t?'block':'none');}
+window.adminLogin=async()=>{try{await signInWithEmailAndPassword(auth,document.getElementById('adminEmail').value,document.getElementById('adminPass').value);showToast('مرحبا بك');}catch(e){showToast('بيانات الدخول غير صحيحة','danger');}}
+window.logout=()=>signOut(auth);
 </script>
 </body>
 </html>
