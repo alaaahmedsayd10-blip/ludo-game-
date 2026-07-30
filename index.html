@@ -9,15 +9,11 @@
   :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
   *{box-sizing:border-box;font-family:'Cairo',sans-serif}
   body{margin:0;background:radial-gradient(1000px 500px at 20% -10%,#16203a 0%,transparent 60%),var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
-.sidebar{width:75px;background:#0a0f16;border-left:1px solid var(--border);height:100vh;position:fixed;right:0;top:0;display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:15px;z-index:10}
-.sidebar-icon{width:45px;height:45px;border-radius:50%;background:#1e2636;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s}
+.sidebar{width:60px;background:#0a0f16;border-left:1px solid var(--border);height:100vh;position:fixed;right:0;top:0;display:flex;flex-direction:column;align-items:center;padding:15px 0;gap:12px;z-index:10}
+.sidebar-icon{width:38px;height:38px;border-radius:50%;background:#1e2636;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s}
 .sidebar-icon:hover{transform:scale(1.1);border-color:var(--primary)}
 .sidebar-icon img{width:100%;height:100%;object-fit:cover}
-.container{max-width:1200px;margin:0 auto;padding:24px;margin-right:95px;width:100%;flex:1}
-@media(max-width: 768px){
- .sidebar{width:60px}
- .container{margin-right:70px;padding:16px}
-  footer{margin-right:60px}
+.container{max-width:1200px;margin:0 auto;padding:20px;margin-right:80px;width:100%;flex:1}
 .card{background:linear-gradient(180deg,#121827,#0d121b);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:20px}
   input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0}
 .btn{padding:12px 20px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-weight:800;cursor:pointer;transition:.2s}
@@ -49,7 +45,14 @@
 .note-popup.show{display:block}
 .note-popup h4{margin:0 0 10px 0;color:var(--primary)}
 
-footer{text-align:center;padding:20px;margin-right:75px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16}
+footer{text-align:center;padding:20px;margin-right:60px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16}
+
+/* للموبايل */
+@media(max-width: 768px){
+.sidebar{width:50px;padding:12px 0;gap:10px}
+.sidebar-icon{width:34px;height:34px}
+.container{margin-right:65px;padding:16px}
+ footer{margin-right:50px}
 </style>
 </head>
 <body>
@@ -78,7 +81,7 @@ footer{text-align:center;padding:20px;margin-right:75px;border-top:1px solid var
 
   <div id="dashboardPage" class="page">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-      <h2>مرحبا بك, <span id="userName"></span></h2>
+      <h2>مرحبا, <span id="userName"></span></h2>
       <div class="header-actions">
         <div class="note-icon" id="noteBtn">!</div>
         <button class="btn ghost" onclick="logout()">خروج</button>
