@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CloudHost Pro</title>
+<title>highrise 24/7</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
@@ -20,7 +20,8 @@
 
 .container{max-width:1400px;margin:0 auto;padding:20px;margin-left:70px;width:calc(100% - 70px);flex:1}
 .card{background:linear-gradient(180deg,#121827,#0d121b);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:20px}
-  input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0}
+  input, select{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0;font-size:16px}
+  select option{background:#0a0f16}
 .btn{padding:12px 20px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-weight:800;cursor:pointer;transition:.2s}
 .btn:hover:not(:disabled){transform:translateY(-2px)}
 .btn.success{background:var(--success)}.btn.danger{background:var(--danger)}.btn.ghost{background:transparent;border:1px solid var(--border)}.btn.warn{background:var(--warn);color:#000}
@@ -29,6 +30,7 @@
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1b2030;border:1px solid var(--border);padding:12px 18px;border-radius:12px;z-index:999;font-weight:700}
 .servers{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
 .server-box{background:var(--card);border:1px solid var(--border);padding:20px;border-radius:16px;cursor:pointer}
+.server-type-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(79,124,255,.2);color:var(--primary);margin-right:8px}
 .badge{font-size:12px;padding:6px 12px;border-radius:20px;font-weight:800}.badge.on{background:rgba(34,197,94,.2);color:var(--success)}.badge.off{background:rgba(239,68,68,.2);color:var(--danger)}.badge.pending{background:rgba(245,158,11,.2);color:var(--warn)}.badge.banned{background:rgba(239,68,68,.3);color:#fff}
 .log{background:#05070a;border:1px solid #0f131b;padding:14px;height:220px;overflow-y:auto;font-family:monospace;font-size:13px;border-radius:12px}
 .auth-wrap{max-width:440px;margin:80px auto}.actions{display:flex;gap:12px}
@@ -37,7 +39,7 @@
 .server-page-icon:hover{transform:scale(1.1)}
 .server-page-icon img{width:100%;height:100%;object-fit:cover}
 
-.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:10000;transition:opacity 0.5s ease} /* صلحت المسافة هنا */
+.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:10000;transition:opacity 0.5s ease}
 .loading-screen.hide{opacity:0;pointer-events:none}
 .loader{width:60px;height:60px;border:4px solid var(--border);border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
@@ -101,12 +103,28 @@ footer{margin-left:50px}
       <p>وشكرا لكم وحظا سعيد للجميع</p>
     </div>
     <button id="newServerBtn" class="btn" onclick="showCreateServer()">+ انشاء سيرفر جديد</button><h3>السيرفرات</h3><div class="servers" id="serversList"></div>
-    <div id="createServerBox" class="card" style="display:none"><h3>انشاء سيرفر</h3><input id="serverName" placeholder="اسم السيرفر"><button class="btn" onclick="createServer()">انشاء</button><button class="btn ghost" onclick="showCreateServer()">الغاء</button></div>
+
+    <div id="createServerBox" class="card" style="display:none">
+      <h3>انشاء سيرفر</h3>
+      <input id="serverName" placeholder="اسم السيرفر">
+      <select id="serverType">
+        <option value="">اختر نوع الخادم</option>
+        <option value="python"> خادم بايثون Python</option>
+        <option value="nodejs"> خادم Node.js</option>
+      </select>
+      <div style="display:flex;gap:10px">
+        <button class="btn" onclick="createServer()" style="flex:1">انشاء</button>
+        <button class="btn ghost" onclick="showCreateServer()" style="flex:1">الغاء</button>
+      </div>
+    </div>
   </div>
 
   <div id="serverPage" class="page"><button class="btn ghost" onclick="goBack()">← رجوع</button>
-    <div class="card" style="margin-top:20px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px"><h2 id="serverTitle"></h2><span id="serverStatus" class="badge"></span></div>
-      <h4>الكونسول</h4><div class="log" id="logBox"></div>
+    <div class="card" style="margin-top:20px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <h2 id="serverTitle"></h2><span id="serverStatus" class="badge"></span>
+    </div>
+      <p style="color:#aaa;margin-top:10px">نوع الخادم: <span id="serverTypeLabel"></span></p>
+      <h4>Console</h4><div class="log" id="logBox"></div>
       <div style="margin:20px 0;display:flex;gap:10px;flex-wrap:wrap">
         <button id="startBtn" class="btn success" onclick="requestAction('start')">طلب تشغيل</button>
         <button id="stopBtn" class="btn danger" onclick="requestAction('stop')">طلب ايقاف</button>
@@ -140,16 +158,9 @@ footer{margin-left:50px}
   const loadingScreen = document.getElementById('loadingScreen');
   function showLoading(callback){
     loadingScreen.classList.remove('hide');
-    // تايمر احتياطي 3 ثواني عشان لو Firebase اتأخر
-    setTimeout(()=>{
-      loadingScreen.classList.add('hide');
-      if(callback) callback();
-    }, 3000);
+    setTimeout(()=>{ loadingScreen.classList.add('hide'); if(callback) callback(); }, 3000);
   }
-
-  function hideLoading(){
-    loadingScreen.classList.add('hide');
-  }
+  function hideLoading(){ loadingScreen.classList.add('hide'); }
 
   const sidebarIcons = [
     { img: "https://d.top4top.io/p_3863cef2q0.png", link: "https://discord.gg/highrise" },
@@ -167,8 +178,8 @@ footer{margin-left:50px}
   const signupUsername = document.getElementById('signupUsername');const signupEmail = document.getElementById('signupEmail');
   const signupPassword = document.getElementById('signupPassword');const signupConfirmPassword = document.getElementById('signupConfirmPassword');
   const userName = document.getElementById('userName');const serversList = document.getElementById('serversList');
-  const newServerBtn = document.getElementById('newServerBtn');const serverName = document.getElementById('serverName');
-  const createServerBox = document.getElementById('createServerBox');const serverTitle = document.getElementById('serverTitle');
+  const newServerBtn = document.getElementById('newServerBtn');const serverName = document.getElementById('serverName'); const serverType = document.getElementById('serverType');
+  const createServerBox = document.getElementById('createServerBox');const serverTitle = document.getElementById('serverTitle'); const serverTypeLabel = document.getElementById('serverTypeLabel');
   const serverStatus = document.getElementById('serverStatus');const logBox = document.getElementById('logBox');
   const startBtn = document.getElementById('startBtn');const stopBtn = document.getElementById('stopBtn'); const deleteBtn = document.getElementById('deleteBtn');
   const pendingNote = document.getElementById('pendingNote'); const deleteCooldown = document.getElementById('deleteCooldown'); const linkInput = document.getElementById('linkInput');
@@ -192,13 +203,11 @@ footer{margin-left:50px}
         currentUser=user; userName.innerText=userDoc.data().username || user.email.split('@')[0];
         lastDeleteTime = userDoc.data().lastDeleteTime || null;
         if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{
-          showPage('dashboardPage');loadServers();hideLoading(); // اخفي التحميل بعد ما الصفحة تجهز
+          showPage('dashboardPage');loadServers();hideLoading();
         }
       } else { showPage('loginPage'); hideLoading(); }
     }catch(e){
-      console.error(e);
-      hideLoading(); // لو حصل خطأ برضو اخفي التحميل
-      toast('خطأ في الاتصال ب Highrise')
+      console.error(e); hideLoading(); toast('خطأ في الاتصال ب Firebase')
     }
   });
 
@@ -234,26 +243,46 @@ footer{margin-left:50px}
     onSnapshot(q,snap=>{
       serverCount=snap.size;serversList.innerHTML='';
       snap.forEach(d=>{const s=d.data();const statusClass=s.status==='شغال'?'on':s.pendingAction?'pending':'off';
-        serversList.innerHTML+=`<div class="server-box" onclick="openServerPage('${d.id}')"><div style="display:flex;justify-content:space-between"><h4>${s.name}</h4><span class="badge ${statusClass}">${s.pendingAction||s.status||'متوقف'}</span></div></div>`});
+        const typeText = s.type==='python'?' بايثون':s.type==='nodejs'?' Node.js':'';
+        serversList.innerHTML+=`<div class="server-box" onclick="openServerPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${s.name}</h4><span class="server-type-badge">${typeText}</span></div><span class="badge ${statusClass}">${s.pendingAction||s.status||'متوقف'}</span></div></div>`});
 
       if(serverCount >= 4){ newServerBtn.style.display = 'none'; createServerBox.style.display = 'none'; }
       else { newServerBtn.style.display = 'block'; }
     });
   }
 
-  window.showCreateServer=()=>{ if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط'); createServerBox.style.display=createServerBox.style.display==='none'?'block':'none'; serverName.value='' }
+  window.showCreateServer=()=>{
+    if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');
+    createServerBox.style.display=createServerBox.style.display==='none'?'block':'none';
+    serverName.value=''; serverType.value='';
+  }
+
   window.createServer=async()=>{
     if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');
-    const name=serverName.value.trim(); if(!name)return toast('اكتب اسم');
-    await addDoc(collection(db,"servers"),{uid:currentUser.uid,name,status:'متوقف',log:'> تم انشاء السيرفر',createdAt:serverTimestamp(),hasLink:false});
-    showCreateServer(); toast('تم')
+    const name=serverName.value.trim();
+    const type=serverType.value;
+    if(!name)return toast('اكتب اسم السيرفر');
+    if(!type)return toast('اختر نوع الخادم');
+
+    await addDoc(collection(db,"servers"),{
+      uid:currentUser.uid,
+      name,
+      type,
+      status:'متوقف',
+      log:`> تم انشاء السيرفر - النوع: ${type==='python'?'بايثون':'Node.js'}`,
+      createdAt:serverTimestamp(),
+      hasLink:false
+    });
+    showCreateServer(); toast('✅ تم انشاء السيرفر')
   }
 
   window.openServerPage=(id)=>{
     currentServerId=id;showPage('serverPage');hasLink=false;linkStatus.style.display='none';
     onSnapshot(doc(db,"servers",id),snap=>{
       if(!snap.exists())return;const s=snap.data();
-      serverTitle.innerText=s.name;serverStatus.innerText=s.pendingAction||s.status;
+      serverTitle.innerText=s.name;
+      serverTypeLabel.innerText = s.type==='python'?' بايثون Python':s.type==='nodejs'?' Node.js':'غير محدد';
+      serverStatus.innerText=s.pendingAction||s.status;
       serverStatus.className='badge '+(s.status==='شغال'?'on':s.pendingAction?'pending':'off');
       logBox.innerHTML=(s.log||'> جاهز').split('\n').map(l=>`<div>${l}</div>`).join('');
       const isPending=s.pendingAction!=null;startBtn.disabled=isPending;stopBtn.disabled=isPending;pendingNote.style.display=isPending?'block':'none';
@@ -293,7 +322,7 @@ footer{margin-left:50px}
       uid: currentUser.uid, userEmail: currentUser.email, serverId: currentServerId, serverName: snap.data().name,
       status: 'pending', time: serverTimestamp()
     });
-    toast('تم ارسال طلب الحذف للادمن');
+    toast('تم ارسال طلب الحذف ');
     deleteBtn.disabled = true;
   }
 
