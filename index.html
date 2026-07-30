@@ -37,7 +37,7 @@
 .server-page-icon:hover{transform:scale(1.1)}
 .server-page-icon img{width:100%;height:100%;object-fit:cover}
 
-.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:10000;transition:opacity.5s}
+.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:10000;transition:opacity 0.5s ease} /* صلحت المسافة هنا */
 .loading-screen.hide{opacity:0;pointer-events:none}
 .loader{width:60px;height:60px;border:4px solid var(--border);border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
@@ -114,11 +114,12 @@ footer{margin-left:50px}
       </div>
       <p id="deleteCooldown" style="display:none;color:var(--warn);font-weight:700"></p>
       <p id="pendingNote" style="display:none;color:var(--warn);font-weight:700">⏳ الطلب قيد المراجعة. انتظر موافقة Highrise خلال 24 ساعة</p>
-      <h4>روابط سريعة</h4>
+      <h4>رفع الملف</h4>
       <a id="serverPageIconLink" href="#" target="_blank">
         <div class="server-page-icon"><img id="serverPageIconImg" src=""></div>
       </a>
-      <h4>ارسال رابط ل Highrise</h4><input id="linkInput" placeholder="الصق الرابط هنا"><button class="btn" onclick="sendLink()">ارسال الرابط</button>
+      <h4>ارسال رابط ل Highrise</h4><input id="linkInput" placeholder="الصق رابط ملف البوت هنا"><button class="btn" onclick="sendLink()">📤 ارسال الرابط</button>
+      <p id="linkStatus" style="display:none;color:var(--success);font-weight:700;margin-top:10px">✅ تم رفع ملف البوت بنجاح</p>
     </div>
   </div>
 </div>
@@ -134,12 +135,20 @@ footer{margin-left:50px}
 
   const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
   const app = initializeApp(firebaseConfig);const auth = getAuth();const db = getFirestore();
-  let currentUser = null;let currentServerId = null;let serverCount = 0; let lastDeleteTime = null;
+  let currentUser = null;let currentServerId = null;let serverCount = 0; let lastDeleteTime = null; let hasLink = false;
 
   const loadingScreen = document.getElementById('loadingScreen');
   function showLoading(callback){
     loadingScreen.classList.remove('hide');
-    setTimeout(()=>{ loadingScreen.classList.add('hide'); if(callback) callback(); }, 2000);
+    // تايمر احتياطي 3 ثواني عشان لو Firebase اتأخر
+    setTimeout(()=>{
+      loadingScreen.classList.add('hide');
+      if(callback) callback();
+    }, 3000);
+  }
+
+  function hideLoading(){
+    loadingScreen.classList.add('hide');
   }
 
   const sidebarIcons = [
@@ -163,7 +172,7 @@ footer{margin-left:50px}
   const serverStatus = document.getElementById('serverStatus');const logBox = document.getElementById('logBox');
   const startBtn = document.getElementById('startBtn');const stopBtn = document.getElementById('stopBtn'); const deleteBtn = document.getElementById('deleteBtn');
   const pendingNote = document.getElementById('pendingNote'); const deleteCooldown = document.getElementById('deleteCooldown'); const linkInput = document.getElementById('linkInput');
-  const noteBtn = document.getElementById('noteBtn');const notePopup = document.getElementById('notePopup');
+  const noteBtn = document.getElementById('noteBtn');const notePopup = document.getElementById('notePopup'); const linkStatus = document.getElementById('linkStatus');
 
   noteBtn.onclick = () => notePopup.classList.toggle('show');
   document.addEventListener('click', e => {if(!noteBtn.contains(e.target) &&!notePopup.contains(e.target)) notePopup.classList.remove('show')});
@@ -176,15 +185,21 @@ footer{margin-left:50px}
   document.getElementById('goToLoginBtn').addEventListener('click', () => showPage('loginPage'));
 
   onAuthStateChanged(auth, async user => {
-    if(user){
-      const userDoc = await getDoc(doc(db,"users",user.uid));
-      if(userDoc.exists() && userDoc.data().banned){document.body.innerHTML=`<div class="banned-screen"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||'بدون سبب'}</p><button class="btn danger" onclick="signOut(auth)">خروج</button></div>`;return;}
-      currentUser=user; userName.innerText=userDoc.data().username || user.email.split('@')[0];
-      lastDeleteTime = userDoc.data().lastDeleteTime || null;
-      if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{
-        showLoading(()=>{showPage('dashboardPage');loadServers();});
-      }
-    } else { showLoading(()=>{showPage('loginPage');}); }
+    try{
+      if(user){
+        const userDoc = await getDoc(doc(db,"users",user.uid));
+        if(userDoc.exists() && userDoc.data().banned){document.body.innerHTML=`<div class="banned-screen"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||'بدون سبب'}</p><button class="btn danger" onclick="signOut(auth)">خروج</button></div>`;return;}
+        currentUser=user; userName.innerText=userDoc.data().username || user.email.split('@')[0];
+        lastDeleteTime = userDoc.data().lastDeleteTime || null;
+        if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{
+          showPage('dashboardPage');loadServers();hideLoading(); // اخفي التحميل بعد ما الصفحة تجهز
+        }
+      } else { showPage('loginPage'); hideLoading(); }
+    }catch(e){
+      console.error(e);
+      hideLoading(); // لو حصل خطأ برضو اخفي التحميل
+      toast('خطأ في الاتصال ب Highrise')
+    }
   });
 
   window.signUp=async()=>{
@@ -194,21 +209,23 @@ footer{margin-left:50px}
     if(password!== confirmPassword) return toast('كلمة السر مش مطابقة');
     if(password.length < 6) return toast('كلمة السر لازم 6 حروف اقل حاجة');
     try{
+      showLoading();
       const res = await createUserWithEmailAndPassword(auth,email,password);
       await setDoc(doc(db,"users",res.user.uid),{username: username,email: email,createdAt: serverTimestamp(),banned: false, lastDeleteTime: null});
       currentUser = res.user; userName.innerText = username;
-      showLoading(()=>{showPage('dashboardPage');loadServers();}); toast('تم انشاء الحساب بنجاح');
-    }catch(e){if(e.code==='auth/email-already-in-use') toast('الايميل ده مستخدم قبل كده'); else toast('خطأ: '+e.message)}
+      showPage('dashboardPage');loadServers();hideLoading(); toast('تم انشاء الحساب بنجاح');
+    }catch(e){hideLoading(); if(e.code==='auth/email-already-in-use') toast('الايميل ده مستخدم قبل كده'); else toast('خطأ: '+e.message)}
   }
 
   window.signIn=async()=>{
     try{
+      showLoading();
       const res = await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);
       const userDoc = await getDoc(doc(db,"users",res.user.uid));
       userName.innerText = userDoc.data().username || res.user.email.split('@')[0];
       lastDeleteTime = userDoc.data().lastDeleteTime || null;
-      showLoading(()=>{showPage('dashboardPage');loadServers();}); toast('مرحبا')
-    }catch(e){toast('خطأ في البيانات')}
+      showPage('dashboardPage');loadServers();hideLoading(); toast('مرحبا')
+    }catch(e){hideLoading(); toast('خطأ في البيانات')}
   }
   window.logout=()=>signOut(auth);
 
@@ -228,18 +245,22 @@ footer{margin-left:50px}
   window.createServer=async()=>{
     if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');
     const name=serverName.value.trim(); if(!name)return toast('اكتب اسم');
-    await addDoc(collection(db,"servers"),{uid:currentUser.uid,name,status:'متوقف',log:'> تم انشاء السيرفر',createdAt:serverTimestamp()});
+    await addDoc(collection(db,"servers"),{uid:currentUser.uid,name,status:'متوقف',log:'> تم انشاء السيرفر',createdAt:serverTimestamp(),hasLink:false});
     showCreateServer(); toast('تم')
   }
 
   window.openServerPage=(id)=>{
-    currentServerId=id;showPage('serverPage');
+    currentServerId=id;showPage('serverPage');hasLink=false;linkStatus.style.display='none';
     onSnapshot(doc(db,"servers",id),snap=>{
       if(!snap.exists())return;const s=snap.data();
       serverTitle.innerText=s.name;serverStatus.innerText=s.pendingAction||s.status;
       serverStatus.className='badge '+(s.status==='شغال'?'on':s.pendingAction?'pending':'off');
       logBox.innerHTML=(s.log||'> جاهز').split('\n').map(l=>`<div>${l}</div>`).join('');
       const isPending=s.pendingAction!=null;startBtn.disabled=isPending;stopBtn.disabled=isPending;pendingNote.style.display=isPending?'block':'none';
+
+      if(s.log && s.log.includes('تم ارسال رابط ل Highrise')){
+        hasLink = true; linkStatus.style.display = 'block';
+      }
 
       if(lastDeleteTime){
         const last = lastDeleteTime.toDate();
@@ -254,11 +275,14 @@ footer{margin-left:50px}
   }
 
   window.requestAction=async(action)=>{
+    if(!hasLink){
+      return toast('⚠️ خطأ: قم برفع ملف البوت اولاً قبل طلب التشغيل');
+    }
     const snap=await getDoc(doc(db,"servers",currentServerId));
     if(snap.data().pendingAction)return toast('انتظر موافقة Highrise خلال 24 ساعه');
     await addDoc(collection(db,"action_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:snap.data().name,action:action,status:'pending',time:serverTimestamp()});
     await updateDoc(doc(db,"servers",currentServerId),{pendingAction:'بانتظار موافقة Highrise',log:(snap.data().log||'') + `\n> تم ارسال طلب ${action==='start'?'تشغيل':'ايقاف'} ل Highrise`});
-    toast('تم ارسال الطلب ل Highrise')
+    toast('✅ تم ارسال الطلب ل Highrise')
   }
 
   window.requestDeleteServer = async() => {
@@ -274,11 +298,12 @@ footer{margin-left:50px}
   }
 
   window.sendLink=async()=>{
-    const link=linkInput.value.trim(); if(!link||!link.startsWith('http'))return toast('رابط غلط');
+    const link=linkInput.value.trim(); if(!link||!link.startsWith('http'))return toast('⚠️ الرجاء ادخال رابط صحيح لملف البوت');
     const serverSnap = await getDoc(doc(db,"servers",currentServerId));
     await addDoc(collection(db,"link_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:serverSnap.data().name,link:link,status:'pending',time:serverTimestamp()});
-    await updateDoc(doc(db,"servers",currentServerId),{log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise\n> ${link}`});
-    linkInput.value='';toast('تم ارسال الرابط ل Highrise')
+    await updateDoc(doc(db,"servers",currentServerId),{log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise\n> ${link}`,hasLink:true});
+    linkInput.value=''; hasLink = true; linkStatus.style.display = 'block';
+    toast('✅ تم استلام ملف البوت بنجاح. يمكنك الان طلب التشغيل')
   }
 </script>
 </body>
