@@ -9,19 +9,16 @@
   :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
   *{box-sizing:border-box;font-family:'Cairo',sans-serif}
   body{margin:0;background:radial-gradient(1000px 500px at 20% -10%,#16203a 0%,transparent 60%),var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
-
 .sidebar{width:55px;background:#0a0f16;border-right:1px solid var(--border);height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;align-items:center;padding:15px 0;gap:12px;z-index:10;overflow-y:auto}
 .sidebar::-webkit-scrollbar{width:4px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
-
 .sidebar-icon{width:38px;height:38px;border-radius:50%;background:#1e2636;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s;flex-shrink:0}
 .sidebar-icon:hover{transform:scale(1.1);border-color:var(--primary)}
 .sidebar-icon img{width:100%;height:100%;object-fit:cover}
-
 .container{max-width:1400px;margin:0 auto;padding:20px;margin-left:70px;width:calc(100% - 70px);flex:1}
 .card{background:linear-gradient(180deg,#121827,#0d121b);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:20px}
-  input, select{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0;font-size:16px}
-  select option{background:#0a0f16}
+input, select{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0;font-size:16px}
+select option{background:#0a0f16}
 .btn{padding:12px 20px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-weight:800;cursor:pointer;transition:.2s}
 .btn:hover:not(:disabled){transform:translateY(-2px)}
 .btn.success{background:var(--success)}.btn.danger{background:var(--danger)}.btn.ghost{background:transparent;border:1px solid var(--border)}.btn.warn{background:var(--warn);color:#000}
@@ -38,35 +35,27 @@
 .server-page-icon{width:55px;height:55px;border-radius:50%;overflow:hidden;border:2px solid var(--primary);margin-bottom:15px;cursor:pointer;transition:.2s}
 .server-page-icon:hover{transform:scale(1.1)}
 .server-page-icon img{width:100%;height:100%;object-fit:cover}
-
 .loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:10000;transition:opacity 0.5s ease}
 .loading-screen.hide{opacity:0;pointer-events:none}
 .loader{width:60px;height:60px;border:4px solid var(--border);border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 .loading-text{font-size:22px;font-weight:800;color:var(--primary)}
-
 .header-actions{display:flex;gap:10px;align-items:center}
 .note-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-weight:800;cursor:pointer;position:relative;transition:.2s}
 .note-icon:hover{background:var(--primary)}
 .note-popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:320px;display:none;z-index:100;text-align:right;line-height:1.8;font-size:14px}
 .note-popup.show{display:block}
 .note-popup h4{margin:0 0 10px 0;color:var(--primary)}
-
-/* الايقونات الجديدة */
 .color-icon{width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#ff0000,#00ff00,#0000ff);border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
 .rooms-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
 .boost-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
 .color-icon:hover,.rooms-icon:hover,.boost-icon:hover{transform:scale(1.1);border-color:var(--primary)}
-
 .popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:420px;max-height:520px;overflow-y:auto;display:none;z-index:100;text-align:right}
 .popup.show{display:block}
 .popup h4{margin:0 0 15px 0;color:var(--primary);text-align:center}
-
-/* الاسكرول الافقي */
 .grid-scroll{display:flex;gap:12px;overflow-x:auto;padding:10px 5px;scroll-snap-type:x mandatory}
 .grid-scroll::-webkit-scrollbar{height:6px}
 .grid-scroll::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
-
 .item{min-width:140px;background:#0a0f16;border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s;scroll-snap-align:start}
 .item:hover{border-color:var(--primary);transform:translateY(-2px)}
 .item-img{width:80px;height:80px;border-radius:10px;object-fit:cover;border:2px solid var(--border)}
@@ -74,10 +63,7 @@
 .copy-btn{padding:6px 10px;font-size:11px;border-radius:8px;background:var(--primary);border:none;color:#fff;font-weight:700;cursor:pointer;width:100%}
 .copy-btn:hover{background:#3b6eff}
 .copy-btn.copied{background:var(--success)}
-
 footer{text-align:center;padding:20px;margin-left:55px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16}
-
-/* للموبايل */
 @media(max-width: 768px){
 .sidebar{width:50px}
 .sidebar-icon{width:34px;height:34px}
@@ -88,12 +74,10 @@ footer{margin-left:50px}
 </style>
 </head>
 <body>
-
   <div id="loadingScreen" class="loading-screen">
     <div class="loader"></div>
     <div class="loading-text">Highrise Bot</div>
   </div>
-
   <div class="sidebar">
     <a id="icon1" href="#" target="_blank"><div class="sidebar-icon"><img id="icon1-img" src=""></div></a>
     <a id="icon2" href="#" target="_blank"><div class="sidebar-icon"><img id="icon2-img" src=""></div></a>
@@ -105,12 +89,10 @@ footer{margin-left:50px}
     <h2 style="text-align:center">تسجيل دخول</h2><input id="loginEmail" type="email" placeholder="البريد الالكتروني"><input id="loginPassword" type="password" placeholder="كلمة السر">
     <div class="actions"><button class="btn" onclick="signIn()" style="flex:1">دخول</button><button class="btn ghost" id="goToSignupBtn" style="flex:1">انشاء حساب</button></div>
   </div></div></div>
-
   <div id="signupPage" class="page"><div class="auth-wrap"><div class="card">
     <h2 style="text-align:center">انشاء حساب جديد</h2><input id="signupUsername" type="text" placeholder="اسم المستخدم"><input id="signupEmail" type="email" placeholder="البريد الالكتروني"><input id="signupPassword" type="password" placeholder="كلمة السر"><input id="signupConfirmPassword" type="password" placeholder="تأكيد كلمة السر">
     <div class="actions"><button class="btn" onclick="signUp()" style="flex:1">انشاء</button><button class="btn ghost" id="goToLoginBtn" style="flex:1">رجوع</button></div>
   </div></div></div>
-
   <div id="dashboardPage" class="page">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <h2>مرحبا, <span id="userName"></span></h2>
@@ -130,7 +112,6 @@ footer{margin-left:50px}
       <p>وشكرا لكم وحظا سعيد للجميع</p>
     </div>
     <button id="newServerBtn" class="btn" onclick="showCreateServer()">+ انشاء سيرفر جديد</button><h3>السيرفرات</h3><div class="servers" id="serversList"></div>
-
     <div id="createServerBox" class="card" style="display:none">
       <h3>انشاء سيرفر</h3>
       <input id="serverName" placeholder="اسم السيرفر">
@@ -145,7 +126,6 @@ footer{margin-left:50px}
       </div>
     </div>
   </div>
-
   <div id="serverPage" class="page"><button class="btn ghost" onclick="goBack()">← رجوع</button>
     <div class="card" style="margin-top:20px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
       <h2 id="serverTitle"></h2><span id="serverStatus" class="badge"></span>
@@ -158,7 +138,7 @@ footer{margin-left:50px}
         <button id="deleteBtn" class="btn warn" onclick="requestDeleteServer()">طلب حذف السيرفر</button>
       </div>
       <p id="deleteCooldown" style="display:none;color:var(--warn);font-weight:700"></p>
-      <p id="pendingNote" style="display:none;color:var(--warn);font-weight:700">⏳ الطلب قيد المراجعة. انتظر موافقة Highrise Bot خلال 24 ساعة</p>
+      <p id="pendingNote" style="display:none;color:var(--warn);font-weight:700"></p>
       <h4>رفع الملف</h4>
       <a id="serverPageIconLink" href="#" target="_blank">
         <div class="server-page-icon"><img id="serverPageIconImg" src=""></div>
@@ -168,10 +148,7 @@ footer{margin-left:50px}
     </div>
   </div>
 </div>
-
-<footer>
-  جميع الحقوق محفوظة © Highrise Bot 2026
-</footer>
+<footer>جميع الحقوق محفوظة © Highrise Bot 2026</footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -183,19 +160,11 @@ footer{margin-left:50px}
   let currentUser = null;let currentServerId = null;let serverCount = 0; let lastDeleteTime = null; let hasLink = false;
 
   const loadingScreen = document.getElementById('loadingScreen');
-  function showLoading(callback){
-    loadingScreen.classList.remove('hide');
-    setTimeout(()=>{ loadingScreen.classList.add('hide'); if(callback) callback(); }, 3000);
-  }
+  function showLoading(callback){loadingScreen.classList.remove('hide');setTimeout(()=>{ loadingScreen.classList.add('hide'); if(callback) callback(); }, 3000);}
   function hideLoading(){ loadingScreen.classList.add('hide'); }
 
-  const sidebarIcons = [
-    { img: "https://d.top4top.io/p_3863cef2q0.png", link: "https://discord.gg/highrise" },
-    { img: "https://f.top4top.io/p_38631ldbs0.png", link: "https://highrise.game/ar-EG" },
-    { img: "https://e.top4top.io/p_3863ub5et0.png", link: "https://replit.com/" }
-  ];
+  const sidebarIcons = [{ img: "https://d.top4top.io/p_3863cef2q0.png", link: "https://discord.gg/highrise" },{ img: "https://f.top4top.io/p_38631ldbs0.png", link: "https://highrise.game/ar-EG" },{ img: "https://e.top4top.io/p_3863ub5et0.png", link: "https://replit.com/" }];
   const serverPageIcon = { img: "https://l.top4top.io/p_3863dou250.png", link: "https://app.mediafire.com/" };
-
   document.getElementById('icon1-img').src = sidebarIcons[0].img; document.getElementById('icon1').href = sidebarIcons[0].link;
   document.getElementById('icon2-img').src = sidebarIcons[1].img; document.getElementById('icon2').href = sidebarIcons[1].link;
   document.getElementById('icon3-img').src = sidebarIcons[2].img; document.getElementById('icon3').href = sidebarIcons[2].link;
@@ -215,120 +184,67 @@ footer{margin-left:50px}
   const roomsBtn = document.getElementById('roomsBtn'); const roomsPopup = document.getElementById('roomsPopup');
   const boostBtn = document.getElementById('boostBtn'); const boostPopup = document.getElementById('boostPopup');
 
-  // 1. الالوان
-  const colors = [
-    {code:"<#000>"},{code:"<#FFFFFF>"},{code:"<#FF0000>"},{code:"<#00FF00>"},
-    {code:"<#0000FF>"},{code:"<#FFFF00>"},{code:"<#FF00FF>"},{code:"<#00FFFF>"},
-    {code:"<#999>"},{code:"<#FF4500>"},{code:"<#FF69B4>"},{code:"<#8A2BE2>"},
-    {code:"<#4f7cff>"},{code:"<#22c55e>"},{code:"<#ef4444>"},{code:"<#f59e0b>"}
-  ];
-  function loadColors(){
-    const grid = document.getElementById('colorGrid');
-    grid.innerHTML = '';
-    colors.forEach(c=>{
-      grid.innerHTML += `<div class="item">
-        <div class="item-img" style="background:${c.code.replace(/[<>]/g,'')}"></div>
-        <div class="item-name">${c.code}</div>
-        <button class="copy-btn" onclick="copyCode('${c.code}',this)">نسخ الكود</button>
-      </div>`;
-    });
-  }
+  const colors = [{code:"<#000>"},{code:"<#FFFFFF>"},{code:"<#FF0000>"},{code:"<#00FF00>"},{code:"<#0000FF>"},{code:"<#FFFF00>"},{code:"<#FF00FF>"},{code:"<#00FFFF>"},{code:"<#999>"},{code:"<#FF4500>"},{code:"<#FF69B4>"},{code:"<#8A2BE2>"},{code:"<#4f7cff>"},{code:"<#22c55e>"},{code:"<#ef4444>"},{code:"<#f59e0b>"}];
+  function loadColors(){const grid = document.getElementById('colorGrid');grid.innerHTML = '';colors.forEach(c=>{grid.innerHTML += `<div class="item"><div class="item-img" style="background:${c.code.replace(/[<>]/g,'')}"></div><div class="item-name">${c.code}</div><button class="copy-btn" onclick="copyCode('${c.code}',this)">نسخ الكود</button></div>`;});}
   loadColors();
-
-  // 2. غرف التجارة
-  const rooms = [
-    {name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=66cef923e84426e4f98b3c85&invite_id=6a6c7853ba4370df5de5760c"},
-    {name:"چوسف ايراني 🇮🇷", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},
-    {name:"للجرابات 💎", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=6686530bb82dc89a70e1d413&invite_id=6a6c7adfad33e8f9515e9ac5"},
-    {name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},
-    {name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},
-    {name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},
-    {name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png"}
-  ];
-  function loadRooms(){
-    const grid = document.getElementById('roomsGrid');
-    grid.innerHTML = '';
-    rooms.forEach(r=>{
-      grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')">
-        <img class="item-img" src="${r.img}">
-        <div class="item-name">${r.name}</div>
-      </div>`;
-    });
-  }
+  const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=66cef923e84426e4f98b3c85&invite_id=6a6c7853ba4370df5de5760c"},{name:"چوسف ايراني 🇮🇷", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"للجرابات 💎", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=6686530bb82dc89a70e1d413&invite_id=6a6c7adfad33e8f9515e9ac5"},{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png"}];
+  function loadRooms(){const grid = document.getElementById('roomsGrid');grid.innerHTML = '';rooms.forEach(r=>{grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')"><img class="item-img" src="${r.img}"><div class="item-name">${r.name}</div></div>`;});}
   loadRooms();
-
-  // 3. تعزيز الغرف
-  const boostRooms = [
-    {name:"تعزيز 1", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
-    {name:"Suff", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=Sufferance_"},
-    {name:"0_Bad_bunny_0", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=0_Bad_bunny_0"},
-    {name:"BOOST 25G", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=panoramik"},
-    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
-    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
-    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
-    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
-    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
-    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"}
-  ];
-  function loadBoost(){
-    const grid = document.getElementById('boostGrid');
-    grid.innerHTML = '';
-    boostRooms.forEach(r=>{
-      grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')">
-        <img class="item-img" src="${r.img}">
-        <div class="item-name">${r.name}</div>
-      </div>`;
-    });
-  }
+  const boostRooms = [{name:"تعزيز 1", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"Suff", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=Sufferance_"},{name:"0_Bad_bunny_0", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=0_Bad_bunny_0"},{name:"BOOST 25G", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=panoramik"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"}];
+  function loadBoost(){const grid = document.getElementById('boostGrid');grid.innerHTML = '';boostRooms.forEach(r=>{grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')"><img class="item-img" src="${r.img}"><div class="item-name">${r.name}</div></div>`;});}
   loadBoost();
-
-  window.copyCode = (code,btn)=>{
-    navigator.clipboard.writeText(code);
-    btn.innerText = 'تم النسخ';
-    btn.classList.add('copied');
-    toast(`تم نسخ ${code}`);
-    setTimeout(()=>{btn.innerText='نسخ الكود';btn.classList.remove('copied')},1500);
-  }
-
+  window.copyCode = (code,btn)=>{navigator.clipboard.writeText(code);btn.innerText = 'تم النسخ';btn.classList.add('copied');toast(`تم نسخ ${code}`);setTimeout(()=>{btn.innerText='نسخ الكود';btn.classList.remove('copied')},1500);}
   function closeAllPopups(){colorPopup.classList.remove('show');roomsPopup.classList.remove('show');boostPopup.classList.remove('show');notePopup.classList.remove('show')}
   colorBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); colorPopup.classList.toggle('show')};
   roomsBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); roomsPopup.classList.toggle('show')};
   boostBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); boostPopup.classList.toggle('show')};
   noteBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); notePopup.classList.toggle('show')};
   document.addEventListener('click', closeAllPopups);
-
   function toast(msg){const t=document.createElement('div');t.className='toast';t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
   function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
   window.goBack = () => showPage('dashboardPage');
-
   document.getElementById('goToSignupBtn').addEventListener('click', () => showPage('signupPage'));
   document.getElementById('goToLoginBtn').addEventListener('click', () => showPage('loginPage'));
 
-  // فانكشن تشغيل الكونسول الوهمي بتاع Highrise Bot
+  // فانكشن تشغيل الكونسول الوهمي
   async function startFakeConsole(serverId){
+    const highriseLogo = `\n-- --- -- | -- --- | ---\n/\\ \\_(_)_ -- / -- | -- \\_ --- \\ -- / \\\n\\/ \\VV / | / -- | -- | -- / \\\n\\/ \\/\\_/ |___/ -- |_/ -- \\__, |___ ___|\n | ___/\n `;
     const fakeLogs = [
-      `تم وضع علامة على الخادم بأنه غير متصل بالإنترنت`,
-      `[Highrise Bot] : جار التحقق من استخدام مساحة القرص`,
+      `[Highrise] : تم وضع علامة على الخادم بأنه غير متصل بالإنترنت`,
+      `[Highrise] : جار التحقق من استخدام مساحة القرص`,
       `القرص على الخادم، قد يستغرق هذا بضع ثوان...`,
-      `[Highrise Bot] : جار تحديث ملفات تهيئة العملية...`,
+      `[Highrise] : جار تحديث ملفات تهيئة العملية...`,
       `تم وضع علامة على بدء تشغيل الخادم`,
-      `
--- --- -- | -- --- | ---
-/\\ \\_(_)_ -- / -- | -- \\_ --- \\ -- / \\
-\\/ \\VV / | / -- | -- | | -- / \\
-\\/ \\/\\_/ |___/ -- |_/ -- \\__, |___ ___|
-            | | ___/
-    `,
+      highriseLogo,
+      `[Highrise] : جار تحميل ملف البوت...`,
+      `[Highrise] : تم الاتصال بخوادم Highrise بنجاح`,
+      `[Highrise] : البوت متصل وجاهز لاستقبال الاوامر`,
       `خادمك قيد التشغيل الآن! استمتع باستخدام Highrise Bot`
     ];
-
-    let i = 0;
-    const interval = setInterval(async () => {
-      if(i >= fakeLogs.length){ clearInterval(interval); return; }
-      const snap = await getDoc(doc(db,"servers",serverId));
+    let i = 0;const interval = setInterval(async () => {
+      if(i >= fakeLogs.length){clearInterval(interval);return;}
+      const snap = await getDoc(doc(db,"servers",serverId));if(!snap.exists()){ clearInterval(interval); return; }
       const newLog = (snap.data().log || '') + `\n${fakeLogs[i]}`;
-      await updateDoc(doc(db,"servers",serverId), {log: newLog, status: 'شغال', pendingAction: null});
-      i++;
+      await updateDoc(doc(db,"servers",serverId), {log: newLog, status: 'شغال', pendingAction: null});i++;
+    }, 1500);
+  }
+
+  // فانكشن ايقاف الكونسول الوهمي
+  async function stopFakeConsole(serverId){
+    const highriseLogo = `\n-- --- -- | -- --- | ---\n/\\ \\_(_)_ -- / -- | -- \\_ --- \\ -- / \\\n\\/ \\VV / | / -- | -- | | -- / \\\n\\/ \\/\\_/ |___/ -- |_/ -- \\__, |___ ___|\n | ___/\n `;
+    const fakeLogs = [
+      `[Highrise] : تم استلام طلب ايقاف الخادم`,
+      `[Highrise] : جار حفظ بيانات البوت...`,
+      `يتم قطع الاتصال بخوادم Highrise...`,
+      highriseLogo,
+      `[Highrise] : تم ايقاف جميع العمليات بنجاح`,
+      `الخادم متوقف الآن`
+    ];
+    let i = 0;const interval = setInterval(async () => {
+      if(i >= fakeLogs.length){clearInterval(interval);return;}
+      const snap = await getDoc(doc(db,"servers",serverId));if(!snap.exists()){ clearInterval(interval); return; }
+      const newLog = (snap.data().log || '') + `\n${fakeLogs[i]}`;
+      await updateDoc(doc(db,"servers",serverId), {log: newLog, status: 'متوقف', pendingAction: null});i++;
     }, 1200);
   }
 
@@ -339,82 +255,23 @@ footer{margin-left:50px}
         if(userDoc.exists() && userDoc.data().banned){document.body.innerHTML=`<div class="banned-screen"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||'بدون سبب'}</p><button class="btn danger" onclick="signOut(auth)">خروج</button></div>`;return;}
         currentUser=user; userName.innerText=userDoc.data().username || user.email.split('@')[0];
         lastDeleteTime = userDoc.data().lastDeleteTime || null;
-        if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{
-          showPage('dashboardPage');loadServers();hideLoading();
-        }
+        if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{showPage('dashboardPage');loadServers();hideLoading();}
       } else { showPage('loginPage'); hideLoading(); }
-    }catch(e){
-      console.error(e); hideLoading(); toast('جار الاتصال ب Highrise Bot')
-    }
+    }catch(e){console.error(e); hideLoading(); toast('جار الاتصال ب Highrise Bot')}
   });
 
-  window.signUp=async()=>{
-    const username = signupUsername.value.trim(); const email = signupEmail.value.trim();
-    const password = signupPassword.value; const confirmPassword = signupConfirmPassword.value;
-    if(!username ||!email ||!password) return toast('املا كل الحقول');
-    if(password!== confirmPassword) return toast('كلمة السر مش مطابقة');
-    if(password.length < 6) return toast('كلمة السر لازم 6 حروف اقل حاجة');
-    try{
-      showLoading();
-      const res = await createUserWithEmailAndPassword(auth,email,password);
-      await setDoc(doc(db,"users",res.user.uid),{username: username,email: email,createdAt: serverTimestamp(),banned: false, lastDeleteTime: null});
-      currentUser = res.user; userName.innerText = username;
-      showPage('dashboardPage');loadServers();hideLoading(); toast('تم انشاء الحساب بنجاح');
-    }catch(e){hideLoading(); if(e.code==='auth/email-already-in-use') toast('الايميل ده مستخدم قبل كده'); else toast('خطأ: '+e.message)}
-  }
-
-  window.signIn=async()=>{
-    try{
-      showLoading();
-      const res = await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);
-      const userDoc = await getDoc(doc(db,"users",res.user.uid));
-      userName.innerText = userDoc.data().username || res.user.email.split('@')[0];
-      lastDeleteTime = userDoc.data().lastDeleteTime || null;
-      showPage('dashboardPage');loadServers();hideLoading(); toast('مرحبا')
-    }catch(e){hideLoading(); toast('خطأ في البيانات')}
-  }
+  window.signUp=async()=>{const username = signupUsername.value.trim(); const email = signupEmail.value.trim();const password = signupPassword.value; const confirmPassword = signupConfirmPassword.value;if(!username ||!email ||!password) return toast('املا كل الحقول');if(password!== confirmPassword) return toast('كلمة السر مش مطابقة');if(password.length < 6) return toast('كلمة السر لازم 6 حروف اقل حاجة');try{showLoading();const res = await createUserWithEmailAndPassword(auth,email,password);await setDoc(doc(db,"users",res.user.uid),{username: username,email: email,createdAt: serverTimestamp(),banned: false, lastDeleteTime: null});currentUser = res.user; userName.innerText = username;showPage('dashboardPage');loadServers();hideLoading(); toast('تم انشاء الحساب بنجاح');}catch(e){hideLoading(); if(e.code==='auth/email-already-in-use') toast('الايميل ده مستخدم قبل كده'); else toast('خطأ: '+e.message)}}
+  window.signIn=async()=>{try{showLoading();const res = await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);const userDoc = await getDoc(doc(db,"users",res.user.uid));userName.innerText = userDoc.data().username || res.user.email.split('@')[0];lastDeleteTime = userDoc.data().lastDeleteTime || null;showPage('dashboardPage');loadServers();hideLoading(); toast('مرحبا')}catch(e){hideLoading(); toast('خطأ في البيانات')}}
   window.logout=()=>signOut(auth);
 
-  async function loadServers(){
-    const q=query(collection(db,"servers"),where("uid","==",currentUser.uid));
-    onSnapshot(q,snap=>{
-      serverCount=snap.size;serversList.innerHTML='';
-      snap.forEach(d=>{const s=d.data();const statusClass=s.status==='شغال'?'on':s.pendingAction?'pending':'off';
-        const typeText = s.type==='python'?' بايثون':s.type==='nodejs'?' Node.js':'';
-        serversList.innerHTML+=`<div class="server-box" onclick="openServerPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${s.name}</h4><span class="server-type-badge">${typeText}</span></div><span class="badge ${statusClass}">${s.pendingAction||s.status||'متوقف'}</span></div></div>`});
+  async function loadServers(){const q=query(collection(db,"servers"),where("uid","==",currentUser.uid));onSnapshot(q,snap=>{serverCount=snap.size;serversList.innerHTML='';snap.forEach(d=>{const s=d.data();const statusClass=s.status==='شغال'?'on':s.pendingAction?'pending':'off';const typeText = s.type==='python'?' بايثون':s.type==='nodejs'?' Node.js':'';serversList.innerHTML+=`<div class="server-box" onclick="openServerPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${s.name}</h4><span class="server-type-badge">${typeText}</span></div><span class="badge ${statusClass}">${s.pendingAction||s.status||'متوقف'}</span></div></div>`});if(serverCount >= 4){ newServerBtn.style.display = 'none'; createServerBox.style.display = 'none'; }else { newServerBtn.style.display = 'block'; }});}
+  window.showCreateServer=()=>{if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');createServerBox.style.display=createServerBox.style.display==='none'?'block':'none';serverName.value=''; serverType.value='';}
+  window.createServer=async()=>{if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');const name=serverName.value.trim();const type=serverType.value;if(!name)return toast('اكتب اسم السيرفر');if(!type)return toast('اختر نوع الخادم');await addDoc(collection(db,"servers"),{uid:currentUser.uid,name,type,status:'متوقف',log:`> تم انشاء السيرفر - النوع: ${type==='python'?'بايثون':'Node.js'}`,createdAt:serverTimestamp(),hasLink:false});showCreateServer(); toast('✅ تم انشاء السيرفر')}
 
-      if(serverCount >= 4){ newServerBtn.style.display = 'none'; createServerBox.style.display = 'none'; }
-      else { newServerBtn.style.display = 'block'; }
-    });
-  }
-
-  window.showCreateServer=()=>{
-    if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');
-    createServerBox.style.display=createServerBox.style.display==='none'?'block':'none';
-    serverName.value=''; serverType.value='';
-  }
-
-  window.createServer=async()=>{
-    if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');
-    const name=serverName.value.trim();
-    const type=serverType.value;
-    if(!name)return toast('اكتب اسم السيرفر');
-    if(!type)return toast('اختر نوع الخادم');
-
-    await addDoc(collection(db,"servers"),{
-      uid:currentUser.uid,
-      name,
-      type,
-      status:'متوقف',
-      log:`> تم انشاء السيرفر - النوع: ${type==='python'?'بايثون':'Node.js'}`,
-      createdAt:serverTimestamp(),
-      hasLink:false
-    });
-    showCreateServer(); toast('✅ تم انشاء السيرفر')
-  }
-
-  window.openServerPage=(id)=>{
+    window.openServerPage=(id)=>{
     currentServerId=id;showPage('serverPage');hasLink=false;linkStatus.style.display='none';
+    let lastStatus = null; // عشان نعرف لو الحالة اتغيرت ونشغل الرسمه
+
     onSnapshot(doc(db,"servers",id),snap=>{
       if(!snap.exists())return;const s=snap.data();
       serverTitle.innerText=s.name;
@@ -422,8 +279,31 @@ footer{margin-left:50px}
       serverStatus.innerText=s.pendingAction||s.status;
       serverStatus.className='badge '+(s.status==='شغال'?'on':s.pendingAction?'pending':'off');
       logBox.innerHTML=(s.log||'> جاهز').split('\n').map(l=>`<div>${l}</div>`).join('');
-      logBox.scrollTop = logBox.scrollHeight; // سكرول لتحت اوتوماتيك
-      const isPending=s.pendingAction!=null;startBtn.disabled=isPending;stopBtn.disabled=isPending;pendingNote.style.display=isPending?'block':'none';
+      logBox.scrollTop = logBox.scrollHeight;
+      const isPending=s.pendingAction!=null;startBtn.disabled=isPending;stopBtn.disabled=isPending;
+
+      // رسالة الانتظار حسب نوع الطلب
+      if(isPending){
+        if(s.pendingAction.includes('التشغيل')){
+          pendingNote.innerText = '⏳ الطلب قيد المراجعة. انتظر لمدة 24 ساعة حتى يتم التفعيل بواسطة Highrise Bot';
+        } else if(s.pendingAction.includes('الايقاف')){
+          pendingNote.innerText = '⏳ الطلب قيد المراجعة. انتظر لمدة 1 ساعة حتى يتم الايقاف بواسطة Highrise Bot';
+        }
+        pendingNote.style.display='block';
+      } else {
+        pendingNote.style.display='none';
+      }
+
+      // تشغيل الرسمه واللوجات لما الحالة تتغير
+      if(lastStatus !== s.status){
+        if(s.status === 'شغال' && lastStatus !== 'شغال'){
+          startFakeConsole(id); // شغل الرسمه بتاعت التشغيل
+        }
+        if(s.status === 'متوقف' && lastStatus === 'شغال'){
+          stopFakeConsole(id); // شغل الرسمه بتاعت الايقاف
+        }
+        lastStatus = s.status;
+      }
 
       if(s.log && s.log.includes('تم ارسال رابط ل Highrise Bot')){
         hasLink = true; linkStatus.style.display = 'block';
@@ -441,28 +321,39 @@ footer{margin-left:50px}
     })
   }
 
+  // طلب التشغيل والايقاف - كله بموافقة الادمن
   window.requestAction=async(action)=>{
     if(!hasLink){
       return toast('⚠️ خطأ: قم برفع ملف البوت اولاً قبل طلب التشغيل');
     }
     const snap=await getDoc(doc(db,"servers",currentServerId));
-    if(snap.data().pendingAction)return toast('انتظر موافقة Highrise Bot خلال 24 ساعه');
-    await addDoc(collection(db,"action_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:snap.data().name,action:action,status:'pending',time:serverTimestamp()});
-    await updateDoc(doc(db,"servers",currentServerId),{pendingAction:'بانتظار موافقة Highrise Bot',log:(snap.data().log||'') + `\n> تم ارسال طلب ${action==='start'?'تشغيل':'ايقاف'} ل Highrise Bot`});
-    toast('✅ تم ارسال الطلب ل Highrise Bot');
+    if(snap.data().pendingAction)return toast('انتظر موافقة Highrise Bot');
 
-    // محاكاة الموافقة بعد 5 ثواني - امسحها وحطها في صفحة الادمن بعدين
-    setTimeout(async () => {
-      if(action === 'start'){
-        await updateDoc(doc(db,"servers",currentServerId),{pendingAction:null});
-        startFakeConsole(currentServerId); // شغل اللوجز الوهمي
-        toast('✅ تمت الموافقة على التشغيل');
-      }
-      if(action === 'stop'){
-        await updateDoc(doc(db,"servers",currentServerId),{pendingAction:null, status:'متوقف', log:(snap.data().log||'') + `\n[Highrise Bot] : تم ايقاف الخادم`});
-        toast('✅ تمت الموافقة على الايقاف');
-      }
-    }, 5000);
+    await addDoc(collection(db,"action_requests"),{
+      uid:currentUser.uid,
+      userEmail:currentUser.email,
+      serverId:currentServerId,
+      serverName:snap.data().name,
+      action:action, // start or stop
+      status:'pending',
+      time:serverTimestamp()
+    });
+
+    if(action === 'start'){
+      await updateDoc(doc(db,"servers",currentServerId),{
+        pendingAction:'بانتظار موافقة التشغيل',
+        log:(snap.data().log||'') + `\n> تم ارسال طلب تشغيل ل Highrise Bot\n> انتظر لمدة 24 ساعة حتى يتم التفعيل`
+      });
+      toast('✅ تم ارسال طلب التشغيل. انتظر 24 ساعة للموافقة');
+    }
+    
+    if(action === 'stop'){
+      await updateDoc(doc(db,"servers",currentServerId),{
+        pendingAction:'بانتظار موافقة الايقاف',
+        log:(snap.data().log||'') + `\n> تم ارسال طلب ايقاف ل Highrise Bot\n> انتظر لمدة 1 ساعة حتى يتم الايقاف`
+      });
+      toast('✅ تم ارسال طلب الايقاف. انتظر 1 ساعة للموافقة');
+    }
   }
 
   window.requestDeleteServer = async() => {
@@ -470,8 +361,12 @@ footer{margin-left:50px}
     const snap = await getDoc(doc(db,"servers",currentServerId));
     if(!snap.exists()) return toast('السيرفر مش موجود');
     await addDoc(collection(db,"delete_requests"),{
-      uid: currentUser.uid, userEmail: currentUser.email, serverId: currentServerId, serverName: snap.data().name,
-      status: 'pending', time: serverTimestamp()
+      uid: currentUser.uid, 
+      userEmail: currentUser.email, 
+      serverId: currentServerId, 
+      serverName: snap.data().name,
+      status: 'pending', 
+      time: serverTimestamp()
     });
     await updateDoc(doc(db,"users",currentUser.uid), {lastDeleteTime: serverTimestamp()});
     toast('تم ارسال طلب الحذف ل Highrise Bot');
@@ -481,11 +376,25 @@ footer{margin-left:50px}
   }
 
   window.sendLink=async()=>{
-    const link=linkInput.value.trim(); if(!link||!link.startsWith('http'))return toast('⚠️ الرجاء ادخال رابط صحيح لملف البوت');
+    const link=linkInput.value.trim(); 
+    if(!link||!link.startsWith('http'))return toast('⚠️ الرجاء ادخال رابط صحيح لملف البوت');
     const serverSnap = await getDoc(doc(db,"servers",currentServerId));
-    await addDoc(collection(db,"link_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:serverSnap.data().name,link:link,status:'pending',time:serverTimestamp()});
-    await updateDoc(doc(db,"servers",currentServerId),{log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise Bot\n> ${link}`,hasLink:true});
-    linkInput.value=''; hasLink = true; linkStatus.style.display = 'block';
+    await addDoc(collection(db,"link_requests"),{
+      uid:currentUser.uid,
+      userEmail:currentUser.email,
+      serverId:currentServerId,
+      serverName:serverSnap.data().name,
+      link:link,
+      status:'pending',
+      time:serverTimestamp()
+    });
+    await updateDoc(doc(db,"servers",currentServerId),{
+      log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise Bot\n> ${link}`, 
+      hasLink:true
+    });
+    linkInput.value=''; 
+    hasLink = true; 
+    linkStatus.style.display = 'block';
     toast('✅ تم استلام ملف البوت بنجاح. يمكنك الان طلب التشغيل')
   }
 </script>
