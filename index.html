@@ -52,6 +52,24 @@
 .note-popup.show{display:block}
 .note-popup h4{margin:0 0 10px 0;color:var(--primary)}
 
+/* الايقونات الجديدة */
+.color-icon{width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#ff0000,#00ff00,#0000ff);border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
+.rooms-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
+.boost-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
+.color-icon:hover,.rooms-icon:hover,.boost-icon:hover{transform:scale(1.1);border-color:var(--primary)}
+
+.popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:380px;max-height:520px;overflow-y:auto;display:none;z-index:100;text-align:right}
+.popup.show{display:block}
+.popup h4{margin:0 0 15px 0;color:var(--primary);text-align:center}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.item{background:#0a0f16;border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s}
+.item:hover{border-color:var(--primary);transform:translateY(-2px)}
+.item-img{width:60px;height:60px;border-radius:10px;object-fit:cover;border:2px solid var(--border)}
+.item-name{font-size:13px;font-weight:700}
+.copy-btn{padding:6px 10px;font-size:11px;border-radius:8px;background:var(--primary);border:none;color:#fff;font-weight:700;cursor:pointer;width:100%}
+.copy-btn:hover{background:#3b6eff}
+.copy-btn.copied{background:var(--success)}
+
 footer{text-align:center;padding:20px;margin-left:55px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16}
 
 /* للموبايل */
@@ -61,6 +79,8 @@ footer{text-align:center;padding:20px;margin-left:55px;border-top:1px solid var(
 .container{margin-left:60px;width:calc(100% - 60px);padding:16px}
 footer{margin-left:50px}
 .note-popup{width:280px}
+.popup{width:320px;left:-100px}
+.grid{grid-template-columns:1fr}
 </style>
 </head>
 <body>
@@ -91,6 +111,21 @@ footer{margin-left:50px}
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <h2>مرحبا, <span id="userName"></span></h2>
       <div class="header-actions">
+        <!-- ايقونة الغرف -->
+        <div class="rooms-icon" id="roomsBtn">🏪
+          <div class="popup" id="roomsPopup"><h4>غرف التجارة</h4><div class="grid" id="roomsGrid"></div></div>
+        </div>
+
+        <!-- ايقونة التعزيز -->
+        <div class="boost-icon" id="boostBtn">🚀
+          <div class="popup" id="boostPopup"><h4>تعزيز الغرف</h4><div class="grid" id="boostGrid"></div></div>
+        </div>
+
+        <!-- ايقونة الالوان -->
+        <div class="color-icon" id="colorBtn">🎨
+          <div class="popup" id="colorPopup"><h4>معرض الالوان</h4><div class="grid" id="colorGrid"></div></div>
+        </div>
+
         <div class="note-icon" id="noteBtn">!</div>
         <button class="btn ghost" onclick="logout()">خروج</button>
       </div>
@@ -184,9 +219,95 @@ footer{margin-left:50px}
   const startBtn = document.getElementById('startBtn');const stopBtn = document.getElementById('stopBtn'); const deleteBtn = document.getElementById('deleteBtn');
   const pendingNote = document.getElementById('pendingNote'); const deleteCooldown = document.getElementById('deleteCooldown'); const linkInput = document.getElementById('linkInput');
   const noteBtn = document.getElementById('noteBtn');const notePopup = document.getElementById('notePopup'); const linkStatus = document.getElementById('linkStatus');
+  const colorBtn = document.getElementById('colorBtn'); const colorPopup = document.getElementById('colorPopup');
+  const roomsBtn = document.getElementById('roomsBtn'); const roomsPopup = document.getElementById('roomsPopup');
+  const boostBtn = document.getElementById('boostBtn'); const boostPopup = document.getElementById('boostPopup');
 
-  noteBtn.onclick = () => notePopup.classList.toggle('show');
-  document.addEventListener('click', e => {if(!noteBtn.contains(e.target) &&!notePopup.contains(e.target)) notePopup.classList.remove('show')});
+  // 1. الالوان - بتنسخ بالاقواس
+  const colors = [
+    {code:"<#000>"},{code:"<#FFFFFF>"},{code:"<#FF0000>"},{code:"<#00FF00>"},
+    {code:"<#0000FF>"},{code:"<#FFFF00>"},{code:"<#FF00FF>"},{code:"<#00FFFF>"},
+    {code:"<#999>"},{code:"<#FF4500>"},{code:"<#FF69B4>"},{code:"<#8A2BE2>"},
+    {code:"<#4f7cff>"},{code:"<#22c55e>"},{code:"<#ef4444>"},{code:"<#f59e0b>"}
+  ];
+  function loadColors(){
+    const grid = document.getElementById('colorGrid');
+    grid.innerHTML = '';
+    colors.forEach(c=>{
+      grid.innerHTML += `<div class="item">
+        <div class="item-img" style="background:${c.code.replace(/[<>]/g,'')}"></div>
+        <div class="item-name">${c.code}</div>
+        <button class="copy-btn" onclick="copyCode('${c.code}',this)">نسخ الكود</button>
+      </div>`;
+    });
+  }
+  loadColors();
+
+  // 2. غرف التجارة - انت حط الرابط والصورة والاسم هنا
+  const rooms = [
+    {name:"غرفة 1", img:"https://via.placeholder.com/60", link:"https://highrise.game/room1"},
+    {name:"غرفة 2", img:"https://via.placeholder.com/60", link:"https://highrise.game/room2"},
+    {name:"غرفة 3", img:"https://via.placeholder.com/60", link:"https://highrise.game/room3"},
+    {name:"غرفة 4", img:"https://via.placeholder.com/60", link:"https://highrise.game/room4"},
+    {name:"غرفة 5", img:"https://via.placeholder.com/60", link:"https://highrise.game/room5"},
+    {name:"غرفة 6", img:"https://via.placeholder.com/60", link:"https://highrise.game/room6"},
+    {name:"غرفة 7", img:"https://via.placeholder.com/60", link:"https://highrise.game/room7"},
+    {name:"غرفة 8", img:"https://via.placeholder.com/60", link:"https://highrise.game/room8"},
+    {name:"غرفة 9", img:"https://via.placeholder.com/60", link:"https://highrise.game/room9"},
+    {name:"غرفة 10", img:"https://via.placeholder.com/60", link:"https://highrise.game/room10"}
+  ];
+  function loadRooms(){
+    const grid = document.getElementById('roomsGrid');
+    grid.innerHTML = '';
+    rooms.forEach(r=>{
+      grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')">
+        <img class="item-img" src="${r.img}">
+        <div class="item-name">${r.name}</div>
+      </div>`;
+    });
+  }
+  loadRooms();
+
+  // 3. تعزيز الغرف - انت حط الرابط والصورة والاسم هنا
+  const boostRooms = [
+    {name:"تعزيز 1", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost1"},
+    {name:"تعزيز 2", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost2"},
+    {name:"تعزيز 3", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost3"},
+    {name:"تعزيز 4", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost4"},
+    {name:"تعزيز 5", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost5"},
+    {name:"تعزيز 6", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost6"},
+    {name:"تعزيز 7", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost7"},
+    {name:"تعزيز 8", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost8"},
+    {name:"تعزيز 9", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost9"},
+    {name:"تعزيز 10", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost10"}
+  ];
+  function loadBoost(){
+    const grid = document.getElementById('boostGrid');
+    grid.innerHTML = '';
+    boostRooms.forEach(r=>{
+      grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')">
+        <img class="item-img" src="${r.img}">
+        <div class="item-name">${r.name}</div>
+      </div>`;
+    });
+  }
+  loadBoost();
+
+  window.copyCode = (code,btn)=>{
+    navigator.clipboard.writeText(code);
+    btn.innerText = 'تم النسخ';
+    btn.classList.add('copied');
+    toast(`تم نسخ ${code}`);
+    setTimeout(()=>{btn.innerText='نسخ الكود';btn.classList.remove('copied')},1500);
+  }
+
+  // قفل وفتح البوب اب
+  function closeAllPopups(){colorPopup.classList.remove('show');roomsPopup.classList.remove('show');boostPopup.classList.remove('show');notePopup.classList.remove('show')}
+  colorBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); colorPopup.classList.toggle('show')};
+  roomsBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); roomsPopup.classList.toggle('show')};
+  boostBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); boostPopup.classList.toggle('show')};
+  noteBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); notePopup.classList.toggle('show')};
+  document.addEventListener('click', closeAllPopups);
 
   function toast(msg){const t=document.createElement('div');t.className='toast';t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
   function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
@@ -207,7 +328,7 @@ footer{margin-left:50px}
         }
       } else { showPage('loginPage'); hideLoading(); }
     }catch(e){
-      console.error(e); hideLoading(); toast('جار  الاتصال ب highrise')
+      console.error(e); hideLoading(); toast('جار الاتصال ب highrise')
     }
   });
 
@@ -318,12 +439,15 @@ footer{margin-left:50px}
     if(deleteBtn.disabled) return toast('لازم تستني 7 ايام بين كل حذف');
     const snap = await getDoc(doc(db,"servers",currentServerId));
     if(!snap.exists()) return toast('السيرفر مش موجود');
-    await addDoc(collection(db,"delete_requests"),{
+        await addDoc(collection(db,"delete_requests"),{
       uid: currentUser.uid, userEmail: currentUser.email, serverId: currentServerId, serverName: snap.data().name,
       status: 'pending', time: serverTimestamp()
     });
-    toast('تم ارسال طلب الحذف ');
+    await updateDoc(doc(db,"users",currentUser.uid), {lastDeleteTime: serverTimestamp()});
+    toast('تم ارسال طلب الحذف ل Highrise');
     deleteBtn.disabled = true;
+    deleteCooldown.style.display = 'block';
+    deleteCooldown.innerText = `⏳ تقدر تطلب حذف سيرفر بعد 7 ايام`;
   }
 
   window.sendLink=async()=>{
