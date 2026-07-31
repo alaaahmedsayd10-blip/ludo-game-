@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>highrise 24/7</title>
+<title>Highrise 24/7</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
@@ -115,21 +115,9 @@ footer{margin-left:50px}
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <h2>مرحبا, <span id="userName"></span></h2>
       <div class="header-actions">
-        <!-- ايقونة الغرف -->
-        <div class="rooms-icon" id="roomsBtn">🏪
-          <div class="popup" id="roomsPopup"><h4>غرف التجارة</h4><div class="grid-scroll" id="roomsGrid"></div></div>
-        </div>
-
-        <!-- ايقونة التعزيز -->
-        <div class="boost-icon" id="boostBtn">🚀
-          <div class="popup" id="boostPopup"><h4>تعزيز الغرف</h4><div class="grid-scroll" id="boostGrid"></div></div>
-        </div>
-
-        <!-- ايقونة الالوان -->
-        <div class="color-icon" id="colorBtn">🎨
-          <div class="popup" id="colorPopup"><h4>معرض الالوان</h4><div class="grid-scroll" id="colorGrid"></div></div>
-        </div>
-
+        <div class="rooms-icon" id="roomsBtn">🏪<div class="popup" id="roomsPopup"><h4>غرف التجارة</h4><div class="grid-scroll" id="roomsGrid"></div></div></div>
+        <div class="boost-icon" id="boostBtn">🚀<div class="popup" id="boostPopup"><h4>تعزيز الغرف</h4><div class="grid-scroll" id="boostGrid"></div></div></div>
+        <div class="color-icon" id="colorBtn">🎨<div class="popup" id="colorPopup"><h4>معرض الالوان</h4><div class="grid-scroll" id="colorGrid"></div></div></div>
         <div class="note-icon" id="noteBtn">!</div>
         <button class="btn ghost" onclick="logout()">خروج</button>
       </div>
@@ -170,12 +158,12 @@ footer{margin-left:50px}
         <button id="deleteBtn" class="btn warn" onclick="requestDeleteServer()">طلب حذف السيرفر</button>
       </div>
       <p id="deleteCooldown" style="display:none;color:var(--warn);font-weight:700"></p>
-      <p id="pendingNote" style="display:none;color:var(--warn);font-weight:700">⏳ الطلب قيد المراجعة. انتظر موافقة Highrise خلال 24 ساعة</p>
+      <p id="pendingNote" style="display:none;color:var(--warn);font-weight:700">⏳ الطلب قيد المراجعة. انتظر موافقة Highrise Bot خلال 24 ساعة</p>
       <h4>رفع الملف</h4>
       <a id="serverPageIconLink" href="#" target="_blank">
         <div class="server-page-icon"><img id="serverPageIconImg" src=""></div>
       </a>
-      <h4>ارسال رابط ل Highrise</h4><input id="linkInput" placeholder="الصق رابط ملف البوت هنا"><button class="btn" onclick="sendLink()">📤 ارسال الرابط</button>
+      <h4>ارسال رابط ل Highrise Bot</h4><input id="linkInput" placeholder="الصق رابط ملف البوت هنا"><button class="btn" onclick="sendLink()">📤 ارسال الرابط</button>
       <p id="linkStatus" style="display:none;color:var(--success);font-weight:700;margin-top:10px">✅ تم رفع ملف البوت بنجاح</p>
     </div>
   </div>
@@ -227,7 +215,7 @@ footer{margin-left:50px}
   const roomsBtn = document.getElementById('roomsBtn'); const roomsPopup = document.getElementById('roomsPopup');
   const boostBtn = document.getElementById('boostBtn'); const boostPopup = document.getElementById('boostPopup');
 
-  // 1. الالوان - بتنسخ بالاقواس
+  // 1. الالوان
   const colors = [
     {code:"<#000>"},{code:"<#FFFFFF>"},{code:"<#FF0000>"},{code:"<#00FF00>"},
     {code:"<#0000FF>"},{code:"<#FFFF00>"},{code:"<#FF00FF>"},{code:"<#00FFFF>"},
@@ -247,9 +235,8 @@ footer{margin-left:50px}
   }
   loadColors();
 
-  // 2. غرف التجارة - انت حط الرابط والصورة والاسم هنا
-  // غرف التجارة - حط انت الباقي
-const rooms = [
+  // 2. غرف التجارة
+  const rooms = [
     {name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=66cef923e84426e4f98b3c85&invite_id=6a6c7853ba4370df5de5760c"},
     {name:"چوسف ايراني 🇮🇷", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},
     {name:"للجرابات 💎", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=6686530bb82dc89a70e1d413&invite_id=6a6c7adfad33e8f9515e9ac5"},
@@ -270,7 +257,7 @@ const rooms = [
   }
   loadRooms();
 
-  // 3. تعزيز الغرف - انت حط الرابط والصورة والاسم هنا
+  // 3. تعزيز الغرف
   const boostRooms = [
     {name:"تعزيز 1", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
     {name:"Suff", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=Sufferance_"},
@@ -303,7 +290,6 @@ const rooms = [
     setTimeout(()=>{btn.innerText='نسخ الكود';btn.classList.remove('copied')},1500);
   }
 
-  // قفل وفتح البوب اب
   function closeAllPopups(){colorPopup.classList.remove('show');roomsPopup.classList.remove('show');boostPopup.classList.remove('show');notePopup.classList.remove('show')}
   colorBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); colorPopup.classList.toggle('show')};
   roomsBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); roomsPopup.classList.toggle('show')};
@@ -318,6 +304,34 @@ const rooms = [
   document.getElementById('goToSignupBtn').addEventListener('click', () => showPage('signupPage'));
   document.getElementById('goToLoginBtn').addEventListener('click', () => showPage('loginPage'));
 
+  // فانكشن تشغيل الكونسول الوهمي بتاع Highrise Bot
+  async function startFakeConsole(serverId){
+    const fakeLogs = [
+      `تم وضع علامة على الخادم بأنه غير متصل بالإنترنت`,
+      `[Highrise Bot] : جار التحقق من استخدام مساحة القرص`,
+      `القرص على الخادم، قد يستغرق هذا بضع ثوان...`,
+      `[Highrise Bot] : جار تحديث ملفات تهيئة العملية...`,
+      `تم وضع علامة على بدء تشغيل الخادم`,
+      `
+-- --- -- | -- --- | ---
+/\\ \\_(_)_ -- / -- | -- \\_ --- \\ -- / \\
+\\/ \\VV / | / -- | -- | | -- / \\
+\\/ \\/\\_/ |___/ -- |_/ -- \\__, |___ ___|
+            | | ___/
+    `,
+      `خادمك قيد التشغيل الآن! استمتع باستخدام Highrise Bot`
+    ];
+
+    let i = 0;
+    const interval = setInterval(async () => {
+      if(i >= fakeLogs.length){ clearInterval(interval); return; }
+      const snap = await getDoc(doc(db,"servers",serverId));
+      const newLog = (snap.data().log || '') + `\n${fakeLogs[i]}`;
+      await updateDoc(doc(db,"servers",serverId), {log: newLog, status: 'شغال', pendingAction: null});
+      i++;
+    }, 1200);
+  }
+
   onAuthStateChanged(auth, async user => {
     try{
       if(user){
@@ -330,7 +344,7 @@ const rooms = [
         }
       } else { showPage('loginPage'); hideLoading(); }
     }catch(e){
-      console.error(e); hideLoading(); toast('جار الاتصال ب highrise')
+      console.error(e); hideLoading(); toast('جار الاتصال ب Highrise Bot')
     }
   });
 
@@ -408,9 +422,10 @@ const rooms = [
       serverStatus.innerText=s.pendingAction||s.status;
       serverStatus.className='badge '+(s.status==='شغال'?'on':s.pendingAction?'pending':'off');
       logBox.innerHTML=(s.log||'> جاهز').split('\n').map(l=>`<div>${l}</div>`).join('');
+      logBox.scrollTop = logBox.scrollHeight; // سكرول لتحت اوتوماتيك
       const isPending=s.pendingAction!=null;startBtn.disabled=isPending;stopBtn.disabled=isPending;pendingNote.style.display=isPending?'block':'none';
 
-      if(s.log && s.log.includes('تم ارسال رابط ل Highrise')){
+      if(s.log && s.log.includes('تم ارسال رابط ل Highrise Bot')){
         hasLink = true; linkStatus.style.display = 'block';
       }
 
@@ -431,10 +446,23 @@ const rooms = [
       return toast('⚠️ خطأ: قم برفع ملف البوت اولاً قبل طلب التشغيل');
     }
     const snap=await getDoc(doc(db,"servers",currentServerId));
-    if(snap.data().pendingAction)return toast('انتظر موافقة Highrise خلال 24 ساعه');
+    if(snap.data().pendingAction)return toast('انتظر موافقة Highrise Bot خلال 24 ساعه');
     await addDoc(collection(db,"action_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:snap.data().name,action:action,status:'pending',time:serverTimestamp()});
-    await updateDoc(doc(db,"servers",currentServerId),{pendingAction:'بانتظار موافقة Highrise',log:(snap.data().log||'') + `\n> تم ارسال طلب ${action==='start'?'تشغيل':'ايقاف'} ل Highrise`});
-    toast('✅ تم ارسال الطلب ل Highrise')
+    await updateDoc(doc(db,"servers",currentServerId),{pendingAction:'بانتظار موافقة Highrise Bot',log:(snap.data().log||'') + `\n> تم ارسال طلب ${action==='start'?'تشغيل':'ايقاف'} ل Highrise Bot`});
+    toast('✅ تم ارسال الطلب ل Highrise Bot');
+
+    // محاكاة الموافقة بعد 5 ثواني - امسحها وحطها في صفحة الادمن بعدين
+    setTimeout(async () => {
+      if(action === 'start'){
+        await updateDoc(doc(db,"servers",currentServerId),{pendingAction:null});
+        startFakeConsole(currentServerId); // شغل اللوجز الوهمي
+        toast('✅ تمت الموافقة على التشغيل');
+      }
+      if(action === 'stop'){
+        await updateDoc(doc(db,"servers",currentServerId),{pendingAction:null, status:'متوقف', log:(snap.data().log||'') + `\n[Highrise Bot] : تم ايقاف الخادم`});
+        toast('✅ تمت الموافقة على الايقاف');
+      }
+    }, 5000);
   }
 
   window.requestDeleteServer = async() => {
@@ -443,10 +471,10 @@ const rooms = [
     if(!snap.exists()) return toast('السيرفر مش موجود');
     await addDoc(collection(db,"delete_requests"),{
       uid: currentUser.uid, userEmail: currentUser.email, serverId: currentServerId, serverName: snap.data().name,
-            status: 'pending', time: serverTimestamp()
+      status: 'pending', time: serverTimestamp()
     });
     await updateDoc(doc(db,"users",currentUser.uid), {lastDeleteTime: serverTimestamp()});
-    toast('تم ارسال طلب الحذف ل Highrise');
+    toast('تم ارسال طلب الحذف ل Highrise Bot');
     deleteBtn.disabled = true;
     deleteCooldown.style.display = 'block';
     deleteCooldown.innerText = `⏳ تقدر تطلب حذف سيرفر بعد 7 ايام`;
@@ -456,7 +484,7 @@ const rooms = [
     const link=linkInput.value.trim(); if(!link||!link.startsWith('http'))return toast('⚠️ الرجاء ادخال رابط صحيح لملف البوت');
     const serverSnap = await getDoc(doc(db,"servers",currentServerId));
     await addDoc(collection(db,"link_requests"),{uid:currentUser.uid,userEmail:currentUser.email,serverId:currentServerId,serverName:serverSnap.data().name,link:link,status:'pending',time:serverTimestamp()});
-    await updateDoc(doc(db,"servers",currentServerId),{log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise\n> ${link}`,hasLink:true});
+    await updateDoc(doc(db,"servers",currentServerId),{log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise Bot\n> ${link}`,hasLink:true});
     linkInput.value=''; hasLink = true; linkStatus.style.display = 'block';
     toast('✅ تم استلام ملف البوت بنجاح. يمكنك الان طلب التشغيل')
   }
