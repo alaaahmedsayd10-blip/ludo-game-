@@ -58,14 +58,19 @@
 .boost-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
 .color-icon:hover,.rooms-icon:hover,.boost-icon:hover{transform:scale(1.1);border-color:var(--primary)}
 
-.popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:380px;max-height:520px;overflow-y:auto;display:none;z-index:100;text-align:right}
+.popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:420px;max-height:520px;overflow-y:auto;display:none;z-index:100;text-align:right}
 .popup.show{display:block}
 .popup h4{margin:0 0 15px 0;color:var(--primary);text-align:center}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.item{background:#0a0f16;border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s}
+
+/* الاسكرول الافقي */
+.grid-scroll{display:flex;gap:12px;overflow-x:auto;padding:10px 5px;scroll-snap-type:x mandatory}
+.grid-scroll::-webkit-scrollbar{height:6px}
+.grid-scroll::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
+
+.item{min-width:140px;background:#0a0f16;border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s;scroll-snap-align:start}
 .item:hover{border-color:var(--primary);transform:translateY(-2px)}
-.item-img{width:60px;height:60px;border-radius:10px;object-fit:cover;border:2px solid var(--border)}
-.item-name{font-size:13px;font-weight:700}
+.item-img{width:80px;height:80px;border-radius:10px;object-fit:cover;border:2px solid var(--border)}
+.item-name{font-size:13px;font-weight:700;text-align:center}
 .copy-btn{padding:6px 10px;font-size:11px;border-radius:8px;background:var(--primary);border:none;color:#fff;font-weight:700;cursor:pointer;width:100%}
 .copy-btn:hover{background:#3b6eff}
 .copy-btn.copied{background:var(--success)}
@@ -80,7 +85,6 @@ footer{text-align:center;padding:20px;margin-left:55px;border-top:1px solid var(
 footer{margin-left:50px}
 .note-popup{width:280px}
 .popup{width:320px;left:-100px}
-.grid{grid-template-columns:1fr}
 </style>
 </head>
 <body>
@@ -113,17 +117,17 @@ footer{margin-left:50px}
       <div class="header-actions">
         <!-- ايقونة الغرف -->
         <div class="rooms-icon" id="roomsBtn">🏪
-          <div class="popup" id="roomsPopup"><h4>غرف التجارة</h4><div class="grid" id="roomsGrid"></div></div>
+          <div class="popup" id="roomsPopup"><h4>غرف التجارة</h4><div class="grid-scroll" id="roomsGrid"></div></div>
         </div>
 
         <!-- ايقونة التعزيز -->
         <div class="boost-icon" id="boostBtn">🚀
-          <div class="popup" id="boostPopup"><h4>تعزيز الغرف</h4><div class="grid" id="boostGrid"></div></div>
+          <div class="popup" id="boostPopup"><h4>تعزيز الغرف</h4><div class="grid-scroll" id="boostGrid"></div></div>
         </div>
 
         <!-- ايقونة الالوان -->
         <div class="color-icon" id="colorBtn">🎨
-          <div class="popup" id="colorPopup"><h4>معرض الالوان</h4><div class="grid" id="colorGrid"></div></div>
+          <div class="popup" id="colorPopup"><h4>معرض الالوان</h4><div class="grid-scroll" id="colorGrid"></div></div>
         </div>
 
         <div class="note-icon" id="noteBtn">!</div>
@@ -244,17 +248,15 @@ footer{margin-left:50px}
   loadColors();
 
   // 2. غرف التجارة - انت حط الرابط والصورة والاسم هنا
-  const rooms = [
-    {name:"غرفة 1", img:"https://via.placeholder.com/60", link:"https://highrise.game/room1"},
-    {name:"غرفة 2", img:"https://via.placeholder.com/60", link:"https://highrise.game/room2"},
-    {name:"غرفة 3", img:"https://via.placeholder.com/60", link:"https://highrise.game/room3"},
-    {name:"غرفة 4", img:"https://via.placeholder.com/60", link:"https://highrise.game/room4"},
-    {name:"غرفة 5", img:"https://via.placeholder.com/60", link:"https://highrise.game/room5"},
-    {name:"غرفة 6", img:"https://via.placeholder.com/60", link:"https://highrise.game/room6"},
-    {name:"غرفة 7", img:"https://via.placeholder.com/60", link:"https://highrise.game/room7"},
-    {name:"غرفة 8", img:"https://via.placeholder.com/60", link:"https://highrise.game/room8"},
-    {name:"غرفة 9", img:"https://via.placeholder.com/60", link:"https://highrise.game/room9"},
-    {name:"غرفة 10", img:"https://via.placeholder.com/60", link:"https://highrise.game/room10"}
+  // غرف التجارة - حط انت الباقي
+const rooms = [
+    {name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=66cef923e84426e4f98b3c85&invite_id=6a6c7853ba4370df5de5760c"},
+    {name:"چوسف ايراني 🇮🇷", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},
+    {name:"للجرابات 💎", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=6686530bb82dc89a70e1d413&invite_id=6a6c7adfad33e8f9515e9ac5"},
+    {name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},
+    {name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},
+    {name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},
+    {name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png"}
   ];
   function loadRooms(){
     const grid = document.getElementById('roomsGrid');
@@ -270,16 +272,16 @@ footer{margin-left:50px}
 
   // 3. تعزيز الغرف - انت حط الرابط والصورة والاسم هنا
   const boostRooms = [
-    {name:"تعزيز 1", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost1"},
-    {name:"تعزيز 2", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost2"},
-    {name:"تعزيز 3", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost3"},
-    {name:"تعزيز 4", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost4"},
-    {name:"تعزيز 5", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost5"},
-    {name:"تعزيز 6", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost6"},
-    {name:"تعزيز 7", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost7"},
-    {name:"تعزيز 8", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost8"},
-    {name:"تعزيز 9", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost9"},
-    {name:"تعزيز 10", img:"https://via.placeholder.com/60", link:"https://highrise.game/boost10"}
+    {name:"تعزيز 1", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
+    {name:"Suff", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=Sufferance_"},
+    {name:"0_Bad_bunny_0", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=0_Bad_bunny_0"},
+    {name:"BOOST 25G", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=panoramik"},
+    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
+    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
+    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
+    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
+    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},
+    {name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"}
   ];
   function loadBoost(){
     const grid = document.getElementById('boostGrid');
@@ -439,9 +441,9 @@ footer{margin-left:50px}
     if(deleteBtn.disabled) return toast('لازم تستني 7 ايام بين كل حذف');
     const snap = await getDoc(doc(db,"servers",currentServerId));
     if(!snap.exists()) return toast('السيرفر مش موجود');
-        await addDoc(collection(db,"delete_requests"),{
+    await addDoc(collection(db,"delete_requests"),{
       uid: currentUser.uid, userEmail: currentUser.email, serverId: currentServerId, serverName: snap.data().name,
-      status: 'pending', time: serverTimestamp()
+            status: 'pending', time: serverTimestamp()
     });
     await updateDoc(doc(db,"users",currentUser.uid), {lastDeleteTime: serverTimestamp()});
     toast('تم ارسال طلب الحذف ل Highrise');
