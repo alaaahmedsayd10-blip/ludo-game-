@@ -342,7 +342,7 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
       chatBox.innerHTML = '';
       snap.forEach(d => {
         const msg = d.data();
-        chatBox.innerHTML += `<div class="chat-msg ${msg.sender==='user'?'me':'admin'}"><b>${msg.sender==='user'?userName.innerText:'الادمن'}:</b><br>${msg.text}</div>`;
+        chatBox.innerHTML += `<div class="chat-msg ${msg.sender==='user'?'me':'admin'}"><b>${msg.sender==='user'?userName.innerText:'الإدارة'}:</b><br>${msg.text}</div>`;
         if(msg.sender==='admin' &&!msg.read){updateDoc(doc(db,"support_messages",d.id),{read:true});}
       });
       chatBox.scrollTop = chatBox.scrollHeight;
