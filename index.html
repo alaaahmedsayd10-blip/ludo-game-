@@ -188,7 +188,7 @@ footer{margin-left:0}
         <input id="supportMessage" placeholder="اكتب رسالتك هنا...">
         <button class="btn" onclick="sendSupportMessage()">ارسال</button>
       </div>
-      <p style="font-size:13px;color:#aaa;margin-top:10px">تقدر تبعت رسالة واحدة فقط كل 24 ساعة</p>
+      <p style="font-size:13px;color:#aaa;margin-top:10px">تقدر تبعت رسالة واحدة فقط كل 1 ساعة</p>
     </div>
   </div>
 
@@ -353,7 +353,7 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
     if(lastSupportMsg){
       const last = lastSupportMsg.toDate();
       const diffHours = (new Date() - last) / (1000 * 60 * 60);
-      if(diffHours < 24) return toast('تقدر تبعت رسالة واحدة كل 24 ساعة فقط');
+      if(diffHours < 1) return toast('تقدر تبعت رسالة واحدة كل 1 ساعة فقط');
     }
     const msg = document.getElementById('supportMessage').value.trim();
     if(!msg) return toast('اكتب رسالة الاول');
@@ -368,7 +368,7 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
     await updateDoc(doc(db,"users",currentUser.uid),{lastSupportMsg: serverTimestamp()});
     lastSupportMsg = Timestamp.now();
     document.getElementById('supportMessage').value = '';
-    toast('✅ تم ارسال رسالتك للادمن');
+    toast('✅ تم ارسال رسالتك انتظر الرد');
   };
 
   onAuthStateChanged(auth, async user => {
