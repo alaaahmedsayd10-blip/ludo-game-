@@ -9,13 +9,16 @@
   :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
   *{box-sizing:border-box;font-family:'Cairo',sans-serif}
   body{margin:0;background:radial-gradient(1000px 500px at 20% -10%,#16203a 0%,transparent 60%),var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
-.sidebar{width:55px;background:#0a0f16;border-right:1px solid var(--border);height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;align-items:center;padding:15px 0;gap:12px;z-index:10;overflow-y:auto}
-.sidebar::-webkit-scrollbar{width:4px}
+  
+/* السايدبار بقى فوق */
+.sidebar{width:100%;background:#0a0f16;border-bottom:1px solid var(--border);height:65px;position:fixed;top:0;left:0;display:flex;flex-direction:row;align-items:center;padding:0 15px;gap:12px;z-index:10;overflow-x:auto;justify-content:flex-start}
+.sidebar::-webkit-scrollbar{height:4px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
-.sidebar-icon{width:38px;height:38px;border-radius:50%;background:#1e2636;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s;flex-shrink:0;display:flex;justify-content:center;align-items:center;font-size:18px;position:relative}
+.sidebar-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s;flex-shrink:0;display:flex;justify-content:center;align-items:center;font-size:18px;position:relative}
 .sidebar-icon:hover{transform:scale(1.1);border-color:var(--primary)}
 .sidebar-icon img{width:100%;height:100%;object-fit:cover}
-.container{max-width:1400px;margin:0 auto;padding:20px;margin-left:70px;width:calc(100% - 70px);flex:1}
+
+.container{max-width:1400px;margin:0 auto;padding:20px;margin-top:75px;width:100%;flex:1} /* شلت المارجن الشمال وحطيت فوق */
 .card{background:linear-gradient(180deg,#121827,#0d121b);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:20px}
 input, select, textarea{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0;font-size:16px}
 select option{background:#0a0f16}
@@ -24,7 +27,7 @@ select option{background:#0a0f16}
 .btn.success{background:var(--success)}.btn.danger{background:var(--danger)}.btn.ghost{background:transparent;border:1px solid var(--border)}.btn.warn{background:var(--warn);color:#000}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .page{display:none}.page.active{display:block}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1b2030;border:1px solid var(--border);padding:12px 18px;border-radius:12px;z-index:999;font-weight:700}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#1b2030;border:1px solid var(--border);padding:12px 18px;border-radius:12px;z-index:999;font-weight:700} /* نزلتها تحت السايدبار */
 .servers{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
 .server-box{background:var(--card);border:1px solid var(--border);padding:20px;border-radius:16px;cursor:pointer}
 .server-type-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(79,124,255,.2);color:var(--primary);margin-right:8px}
@@ -63,7 +66,7 @@ select option{background:#0a0f16}
 .copy-btn{padding:6px 10px;font-size:11px;border-radius:8px;background:var(--primary);border:none;color:#fff;font-weight:700;cursor:pointer;width:100%}
 .copy-btn:hover{background:#3b6eff}
 .copy-btn.copied{background:var(--success)}
-footer{text-align:center;padding:20px;margin-left:55px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16}
+footer{text-align:center;padding:20px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16;margin-left:0} /* شلت المارجن */
 .top-buttons{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .bot-commands{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:15px}
 .command-btn{padding:14px;background:#0a0f16;border:1px solid var(--border);border-radius:12px;text-align:center;font-weight:700;cursor:default}
@@ -77,12 +80,13 @@ footer{text-align:center;padding:20px;margin-left:55px;border-top:1px solid var(
 .chat-input{display:flex;gap:10px}
 .notif-badge{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;justify-content:center;align-items:center}
 @media(max-width: 768px){
-.sidebar{width:50px}
-.sidebar-icon{width:34px;height:34px}
-.container{margin-left:60px;width:calc(100% - 60px);padding:16px}
-footer{margin-left:50px}
+.sidebar{height:60px}
+.sidebar-icon{width:36px;height:36px}
+.container{margin-top:70px;padding:16px}
+footer{margin-left:0}
 .note-popup{width:280px}
 .popup{width:320px;left:-100px}
+}
 </style>
 </head>
 <body>
@@ -90,15 +94,16 @@ footer{margin-left:50px}
     <div class="loader"></div>
     <div class="loading-text">Highrise Bot</div>
   </div>
+
+  <!-- السايدبار بقى فوق -->
   <div class="sidebar">
+    <div class="sidebar-icon" id="supportIcon">💬<span class="notif-badge" id="notifBadge" style="display:none">1</span></div>
     <a id="icon1" href="#" target="_blank"><div class="sidebar-icon"><img id="icon1-img" src=""></div></a>
     <a id="icon2" href="#" target="_blank"><div class="sidebar-icon"><img id="icon2-img" src=""></div></a>
     <a id="icon3" href="#" target="_blank"><div class="sidebar-icon"><img id="icon3-img" src=""></div></a>
-    <div class="sidebar-icon" id="supportIcon">💬<span class="notif-badge" id="notifBadge" style="display:none">1</span></div>
   </div>
-
 <div class="container">
-  <div id="devBanner" class="dev-banner" style="display:none">⚠️ الموقع في مرحلة التطور - بنشتغل على تحديثات جديدة</div>
+ <div id="devBanner" class="dev-banner" style="display:none">⚠️ الموقع في مرحلة التطور - بنشتغل على تحديثات جديدة</div>
 
   <div id="loginPage" class="page active"><div class="auth-wrap"><div class="card">
     <h2 style="text-align:center">تسجيل دخول</h2><input id="loginEmail" type="email" placeholder="البريد الالكتروني"><input id="loginPassword" type="password" placeholder="كلمة السر">
@@ -161,10 +166,12 @@ footer{margin-left:50px}
       <select id="botDuration">
         <option value="12 ساعة">12 ساعة</option>
         <option value="24 ساعة">24 ساعة</option>
+        <option value="48 ساعة">48 ساعة</option>
         <option value="اسبوع">اسبوع</option>
         <option value="شهر">شهر</option>
       </select>
-      <p style="font-size:13px;color:#aaa" id="durationNote">ملاحظة: المدة الافتراضية 12 ساعة. صلاحيات اطول للمشرفين فقط</p>
+      <p style="font-size:13px;color:#aaa" id="durationNote">ملاحظة: المدة الافتراضية 12 ساعة. المشرفين يقدرو يختارو مدة اطول</p>
+      <p style="font-size:12px;color:var(--warn);margin-top:-5px">💡 لو عايز تغير اي حاجة في البوت بعد التشغيل ابعت للدعم</p>
       <div style="display:flex;gap:10px">
         <button class="btn success" onclick="createBotRequest()" style="flex:1">ارسال طلب الانشاء</button>
         <button class="btn ghost" onclick="showCreateBot()" style="flex:1">الغاء</button>
@@ -280,7 +287,7 @@ footer{margin-left:50px}
   const colors = [{code:"<#000>"},{code:"<#FFFFFF>"},{code:"<#FF0000>"},{code:"<#00FF00>"},{code:"<#0000FF>"},{code:"<#FFFF00>"},{code:"<#FF00FF>"},{code:"<#00FFFF>"},{code:"<#999>"},{code:"<#FF4500>"},{code:"<#FF69B4>"},{code:"<#8A2BE2>"},{code:"<#4f7cff>"},{code:"<#22c55e>"},{code:"<#ef4444>"},{code:"<#f59e0b>"}];
   function loadColors(){const grid = document.getElementById('colorGrid');if(!grid)return;grid.innerHTML = '';colors.forEach(c=>{grid.innerHTML += `<div class="item"><div class="item-img" style="background:${c.code.replace(/[<>]/g,'')}"></div><div class="item-name">${c.code}</div><button class="copy-btn" onclick="copyCode('${c.code}',this)">نسخ الكود</button></div>`;});}
   loadColors();
-  const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=66cef923e84426e4f98b3c85&invite_id=6a6c7853ba4370df5de5760c"},{name:"چوسف ايراني 🇮🇷", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"للجرابات 💎", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=6686530bb82dc89a70e1d413&invite_id=6a6c7adfad33e8f9515e9ac5"},{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png"}];
+const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=66cef923e84426e4f98b3c85&invite_id=6a6c7853ba4370df5de5760c"},{name:"چوسف ايراني 🇮🇷", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"للجرابات 💎", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=6686530bb82dc89a70e1d413&invite_id=6a6c7adfad33e8f9515e9ac5"},{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png"}];
   function loadRooms(){const grid = document.getElementById('roomsGrid');grid.innerHTML = '';rooms.forEach(r=>{grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')"><img class="item-img" src="${r.img}"><div class="item-name">${r.name}</div></div>`;});}
   loadRooms();
   const boostRooms = [{name:"تعزيز 1", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"Suff", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=Sufferance_"},{name:"0_Bad_bunny_0", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=0_Bad_bunny_0"},{name:"BOOST 25G", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=panoramik"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"}];
@@ -383,6 +390,7 @@ footer{margin-left:50px}
         } else {
           document.getElementById('botDuration').value = '12 ساعة';
           document.getElementById('botDuration').disabled = true;
+          document.getElementById('durationNote').innerText = 'ملاحظة: المدة الافتراضية 12 ساعة. المشرفين يقدرو يختارو مدة اطول';
         }
 
         const notifQ = query(collection(db,"support_messages"), where("uid","==",user.uid), where("sender","==","admin"), where("read","==",false));
@@ -411,7 +419,7 @@ footer{margin-left:50px}
 
   window.createBotRequest=async()=>{if(botCount>=1)return toast('مسموح ببوت واحد فقط');const name=document.getElementById('botName').value.trim();const token=document.getElementById('botApiToken').value.trim();const room=document.getElementById('botRoomId').value.trim();const duration=document.getElementById('botDuration').value;if(!name||!token||!room)return toast('املا كل البيانات');await addDoc(collection(db,"bot_requests"),{uid:currentUser.uid,userEmail:currentUser.email,username:userName.innerText,name,token,room,duration:duration,status:"pending",time:serverTimestamp()});await addDoc(collection(db,"bots"),{uid:currentUser.uid,name,status:"قيد المراجعة",duration:duration,createdAt:serverTimestamp()});showPage('botReviewPage');showCreateBot();toast('✅ تم ارسال طلب البوت للمراجعة')}
 
-  window.openBotPage=(id)=>{currentBotId=id;showPage('botPage');onSnapshot(doc(db,"bots",id),async snap=>{if(!snap.exists())return;const b=snap.data();document.getElementById('botTitle').innerText=b.name;const statusEl=document.getElementById('botStatus');statusEl.innerText=b.status;statusEl.className='badge '+(b.status==='شغال'?'on':b.status==='قيد المراجعة'?'pending':'off');if(b.status==='شغال'&&b.expiresAt){const diff=b.expiresAt.toDate()-new Date();const hours=Math.floor(diff/3600000);const mins=Math.floor((diff%3600000)/60000);document.getElementById('botTimeLeft').innerText=`${hours} ساعة و ${mins} دقيقة`}else{document.getElementById('botTimeLeft').innerText='-'}const q=query(collection(db,"bot_commands"),where("botId","==",id));onSnapshot(q,csnap=>{const list=document.getElementById('botCommandsList');list.innerHTML='';csnap.forEach(c=>{list.innerHTML+=`<div class="command-btn">${c.data().command}</div>`})})})}
+  window.openBotPage=(id)=>{currentBotId=id;showPage('botPage');onSnapshot(doc(db,"bots",id),async snap=>{if(!snap.exists())return;const b=snap.data();document.getElementById('botTitle').innerText=b.name;const statusEl=document.getElementById('botStatus');statusEl.innerText=b.status;statusEl.className='badge '+(b.status==='شغال'?'on':b.status==='قيد المراجعة'?'pending':'off');if(b.status==='شغال'&&b.expiresAt){const diff=b.expiresAt.toDate()-new Date();const hours=Math.floor(diff/3600000);const mins=Math.floor((diff%3600000)/60000);const days=Math.floor(hours/24);if(days>0){document.getElementById('botTimeLeft').innerText=`${days} يوم و ${hours%24} ساعة`}else{document.getElementById('botTimeLeft').innerText=`${hours} ساعة و ${mins} دقيقة`}}else{document.getElementById('botTimeLeft').innerText='-'}const q=query(collection(db,"bot_commands"),where("botId","==",id));onSnapshot(q,csnap=>{const list=document.getElementById('botCommandsList');list.innerHTML='';csnap.forEach(c=>{list.innerHTML+=`<div class="command-btn">${c.data().command}</div>`})})})}
 
   async function startFakeConsole(serverId){
     const highriseLogo = `\n-- --- -- | -- --- | ---\n/\\ \\_(_)_ -- / -- | -- \\_ --- \\ -- / \\\n\\/ \\VV / | / -- | -- | -- / \\\n\\/ \\/\\_/ |___/ -- |_/ -- \\__, |___ ___|\n | ___/\n `;
