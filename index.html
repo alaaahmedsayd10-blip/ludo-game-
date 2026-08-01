@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Highrise 24/7</title>
+<title>Highrise BOT/title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
@@ -188,7 +188,7 @@ footer{margin-left:0}
         <input id="supportMessage" placeholder="اكتب رسالتك هنا...">
         <button class="btn" onclick="sendSupportMessage()">ارسال</button>
       </div>
-      <p style="font-size:13px;color:#aaa;margin-top:10px">تقدر تبعت رسالة واحدة فقط كل 24 ساعة</p>
+      <p style="font-size:13px;color:#aaa;margin-top:10px">تقدر تبعت رسالة واحدة فقط كل 1 ساعة</p>
     </div>
   </div>
 
@@ -342,7 +342,7 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
       chatBox.innerHTML = '';
       snap.forEach(d => {
         const msg = d.data();
-        chatBox.innerHTML += `<div class="chat-msg ${msg.sender==='user'?'me':'admin'}"><b>${msg.sender==='user'?userName.innerText:'الادمن'}:</b><br>${msg.text}</div>`;
+        chatBox.innerHTML += `<div class="chat-msg ${msg.sender==='user'?'me':'admin'}"><b>${msg.sender==='user'?userName.innerText:'الادارة'}:</b><br>${msg.text}</div>`;
         if(msg.sender==='admin' &&!msg.read){updateDoc(doc(db,"support_messages",d.id),{read:true});}
       });
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -353,7 +353,7 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
     if(lastSupportMsg){
       const last = lastSupportMsg.toDate();
       const diffHours = (new Date() - last) / (1000 * 60 * 60);
-      if(diffHours < 24) return toast('تقدر تبعت رسالة واحدة كل 24 ساعة فقط');
+      if(diffHours < 1) return toast('تقدر تبعت رسالة واحدة كل 1 ساعة فقط');
     }
     const msg = document.getElementById('supportMessage').value.trim();
     if(!msg) return toast('اكتب رسالة الاول');
@@ -368,7 +368,7 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
     await updateDoc(doc(db,"users",currentUser.uid),{lastSupportMsg: serverTimestamp()});
     lastSupportMsg = Timestamp.now();
     document.getElementById('supportMessage').value = '';
-    toast('✅ تم ارسال رسالتك للادمن');
+    toast('✅ تم ارسال رسالتك الادارة');
   };
 
   onAuthStateChanged(auth, async user => {
