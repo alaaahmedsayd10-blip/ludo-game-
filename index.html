@@ -143,7 +143,7 @@ footer{margin-left:0}
 
   <div id="dashboardPage" class="page">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-      <h2>مرحبا, <span id="userName"></span></h2>
+      <h2>مرحبا سعيد بي انضامك موقعنا💎Highrise💎, <span id="userName"></span></h2>
       <div class="header-actions">
         <div class="rooms-icon" id="roomsBtn">🏪<div class="popup" id="roomsPopup"><h4>غرف التجارة</h4><div class="grid-scroll" id="roomsGrid"></div></div></div>
         <div class="boost-icon" id="boostBtn">🚀<div class="popup" id="boostPopup"><h4>تعزيز الغرف</h4><div class="grid-scroll" id="boostGrid"></div></div></div>
@@ -235,6 +235,9 @@ footer{margin-left:0}
       <div class="code-box">
         <code id="botCode"></code>
         <button class="btn" onclick="copyBotCode(this)">نسخ</button>
+      </div>
+      <div style="margin-top:20px">
+        <button class="btn ghost" onclick="goBack()">الغاء الظهور مرة اخرى</button>
       </div>
     </div>
   </div>
@@ -454,11 +457,18 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
     toast('✅ تم ارسال رسالتك الإدارة');
   };
 
+  // التعديل المهم هنا عشان اللودينج
   onAuthStateChanged(auth, async user => {
     try{
       if(user){
         const userDoc = await getDoc(doc(db,"users",user.uid));
-        if(userDoc.exists() && userDoc.data().banned){document.body.innerHTML=`<div class="banned-screen"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||'بدون سبب'}</p><button class="btn danger" onclick="signOut(auth)">خروج</button></div>`;return;}
+        if(!userDoc.exists()){
+            toast('خطأ: الحساب مش موجود في قاعدة البيانات');
+            await signOut(auth);
+            hideLoading();
+            return;
+        }
+        if(userDoc.data().banned){document.body.innerHTML=`<div class="banned-screen"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||'بدون سبب'}</p><button class="btn danger" onclick="signOut(auth)">خروج</button></div>`;hideLoading();return;}
         currentUser=user;
         userName.innerText=userDoc.data().username || user.email.split('@')[0];
         isModerator = userDoc.data().isModerator || false;
@@ -479,22 +489,33 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
         const notifQ = query(collection(db,"support_messages"), where("uid","==",user.uid), where("sender","==","admin"), where("read","==",false));
         onSnapshot(notifQ, snap => {notifBadge.style.display = snap.size > 0? 'flex' : 'none';});
 
-        // استماع للبوتات الجاهزة API
-        onSnapshot(query(collection(db,"bots"),where("uid","==",user.uid)), snap => {
-          snap.forEach(d=>{
+        // استماع للبوتات الجاهزة API - مرة واحدة بس
+        onSnapshot(query(collection(db,"bots"),where("uid","==",user.uid)), async snap => {
+          for(const d of snap.docs){
             const b=d.data();
-            if(b.status==='جاهز' && b.code){
+            // شرطين: البوت جاهز + لسه متعرضش قبل كده
+            if(b.status==='جاهز' && b.code && !b.shown){
               document.getElementById('readyBotName').innerText=b.name;
               document.getElementById('readyGameName').innerText=b.gameName || '-';
               document.getElementById('botCode').innerText=b.code;
               showPage('botReadyPage');
+              
+              // علم عليه انه اتعرض خلاص عشان ميظهرش تاني
+              await updateDoc(doc(db,"bots",d.id),{shown: true});
+              break; // نطلع بعد اول واحد
             }
-          })
+          }
         })
 
-        if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{showPage('dashboardPage');loadServers();loadBots();hideLoading();}
-      } else { showPage('loginPage'); hideLoading(); }
-    }catch(e){console.error(e); hideLoading(); toast('جار الاتصال ب Highrise Bot')}
+        if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{showPage('dashboardPage');loadServers();loadBots();}
+      } else { showPage('loginPage'); }
+    }catch(e){
+        console.error(e);
+        toast('خطأ في الاتصال: '+e.message)
+        showPage('loginPage');
+    } finally {
+        hideLoading(); // ده اهم سطر. هيقفل اللودينج في كل الحالات
+    }
   });
 
   window.signUp=async()=>{const username = signupUsername.value.trim(); const email = signupEmail.value.trim();const password = signupPassword.value; const confirmPassword = signupConfirmPassword.value;if(!username ||!email ||!password) return toast('املا كل الحقول');if(password!== confirmPassword) return toast('كلمة السر مش مطابقة');if(password.length < 6) return toast('كلمة السر لازم 6 حروف اقل حاجة');try{showLoading();const res = await createUserWithEmailAndPassword(auth,email,password);await setDoc(doc(db,"users",res.user.uid),{username: username,email: email,createdAt: serverTimestamp(),banned: false, lastDeleteTime: null, lastSupportMsg: null, isModerator: false, newUser: true});currentUser = res.user; userName.innerText = username;document.getElementById('devBanner').style.display='block';showPage('dashboardPage');loadServers();loadBots();hideLoading(); toast('تم انشاء الحساب بنجاح');}catch(e){hideLoading(); if(e.code==='auth/email-already-in-use') toast('الايميل ده مستخدم قبل كده'); else toast('خطأ: '+e.message)}}
@@ -505,15 +526,15 @@ const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png"
 
   async function loadServers(){const q=query(collection(db,"servers"),where("uid","==",currentUser.uid));onSnapshot(q,snap=>{serverCount=snap.size;serversList.innerHTML='';snap.forEach(d=>{const s=d.data();const statusClass=s.status==='شغال'?'on':s.pendingAction?'pending':'off';const typeText = s.type==='python'?' بايثون':s.type==='nodejs'?' Node.js':'';serversList.innerHTML+=`<div class="server-box" onclick="openServerPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${s.name}</h4><span class="server-type-badge">${typeText}</span></div><span class="badge ${statusClass}">${s.pendingAction||s.status||'متوقف'}</span></div></div>`});if(serverCount >= 4){ newServerBtn.style.display = 'none'; createServerBox.style.display = 'none'; }else { newServerBtn.style.display = 'block'; }});}
 
-  async function loadBots(){const q=query(collection(db,"bots"),where("uid","==",currentUser.uid));onSnapshot(q,snap=>{botCount=snap.size;botsList.innerHTML='';snap.forEach(d=>{const b=d.data();const statusClass=b.status==='شغال'?'on':b.status==='قيد المراجعة'?'pending':b.status==='جاهز'?'on':'off';botsList.innerHTML+=`<div class="server-box" onclick="openBotPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${b.name}</h4><span class="server-type-badge">بوت Highrise</span></div><span class="badge ${statusClass}">${b.status}</span></div></div>`});if(botCount >= 1){ newBotBtn.style.display = 'none'; createBotBox.style.display = 'none'; }else { newBotBtn.style.display = 'block'; }});}
+  async function loadBots(){const q=query(collection(db,"bots"),where("uid","==",currentUser.uid));onSnapshot(q,snap=>{botCount=snap.size;botsList.innerHTML='';snap.forEach(d=>{const b=d.data();const statusClass=b.status==='شغال'?'on':b.status==='قيد المراجعة'?'pending':b.status==='جاهز'?'on':'off';botsList.innerHTML+=`<div class="server-box" onclick="openBotPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${b.name}</h4><span class="server-type-badge">بوت Highrise</span></div><span class="badge ${statusClass}">${b.status}</span></div></div>`});if(botCount >= 4){ newBotBtn.style.display = 'none'; createBotBox.style.display = 'none'; }else { newBotBtn.style.display = 'block'; }});}
 
   window.showCreateServer=()=>{if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');createServerBox.style.display=createServerBox.style.display==='none'?'block':'none';createBotBox.style.display='none';serverName.value=''; serverType.value='';}
 
-  window.showCreateBot=()=>{if(botCount>=1)return toast('مسموح ببوت واحد فقط لكل حساب');createBotBox.style.display=createBotBox.style.display==='none'?'block':'none';createServerBox.style.display='none';document.getElementById('botName').value='';document.getElementById('botApiToken').value='';document.getElementById('botRoomId').value='';}
+  window.showCreateBot=()=>{if(botCount>=2)return toast('مسموح ببوت 2 فقط لكل حساب');createBotBox.style.display=createBotBox.style.display==='none'?'block':'none';createServerBox.style.display='none';document.getElementById('botName').value='';document.getElementById('botApiToken').value='';document.getElementById('botRoomId').value='';}
 
   window.createServer=async()=>{if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');const name=serverName.value.trim();const type=serverType.value;if(!name)return toast('اكتب اسم السيرفر');if(!type)return toast('اختر نوع الخادم');await addDoc(collection(db,"servers"),{uid:currentUser.uid,name,type,status:'متوقف',log:`> تم انشاء السيرفر - النوع: ${type==='python'?'بايثون':'Node.js'}`,createdAt:serverTimestamp(),hasLink:false});showCreateServer(); toast('✅ تم انشاء السيرفر')}
 
-  window.createBotRequest=async()=>{if(botCount>=1)return toast('مسموح ببوت واحد فقط');const name=document.getElementById('botName').value.trim();const token=document.getElementById('botApiToken').value.trim();const room=document.getElementById('botRoomId').value.trim();const duration=document.getElementById('botDuration').value;if(!name||!token||!room)return toast('املا كل البيانات');await addDoc(collection(db,"bot_requests"),{uid:currentUser.uid,userEmail:currentUser.email,username:userName.innerText,name,token,room,duration:duration,status:"pending",time:serverTimestamp()});await addDoc(collection(db,"bots"),{uid:currentUser.uid,name,status:"قيد المراجعة",duration:duration,createdAt:serverTimestamp()});showPage('botReviewPage');showCreateBot();toast('✅ تم ارسال طلب البوت للمراجعة')}
+  window.createBotRequest=async()=>{if(botCount>=2)return toast('مسموح ببوت 2 فقط');const name=document.getElementById('botName').value.trim();const token=document.getElementById('botApiToken').value.trim();const room=document.getElementById('botRoomId').value.trim();const duration=document.getElementById('botDuration').value;if(!name||!token||!room)return toast('املا كل البيانات');await addDoc(collection(db,"bot_requests"),{uid:currentUser.uid,userEmail:currentUser.email,username:userName.innerText,name,token,room,duration:duration,status:"pending",time:serverTimestamp()});await addDoc(collection(db,"bots"),{uid:currentUser.uid,name,status:"قيد المراجعة",duration:duration,createdAt:serverTimestamp()});showPage('botReviewPage');showCreateBot();toast('✅ تم ارسال طلب البوت للمراجعة')}
 
   window.openBotPage=(id)=>{currentBotId=id;showPage('botPage');onSnapshot(doc(db,"bots",id),async snap=>{if(!snap.exists())return;const b=snap.data();document.getElementById('botTitle').innerText=b.name;const statusEl=document.getElementById('botStatus');statusEl.innerText=b.status;statusEl.className='badge '+(b.status==='شغال'?'on':b.status==='قيد المراجعة'?'pending':b.status==='جاهز'?'on':'off');if(b.status==='شغال'&&b.expiresAt){const diff=b.expiresAt.toDate()-new Date();const hours=Math.floor(diff/3600000);const mins=Math.floor((diff%3600000)/60000);const days=Math.floor(hours/24);if(days>0){document.getElementById('botTimeLeft').innerText=`${days} يوم و ${hours%24} ساعة`}else{document.getElementById('botTimeLeft').innerText=`${hours} ساعة و ${mins} دقيقة`}}else{document.getElementById('botTimeLeft').innerText='-'}const q=query(collection(db,"bot_commands"),where("botId","==",id));onSnapshot(q,csnap=>{const list=document.getElementById('botCommandsList');list.innerHTML='';csnap.forEach(c=>{list.innerHTML+=`<div class="command-btn">${c.data().command}</div>`})})})}
 
