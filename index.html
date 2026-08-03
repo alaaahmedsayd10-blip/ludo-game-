@@ -1,357 +1,747 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><title>Highrise ULTRA | لوحة التحكم</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Highrise 24/7</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#03040a;--card:#0a0f1a;--border:#1a2333;--text:#f0f4ff;--primary:#5b8def;--success:#10b981;--danger:#f43f5e;--warn:#f59e0b;--purple:#a855f7}
-*{box-sizing:border-box;font-family:'Cairo',sans-serif}
-body{background:radial-gradient(1200px 600px at 80% -10%,#1a2a4a 0%,transparent 60%),linear-gradient(180deg,#03040a,#050812);color:var(--text);margin:0;padding:0}
-.header{position:sticky;top:0;background:rgba(3,4,10,.7);backdrop-filter:blur(20px);padding:18px 30px;border-bottom:1px solid var(--border);z-index:100;display:flex;justify-content:space-between;align-items:center}
-.header h1{color:var(--primary);font-weight:900;margin:0;font-size:24px;letter-spacing:.5px}
-.header h1 span{color:var(--text);font-weight:600}
+  :root{--bg:#05070a; --card:#0f131b; --border:#1e2636; --text:#eef2fa;--primary:#4f7cff; --success:#22c55e; --danger:#ef4444; --warn:#f59e0b;}
+  *{box-sizing:border-box;font-family:'Cairo',sans-serif}
+  body{margin:0;background:radial-gradient(1000px 500px at 20% -10%,#16203a 0%,transparent 60%),var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
+
+.sidebar{width:100%;background:#0a0f16;border-bottom:1px solid var(--border);height:65px;position:fixed;top:0;left:0;display:flex;flex-direction:row;align-items:center;padding:0 15px;gap:12px;z-index:10;overflow-x:auto;justify-content:flex-start}
+.sidebar::-webkit-scrollbar{height:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
+.sidebar-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s;flex-shrink:0;display:flex;justify-content:center;align-items:center;font-size:18px;position:relative}
+.sidebar-icon:hover{transform:scale(1.1);border-color:var(--primary)}
+.sidebar-icon img{width:100%;height:100%;object-fit:cover}
+
+.container{max-width:1400px;margin:0 auto;padding:20px;margin-top:75px;width:100%;flex:1}
+.card{background:linear-gradient(180deg,#121827,#0d121b);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:20px}
+input, select, textarea{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#0a0f16;color:#fff;margin:10px 0;font-size:16px}
+select option{background:#0a0f16}
+.btn{padding:12px 20px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-weight:800;cursor:pointer;transition:.2s}
+.btn:hover:not(:disabled){transform:translateY(-2px)}
+.btn.success{background:var(--success)}.btn.danger{background:var(--danger)}.btn.ghost{background:transparent;border:1px solid var(--border)}.btn.warn{background:var(--warn);color:#000}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.page{display:none}.page.active{display:block}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#1b2030;border:1px solid var(--border);padding:12px 18px;border-radius:12px;z-index:999;font-weight:700}
+.servers{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.server-box{background:var(--card);border:1px solid var(--border);padding:20px;border-radius:16px;cursor:pointer}
+.server-type-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(79,124,255,.2);color:var(--primary);margin-right:8px}
+.badge{font-size:12px;padding:6px 12px;border-radius:20px;font-weight:800}.badge.on{background:rgba(34,197,94,.2);color:var(--success)}.badge.off{background:rgba(239,68,68,.2);color:var(--danger)}.badge.pending{background:rgba(245,158,11,.2);color:var(--warn)}.badge.banned{background:rgba(239,68,68,.3);color:#fff}
+.log{background:#05070a;border:1px solid #0f131b;padding:14px;height:220px;overflow-y:auto;font-family:monospace;font-size:13px;border-radius:12px}
+.auth-wrap{max-width:440px;margin:80px auto}.actions{display:flex;gap:12px}
+.banned-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999}
+.server-page-icon{width:55px;height:55px;border-radius:50%;overflow:hidden;border:2px solid var(--primary);margin-bottom:15px;cursor:pointer;transition:.2s}
+.server-page-icon:hover{transform:scale(1.1)}
+.server-page-icon img{width:100%;height:100%;object-fit:cover}
+.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:10000;transition:opacity 0.5s ease}
+.loading-screen.hide{opacity:0;pointer-events:none}
+.loader{width:60px;height:60px;border:4px solid var(--border);border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.loading-text{font-size:22px;font-weight:800;color:var(--primary)}
 .header-actions{display:flex;gap:10px;align-items:center}
-.container{padding:30px;max-width:1700px;margin:0 auto}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-bottom:35px}
-.stat-card{background:rgba(10,15,26,.6);backdrop-filter:blur(10px);border:1px solid var(--border);padding:28px;border-radius:22px;transition:.4s;position:relative;overflow:hidden;animation:fadeUp.5s}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.stat-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--primary),var(--purple))}
-.stat-card:hover{transform:translateY(-8px);border-color:var(--primary);box-shadow:0 15px 50px rgba(91,141,239,.25)}
-.stat-card h3{margin:0;font-size:15px;color:#94a3b8;font-weight:600;display:flex;align-items:center;gap:8px}
-.stat-card p{margin:15px 0 0;font-size:42px;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tabs{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap;background:rgba(10,15,26,.6);backdrop-filter:blur(10px);padding:12px;border-radius:18px;border:1px solid var(--border)}
-.tabs button{padding:13px 26px;background:transparent;border:none;color:#94a3b8;cursor:pointer;border-radius:14px;font-weight:700;transition:.3s;font-size:15px;position:relative}
-.tabs button:hover{color:var(--text);background:rgba(91,141,239,.12)}
-.tabs button.active{background:linear-gradient(135deg,var(--primary),#3b82f6);color:white;box-shadow:0 6px 25px rgba(91,141,239,.5)}
-.tab-badge{position:absolute;top:-5px;left:-5px;background:var(--danger);color:white;font-size:11px;font-weight:900;border-radius:50%;width:22px;height:22px;display:none;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(244,63,94,.8);animation:pulse 1.5s infinite}
+.note-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-weight:800;cursor:pointer;position:relative;transition:.2s}
+.note-icon:hover{background:var(--primary)}
+.note-popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:320px;display:none;z-index:100;text-align:right;line-height:1.8;font-size:14px}
+.note-popup.show{display:block}
+.note-popup h4{margin:0 0 10px 0;color:var(--primary)}
+.color-icon{width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#ff0000,#00ff00,#0000ff);border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
+.rooms-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
+.boost-icon{width:40px;height:40px;border-radius:50%;background:#1e2636;border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:18px;cursor:pointer;position:relative;transition:.2s}
+.color-icon:hover,.rooms-icon:hover,.boost-icon:hover{transform:scale(1.1);border-color:var(--primary)}
+.popup{position:absolute;top:50px;left:0;background:#121827;border:1px solid var(--border);padding:20px;border-radius:16px;width:420px;max-height:520px;overflow-y:auto;display:none;z-index:100;text-align:right}
+.popup.show{display:block}
+.popup h4{margin:0 0 15px 0;color:var(--primary);text-align:center}
+.grid-scroll{display:flex;gap:12px;overflow-x:auto;padding:10px 5px;scroll-snap-type:x mandatory}
+.grid-scroll::-webkit-scrollbar{height:6px}
+.grid-scroll::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
+.item{min-width:140px;background:#0a0f16;border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s;scroll-snap-align:start}
+.item:hover{border-color:var(--primary);transform:translateY(-2px)}
+.item-img{width:80px;height:80px;border-radius:10px;object-fit:cover;border:2px solid var(--border)}
+.item-name{font-size:13px;font-weight:700;text-align:center}
+.copy-btn{padding:6px 10px;font-size:11px;border-radius:8px;background:var(--primary);border:none;color:#fff;font-weight:700;cursor:pointer;width:100%}
+.copy-btn:hover{background:#3b6eff}
+.copy-btn.copied{background:var(--success)}
+footer{text-align:center;padding:20px;border-top:1px solid var(--border);color:#aaa;font-size:14px;background:#0a0f16;margin-left:0}
+.top-buttons{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.bot-commands{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:15px}
+.command-btn{padding:14px;background:#0a0f16;border:1px solid var(--border);border-radius:12px;text-align:center;font-weight:700;cursor:default}
+.review-box{text-align:center;padding:40px}
+.review-box.icon{font-size:60px;margin-bottom:20px}
+.dev-banner{background:linear-gradient(90deg,#f59e0b,#ef4444);padding:12px;text-align:center;font-weight:800;border-radius:12px;margin-bottom:20px}
+.chat-box{height:300px;overflow-y:auto;background:#0a0f16;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:10px}
+.chat-msg{margin-bottom:12px;padding:10px;border-radius:10px;max-width:80%}
+.chat-msg.me{background:var(--primary);margin-left:auto;text-align:left}
+.chat-msg.admin{background:#1e2636;margin-right:auto;text-align:right}
+.chat-input{display:flex;gap:10px}
+.notif-badge{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;justify-content:center;align-items:center}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;z-index:99999}
+.modal-box{background:#121827;border:2px solid var(--primary);padding:30px;border-radius:20px;width:90%;max-width:650px;max-height:85vh;overflow-y:auto;text-align:right;line-height:1.8}
+.modal-box h3{color:var(--primary);margin-top:0}
+.checkbox-wrap{display:flex;align-items:flex-start;gap:10px;margin:20px 0}
+.checkbox-wrap input{width:20px;height:20px;margin:0;flex-shrink:0}
+.code-box{background:#05070a;border:1px solid var(--border);padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin:15px 0;gap:10px}
+.code-box code{font-family:monospace;font-size:14px;color:var(--success);word-break:break-all;flex:1}
+.maintenance-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#05070a,#0a0f16);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:100000;text-align:center;padding:20px}
+.maintenance-icon{font-size:80px;margin-bottom:20px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.card{background:rgba(10,15,26,.6);backdrop-filter:blur(10px);border:1px solid var(--border);padding:22px;margin:16px 0;border-radius:20px;transition:.3s}
-.card:hover{border-color:var(--primary)}
-.btn{padding:12px 20px;border:none;border-radius:14px;cursor:pointer;margin:5px;font-weight:800;transition:.25s;font-size:14px}
-.btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.4)}
-.btn.green{background:var(--success);color:#000}.btn.red{background:var(--danger);color:white}.btn.blue{background:var(--primary);color:white}.btn.orange{background:var(--warn);color:#000}.btn.purple{background:var(--purple);color:white}.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
-.toast{position:fixed;bottom:30px;right:30px;background:var(--success);color:#000;padding:16px 24px;border-radius:16px;display:none;font-weight:800;z-index:9999;box-shadow:0 10px 40px rgba(16,185,129,.4);animation:slideIn.3s}
-@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
-.login-box{background:rgba(10,15,26,.7);backdrop-filter:blur(20px);padding:45px;border-radius:26px;max-width:460px;margin:100px auto;border:1px solid var(--border);text-align:center;box-shadow:0 25px 70px rgba(0,0,0,.6)}
-input{width:100%;padding:15px;border-radius:14px;border:1px solid var(--border);background:#03040a;color:white;margin:12px 0;font-size:16px}
-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(91,141,239,.2)}
-.req-item{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-.req-info{flex:1}
-a{color:var(--primary);word-break:break-all}
-.user-actions{display:flex;gap:10px;flex-wrap:wrap}
-.badge{padding:7px 14px;border-radius:22px;font-size:12px;font-weight:800}
-.badge.pending{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid var(--warn)}.badge.on{background:rgba(16,185,129,.15);color:var(--success);border:1px solid var(--success)}.badge.off{background:rgba(244,63,94,.15);color:var(--danger);border:1px solid var(--danger)}.badge.mod{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid var(--purple)}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);backdrop-filter:blur(10px);display:none;justify-content:center;align-items:center;z-index:10000;animation:fadeIn.3s}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-box{background:rgba(10,15,26,.9);backdrop-filter:blur(20px);border:1px solid var(--primary);padding:32px;border-radius:26px;width:90%;max-width:580px;box-shadow:0 25px 90px rgba(91,141,239,.4)}
-.modal-box h3{margin-top:0;color:var(--primary);font-size:23px;display:flex;align-items:center;gap:12px}
-.modal-box textarea{width:100%;min-height:110px;background:#03040a;border:1px solid var(--border);color:white;border-radius:14px;padding:14px;margin:18px 0;font-family:'Cairo'}
-.modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:22px}
-.chat-admin{max-height:420px;overflow-y:auto;background:#03040a;padding:18px;border-radius:14px;margin:18px 0;border:1px solid var(--border)}
-.chat-msg{padding:12px;margin:10px 0;border-radius:12px}
-.chat-msg.user{background:rgba(91,141,239,.15);margin-right:50px;border-right:3px solid var(--primary)}
-.chat-msg.admin{background:rgba(168,85,247,.15);margin-left:50px;border-left:3px solid var(--purple)}
-.send-to-user-box{background:#03040a;padding:18px;border-radius:14px;margin-bottom:22px;border:1px dashed var(--primary)}
-.quick-replies{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.quick-reply-btn{background:rgba(91,141,239,.12);border:1px solid var(--primary);color:var(--primary);padding:9px 15px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:700}
-.quick-reply-btn:hover{background:var(--primary);color:white}
-.pro-table{width:100%;border-collapse:collapse;background:rgba(10,15,26,.6);backdrop-filter:blur(10px);border-radius:18px;overflow:hidden;border:1px solid var(--border)}
-.pro-table th{background:linear-gradient(135deg,var(--primary),#3b82f6);color:white;padding:16px;text-align:right;font-weight:800;font-size:15px}
-.pro-table td{padding:16px;border-bottom:1px solid var(--border);font-weight:600}
-.pro-table tr:hover{background:rgba(91,141,239,.08)}
-.maintenance-input{width:300px}
+.maintenance-title{font-size:32px;font-weight:800;color:var(--warn);margin-bottom:15px}
+.maintenance-msg{font-size:18px;color:#aaa;max-width:600px;line-height:1.8}
+@media(max-width: 768px){
+.sidebar{height:60px}
+.sidebar-icon{width:36px;height:36px}
+.container{margin-top:70px;padding:16px}
+footer{margin-left:0}
+.note-popup{width:280px}
+.popup{width:320px;left:-100px}
+.modal-box{padding:20px}
 </style>
 </head>
 <body>
-<div id="app">جاري التحميل...</div>
-<div class="toast" id="toast"></div>
-<div class="modal" id="modal"><div class="modal-box" id="modalContent"></div></div>
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loader"></div>
+    <div class="loading-text">Highrise Bot</div>
+  </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs, serverTimestamp, addDoc, Timestamp, orderBy, limit, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <div id="maintenanceScreen" class="maintenance-screen" style="display:none">
+    <div class="maintenance-icon">⚙️</div>
+    <div class="maintenance-title">الموقع في الصيانة</div>
+    <div class="maintenance-msg" id="maintenanceMessage">نقوم بعمل بعض التحديثات لتحسين تجربتك. نعود قريباً ❤️</div>
+  </div>
 
-const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
-const app=initializeApp(firebaseConfig); const db=getFirestore(app); const auth=getAuth(app);
-const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
+  <div class="sidebar">
+    <div class="sidebar-icon" id="supportIcon">💬<span class="notif-badge" id="notifBadge" style="display:none">1</span></div>
+    <a id="icon1" href="#" target="_blank"><div class="sidebar-icon"><img id="icon1-img" src=""></div></a>
+    <a id="icon2" href="#" target="_blank"><div class="sidebar-icon"><img id="icon2-img" src=""></div></a>
+    <a id="icon3" href="#" target="_blank"><div class="sidebar-icon"><img id="icon3-img" src=""></div></a>
+  </div>
 
-const QUICK_REPLIES = ["سوف يتم الرد عليك في اقرب وقت 🌹","تم استلام طلبك وجاري المراجعة","ممكن توضح المشكلة اكتر؟","تم حل المشكلة بنجاح ✅","شكراً لتواصلك معنا"];
-
-function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3500)}
-function showModal(icon,title,content,actions){document.getElementById('modalContent').innerHTML=`<h3>${icon} ${title}</h3>${content}<div class="modal-actions">${actions}</div>`;document.getElementById('modal').style.display='flex'}
-function closeModal(){document.getElementById('modal').style.display='none'}
-function getDurationMs(duration){if(duration==="24 ساعة") return 24*60*60*1000;if(duration==="اسبوع") return 7*24*60*60*1000;if(duration==="شهر") return 30*24*60*60*1000;return 12*60*60*1000;}
-
-async function getUserInfo(uid) {
-  if(!uid) return {username:'غير معروف', email:'-'};
-  const userSnap = await getDocs(query(collection(db,"users"), where("__name__","==",uid)));
-  if(userSnap.empty) return {username:'مستخدم محذوف', email:'-'};
-  const data = userSnap.docs[0].data();
-  return {username: data.username || 'بدون اسم', email: data.email || '-'};
-}
-
-function updateTabBadge(tabId, count){
-  const btn = document.querySelector(`button[onclick*="'${tabId}'"]`);
-  if(!btn) return;
-  let badge = btn.querySelector('.tab-badge');
-  if(!badge){
-    badge = document.createElement('span');
-    badge.className = 'tab-badge';
-    btn.appendChild(badge);
-  }
-  if(count > 0){
-    badge.style.display = 'flex';
-    badge.innerText = count;
-  }else{
-    badge.style.display = 'none';
-  }
-}
-
-onAuthStateChanged(auth, user => {
-  const appDiv = document.getElementById('app');
-  if(!user) {
-    appDiv.innerHTML = `<div class="login-box"><h1 style="background:linear-gradient(90deg,var(--primary),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent">🔐 Highrise ULTRA</h1><input type="email" id="adminEmail" placeholder="ايميل الادمن" value="${ADMIN_EMAIL}"><input type="password" id="adminPass" placeholder="كلمة السر"><button class="btn blue" style="width:100%;margin-top:12px" onclick="adminLogin()">دخول</button></div>`;
-    return;
-  }
-  if(user.email!== ADMIN_EMAIL){appDiv.innerHTML = `<div class="login-box"><h1>⛔ غير مصرح</h1><button class="btn red" onclick="logout()">خروج</button></div>`; return;}
-  loadAdminPanel();
-});
-
-function loadAdminPanel(){
-  document.getElementById('app').innerHTML = `
-  <div class="header">
-    <h1>Highrise <span>ULTRA</span></h1>
-    <div class="header-actions">
-      <input id="maintenanceInput" class="maintenance-input" placeholder="رسالة الصيانة">
-      <button class="btn red" onclick="toggleMaintenance(true)">ايقاف الموقع</button>
-      <button class="btn green" onclick="toggleMaintenance(false)">تشغيل الموقع</button>
-      <button class="btn red" onclick="logout()">خروج</button>
+<div class="modal-overlay" id="apiWarningModal">
+  <div class="modal-box">
+    <h3>انتظر لحظة!</h3>
+    <p>إذا كنت تفكر في إنشاء روبوت والوصول إلى واجهة برمجة تطبيقات Highrise، فمن المهم أن تعلم أن هذه الميزة مخصصة للمطورين ذوي الخبرة. فهي تتطلب خبرة في البرمجة والقدرة على استضافة الروبوت على خادمك أو جهاز الكمبيوتر الخاص بك.</p>
+    <p>توفر واجهة برمجة تطبيقات Highrise مجموعة من الأدوات للتكامل مع عالم Highrise الافتراضي، بما في ذلك إمكانية الوصول إلى بيانات اللعبة، والتفاعل مع لاعبين آخرين، وأتمتة بعض الإجراءات. مع ذلك، وكما هو الحال مع أي واجهة برمجة تطبيقات، قد يكون استخدامها معقدًا ويتطلب فهمًا جيدًا لمفاهيم البرمجة مثل واجهات برمجة التطبيقات، وطلبات HTTP، وتنسيقات بيانات JSON.</p>
+    <p><b>وأخيرًا، يتحمل مالكو البوت مسؤولية تصرفاته.</b> إذا أساء البوت التصرف أو انتهك إرشادات مجتمعنا، فسيتم اتخاذ إجراءات ضد المستخدم المالك.</p>
+    <p>بالإضافة إلى ذلك، يتطلب استضافة برنامج روبوت خبرة فنية وقدرة على تهيئة الخادم أو جهاز الكمبيوتر الخاص بك للتعامل مع عبء عمل البرنامج. إذا لم تكن على دراية بهذه المفاهيم، فقد يكون من الأفضل البحث عن حلول بديلة أو طلب المساعدة من مطور لديه خبرة في إنشاء برامج الروبوت ودمجها مع واجهات برمجة التطبيقات (APIs).</p>
+    <p><a href="#" style="color:var(--primary)">اقرأ وثائق واجهة برمجة التطبيقات API الخاصة بنا للبدء.</a></p>
+    <div class="checkbox-wrap">
+      <input type="checkbox" id="confirmAPI">
+      <label for="confirmAPI">أؤكد أنني أمتلك الخبرة والمهارات التقنية اللازمة لإنشاء روبوت واستخدام واجهة برمجة تطبيقات Highrise</label>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" id="nextToCreateBtn" disabled>التالي</button>
+      <button class="btn ghost" onclick="closeApiModal()">الغاء</button>
     </div>
   </div>
-  <div class="container">
-  <div class="stats">
-    <div class="stat-card"><h3>👥 اجمالي الحسابات</h3><p id="userCount">0</p></div>
-    <div class="stat-card"><h3>🖥️ السيرفرات النشطة</h3><p id="serverCount">0</p></div>
-    <div class="stat-card"><h3>🤖 البوتات المشغلة</h3><p id="botCount">0</p></div>
+</div>
+
+<div class="container"><div id="devBanner" class="dev-banner" style="display:none">⚠️الموقع في مرحله التجربيه توقع بعد المميزات الفقوده وبعض الأخطاء على طول الطريق</div>
+
+  <div id="loginPage" class="page active"><div class="auth-wrap"><div class="card">
+    <h2 style="text-align:center">تسجيل دخول</h2><input id="loginEmail" type="email" placeholder="البريد الالكتروني"><input id="loginPassword" type="password" placeholder="كلمة السر">
+    <div class="actions"><button class="btn" onclick="signIn()" style="flex:1">دخول</button><button class="btn ghost" id="goToSignupBtn" style="flex:1">انشاء حساب</button></div>
+  </div></div></div>
+
+  <div id="signupPage" class="page"><div class="auth-wrap"><div class="card">
+    <h2 style="text-align:center">انشاء حساب جديد</h2><input id="signupUsername" type="text" placeholder="اسم المستخدم"><input id="signupEmail" type="email" placeholder="البريد الالكتروني"><input id="signupPassword" type="password" placeholder="كلمة السر"><input id="signupConfirmPassword" type="password" placeholder="تأكيد كلمة السر">
+    <div class="actions"><button class="btn" onclick="signUp()" style="flex:1">انشاء</button><button class="btn ghost" id="goToLoginBtn" style="flex:1">رجوع</button></div>
+  </div></div></div>
+
+  <div id="dashboardPage" class="page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <h2>مرحبا <span id="userName"></span></h2>
+      <div class="header-actions">
+        <div class="rooms-icon" id="roomsBtn">🏪<div class="popup" id="roomsPopup"><h4>غرف التجارة</h4><div class="grid-scroll" id="roomsGrid"></div></div></div>
+        <div class="boost-icon" id="boostBtn">🚀<div class="popup" id="boostPopup"><h4>تعزيز الغرف</h4><div class="grid-scroll" id="boostGrid"></div></div></div>
+        <div class="color-icon" id="colorBtn">🎨<div class="popup" id="colorPopup"><h4>معرض الالوان</h4><div class="grid-scroll" id="colorGrid"></div></div></div>
+        <div class="note-icon" id="noteBtn">!</div>
+        <button class="btn ghost" onclick="showModeratorForm()">طلب مشرف</button>
+        <button class="btn ghost" onclick="logout()">خروج</button>
+      </div>
+    </div>
+    <div class="note-popup" id="notePopup">
+      <h4>مرحبا بك في موقع هاي رايز لتثبيت البوتات</h4>
+      <p><b>معلومة لتثبيت البوت الخاص بك اتبع القوانين ولا تخالف</b></p>
+      <p><b>القانون الاول:</b> يجب ان يكون البوت الخاص بك مضاف في الغرفه في اللعبه</p>
+      <p><b>ثانيا:</b> عندما تقوم بي فتح سرفر هنا يجيب ان تقوم بي رفع الملف الخاص بي البوت وتقوم بي رفع الملف وتنظر حتي قبول الطلب</p>
+      <p>وشكرا لكم وحظا سعيد للجميع</p>
+    </div>
+
+    <div id="adminControls" style="display:none">
+      <div class="card" style="background:linear-gradient(90deg,#ef4444,#f59e0b)">
+        <h3 style="margin-top:0">⚙️ لوحة تحكم الموقع</h3>
+        <input id="maintenanceText" placeholder="اكتب رسالة الصيانة هنا">
+        <div style="display:flex;gap:10px">
+          <button class="btn danger" onclick="toggleMaintenance(true)" style="flex:1">ايقاف الموقع</button>
+          <button class="btn success" onclick="toggleMaintenance(false)" style="flex:1">تشغيل الموقع</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-buttons">
+      <button id="newServerBtn" class="btn" onclick="showCreateServer()">+ انشاء سيرفر جديد</button>
+      <button id="newBotBtn" class="btn success" onclick="showCreateBot()">+ انشاء بوت جديد</button>
+      <button id="newAPIBotBtn" class="btn warn" onclick="openApiModal()">+ انشاء بوت API</button>
+    </div>
+
+    <h3>السيرفرات</h3><div class="servers" id="serversList"></div>
+
+    <h3 style="margin-top:30px">البوتات</h3><div class="servers" id="botsList"></div>
+
+    <div id="createServerBox" class="card" style="display:none">
+      <h3>انشاء سيرفر</h3>
+      <input id="serverName" placeholder="اسم السيرفر">
+      <select id="serverType">
+        <option value="">اختر نوع الخادم</option>
+        <option value="python"> خادم بايثون Python</option>
+        <option value="nodejs"> خادم Node.js</option>
+      </select>
+      <div style="display:flex;gap:10px">
+        <button class="btn" onclick="createServer()" style="flex:1">انشاء</button>
+        <button class="btn ghost" onclick="showCreateServer()" style="flex:1">الغاء</button>
+      </div>
+    </div>
+
+    <div id="createBotBox" class="card" style="display:none">
+      <h3>انشاء بوت جديد</h3>
+      <input id="botName" placeholder="اسم حساب البوت في Highrise">
+      <input id="botApiToken" placeholder="API Token">
+      <input id="botRoomId" placeholder="ID الغرفة">
+      <select id="botDuration">
+        <option value="12 ساعة">12 ساعة</option>
+        <option value="24 ساعة">24 ساعة</option>
+        <option value="48 ساعة">48 ساعة</option>
+        <option value="اسبوع">اسبوع</option>
+        <option value="شهر">شهر</option>
+      </select>
+      <p style="font-size:13px;color:#aaa" id="durationNote">ملاحظة: المدة الافتراضية 12 ساعة. المشرفين يقدرو يختارو مدة اطول</p>
+      <p style="font-size:12px;color:var(--warn);margin-top:-5px">💡 لو عايز تغير اي حاجة في البوت بعد التشغيل ابعت للدعم</p>
+      <div style="display:flex;gap:10px">
+        <button class="btn success" onclick="createBotRequest()" style="flex:1">ارسال طلب الانشاء</button>
+        <button class="btn ghost" onclick="showCreateBot()" style="flex:1">الغاء</button>
+      </div>
+    </div>
   </div>
-  <div class="tabs">
-    <button class="active" onclick="showTab('users',this)">👥 المستخدمين<span class="tab-badge"></span></button>
-    <button onclick="showTab('servers',this)">🖥️ السيرفرات</button>
-    <button onclick="showTab('bots',this)">🤖 البوتات</button>
-    <button onclick="showTab('support',this)">💬 الدعم الفني<span class="tab-badge"></span></button>
-    <button onclick="showTab('modReq',this)">🛡️ طلبات اشراف<span class="tab-badge"></span></button>
-    <button onclick="showTab('botReq',this)">🤖 طلبات بوتات<span class="tab-badge"></span></button>
-    <button onclick="showTab('apiBotReq',this)">⚡ طلبات بوت API<span class="tab-badge"></span></button>
-    <button onclick="showTab('actionReq',this)">⚡ طلبات تشغيل<span class="tab-badge"></span></button>
-    <button onclick="showTab('linkReq',this)">🔗 طلبات روابط<span class="tab-badge"></span></button>
-    <button onclick="showTab('deleteReq',this)">🗑️ طلبات حذف<span class="tab-badge"></span></button>
+
+  <div id="createAPIBotPage" class="page">
+    <button class="btn ghost" onclick="goBack()">← رجوع</button>
+    <div class="card" style="margin-top:20px">
+      <h2>انشاء بوت API</h2>
+      <input id="apiBotGameName" placeholder="اسم حسابك في اللعبة">
+      <input id="apiBotName" placeholder="اسم البوت اللي انت عايزه">
+      <button class="btn success" onclick="submitAPIBotRequest()">ارسال طلب انشاء البوت</button>
+    </div>
   </div>
-  <div id="users"></div><div id="servers" style="display:none"></div><div id="bots" style="display:none"></div>
-  <div id="support" style="display:none"></div><div id="modReq" style="display:none"></div>
-  <div id="botReq" style="display:none"></div><div id="apiBotReq" style="display:none"></div>
-  <div id="actionReq" style="display:none"></div><div id="linkReq" style="display:none"></div><div id="deleteReq" style="display:none"></div>
-  </div>`;
-  loadUsers(); loadServers(); loadBots(); loadSupport(); loadModRequests(); loadBotRequests(); loadAPIBotRequests(); loadActionRequests(); loadLinkRequests(); loadDeleteRequests();
-}
 
-function loadUsers(){
-  onSnapshot(collection(db,"users"),(snap)=>{
-    document.getElementById('userCount').innerText=snap.size;
-    const newUsers = snap.docs.filter(d =>!d.data().isReadByAdmin).length;
-    updateTabBadge('users', newUsers);
+  <div id="botPendingPage" class="page">
+    <div class="card review-box">
+      <div class="icon">⏳</div>
+      <h2>انتظر حتى يتم انشاء البوت الخاص بك</h2>
+      <p>تم ارسال طلبك للادارة</p>
+      <button class="btn ghost" onclick="goBack()">رجوع للوحة التحكم</button>
+    </div>
+  </div>
 
-    let html='<h2>👥 ادارة المستخدمين</h2>';
-    snap.forEach(d=>{const u=d.data();
-      html+=`<div class="card req-item"><div class="req-info"><p><b>الاسم:</b> ${u.username || 'بدون'} ${u.isModerator?'<span class="badge mod">🛡️ مشرف</span>':''}</p><p><b>الايميل:</b> ${u.email}</p><p><b>الحالة:</b> ${u.banned?`<span class="badge" style="background:rgba(244,63,94,.15);color:var(--danger);border:1px solid var(--danger)">🔨 محظور</span>`:`<span class="badge" style="background:rgba(16,185,129,.15);color:var(--success);border:1px solid var(--success)">✅ فعال</span>`}</p></div><div class="user-actions">${u.isModerator?`<button class="btn purple" onclick="revokeMod('${d.id}')">⛔ الغاء اشراف</button>`:''}${!u.banned?`<button class="btn orange" onclick="openWarnModal('${d.id}','${u.email}')">⚠️ تحذير</button><button class="btn red" onclick="openBanModal('${d.id}','${u.email}')">🚫 حظر</button>`:`<button class="btn green" onclick="unbanUser('${d.id}')">✅ فك حظر</button>`}<button class="btn red" onclick="openDeleteUserModal('${d.id}','${u.email}')">🗑️ حذف</button></div></div>`;});
-    document.getElementById('users').innerHTML=html||'<p>لا يوجد مستخدمين</p>';
-  });
-}
+  <div id="botReadyPage" class="page">
+    <button class="btn ghost" onclick="goBack()">← رجوع</button>
+    <div class="card" style="margin-top:20px">
+      <h2>✅ تم انشاء البوت الخاص بك</h2>
+      <p><b>اسم البوت:</b> <span id="readyBotName"></span></p>
+      <p><b>اسم حسابك في اللعبة:</b> <span id="readyGameName"></span></p>
+      <p><b>كود البوت:</b></p>
+      <div class="code-box">
+        <code id="botCode"></code>
+        <button class="btn" onclick="copyBotCode(this)">نسخ</button>
+      </div>
+      <div style="margin-top:20px">
+        <button class="btn ghost" onclick="goBack()">الغاء الظهور مرة اخرى</button>
+      </div>
+    </div>
+  </div>
 
-function loadSupport(){
-  // الاشعارات
-  onSnapshot(query(collection(db,"support_messages"),where("read","==",false), where("sender","==","user")),(snap)=>{
-    updateTabBadge('support', snap.size);
-  });
+  <div id="supportPage" class="page">
+    <button class="btn ghost" onclick="goBack()">← رجوع</button>
+    <div class="card" style="margin-top:20px">
+      <h2>خدمة العملاء</h2>
+      <div class="chat-box" id="supportChat"></div>
+      <div class="chat-input">
+        <input id="supportMessage" placeholder="اكتب رسالتك هنا...">
+        <button class="btn" onclick="sendSupportMessage()">ارسال</button>
+      </div>
+      <p style="font-size:13px;color:#aaa;margin-top:10px">تقدر تبعت رسالة واحدة فقط كل 1 ساعة</p>
+    </div>
+  </div>
 
-  // الرد التلقائي
-  onSnapshot(query(collection(db,"support_messages"),where("sender","==","user"),where("autoReplied","==",null)), (snap)=>{
-    snap.forEach(async d=>{
-      const msg = d.data();
-      // ابعت رد تلقائي
-      await addDoc(collection(db,"support_messages"),{
-        uid: msg.uid,
-        username: "الادارة",
-        text: "طلبك قيد المراجعة وسوف يتم الرد عليك في اقرب وقت 🌹",
-        sender: "admin",
-        read: true,
-        time: serverTimestamp()
-      });
-      // علم ان الرسالة دي اترد عليها
-      await updateDoc(doc(db,"support_messages",d.id),{autoReplied:true});
-    })
-  });
+  <div id="moderatorFormPage" class="page">
+    <button class="btn ghost" onclick="goBack()">← رجوع</button>
+    <div class="card" style="margin-top:20px">
+      <h2>تقديم طلب مشرف</h2>
+      <input id="modReason" placeholder="ليه عايز تبقى مشرف؟">
+      <input id="modExperience" placeholder="خبرتك في Highrise">
+      <textarea id="modBio" placeholder="نبذة عنك" rows="3"></textarea>
+      <button class="btn success" onclick="submitModeratorRequest()">ارسال الطلب</button>
+    </div>
+  </div>
 
-  onSnapshot(query(collection(db,"support_messages"),orderBy("time","asc")),(snap)=>{
-    let html='<h2>💬 مركز الدعم الفني</h2>';
-    html += `<div class="send-to-user-box"><h3>📨 ارسال رسالة مباشرة</h3><input id="targetUsername" placeholder="اسم المستخدم"><textarea id="targetMessage" placeholder="نص الرسالة"></textarea><div class="quick-replies">${QUICK_REPLIES.map(r=>`<button class="quick-reply-btn" onclick="useQuickReply('targetMessage','${r}')">${r.substring(0,18)}...</button>`).join('')}</div><button class="btn purple" onclick="sendToAnyUser()">ارسال</button></div>`;
-    const users = {}; snap.forEach(d=>{const m=d.data(); if(!users[m.uid]) users[m.uid]=[]; users[m.uid].push({id:d.id,...m});});
-    for(const uid in users){
-      html+=`<div class="card"><h3>${users[uid][0].username}</h3><div class="user-actions"><button class="btn red" onclick="openDeleteChatModal('${uid}','${users[uid][0].username}')">🗑️ مسح المحادثة</button></div><div class="chat-admin">`;
-      users[uid].forEach(m=>{html+=`<div class="chat-msg ${m.sender}"><b>${m.sender==='user'?users[uid][0].username:'الإدارة'}:</b><br>${m.text}</div>`});
-      html+=`</div><input id="reply${uid}" placeholder="رد..."><div class="quick-replies">${QUICK_REPLIES.map(r=>`<button class="quick-reply-btn" onclick="useQuickReply('reply${uid}','${r}')">نسخ</button>`).join('')}</div><button class="btn purple" style="margin-top:10px" onclick="replyUser('${uid}')">ارسال</button></div>`;
+  <div id="botReviewPage" class="page">
+    <div class="card review-box">
+      <div class="icon">⏳</div>
+      <h2>طلب البوت قيد المراجعة</h2>
+      <p>تم ارسال بيانات البوت ل Highrise Bot</p>
+      <p style="color:var(--warn)">انتظر موافقة الادارة. سيتم تشغيل البوت بعد الموافقة</p>
+      <button class="btn ghost" onclick="goBack()">رجوع للوحة التحكم</button>
+    </div>
+  </div>
+
+  <div id="botPage" class="page"><button class="btn ghost" onclick="goBack()">← رجوع</button>
+    <div class="card" style="margin-top:20px">
+      <h2 id="botTitle"></h2>
+      <p style="color:#aaa">حالة البوت: <span id="botStatus" class="badge"></span></p>
+      <p style="color:#aaa">المدة المتبقية: <span id="botTimeLeft"></span></p>
+      <h4>اوامر البوت</h4>
+      <div class="bot-commands" id="botCommandsList"></div>
+    </div>
+  </div>
+
+  <div id="serverPage" class="page"><button class="btn ghost" onclick="goBack()">← رجوع</button>
+    <div class="card" style="margin-top:20px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <h2 id="serverTitle"></h2><span id="serverStatus" class="badge"></span>
+    </div>
+      <p style="color:#aaa;margin-top:10px">نوع الخادم: <span id="serverTypeLabel"></span></p>
+      <h4>Console</h4><div class="log" id="logBox"></div>
+      <div style="margin:20px 0;display:flex;gap:10px;flex-wrap:wrap">
+        <button id="startBtn" class="btn success" onclick="requestAction('start')">طلب تشغيل</button>
+        <button id="stopBtn" class="btn danger" onclick="requestAction('stop')">طلب ايقاف</button>
+        <button id="deleteBtn" class="btn warn" onclick="requestDeleteServer()">طلب حذف السيرفر</button>
+      </div>
+      <p id="deleteCooldown" style="display:none;color:var(--warn);font-weight:700"></p>
+      <p id="pendingNote" style="display:none;color:var(--warn);font-weight:700"></p>
+      <h4>رفع الملف</h4>
+      <a id="serverPageIconLink" href="#" target="_blank">
+        <div class="server-page-icon"><img id="serverPageIconImg" src=""></div>
+      </a>
+      <h4>ارسال رابط ل Highrise Bot</h4><input id="linkInput" placeholder="الصق رابط ملف البوت هنا"><button class="btn" onclick="sendLink()">📤 ارسال الرابط</button>
+      <p id="linkStatus" style="display:none;color:var(--success);font-weight:700;margin-top:10px">✅ تم رفع ملف البوت بنجاح</p>
+    </div>
+  </div>
+</div>
+<footer>جميع الحقوق محفوظة © Highrise Bot 2026</footer><script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, addDoc, query, where, doc, updateDoc, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, Timestamp, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
+  const app = initializeApp(firebaseConfig);const auth = getAuth();const db = getFirestore();
+  let currentUser = null;let currentServerId = null;let currentBotId = null;let serverCount = 0; let botCount = 0; let lastDeleteTime = null; let hasLink = false; let isModerator = false; let lastSupportMsg = null;
+
+  const loadingScreen = document.getElementById('loadingScreen');
+  function showLoading(callback){loadingScreen.classList.remove('hide');setTimeout(()=>{ loadingScreen.classList.add('hide'); if(callback) callback(); }, 1500);}
+  function hideLoading(){ loadingScreen.classList.add('hide'); }
+
+  const sidebarIcons = [{ img: "https://d.top4top.io/p_3863cef2q0.png", link: "https://discord.gg/highrise" },{ img: "https://f.top4top.io/p_38631ldbs0.png", link: "https://highrise.game/ar-EG" },{ img: "https://e.top4top.io/p_3863ub5et0.png", link: "https://replit.com/" }];
+  const serverPageIcon = { img: "https://l.top4top.io/p_3863dou250.png", link: "https://app.mediafire.com/" };
+  document.getElementById('icon1-img').src = sidebarIcons[0].img; document.getElementById('icon1').href = sidebarIcons[0].link;
+  document.getElementById('icon2-img').src = sidebarIcons[1].img; document.getElementById('icon2').href = sidebarIcons[1].link;
+  document.getElementById('icon3-img').src = sidebarIcons[2].img; document.getElementById('icon3').href = sidebarIcons[2].link;
+  document.getElementById('serverPageIconImg').src = serverPageIcon.img; document.getElementById('serverPageIconLink').href = serverPageIcon.link;
+
+  const loginEmail = document.getElementById('loginEmail');const loginPassword = document.getElementById('loginPassword');
+  const signupUsername = document.getElementById('signupUsername');const signupEmail = document.getElementById('signupEmail');
+  const signupPassword = document.getElementById('signupPassword');const signupConfirmPassword = document.getElementById('signupConfirmPassword');
+  const userName = document.getElementById('userName');const serversList = document.getElementById('serversList'); const botsList = document.getElementById('botsList');
+  const newServerBtn = document.getElementById('newServerBtn'); const newBotBtn = document.getElementById('newBotBtn');
+  const serverName = document.getElementById('serverName'); const serverType = document.getElementById('serverType');
+  const createServerBox = document.getElementById('createServerBox'); const createBotBox = document.getElementById('createBotBox');
+  const serverTitle = document.getElementById('serverTitle'); const serverTypeLabel = document.getElementById('serverTypeLabel');
+  const serverStatus = document.getElementById('serverStatus');const logBox = document.getElementById('logBox');
+  const startBtn = document.getElementById('startBtn');const stopBtn = document.getElementById('stopBtn'); const deleteBtn = document.getElementById('deleteBtn');
+  const pendingNote = document.getElementById('pendingNote'); const deleteCooldown = document.getElementById('deleteCooldown'); const linkInput = document.getElementById('linkInput');
+  const noteBtn = document.getElementById('noteBtn');const notePopup = document.getElementById('notePopup'); const linkStatus = document.getElementById('linkStatus');
+  const colorBtn = document.getElementById('colorBtn'); const colorPopup = document.getElementById('colorPopup');
+  const roomsBtn = document.getElementById('roomsBtn'); const roomsPopup = document.getElementById('roomsPopup');
+  const boostBtn = document.getElementById('boostBtn'); const boostPopup = document.getElementById('boostPopup');
+  const supportIcon = document.getElementById('supportIcon'); const notifBadge = document.getElementById('notifBadge');
+  const maintenanceScreen = document.getElementById('maintenanceScreen'); const maintenanceMessage = document.getElementById('maintenanceMessage');
+
+  const colors = [{code:"<#000>"},{code:"<#FFFFFF>"},{code:"<#FF0000>"},{code:"<#00FF00>"},{code:"<#0000FF>"},{code:"<#FFFF00>"},{code:"<#FF00FF>"},{code:"<#00FFFF>"},{code:"<#999>"},{code:"<#FF4500>"},{code:"<#FF69B4>"},{code:"<#8A2BE2>"},{code:"<#4f7cff>"},{code:"<#22c55e>"},{code:"<#ef4444>"},{code:"<#f59e0b>"}];
+  function loadColors(){const grid = document.getElementById('colorGrid');if(!grid)return;grid.innerHTML = '';colors.forEach(c=>{grid.innerHTML += `<div class="item"><div class="item-img" style="background:${c.code.replace(/[<>]/g,'')}"></div><div class="item-name">${c.code}</div><button class="copy-btn" onclick="copyCode('${c.code}',this)">نسخ الكود</button></div>`;});}
+  loadColors();
+const rooms = [{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=66cef923e84426e4f98b3c85&invite_id=6a6c7853ba4370df5de5760c"},{name:"چوسف ايراني 🇮🇷", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e44a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"للجرابات 💎", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/room?id=6686530bb82dc89a70e1d413&invite_id=6a6c7adfad33e8f9515e9ac5"},{name:"Find a trade", img:"https://h.top4top.io/p_3864g40850.png", link:"https://high.rs/world?id=6894bd39e3e4a405517cb530&ownedRoomId=66a630e94ea1287c3e19e8a4&invite_id=6a6c7a86d34d2536e765399f"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png", link:"https://highrisebot.vercel.app/"},{name:"غير متوفر الان", img:"https://h.top4top.io/p_3864g40850.png"}];
+  function loadRooms(){const grid = document.getElementById('roomsGrid');grid.innerHTML = '';rooms.forEach(r=>{grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')"><img class="item-img" src="${r.img}"><div class="item-name">${r.name}</div></div>`;});}
+  loadRooms();
+  const boostRooms = [{name:"تعزيز 1", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"Suff", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=Sufferance_"},{name:"0_Bad_bunny_0", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=0_Bad_bunny_0"},{name:"BOOST 25G", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://high.rs/user?name=panoramik"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"},{name:"صيانه⚙️", img:"https://l.top4top.io/p_3864g80770.jpg", link:"https://highrisebot.vercel.app/"}];
+  function loadBoost(){const grid = document.getElementById('boostGrid');grid.innerHTML = '';boostRooms.forEach(r=>{grid.innerHTML += `<div class="item" onclick="window.open('${r.link}','_blank')"><img class="item-img" src="${r.img}"><div class="item-name">${r.name}</div></div>`;});}
+  loadBoost();
+  window.copyCode = (code,btn)=>{navigator.clipboard.writeText(code);btn.innerText = 'تم النسخ';btn.classList.add('copied');toast(`تم نسخ ${code}`);setTimeout(()=>{btn.innerText='نسخ الكود';btn.classList.remove('copied')},1500);}
+  window.copyBotCode = (btn) => {navigator.clipboard.writeText(document.getElementById('botCode').innerText);btn.innerText='تم النسخ';setTimeout(()=>btn.innerText='نسخ',1500)}
+  function closeAllPopups(){colorPopup.classList.remove('show');roomsPopup.classList.remove('show');boostPopup.classList.remove('show');notePopup.classList.remove('show')}
+  colorBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); colorPopup.classList.toggle('show')};
+  roomsBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); roomsPopup.classList.toggle('show')};
+  boostBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); boostPopup.classList.toggle('show')};
+  noteBtn.onclick = (e) => {e.stopPropagation(); closeAllPopups(); notePopup.classList.toggle('show')};
+  document.addEventListener('click', closeAllPopups);
+  function toast(msg){const t=document.createElement('div');t.className='toast';t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
+  function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
+  window.goBack = () => showPage('dashboardPage');
+  document.getElementById('goToSignupBtn').addEventListener('click', () => showPage('signupPage'));
+  document.getElementById('goToLoginBtn').addEventListener('click', () => showPage('loginPage'));
+
+  // مراقبة الصيانة من الادمن
+  onSnapshot(doc(db,"adminConfig","siteStatus"), snap=>{
+    if(snap.exists()){
+      const data = snap.data();
+      maintenanceScreen.style.display = data.maintenance? 'flex' : 'none';
+      if(data.maintenance) maintenanceMessage.innerText = data.message || 'نقوم بعمل بعض التحديثات لتحسين تجربتك. نعود قريباً ❤️';
+    } else {
+      maintenanceScreen.style.display = 'none';
     }
-    document.getElementById('support').innerHTML=html||'<p>لا توجد رسائل</p>';
-  });
-}
+  })
 
-window.useQuickReply=(inputId,text)=>{document.getElementById(inputId).value = text;navigator.clipboard.writeText(text);showToast('تم النسخ 📋');}
-window.sendToAnyUser=async()=>{const username = document.getElementById('targetUsername').value.trim();const message = document.getElementById('targetMessage').value.trim();if(!username ||!message) return showToast('اكمل البيانات');const usersSnap = await getDocs(query(collection(db,"users"),where("username","==",username)));if(usersSnap.empty) return showToast('❌ غير موجود');await addDoc(collection(db,"support_messages"),{uid: usersSnap.docs[0].id, username, text: message, sender: "admin", read: true, time: serverTimestamp()});document.getElementById('targetUsername').value='';document.getElementById('targetMessage').value='';showToast(`✅ تم الارسال لـ ${username}`);}
-window.replyUser=async(uid)=>{const msg=document.getElementById(`reply${uid}`).value.trim();if(!msg)return;await addDoc(collection(db,"support_messages"),{uid,username:"الادارة",text:msg,sender:"admin",read:true,time:serverTimestamp()});document.getElementById(`reply${uid}`).value='';showToast('تم الرد');}
-window.openDeleteChatModal=(uid,username)=>{showModal('🗑️',`مسح محادثة ${username}`,`<p style="color:var(--danger)">تحذير: سيتم مسح كل الرسائل نهائياً</p>`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn red" onclick="deleteChat('${uid}')">تأكيد</button>`);}
-window.deleteChat=async(uid)=>{const msgs = await getDocs(query(collection(db,"support_messages"),where("uid","==",uid)));msgs.forEach(m=>deleteDoc(doc(db,"support_messages",m.id)));closeModal();showToast('🗑️ تم المسح');}
+  // مودال API
+  window.openApiModal = () => {document.getElementById('apiWarningModal').style.display='flex'}
+  window.closeApiModal = () => {document.getElementById('apiWarningModal').style.display='none';document.getElementById('confirmAPI').checked=false;document.getElementById('nextToCreateBtn').disabled=true}
+  document.getElementById('confirmAPI').onchange = (e) => {document.getElementById('nextToCreateBtn').disabled =!e.target.checked}
+  document.getElementById('nextToCreateBtn').onclick = () => {closeApiModal();showPage('createAPIBotPage')}
 
-// تشغيل وايقاف الموقع
-window.toggleMaintenance = async(status) => {
-  const msg = document.getElementById('maintenanceInput').value.trim();
-  await setDoc(doc(db,"adminConfig","siteStatus"),{
-    maintenance: status,
-    message: msg || 'الموقع في الصيانة'
-  });
-  showToast(status? '✅ تم ايقاف الموقع' : '✅ تم تشغيل الموقع');
-}
+  window.submitAPIBotRequest = async() => {
+    const gameName = document.getElementById('apiBotGameName').value.trim();
+    const botName = document.getElementById('apiBotName').value.trim();
+    if(!gameName ||!botName) return toast('املا كل الحقول');
+    await addDoc(collection(db,"api_bot_requests"),{
+      uid: currentUser.uid,
+      username: userName.innerText,
+      email: currentUser.email,
+      gameName, botName,
+      status: 'pending',
+      time: serverTimestamp()
+    });
+    showPage('botPendingPage');
+    toast('✅ تم ارسال الطلب للادارة');
+  }
 
-function loadModRequests(){
-  onSnapshot(query(collection(db,"moderator_requests"),where("status","==","pending")), async (snap)=>{
-    updateTabBadge('modReq', snap.size);
-    let html='<h2>🛡️ طلبات الاشراف المعلقة</h2>';
-    for(const d of snap.docs){const r=d.data(); const userInfo = await getUserInfo(r.uid);
-      html+=`<div class="card req-item"><div class="req-info"><p><b>اسم الحساب:</b> ${userInfo.username}</p><p><b>الايميل:</b> ${userInfo.email}</p><p><b>السبب:</b> ${r.reason}</p><p><b>الخبرة:</b> ${r.exp}</p></div><div><button class="btn green" onclick="approveMod('${d.id}','${r.uid}')">✅ قبول</button><button class="btn red" onclick="rejectMod('${d.id}')">❌ رفض</button></div></div>`;}
-    document.getElementById('modReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveMod=async(id,uid)=>{await updateDoc(doc(db,"users",uid),{isModerator:true});await updateDoc(doc(db,"moderator_requests",id),{status:'approved'});showToast('تمت الترقية لمشرف');}
-window.rejectMod=async(id)=>{await updateDoc(doc(db,"moderator_requests",id),{status:'rejected'});showToast('تم الرفض');}
+  supportIcon.onclick = () => {
+    if(!currentUser){toast('سجل حساب الاول عشان تستخدم خدمة العملاء');showPage('loginPage');return;}
+    showPage('supportPage');
+    loadSupportChat();
+    notifBadge.style.display = 'none';
+  };
 
-function loadServers(){onSnapshot(collection(db,"servers"),(snap)=>{document.getElementById('serverCount').innerText=snap.size;let html='<h2>🖥️ ادارة السيرفرات</h2><table class="pro-table"><tr><th>اسم السيرفر</th><th>الحالة</th><th>النوع</th><th>المالك</th><th>اجراء</th></tr>';snap.forEach(d=>{const s=d.data();html+=`<tr><td>${s.name}</td><td><span class="badge ${s.status==='شغال'?'on':s.pendingAction?'pending':'off'}">${s.pendingAction||s.status}</span></td><td>${s.type==='python'?'بايثون':'Node.js'}</td><td>${s.uid}</td><td><button class="btn red" onclick="deleteServer('${d.id}')">حذف</button></td></tr>`});html+='</table>';document.getElementById('servers').innerHTML=html||'<p>لا توجد سيرفرات</p>';});}
-window.deleteServer=async(id)=>{await deleteDoc(doc(db,"servers",id));showToast('تم الحذف')}
+  window.showModeratorForm = () => {
+    if(!currentUser){toast('لازم تسجل الاول');showPage('loginPage');return;}
+    showPage('moderatorFormPage');
+  };
 
-function loadBots(){onSnapshot(collection(db,"bots"), async (snap)=>{document.getElementById('botCount').innerText=snap.size;let html='<h2>🤖 ادارة البوتات</h2><table class="pro-table"><tr><th>اسم البوت</th><th>اسم الحساب</th><th>الحالة</th><th>المدة</th><th>اجراء</th></tr>';
-  for(const d of snap.docs){const b=d.data(); const userInfo = await getUserInfo(b.uid);
-    html+=`<tr><td>${b.name}</td><td>${userInfo.username}<br><small style="color:#94a3b8">${userInfo.email}</small></td><td><span class="badge ${b.status==='شغال'?'on':b.status==='جاهز'?'on':'pending'}">${b.status}</span></td><td>${b.duration||'API'}</td><td><button class="btn red" onclick="deleteBot('${d.id}')">حذف</button></td></tr>`;}
-  html+='</table>';document.getElementById('bots').innerHTML=html||'<p>لا توجد بوتات</p>';});}
-window.deleteBot=async(id)=>{await deleteDoc(doc(db,"bots",id));showToast('تم حذف البوت')}
+  window.submitModeratorRequest = async() => {
+    const reason = document.getElementById('modReason').value.trim();
+    const exp = document.getElementById('modExperience').value.trim();
+    const bio = document.getElementById('modBio').value.trim();
+    if(!reason ||!exp) return toast('املا الحقول المطلوبة');
+    await addDoc(collection(db,"moderator_requests"),{
+      uid: currentUser.uid,
+      username: userName.innerText,
+      email: currentUser.email,
+      reason, exp, bio,
+      status: 'pending',
+      time: serverTimestamp()
+    });
+    toast('✅ تم ارسال طلب الاشراف للادارة');
+    goBack();
+  };
 
-function loadBotRequests(){
-  onSnapshot(query(collection(db,"bot_requests"),where("status","==","pending")), async (snap)=>{
-    updateTabBadge('botReq', snap.size);
-    let html='<h2>🤖 طلبات البوتات العادية المعلقة</h2>';
-    for(const d of snap.docs){const r=d.data(); const userInfo = await getUserInfo(r.uid);
-      html+=`<div class="card req-item"><div class="req-info"><p><b>اسم الحساب:</b> ${userInfo.username}</p><p><b>الايميل:</b> ${userInfo.email}</p><p><b>البوت:</b> ${r.name}</p><p><b>المدة:</b> ${r.duration}</p><p><b>Token:</b> ${r.token}</p><p><b>الغرفة:</b> ${r.room}</p></div><div><button class="btn green" onclick="approveBot('${d.id}','${r.uid}','${r.name}','${r.duration}')">✅ موافقة</button><button class="btn red" onclick="rejectBot('${d.id}')">❌ رفض</button></div></div>`;}
-    document.getElementById('botReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveBot=async(reqId,userId,botName,duration)=>{const expires=new Date();expires.setTime(expires.getTime()+getDurationMs(duration));const botRef=await addDoc(collection(db,"bots"),{uid:userId,name:botName,status:"شغال",duration,createdAt:serverTimestamp(),expiresAt:Timestamp.fromDate(expires)});await updateDoc(doc(db,"bot_requests",reqId),{status:'approved',botId:botRef.id});await addDoc(collection(db,"notifications"),{uid:userId,reason:`تمت الموافقة على بوت ${botName} لمدة ${duration}`,type:"bot_approved",time:serverTimestamp()});showToast(`✅ تمت الموافقة`);}
-window.rejectBot=async(reqId)=>{await updateDoc(doc(db,"bot_requests",reqId),{status:'rejected'});showToast('❌ تم الرفض');}
+  async function loadSupportChat(){
+    const chatBox = document.getElementById('supportChat');
+    const q = query(collection(db,"support_messages"), where("uid","==",currentUser.uid), orderBy("time","asc"));
+    onSnapshot(q, snap => {
+      chatBox.innerHTML = '';
+      snap.forEach(d => {
+        const msg = d.data();
+        chatBox.innerHTML += `<div class="chat-msg ${msg.sender==='user'?'me':'admin'}"><b>${msg.sender==='user'?userName.innerText:'الإدارة'}:</b><br>${msg.text}</div>`;
+        if(msg.sender==='admin' &&!msg.read){updateDoc(doc(db,"support_messages",d.id),{read:true});}
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  }
 
-function loadAPIBotRequests(){
-  onSnapshot(query(collection(db,"api_bot_requests"),where("status","==","pending")), async (snap)=>{
-    updateTabBadge('apiBotReq', snap.size);
-    let html='<h2>⚡ طلبات بوت API المعلقة</h2>';
-    for(const d of snap.docs){const r=d.data(); const userInfo = await getUserInfo(r.uid);
-      html+=`<div class="card req-item"><div class="req-info">
-        <p><b>اسم الحساب في الموقع:</b> ${userInfo.username}</p>
-        <p><b>الايميل:</b> ${userInfo.email}</p>
-        <p><b>اسم الحساب في اللعبة:</b> ${r.gameName}</p>
-        <p><b>اسم البوت المطلوب:</b> ${r.botName}</p>
-      </div><div>
-        <button class="btn green" onclick="openApproveAPIBotModal('${d.id}','${r.uid}','${r.botName}','${r.gameName}')">✅ موافقة وارسال الكود</button>
-        <button class="btn red" onclick="rejectAPIBot('${d.id}')">❌ رفض</button>
-      </div></div>`;}
-    document.getElementById('apiBotReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.openApproveAPIBotModal=(reqId,uid,botName,gameName)=>{
-  showModal('⚡',`موافقة على بوت ${botName}`,`<p><b>اسم الحساب:</b> ${gameName}</p><textarea id="botCodeInput" placeholder="الصق كود البوت هنا اللي هتديه لليوزر"></textarea>`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn green" onclick="approveAPIBot('${reqId}','${uid}','${botName}','${gameName}')">ارسال الكود</button>`);
-}
-window.approveAPIBot=async(reqId,userId,botName,gameName)=>{
-  const code = document.getElementById('botCodeInput').value.trim();
-  if(!code) return showToast('لازم تحط كود البوت');
-  await addDoc(collection(db,"bots"),{uid:userId,name:botName,gameName:gameName,status:"جاهز",code:code,createdAt:serverTimestamp()});
-  await updateDoc(doc(db,"api_bot_requests",reqId),{status:'approved'});
-  await addDoc(collection(db,"notifications"),{uid:userId,reason:`تمت الموافقة على بوت API ${botName}`,type:"api_bot_approved",time:serverTimestamp()});
-  closeModal(); showToast(`✅ تم ارسال الكود لـ ${botName}`);
-}
-window.rejectAPIBot=async(reqId)=>{await updateDoc(doc(db,"api_bot_requests",reqId),{status:'rejected'});showToast('❌ تم رفض الطلب');}
+  window.sendSupportMessage = async() => {
+    if(lastSupportMsg){
+      const last = lastSupportMsg.toDate();
+      const diffHours = (new Date() - last) / (1000 * 60 * 60);
+      if(diffHours < 1) return toast('تقدر تبعت رسالة واحدة كل 1 ساعة فقط');
+    }
+    const msg = document.getElementById('supportMessage').value.trim();
+    if(!msg) return toast('اكتب رسالة الاول');
+    await addDoc(collection(db,"support_messages"),{
+      uid: currentUser.uid,
+      username: userName.innerText,
+      text: msg,
+      sender: 'user',
+      read: false,
+      time: serverTimestamp()
+    });
+    await updateDoc(doc(db,"users",currentUser.uid),{lastSupportMsg: serverTimestamp()});
+    lastSupportMsg = Timestamp.now();
+    document.getElementById('supportMessage').value = '';
+    toast('✅ تم ارسال رسالتك الإدارة');
+  };
 
-function loadActionRequests(){
-  onSnapshot(query(collection(db,"action_requests"),where("status","==","pending")), async (snap)=>{
-    updateTabBadge('actionReq', snap.size);
-    let html='<h2>⚡ طلبات التشغيل/الايقاف</h2>';
-    for(const d of snap.docs){const r=d.data(); const userInfo = await getUserInfo(r.uid);
-      html+=`<div class="card req-item"><div class="req-info"><p><b>اسم الحساب:</b> ${userInfo.username}</p><p><b>الايميل:</b> ${userInfo.email}</p><p><b>السيرفر:</b> ${r.serverName}</p><p><b>الطلب:</b> ${r.action==='start'?'تشغيل':'ايقاف'}</p></div><div><button class="btn green" onclick="approveAction('${d.id}','${r.serverId}','${r.action}')">✅ موافقة</button><button class="btn red" onclick="rejectAction('${d.id}','${r.serverId}')">❌ رفض</button></div></div>`;}
-    document.getElementById('actionReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveAction=async(reqId,serverId,action)=>{const newStatus=action==='start'?'شغال':'متوقف';await updateDoc(doc(db,"servers",serverId),{status:newStatus,pendingAction:null,log:`> تم ${action==='start'?'تشغيل':'ايقاف'} بواسطة الادارة`});await updateDoc(doc(db,"action_requests",reqId),{status:'approved'});showToast('تمت الموافقة');}
-window.rejectAction=async(reqId,serverId)=>{await updateDoc(doc(db,"action_requests",reqId),{status:'rejected'});showToast('تم الرفض');}
-
-function loadLinkRequests(){
-  onSnapshot(query(collection(db,"link_requests"),where("status","==","pending")), async (snap)=>{
-    updateTabBadge('linkReq', snap.size);
-    let html='<h2>🔗 طلبات الروابط</h2>';
-    for(const d of snap.docs){const r=d.data(); const userInfo = await getUserInfo(r.uid);
-      html+=`<div class="card req-item"><div class="req-info"><p><b>اسم الحساب:</b> ${userInfo.username}</p><p><b>الايميل:</b> ${userInfo.email}</p><p><b>السيرفر:</b> ${r.serverName}</p><p><b>الرابط:</b> <a href="${r.link}" target="_blank">${r.link}</a></p></div><div><button class="btn green" onclick="approveLink('${d.id}')">✅ اعتماد</button><button class="btn red" onclick="rejectLink('${d.id}')">❌ رفض</button></div></div>`;}
-    document.getElementById('linkReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveLink=async(id)=>{await updateDoc(doc(db,"link_requests",id),{status:'done'});showToast('تم الاعتماد')}
-window.rejectLink=async(id)=>{await updateDoc(doc(db,"link_requests",id),{status:'rejected'});showToast('تم الرفض')}
-
-function loadDeleteRequests(){
-  onSnapshot(query(collection(db,"delete_requests"),where("status","==","pending")), async (snap)=>{
-    updateTabBadge('deleteReq', snap.size);
-    let html='<h2>🗑️ طلبات حذف السيرفرات</h2>';
-    for(const d of snap.docs){const r=d.data(); const userInfo = await getUserInfo(r.uid);
-      html+=`<div class="card req-item"><div class="req-info"><p><b>اسم الحساب:</b> ${userInfo.username}</p><p><b>الايميل:</b> ${userInfo.email}</p><p><b>السيرفر:</b> ${r.serverName}</p></div><div><button class="btn green" onclick="approveDelete('${d.id}','${r.serverId}','${r.uid}')">✅ موافقة</button><button class="btn red" onclick="rejectDelete('${d.id}')">❌ رفض</button></div></div>`;}
-    document.getElementById('deleteReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveDelete=async(reqId,serverId,userId)=>{
-  await deleteDoc(doc(db,"servers",serverId));
-  await updateDoc(doc(db,"users",userId),{lastDeleteTime: serverTimestamp()});
-  await updateDoc(doc(db,"delete_requests",reqId),{status:'approved'});
-  showToast('تم الحذف');
-}
-window.rejectDelete=async(reqId)=>{await updateDoc(doc(db,"delete_requests",reqId),{status:'rejected'});showToast('تم الرفض');}
-
-window.showTab=(t,btn)=>{
-  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  
-  if(t === 'users'){
-    getDocs(collection(db,"users")).then(snap=>{
-      snap.forEach(d=>{
-        if(!d.data().isReadByAdmin){
-          updateDoc(doc(db,"users",d.id),{isReadByAdmin:true})
+  onAuthStateChanged(auth, async user => {
+    try{
+      if(user){
+        const userDoc = await getDoc(doc(db,"users",user.uid));
+        if(!userDoc.exists()){
+            toast('خطأ: الحساب مش موجود في قاعدة البيانات');
+            await signOut(auth);
+            hideLoading();
+            return;
         }
-      })
-    })
-    updateTabBadge('users', 0);
+        if(userDoc.data().banned){document.body.innerHTML=`<div class="banned-screen"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||'بدون سبب'}</p><button class="btn danger" onclick="signOut(auth)">خروج</button></div>`;hideLoading();return;}
+        currentUser=user;
+        userName.innerText=userDoc.data().username || user.email.split('@')[0];
+        isModerator = userDoc.data().isModerator || false;
+        lastDeleteTime = userDoc.data().lastDeleteTime || null;
+        lastSupportMsg = userDoc.data().lastSupportMsg || null;
+
+        // اظهار ازرار الادمن
+        if(user.email==='alaaahmedsayd16@gmail.com'){
+          document.getElementById('adminControls').style.display = 'block';
+        }
+
+        if(userDoc.data().newUser){document.getElementById('devBanner').style.display='block'; await updateDoc(doc(db,"users",user.uid),{newUser:false});}
+
+        if(isModerator){
+          document.getElementById('botDuration').disabled = false;
+          document.getElementById('durationNote').innerText = '✅ انت مشرف: تقدر تختار المدة اللي عايزها';
+        } else {
+          document.getElementById('botDuration').value = '12 ساعة';
+          document.getElementById('botDuration').disabled = true;
+          document.getElementById('durationNote').innerText = 'ملاحظة: المدة الافتراضية 12 ساعة. المشرفين يقدرو يختارو مدة اطول';
+        }
+
+        const notifQ = query(collection(db,"support_messages"), where("uid","==",user.uid), where("sender","==","admin"), where("read","==",false));
+        onSnapshot(notifQ, snap => {notifBadge.style.display = snap.size > 0? 'flex' : 'none';});
+
+        onSnapshot(query(collection(db,"bots"),where("uid","==",user.uid)), async snap => {
+          for(const d of snap.docs){
+            const b=d.data();
+            if(b.status==='جاهز' && b.code &&!b.shown){
+              document.getElementById('readyBotName').innerText=b.name;
+              document.getElementById('readyGameName').innerText=b.gameName || '-';
+              document.getElementById('botCode').innerText=b.code;
+              showPage('botReadyPage');
+              await updateDoc(doc(db,"bots",d.id),{shown: true});
+              break;
+            }
+          }
+        })
+
+        if(user.email==='alaaahmedsayd16@gmail.com'){window.location.href='admin.html'}else{showPage('dashboardPage');loadServers();loadBots();}
+      } else { showPage('loginPage'); }
+    }catch(e){
+        console.error(e);
+        toast('خطأ في الاتصال: '+e.message)
+        showPage('loginPage');
+    } finally {
+        hideLoading();
+    }
+  });
+
+  window.signUp=async()=>{const username = signupUsername.value.trim(); const email = signupEmail.value.trim();const password = signupPassword.value; const confirmPassword = signupConfirmPassword.value;if(!username ||!email ||!password) return toast('املا كل الحقول');if(password!== confirmPassword) return toast('كلمة السر مش مطابقة');if(password.length < 6) return toast('كلمة السر لازم 6 حروف اقل حاجة');
+  const usersSnap = await getDocs(query(collection(db,"users"), where("username","==",username)));if(!usersSnap.empty) return toast('❌ اسم الحساب مستخدم');
+  try{showLoading();const res = await createUserWithEmailAndPassword(auth,email,password);await setDoc(doc(db,"users",res.user.uid),{username: username,email: email,createdAt: serverTimestamp(),banned: false, lastDeleteTime: null, lastSupportMsg: null, isModerator: false, newUser: true});currentUser = res.user; userName.innerText = username;document.getElementById('devBanner').style.display='block';showPage('dashboardPage');loadServers();loadBots();hideLoading(); toast('تم انشاء الحساب بنجاح');}catch(e){hideLoading(); if(e.code==='auth/email-already-in-use') toast('الايميل ده مستخدم قبل كده'); else toast('خطأ: '+e.message)}}
+
+  window.signIn=async()=>{try{showLoading();const res = await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);const userDoc = await getDoc(doc(db,"users",res.user.uid));userName.innerText = userDoc.data().username || res.user.email.split('@')[0];lastDeleteTime = userDoc.data().lastDeleteTime || null;isModerator = userDoc.data().isModerator || false;lastSupportMsg = userDoc.data().lastSupportMsg || null;if(isModerator){document.getElementById('botDuration').disabled = false;document.getElementById('durationNote').innerText = '✅ انت مشرف: تقدر تختار المدة اللي عايزها';}showPage('dashboardPage');loadServers();loadBots();hideLoading(); toast('مرحبا')}catch(e){hideLoading(); toast('خطأ في البيانات')}}
+
+  window.logout=()=>signOut(auth);
+
+  async function loadServers(){const q=query(collection(db,"servers"),where("uid","==",currentUser.uid));onSnapshot(q,snap=>{serverCount=snap.size;serversList.innerHTML='';snap.forEach(d=>{const s=d.data();const statusClass=s.status==='شغال'?'on':s.pendingAction?'pending':'off';const typeText = s.type==='python'?' بايثون':s.type==='nodejs'?' Node.js':'';serversList.innerHTML+=`<div class="server-box" onclick="openServerPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${s.name}</h4><span class="server-type-badge">${typeText}</span></div><span class="badge ${statusClass}">${s.pendingAction||s.status||'متوقف'}</span></div></div>`});if(serverCount >= 4){ newServerBtn.style.display = 'none'; createServerBox.style.display = 'none'; }else { newServerBtn.style.display = 'block'; }});}
+
+  async function loadBots(){const q=query(collection(db,"bots"),where("uid","==",currentUser.uid));onSnapshot(q,snap=>{botCount=snap.size;botsList.innerHTML='';snap.forEach(d=>{const b=d.data();const statusClass=b.status==='شغال'?'on':b.status==='قيد المراجعة'?'pending':b.status==='جاهز'?'on':'off';botsList.innerHTML+=`<div class="server-box" onclick="openBotPage('${d.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><h4 style="margin:0">${b.name}</h4><span class="server-type-badge">بوت Highrise</span></div><span class="badge ${statusClass}">${b.status}</span></div></div>`});if(botCount >= 4){ newBotBtn.style.display = 'none'; createBotBox.style.display = 'none'; }else { newBotBtn.style.display = 'block'; }});}
+
+  window.showCreateServer=()=>{if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');createServerBox.style.display=createServerBox.style.display==='none'?'block':'none';createBotBox.style.display='none';serverName.value=''; serverType.value='';}
+
+  window.showCreateBot=()=>{if(botCount>=2)return toast('مسموح ببوت 2 فقط لكل حساب');createBotBox.style.display=createBotBox.style.display==='none'?'block':'none';createServerBox.style.display='none';document.getElementById('botName').value='';document.getElementById('botApiToken').value='';document.getElementById('botRoomId').value='';}
+
+  window.createServer=async()=>{if(serverCount>=4)return toast('الحد الاقصي 4 سيرفرات فقط');const name=serverName.value.trim();const type=serverType.value;if(!name)return toast('اكتب اسم السيرفر');if(!type)return toast('اختر نوع الخادم');await addDoc(collection(db,"servers"),{uid:currentUser.uid,name,type,status:'متوقف',log:`> تم انشاء السيرفر - النوع: ${type==='python'?'بايثون':'Node.js'}`,createdAt:serverTimestamp(),hasLink:false});showCreateServer(); toast('✅ تم انشاء السيرفر')}
+
+  window.createBotRequest=async()=>{if(botCount>=2)return toast('مسموح ببوت 2 فقط');const name=document.getElementById('botName').value.trim();const token=document.getElementById('botApiToken').value.trim();const room=document.getElementById('botRoomId').value.trim();const duration=document.getElementById('botDuration').value;if(!name||!token||!room)return toast('املا كل البيانات');await addDoc(collection(db,"bot_requests"),{uid:currentUser.uid,userEmail:currentUser.email,username:userName.innerText,name,token,room,duration:duration,status:"pending",time:serverTimestamp()});await addDoc(collection(db,"bots"),{uid:currentUser.uid,name,status:"قيد المراجعة",duration:duration,createdAt:serverTimestamp()});showPage('botReviewPage');showCreateBot();toast('✅ تم ارسال طلب البوت للمراجعة')}
+
+  window.openBotPage=(id)=>{currentBotId=id;showPage('botPage');onSnapshot(doc(db,"bots",id),async snap=>{if(!snap.exists())return;const b=snap.data();document.getElementById('botTitle').innerText=b.name;const statusEl=document.getElementById('botStatus');statusEl.innerText=b.status;statusEl.className='badge '+(b.status==='شغال'?'on':b.status==='قيد المراجعة'?'pending':b.status==='جاهز'?'on':'off');if(b.status==='شغال'&&b.expiresAt){const diff=b.expiresAt.toDate()-new Date();const hours=Math.floor(diff/3600000);const mins=Math.floor((diff%3600000)/60000);const days=Math.floor(hours/24);if(days>0){document.getElementById('botTimeLeft').innerText=`${days} يوم و ${hours%24} ساعة`}else{document.getElementById('botTimeLeft').innerText=`${hours} ساعة و ${mins} دقيقة`}}else{document.getElementById('botTimeLeft').innerText='-'}const q=query(collection(db,"bot_commands"),where("botId","==",id));onSnapshot(q,csnap=>{const list=document.getElementById('botCommandsList');list.innerHTML='';csnap.forEach(c=>{list.innerHTML+=`<div class="command-btn">${c.data().command}</div>`})})})}
+
+  async function startFakeConsole(serverId){
+    const highriseLogo = `\n-- --- -- | -- --- | ---\n/\\ \\_(_)_ -- / -- | -- \\_ --- \\ -- / \\\n\\/ \\VV / | / -- | -- | -- / \\\n\\/ \\/\\_/ |___/ -- |_/ -- \\__, |___ ___|\n | ___/\n `;
+    const fakeLogs = [
+      `[Highrise] : تم وضع علامة على الخادم بأنه غير متصل بالإنترنت`,
+      `[Highrise] : جار التحقق من استخدام مساحة القرص`,
+      `القرص على الخادم، قد يستغرق هذا بضع ثوان...`,
+      `[Highrise] : جار تحديث ملفات تهيئة العملية...`,
+      `تم وضع علامة على بدء تشغيل الخادم`,
+      highriseLogo,
+      `[Highrise] : جار تحميل ملف البوت...`,
+      `[Highrise] : تم الاتصال بخوادم Highrise بنجاح`,
+      `[Highrise] : البوت متصل وجاهز لاستقبال الاوامر`,
+      `خادمك قيد التشغيل الآن! استمتع باستخدام Highrise Bot`
+    ];
+    let i = 0;const interval = setInterval(async () => {
+      if(i >= fakeLogs.length){clearInterval(interval);return;}
+      const snap = await getDoc(doc(db,"servers",serverId));if(!snap.exists()){ clearInterval(interval); return; }
+      const newLog = (snap.data().log || '') + `\n${fakeLogs[i]}`;
+      await updateDoc(doc(db,"servers",serverId), {log: newLog, status: 'شغال', pendingAction: null});i++;
+    }, 1500);
   }
-  if(t === 'support'){
-    getDocs(query(collection(db,"support_messages"),where("read","==",false), where("sender","==","user"))).then(snap=>{
-      snap.forEach(d=>{
-        updateDoc(doc(db,"support_messages",d.id),{read:true})
-      })
-    })
-    updateTabBadge('support', 0);
+
+  async function stopFakeConsole(serverId){
+    const highriseLogo = `\n-- --- -- | -- --- | ---\n/\\ \\_(_)_ -- / -- | -- \\_ --- \\ -- / \\\n\\/ \\VV / | / -- | -- | -- / \\\n\\/ \\/\\_/ |___/ -- |_/ -- \\__, |___ ___|\n | ___/\n `;
+    const fakeLogs = [
+      `[Highrise] : تم استلام طلب ايقاف الخادم`,
+      `[Highrise] : جار حفظ بيانات البوت...`,
+      `يتم قطع الاتصال بخوادم Highrise...`,
+      highriseLogo,
+      `[Highrise] : تم ايقاف جميع العمليات بنجاح`,
+      `الخادم متوقف الآن`
+    ];
+    let i = 0;const interval = setInterval(async () => {
+      if(i >= fakeLogs.length){clearInterval(interval);return;}
+      const snap = await getDoc(doc(db,"servers",serverId));if(!snap.exists()){ clearInterval(interval); return; }
+      const newLog = (snap.data().log || '') + `\n${fakeLogs[i]}`;
+      await updateDoc(doc(db,"servers",serverId), {log: newLog, status: 'متوقف', pendingAction: null});i++;
+    }, 1200);
   }
-  
-  ['users','servers','bots','support','modReq','actionReq','botReq','apiBotReq','linkReq','deleteReq'].forEach(id=>document.getElementById(id).style.display=id==t?'block':'none');
-}
-window.adminLogin=async()=>{try{await signInWithEmailAndPassword(auth,document.getElementById('adminEmail').value,document.getElementById('adminPass').value);showToast('تم الدخول');}catch(e){showToast('بيانات خاطئة');}}
-window.logout=()=>signOut(auth);
+
+  window.openServerPage=(id)=>{
+    currentServerId=id;showPage('serverPage');hasLink=false;linkStatus.style.display='none';
+    let lastStatus = null;
+    onSnapshot(doc(db,"servers",id),snap=>{
+      if(!snap.exists())return;const s=snap.data();
+      serverTitle.innerText=s.name;
+      serverTypeLabel.innerText = s.type==='python'?' بايثون Python':s.type==='nodejs'?' Node.js':'غير محدد';
+      serverStatus.innerText=s.pendingAction||s.status;
+      serverStatus.className='badge '+(s.status==='شغال'?'on':s.pendingAction?'pending':'off');
+      logBox.innerHTML=(s.log||'> جاهز').split('\n').map(l=>`<div>${l}</div>`).join('');
+      logBox.scrollTop = logBox.scrollHeight;
+      const isPending=s.pendingAction!=null;startBtn.disabled=isPending;stopBtn.disabled=isPending;
+      if(isPending){
+        if(s.pendingAction.includes('التشغيل')){
+          pendingNote.innerText = '⏳ الطلب قيد المراجعة. انتظر لمدة 24 ساعة حتى يتم التفعيل بواسطة Highrise Bot';
+        } else if(s.pendingAction.includes('الايقاف')){
+          pendingNote.innerText = '⏳ الطلب قيد المراجعة. انتظر لمدة 1 ساعة حتى يتم الايقاف بواسطة Highrise Bot';
+        }
+        pendingNote.style.display='block';
+      } else {
+        pendingNote.style.display='none';
+      }
+      if(lastStatus!== s.status){
+        if(s.status === 'شغال' && lastStatus!== 'شغال'){
+          startFakeConsole(id);
+        }
+        if(s.status === 'متوقف' && lastStatus === 'شغال'){
+          stopFakeConsole(id);
+        }
+        lastStatus = s.status;
+      }
+      if(s.log && s.log.includes('تم ارسال رابط ل Highrise Bot')){
+        hasLink = true; linkStatus.style.display = 'block';
+      }
+      if(lastDeleteTime){
+        const last = lastDeleteTime.toDate();
+        const diffDays = (new Date() - last) / (1000 * 60 * 60 * 24);
+        if(diffDays < 7){
+          deleteBtn.disabled = true;
+          deleteCooldown.style.display = 'block';
+          deleteCooldown.innerText = `⏳ تقدر تطلب حذف سيرفر بعد ${(7 - diffDays).toFixed(1)} يوم`;
+        } else { deleteBtn.disabled = false; deleteCooldown.style.display = 'none'; }
+      } else { deleteBtn.disabled = false; deleteCooldown.style.display = 'none'; }
+    })
+  }
+
+  window.requestAction=async(action)=>{
+    if(!hasLink){
+      return toast('⚠️ خطأ: قم برفع ملف البوت اولاً قبل طلب التشغيل');
+    }
+    const snap=await getDoc(doc(db,"servers",currentServerId));
+    if(snap.data().pendingAction)return toast('انتظر موافقة Highrise Bot');
+    await addDoc(collection(db,"action_requests"),{
+      uid:currentUser.uid,
+      userEmail:currentUser.email,
+      username: userName.innerText,
+      serverId:currentServerId,
+      serverName:snap.data().name,
+      action:action,
+      status:'pending',
+      time:serverTimestamp()
+    });
+    if(action === 'start'){
+      await updateDoc(doc(db,"servers",currentServerId),{
+        pendingAction:'بانتظار موافقة التشغيل',
+        log:(snap.data().log||'') + `\n> تم ارسال طلب تشغيل ل Highrise Bot\n> انتظر لمدة 24 ساعة حتى يتم التفعيل`
+      });
+      toast('✅ تم ارسال طلب التشغيل. انتظر 24 ساعة للموافقة');
+    }
+    if(action === 'stop'){
+      await updateDoc(doc(db,"servers",currentServerId),{
+        pendingAction:'بانتظار موافقة الايقاف',
+        log:(snap.data().log||'') + `\n> تم ارسال طلب ايقاف ل Highrise Bot\n> انتظر لمدة 1 ساعة حتى يتم الايقاف`
+      });
+      toast('✅ تم ارسال طلب الايقاف. انتظر 1 ساعة للموافقة');
+    }
+  }
+
+  window.requestDeleteServer = async() => {
+    if(deleteBtn.disabled) return toast('لازم تستني 7 ايام بين كل حذف');
+    const snap = await getDoc(doc(db,"servers",currentServerId));
+    if(!snap.exists()) return toast('السيرفر مش موجود');
+    await addDoc(collection(db,"delete_requests"),{
+      uid: currentUser.uid,
+      userEmail: currentUser.email,
+      username: userName.innerText,
+      serverId: currentServerId,
+      serverName: snap.data().name,
+      status: 'pending',
+      time: serverTimestamp()
+    });
+    await updateDoc(doc(db,"users",currentUser.uid), {lastDeleteTime: serverTimestamp()});
+    toast('تم ارسال طلب الحذف ل Highrise Bot');
+    deleteBtn.disabled = true;
+    deleteCooldown.style.display = 'block';
+    deleteCooldown.innerText = `⏳ تقدر تطلب حذف سيرفر بعد 7 ايام`;
+  }
+
+  window.sendLink=async()=>{
+    const link=linkInput.value.trim();
+    if(!link||!link.startsWith('http'))return toast('⚠️ الرجاء ادخال رابط صحيح لملف البوت');
+    const serverSnap = await getDoc(doc(db,"servers",currentServerId));
+    await addDoc(collection(db,"link_requests"),{
+      uid:currentUser.uid,
+      userEmail:currentUser.email,
+      username: userName.innerText,
+      serverId:currentServerId,
+      serverName:serverSnap.data().name,
+      link:link,
+      status:'pending',
+      time:serverTimestamp()
+    });
+    await updateDoc(doc(db,"servers",currentServerId),{
+      log:(serverSnap.data().log||'') + `\n> تم ارسال رابط ل Highrise Bot\n> ${link}`,
+      hasLink:true
+    });
+    linkInput.value='';
+    hasLink = true;
+    linkStatus.style.display = 'block';
+    toast('✅ تم استلام ملف البوت بنجاح. يمكنك الان طلب التشغيل')
+  }
+
+  // تشغيل وايقاف الموقع من لوحة الادمن
+  window.toggleMaintenance = async(status) => {
+    const msg = document.getElementById('maintenanceText').value.trim();
+    if(status &&!msg) return toast('اكتب رسالة الصيانة الاول');
+    await setDoc(doc(db,"adminConfig","siteStatus"),{
+      maintenance: status,
+      message: msg || 'الموقع في الصيانة'
+    });
+    toast(status? '✅ تم ايقاف الموقع' : '✅ تم تشغيل الموقع');
+  }
 </script>
 </body>
 </html>
