@@ -16,6 +16,7 @@
 .btn{padding:14px 24px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;font-weight:900;cursor:pointer;transition:.3s}
 .btn:hover{transform:translateY(-4px)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .btn.success{background:linear-gradient(135deg,var(--success),#059669)}.btn.danger{background:linear-gradient(135deg,var(--danger),#e11d48)}.btn.ghost{background:transparent;border:2px solid var(--border)}
+.actions{display:flex;gap:10px}
 .page{display:none}.page.active{display:block}
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--success),#059669);color:#000;padding:16px 24px;border-radius:16px;z-index:999;font-weight:900;display:none}
 .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding:15px 20px;background:rgba(10,15,26,.6);border-radius:18px;border:1px solid var(--border)}
@@ -57,7 +58,31 @@
 <div class="container">
   <div class="top-bar"><h2 style="margin:0">Highrise Panel</h2><a href="https://high.rs/user?name=c203" target="_blank" class="buy-btn">TORKY - لشراء بوت</a></div>
 
-  <div id="loginPage" class="page active"><div class="card" style="max-width:450px;margin:40px auto"><h2 style="text-align:center">تسجيل دخول</h2><input id="loginEmail" type="email" placeholder="البريد الالكتروني"><input id="loginPassword" type="password" placeholder="كلمة السر"><button class="btn" id="loginBtn" style="width:100%">دخول</button></div></div>
+  <div id="loginPage" class="page active">
+    <div class="card" style="max-width:450px;margin:40px auto">
+      <h2 style="text-align:center">تسجيل دخول</h2>
+      <input id="loginEmail" type="email" placeholder="البريد الالكتروني">
+      <input id="loginPassword" type="password" placeholder="كلمة السر">
+      <div class="actions">
+        <button class="btn" id="loginBtn" style="flex:1">دخول</button>
+        <button class="btn ghost" id="goToSignupBtn" style="flex:1">انشاء حساب</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="signupPage" class="page">
+    <div class="card" style="max-width:450px;margin:40px auto">
+      <h2 style="text-align:center">انشاء حساب جديد</h2>
+      <input id="signupUsername" type="text" placeholder="اسم المستخدم">
+      <input id="signupEmail" type="email" placeholder="البريد الالكتروني">
+      <input id="signupPassword" type="password" placeholder="كلمة السر">
+      <input id="signupConfirmPassword" type="password" placeholder="تأكيد كلمة السر">
+      <div class="actions">
+        <button class="btn" id="signupBtn" style="flex:1">انشاء</button>
+        <button class="btn ghost" id="goToLoginBtn" style="flex:1">رجوع</button>
+      </div>
+    </div>
+  </div>
 
   <div id="dashboardPage" class="page">
     <div class="card">
@@ -79,7 +104,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
@@ -91,7 +116,10 @@
   const toast = (msg) => {const t=document.getElementById('toast');t.innerText=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3500)}
   const showPage = (id) => {document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
+  document.getElementById('goToSignupBtn').onclick = () => showPage('signupPage');
+  document.getElementById('goToLoginBtn').onclick = () => showPage('loginPage');
   document.getElementById('loginBtn').onclick = signIn;
+  document.getElementById('signupBtn').onclick = signUp;
   document.getElementById('logoutBtn').onclick = () => signOut(auth);
   document.getElementById('settingsBtn').onclick = (e) => {e.stopPropagation(); document.getElementById('settingsMenu').classList.toggle('show')};
   document.getElementById('updatesBtn').onclick = () => document.getElementById('updatesModal').classList.add('show');
@@ -102,6 +130,7 @@
     if(user){
       const userDoc = await getDoc(doc(db,"users",user.uid));
       if(!userDoc.exists()){ await signOut(auth); hideLoading(); return; }
+      if(userDoc.data().banned){ document.body.innerHTML=`<div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||''}</p></div>`; hideLoading(); return; }
       currentUser = user; userData = userDoc.data();
       document.getElementById('userName').innerText = userData.username;
       document.getElementById('userEmail').innerText = userData.email;
@@ -223,6 +252,35 @@
   }
 
   async function signIn(){ const email = document.getElementById('loginEmail').value; const password = document.getElementById('loginPassword').value; if(!email ||!password) return toast('املا كل الحقول'); showLoading(); try{ await signInWithEmailAndPassword(auth,email,password); }catch(e){ toast('خطأ: ' + e.message); hideLoading(); } }
+
+  async function signUp(){
+    const username = document.getElementById('signupUsername').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const confirm = document.getElementById('signupConfirmPassword').value;
+    if(!username ||!email ||!password) return toast('املا كل الحقول');
+    if(password!== confirm) return toast('كلمة السر مش مطابقة');
+    showLoading();
+    try{
+      const res = await createUserWithEmailAndPassword(auth,email,password);
+      await setDoc(doc(db,"users",res.user.uid),{
+        username,email,createdAt:serverTimestamp(),
+        banned:false,isAdmin:false,botCode:"",botStatus:"متوقف",botCommands:[]
+      });
+      toast('✅ تم انشاء الحساب');
+    }catch(e){
+      if(e.code === 'auth/email-already-in-use'){
+        toast('⚠️ الحساب موجود غير البريد');
+      } else if(e.code === 'auth/weak-password'){
+        toast('⚠️ كلمة السر ضعيفة لازم 6 حروف');
+      } else if(e.code === 'auth/invalid-email'){
+        toast('⚠️ البريد الالكتروني غير صحيح');
+      } else {
+        toast('خطأ: ' + e.message);
+      }
+      hideLoading();
+    }
+  }
 </script>
 </body>
 </html>
