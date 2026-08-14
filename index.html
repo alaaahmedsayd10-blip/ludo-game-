@@ -250,7 +250,7 @@
     }
     await addDoc(collection(db,"bot_action_requests"),{uid: currentUser.uid, username: userData.username, action: action, status: 'pending', time: serverTimestamp()});
     await setDoc(doc(db,"users",currentUser.uid), {botStatus: 'بانتظار الموافقة'}, {merge:true});
-    toast('✅ تم العمل انتظر 30 ثانيه');
+    toast('✅ جاري طلبك انتظر 30 ثانيه');
   }
 
   window.requestTransferBot = async () => {
