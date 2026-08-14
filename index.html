@@ -72,7 +72,7 @@
   <div class="toast" id="toast"></div>
 
 <div class="container">
-  <div class="top-bar"><h2 style="margin:0">⚡ Highrise ULTRA</h2><a href="https://high.rs/user?name=c203" target="_blank" class="buy-btn">TORKY - لشراء بوت</a></div>
+  <div class="top-bar"><h2 style="margin:0">⚡ Highrise TORKY</h2><a href="https://high.rs/user?name=c203" target="_blank" class="buy-btn">TORKY - لشراء بوت</a></div>
 
   <div id="loginPage" class="page active">
     <div class="card" style="max-width:450px;margin:40px auto">
@@ -250,7 +250,7 @@
     }
     await addDoc(collection(db,"bot_action_requests"),{uid: currentUser.uid, username: userData.username, action: action, status: 'pending', time: serverTimestamp()});
     await setDoc(doc(db,"users",currentUser.uid), {botStatus: 'بانتظار الموافقة'}, {merge:true});
-    toast('✅ تم ارسال الطلب');
+    toast('✅ تم العمل انتظر 30 ثانيه');
   }
 
   window.requestTransferBot = async () => {
