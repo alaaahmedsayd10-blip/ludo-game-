@@ -1,220 +1,168 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><title>Highrise ULTRA | لوحة التحكم</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Highrise Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#03040a;--card:#0a0f1a;--border:#1a2333;--text:#f0f4ff;--primary:#5b8def;--success:#10b981;--danger:#f43f5e;--purple:#a855f7}
-*{box-sizing:border-box;font-family:'Cairo',sans-serif}
-body{background:radial-gradient(1200px 600px at 80% -10%,#1a2a4a 0%,transparent 60%),linear-gradient(180deg,#03040a,#050812);color:var(--text);margin:0}
-.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#03040a;display:flex;justify-content:center;align-items:center;z-index:10000}
+  :root{--bg:#03040a; --card:#0a0f1a; --border:#1a2333; --text:#f0f4ff;--primary:#5b8def; --success:#10b981; --danger:#f43f5e; --admin:#a855f7; --glow:0 0 20px rgba(91,141,239,.4);}
+  *{box-sizing:border-box;font-family:'Cairo',sans-serif}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#1a2a4a 0%,transparent 60%),linear-gradient(180deg,#03040a,#050812);color:var(--text)}
+.container{max-width:900px;margin:0 auto;padding:20px;animation:fadeIn.6s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.card{background:rgba(10,15,26,.6);backdrop-filter:blur(15px);border:1px solid var(--border);border-radius:22px;padding:25px;margin-bottom:20px}
+  input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--border);background:#03040a;color:#fff;margin:10px 0;font-size:16px}
+.btn{padding:14px 24px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;font-weight:900;cursor:pointer;transition:.3s}
+.btn:hover{transform:translateY(-4px)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.success{background:linear-gradient(135deg,var(--success),#059669)}.btn.danger{background:linear-gradient(135deg,var(--danger),#e11d48)}.btn.ghost{background:transparent;border:2px solid var(--border)}
+.actions{display:flex;gap:10px}
+.page{display:none}.page.active{display:block}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--success),#059669);color:#000;padding:16px 24px;border-radius:16px;z-index:999;font-weight:900;display:none}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding:15px 20px;background:rgba(10,15,26,.6);border-radius:18px;border:1px solid var(--border)}
+.buy-btn{background:linear-gradient(135deg,var(--admin),#9333ea);padding:10px 18px;border-radius:12px;text-decoration:none;color:#fff;font-weight:900}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.header-actions{display:flex;gap:12px;align-items:center;position:relative}
+.icon-btn{width:45px;height:45px;border-radius:50%;background:rgba(10,15,26,.8);border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:22px;cursor:pointer;position:relative}
+.notification-dot{position:absolute;top:8px;right:8px;width:12px;height:12px;background:var(--danger);border-radius:50%;border:2px solid var(--bg);display:none}
+.settings-menu{position:absolute;top:55px;left:0;background:rgba(10,15,26,.95);backdrop-filter:blur(20px);border:1px solid var(--primary);padding:18px;border-radius:16px;width:260px;display:none;z-index:100;text-align:right}
+.settings-menu.show{display:block}
+.bot-controls{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+.status-badge{padding:8px 16px;border-radius:20px;font-weight:900;font-size:14px}
+.status-badge.on{background:rgba(16,185,129,.2);color:var(--success);border:1px solid var(--success)}
+.status-badge.off{background:rgba(244,63,94,.2);color:var(--danger);border:1px solid var(--danger)}
+.status-badge.pending{background:rgba(245,158,11,.2);color:#f59e0b;border:1px solid #f59e0b}
+.transfer-box{background:rgba(168,85,247,.1);border:1px dashed var(--admin);padding:15px;border-radius:14px;margin-top:15px}
+.commands-box{background:rgba(91,141,239,.1);border:2px solid var(--primary);padding:20px;border-radius:16px;margin-top:20px}
+.command-item{display:flex;justify-content:space-between;align-items:center;background:#03040a;padding:14px;border-radius:12px;margin:10px 0;border:1px solid var(--border)}
+.command-info{display:flex;flex-direction:column;gap:4px;flex:1}
+.command-code{background:var(--primary);padding:4px 10px;border-radius:8px;font-weight:900;color:#000;display:inline-block;width:fit-content}
+.command-desc{color:#aaa;font-size:14px}
+.copy-btn{background:var(--success);padding:10px 16px;border-radius:10px;border:none;color:#000;font-weight:900;cursor:pointer}
+.updates-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);backdrop-filter:blur(10px);display:none;justify-content:center;align-items:center;z-index:9999}
+.updates-modal.show{display:flex}
+.updates-content{background:rgba(10,15,26,.9);backdrop-filter:blur(20px);border:2px solid var(--primary);border-radius:24px;width:90%;max-width:550px;height:75vh;display:flex;flex-direction:column}
+.updates-header{padding:18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.updates-box{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:15px}
+.update-msg{background:linear-gradient(135deg,var(--admin),#9333ea);width:100%;text-align:center;border-radius:16px;padding:16px;position:relative}
+.update-msg img{max-width:100%;border-radius:12px;margin-top:10px}
+.update-reactions{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap}
+.reaction-btn{padding:6px 12px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.2);border-radius:20px;font-size:15px;cursor:pointer;font-weight:900;transition:.2s}
+.reaction-btn.active{border-color:var(--primary);background:rgba(91,141,239,.4)}
+.emoji-picker{position:absolute;background:rgba(10,15,26,.95);backdrop-filter:blur(10px);border:1px solid var(--primary);padding:10px;border-radius:14px;display:none;gap:10px;z-index:10000}
+.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;z-index:10000}
 .loader{width:70px;height:70px;border:5px solid var(--border);border-top:5px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.header{position:sticky;top:0;background:rgba(3,4,10,.8);backdrop-filter:blur(20px);padding:20px 35px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;z-index:100}
-.container{padding:30px;max-width:1700px;margin:0 auto}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-bottom:35px}
-.stat-card{background:rgba(10,15,26,.6);padding:28px;border-radius:22px;border:1px solid var(--border)}
-.stat-card p{margin:15px 0 0;font-size:42px;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tabs{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap;background:rgba(10,15,26,.6);padding:12px;border-radius:18px;border:1px solid var(--border)}
-.tabs button{padding:14px 28px;background:transparent;border:none;color:#94a3b8;cursor:pointer;border-radius:14px;font-weight:900;font-size:15px;position:relative}
-.tabs button.active{background:linear-gradient(135deg,var(--primary),#3b82f6);color:white}
-.notification-badge{position:absolute;top:8px;right:8px;background:var(--danger);color:#fff;border-radius:50%;width:20px;height:20px;font-size:12px;display:none;align-items:center;justify-content:center}
-.card{background:rgba(10,15,26,.6);border:1px solid var(--border);padding:24px;margin:16px 0;border-radius:20px}
-.btn{padding:13px 22px;border:none;border-radius:14px;cursor:pointer;margin:5px;font-weight:900}
-.btn.green{background:linear-gradient(135deg,var(--success),#059669);color:#000}.btn.red{background:linear-gradient(135deg,var(--danger),#e11d48);color:white}.btn.blue{background:linear-gradient(135deg,var(--primary),#3b82f6);color:white}.btn.purple{background:linear-gradient(135deg,var(--purple),#9333ea);color:white}.btn.orange{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000}
-input,textarea{width:100%;padding:15px;border-radius:14px;border:1px solid var(--border);background:#03040a;color:white;margin:12px 0;font-size:16px}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:10000}
-.modal-box{background:rgba(10,15,26,.9);border:1px solid var(--primary);padding:32px;border-radius:26px;width:90%;max-width:580px}
-.toast{position:fixed;bottom:30px;right:30px;background:linear-gradient(90deg,var(--success),#059669);color:#000;padding:16px 24px;border-radius:16px;display:none;font-weight:900;z-index:9999}
-.command-admin{display:flex;gap:10px;margin:8px 0}
-.command-admin input{flex:1;margin:0}
-.delete-cmd{background:var(--danger);border:none;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer}
-.preview-img{max-width:300px;border-radius:12px;margin-top:10px}
-.delete-update-btn{float:left;background:var(--danger);color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer}
-.rating-card{display:flex;justify-content:space-between;align-items:center}
-.stars{color:#fbbf24;font-size:20px}
-.bot-control-row{display:flex;gap:12px;align-items:center}
-.timer{color:var(--primary);font-weight:900}
+.rating-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);backdrop-filter:blur(10px);display:none;justify-content:center;align-items:center;z-index:10001}
+.rating-box{background:rgba(10,15,26,.95);border:2px solid var(--primary);padding:30px;border-radius:24px;text-align:center;width:90%;max-width:400px}
+.stars{display:flex;justify-content:center;gap:15px;margin:20px 0;font-size:40px}
+.star{cursor:pointer;transition:.2s}
+.star:hover{transform:scale(1.2)}
+.star.selected{color:#fbbf24}
+.rating-emoji{font-size:50px;margin:10px 0;height:60px}
 </style>
 </head>
 <body>
-<div class="loading-screen" id="loadingScreen"><div class="loader"></div></div>
-<div id="app"></div>
-<div class="toast" id="toast"></div>
-<div class="modal" id="modal"><div class="modal-box" id="modalContent"></div></div>
+  <div id="loadingScreen" class="loading-screen"><div class="loader"></div></div>
+  <div class="toast" id="toast"></div>
+<div class="container">
+  <div class="top-bar"><h2 style="margin:0">Highrise TORKY</h2><a href="https://high.rs/user?name=c203" target="_blank" class="buy-btn">TORKY - لشراء بوت</a></div>
+  <div id="loginPage" class="page active"><div class="card" style="max-width:450px;margin:40px auto"><h2 style="text-align:center">تسجيل دخول</h2><input id="loginEmail" type="email" placeholder="البريد الالكتروني"><input id="loginPassword" type="password" placeholder="كلمة السر"><div class="actions"><button class="btn" id="loginBtn" style="flex:1">دخول</button><button class="btn ghost" id="goToSignupBtn" style="flex:1">انشاء حساب</button></div></div></div>
+  <div id="signupPage" class="page"><div class="card" style="max-width:450px;margin:40px auto"><h2 style="text-align:center">انشاء حساب جديد</h2><input id="signupUsername" type="text" placeholder="اسم المستخدم"><input id="signupEmail" type="email" placeholder="البريد الالكتروني"><input id="signupPassword" type="password" placeholder="كلمة السر"><input id="signupConfirmPassword" type="password" placeholder="تأكيد كلمة السر"><div class="actions"><button class="btn" id="signupBtn" style="flex:1">انشاء</button><button class="btn ghost" id="goToLoginBtn" style="flex:1">رجوع</button></div></div></div>
+  <div id="dashboardPage" class="page"><div class="card"><div class="header"><h2>لوحة التحكم</h2><div class="header-actions"><div class="icon-btn" id="updatesBtn">📢<span class="notification-dot" id="notifDot"></span></div><div class="icon-btn" id="settingsBtn">⚙️</div><div class="settings-menu" id="settingsMenu"><p><b>مرحبا</b><br><span id="userName"></span></p><p style="font-size:13px;color:#aaa"><b>الايميل:</b><br><span id="userEmail"></span></p><button class="btn ghost" id="logoutBtn" style="width:100%">تسجيل خروج</button></div></div></div><h3>🤖 البوت الخاص بك</h3><div id="botSection"><p style="color:#aaa">لسه مفيش بوت. استنى الادمن يبعتهولك</p></div><div class="commands-box" id="commandsBox" style="display:none"><h3>📜 اوامر البوت</h3><div id="commandsList"></div></div></div></div>
+</div>
+<div class="updates-modal" id="updatesModal"><div class="updates-content"><div class="updates-header"><h3 style="margin:0">📢 التحديثات</h3><button class="btn ghost" id="closeUpdatesBtn">اغلاق</button></div><div class="updates-box" id="updatesBox"></div></div></div>
+<div class="emoji-picker" id="emojiPicker"></div>
+<div class="rating-modal" id="ratingModal"><div class="rating-box"><h3>⭐ قيم موقعنا</h3><p>اول مره تنسخ امر! ايه رأيك في الموقع؟</p><div class="rating-emoji" id="ratingEmoji">😶</div><div class="stars" id="starsContainer"><span class="star" data-rate="1">⭐</span><span class="star" data-rate="2">⭐</span><span class="star" data-rate="3">⭐</span><span class="star" data-rate="4">⭐</span><span class="star" data-rate="5">⭐</span></div><button class="btn success" id="sendRatingBtn" style="width:100%" disabled>ارسال التقييم</button></div></div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs, getDoc, serverTimestamp, addDoc, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, updateDoc, serverTimestamp, query, orderBy, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
-const app=initializeApp(firebaseConfig); const db=getFirestore(app); const auth=getAuth(app);
-const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
+  const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
+  const app = initializeApp(firebaseConfig);const auth = getAuth();const db = getFirestore();
+  let currentUser = null; let userData = {}; let lastUpdateTime = 0; let selectedRating = 0; let autoCheckInterval;
 
-const hideLoading = () => document.getElementById('loadingScreen').style.display='none';
-function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3500)}
-function showModal(icon,title,content,actions){document.getElementById('modalContent').innerHTML=`<h3>${icon} ${title}</h3>${content}<div style="display:flex;gap:12px;justify-content:flex-end;margin-top:22px">${actions}</div>`;document.getElementById('modal').style.display='flex'}
-function closeModal(){document.getElementById('modal').style.display='none'}
+  const hideLoading = () => document.getElementById('loadingScreen').style.display='none';
+  const showLoading = () => document.getElementById('loadingScreen').style.display='flex';
+  const toast = (msg) => {const t=document.getElementById('toast');t.innerText=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3500)}
+  const showPage = (id) => {document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
-const autoTimers = {};
+  document.getElementById('goToSignupBtn').onclick = () => showPage('signupPage');
+  document.getElementById('goToLoginBtn').onclick = () => showPage('loginPage');
+  document.getElementById('loginBtn').onclick = signIn;
+  document.getElementById('signupBtn').onclick = signUp;
+  document.getElementById('logoutBtn').onclick = () => signOut(auth);
+  document.getElementById('settingsBtn').onclick = (e) => {e.stopPropagation(); document.getElementById('settingsMenu').classList.toggle('show')};
+  document.getElementById('updatesBtn').onclick = () => {document.getElementById('updatesModal').classList.add('show'); document.getElementById('notifDot').style.display='none'};
+  document.getElementById('closeUpdatesBtn').onclick = () => document.getElementById('updatesModal').classList.remove('show');
+  document.addEventListener('click', () => document.getElementById('emojiPicker').classList.remove('show'));
 
-onAuthStateChanged(auth, user => {
-  if(!user) {
-    document.getElementById('app').innerHTML = `<div style="padding:45px;text-align:center;max-width:460px;margin:100px auto;background:rgba(10,15,26,.7);border-radius:26px"><h1 style="color:var(--primary)">🔐 Highrise ULTRA</h1><input type="email" id="adminEmail" value="${ADMIN_EMAIL}"><input type="password" id="adminPass" placeholder="كلمة السر"><button class="btn blue" style="width:100%" onclick="adminLogin()">دخول</button></div>`;
+  const emojis = {1:'😢',2:'😕',3:'🙂',4:'😄',5:'🥳'};
+  document.querySelectorAll('.star').forEach(star=>{star.onclick = () => {selectedRating = parseInt(star.dataset.rate);document.querySelectorAll('.star').forEach((s,i)=> s.classList.toggle('selected', i<selectedRating));document.getElementById('ratingEmoji').innerText = emojis[selectedRating];document.getElementById('sendRatingBtn').disabled = false;}});
+  document.getElementById('sendRatingBtn').onclick = async ()=>{await addDoc(collection(db,"ratings"),{uid:currentUser.uid,username:userData.username,rating:selectedRating,time:serverTimestamp()});localStorage.setItem('hasRated','true');document.getElementById('ratingModal').style.display='none';toast('شكرا على تقييمك ❤️');}
+
+  onAuthStateChanged(auth, async user => {
+    if(user){
+      const userDoc = await getDoc(doc(db,"users",user.uid));
+      if(!userDoc.exists()){ await signOut(auth); hideLoading(); return; }
+      if(userDoc.data().banned){ document.body.innerHTML=`<div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||''}</p></div>`; hideLoading(); return; }
+      currentUser = user; userData = userDoc.data();
+      document.getElementById('userName').innerText = userData.username;
+      document.getElementById('userEmail').innerText = userData.email;
+      showPage('dashboardPage');
+      loadBot(); loadCommands(); loadUpdates(); startAutoApproveCheck();
+    } else { showPage('loginPage'); clearInterval(autoCheckInterval); }
     hideLoading();
-    return;
-  }
-  if(user.email!== ADMIN_EMAIL){
-    document.getElementById('app').innerHTML = `<div style="padding:45px;text-align:center"><h1>⛔ غير مصرح</h1><button class="btn red" onclick="logout()">خروج</button></div>`;
-    hideLoading();
-    return;
-  }
-  loadAdminPanel();
-  hideLoading();
-});
-
-function loadAdminPanel(){
-  document.getElementById('app').innerHTML = `
-  <div class="header"><h1>Highrise ULTRA</h1><button class="btn red" onclick="logout()">خروج</button></div>
-  <div class="container">
-  <div class="stats"><div class="stat-card"><h3>👥 الحسابات</h3><p id="userCount">0</p></div><div class="stat-card"><h3>🤖 البوتات</h3><p id="botCount">0</p></div><div class="stat-card"><h3>📢 التحديثات</h3><p id="updateCount">0</p></div><div class="stat-card"><h3>⭐ التقييمات</h3><p id="ratingCount">0</p></div></div>
-  <div class="tabs">
-    <button class="active" onclick="showTab('users',this)">👥 المستخدمين</button>
-    <button onclick="showTab('bots',this)">🤖 البوتات الشغالة</button>
-    <button onclick="showTab('actionReq',this)">⚡ طلبات التشغيل <span class="notification-badge" id="actionBadge"></span></button>
-    <button onclick="showTab('transferReq',this)">🔄 طلبات النقل <span class="notification-badge" id="transferBadge"></span></button>
-    <button onclick="showTab('updates',this)">📢 التحديثات</button>
-    <button onclick="showTab('ratings',this)">⭐ التقييمات</button>
-  </div>
-  <div id="users"></div><div id="bots" style="display:none"></div><div id="actionReq" style="display:none"></div><div id="transferReq" style="display:none"></div><div id="updates" style="display:none"></div><div id="ratings" style="display:none"></div></div>`;
-  loadUsers(); loadBots(); loadActionRequests(); loadTransferRequests(); loadUpdates(); loadRatings();
-}
-
-function loadUsers(){
-  onSnapshot(collection(db,"users"),(snap)=>{
-    document.getElementById('userCount').innerText=snap.size;
-    let botCount = 0;
-    let html='<h2>👥 ادارة المستخدمين</h2>';
-    snap.forEach(d=>{const u=d.data(); if(u.botCode) botCount++;
-      html+=`<div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap"><div><p><b>الاسم:</b> ${u.username}</p><p><b>الايميل:</b> ${u.email}</p><p><b>حالة البوت:</b> ${u.botStatus || 'متوقف'}</p><p><b>التحكم:</b> ${u.botAssigned? '🎛️ مضاف للمستخدم' : 'غير مضاف'} ${u.botOnline? '🟢 متصل' : ''}</p></div><div><button class="btn blue" onclick="openBotControlModal('${d.id}','${u.username}')">🤖 ارسال بوت + اوامر</button>${!u.banned?`<button class="btn orange" onclick="openBanModal('${d.id}','${u.email}')">🚫 حظر</button>`:`<button class="btn green" onclick="unbanUser('${d.id}')">✅ فك حظر</button>`}<button class="btn red" onclick="deleteUser('${d.id}')">🗑️ حذف</button></div></div>`;});
-    document.getElementById('users').innerHTML=html;
-    document.getElementById('botCount').innerText=botCount;
   });
-}
 
-function loadBots(){
-  onSnapshot(collection(db,"users"),(snap)=>{
-    let html='<h2>🤖 البوتات الشغالة والمتوقفة</h2>';
-    snap.forEach(d=>{const u=d.data(); if(u.botCode){
-      html+=`<div class="card"><div class="bot-control-row"><div><p><b>${u.username}</b></p><p><b>الحالة:</b> <span style="color:${u.botStatus==='شغال'?'var(--success)':'var(--danger)'}">${u.botStatus || 'متوقف'}</span></p></div><div>`;
-      if(u.botStatus==='شغال'){html+=`<button class="btn red" onclick="adminForceStop('${d.id}')">⏹ ايقاف</button>`}else{html+=`<button class="btn green" onclick="adminForceStart('${d.id}')">▶ تشغيل</button>`}
-      html+=`</div></div></div>`;
-    }});
-    document.getElementById('bots').innerHTML=html||'<p>لا توجد بوتات</p>';
-  });
-}
-
-window.adminForceStart=async(uid)=>{await updateDoc(doc(db,"users",uid),{botStatus:'شغال',botControlEnabled:true,botRequestedAction:null});showToast('🟢 تم تشغيل البوت');}
-window.adminForceStop=async(uid)=>{await updateDoc(doc(db,"users",uid),{botStatus:'متوقف',botControlEnabled:false,botRequestedAction:null});showToast('🔴 تم ايقاف البوت');}
-
-window.openBotControlModal=async(uid,username)=>{
-  const snap = await getDoc(doc(db,"users",uid));
-  const data = snap.data();
-  const commands = data.botCommands || [];
-  let commandsHtml = `<h4>📜 اوامر البوت</h4><div id="cmdList">`;
-  commands.forEach((c,i)=>{commandsHtml += `<div class="command-admin"><input value="${c.command}" id="cmdName${i}" placeholder="الامر"><input value="${c.desc}" id="cmdDesc${i}" placeholder="الامر بيعمل اي"><button class="delete-cmd" onclick="deleteCommand('${uid}',${i})">🗑️</button></div>`});
-  commandsHtml += `</div><div style="display:flex;gap:10px"><input id="newCommandName" placeholder="الامر"><input id="newCommandDesc" placeholder="الامر بيعمل اي"><button class="btn green" onclick="addCommand('${uid}')">اضافة</button></div>`;
-  showModal('🤖',`تحكم في بوت ${username}`,`<p><b>معرف البوت:</b></p><input id="botControlId" value="${data.botControlId || 'main'}" placeholder="مثال: main"><p><b>كود البوت:</b></p><textarea id="botCodeEdit" style="min-height:200px">${data.botCode || ''}</textarea>${commandsHtml}`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn blue" onclick="saveBotCode('${uid}')">💾 ارسال البوت</button>`);
-}
-
-window.saveBotCode=async(uid)=>{const code=document.getElementById('botCodeEdit').value.trim();const botControlId=document.getElementById('botControlId').value.trim()||'main';if(!code)return showToast('حط الكود');await setDoc(doc(db,"users",uid),{botCode:code,botControlId,botAssigned:true,botStatus:'متوقف',botControlEnabled:false,botOnline:false,botRequestedAction:null},{merge:true});closeModal();showToast('✅ تم ارسال البوت للمستخدم')}
-window.addCommand=async(uid)=>{const name=document.getElementById('newCommandName').value.trim();const desc=document.getElementById('newCommandDesc').value.trim();if(!name||!desc)return showToast('لازم تملا الامر والشرح');const snap=await getDoc(doc(db,"users",uid));let cmds=snap.data().botCommands||[];cmds.push({command:name,desc:desc});await updateDoc(doc(db,"users",uid),{botCommands:cmds});document.getElementById('newCommandName').value='';document.getElementById('newCommandDesc').value='';showToast('تم اضافة الامر');}
-window.deleteCommand=async(uid,index)=>{const snap=await getDoc(doc(db,"users",uid));let cmds=snap.data().botCommands||[];cmds.splice(index,1);await updateDoc(doc(db,"users",uid),{botCommands:cmds});showToast('تم مسح الامر');}
-window.openBanModal=(uid,email)=>{showModal('🚫',`حظر: ${email}`,`<textarea id="banReason" placeholder="سبب الحظر"></textarea>`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn red" onclick="doBan('${uid}')">تأكيد</button>`);}
-window.doBan=async(uid)=>{await updateDoc(doc(db,"users",uid),{banned:true,banReason:document.getElementById('banReason').value});closeModal();showToast('تم الحظر');}
-window.unbanUser=async(uid)=>{await updateDoc(doc(db,"users",uid),{banned:false,banReason:null});showToast('تم فك الحظر');}
-window.deleteUser=async(uid)=>{if(confirm('متأكد؟')){await deleteDoc(doc(db,"users",uid));showToast('تم الحذف')}}
-
-function loadActionRequests(){
-  onSnapshot(query(collection(db,"bot_action_requests"),where("status","==","pending")), async (snap)=>{
-    document.getElementById('actionBadge').style.display = snap.size > 0? 'flex' : 'none';
-    document.getElementById('actionBadge').innerText = snap.size;
-    if(snap.size > 0) showToast(`🔔 ${snap.size} طلب تشغيل جديد`);
-
-    let html='<h2>⚡ طلبات التشغيل/الايقاف</h2>';
-    for(const d of snap.docs){const r=d.data();
-      if(!autoTimers[d.id]){
-        let time=30;
-        autoTimers[d.id]=setInterval(async()=>{
-          time--;
-          const el=document.getElementById('timer'+d.id);
-          if(el) el.innerText=time;
-          if(time<=0){
-            clearInterval(autoTimers[d.id]);
-            delete autoTimers[d.id];
-            const reqSnap=await getDoc(doc(db,"bot_action_requests",d.id));
-            if(reqSnap.exists() && reqSnap.data().status==='pending'){
-              approveAction(d.id,r.uid,r.action);
-            }
-          }
-        },1000);
-      }
-      html+=`<div class="card" style="display:flex;justify-content:space-between"><div><p><b>المستخدم:</b> ${r.username}</p><p><b>الطلب:</b> ${r.action==='start'?'تشغيل':'ايقاف'}</p><p>قبول تلقائي بعد: <span class="timer" id="timer${d.id}">30</span> ثانية</p></div><div><button class="btn green" onclick="manualApprove('${d.id}','${r.uid}','${r.action}')">✅ موافقة الان</button><button class="btn red" onclick="manualReject('${d.id}','${r.uid}')">❌ الغاء</button></div></div>`;
-    }
-    document.getElementById('actionReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.manualApprove=async(reqId,uid,action)=>{clearInterval(autoTimers[reqId]);delete autoTimers[reqId];approveAction(reqId,uid,action);}
-window.manualReject=async(reqId,uid)=>{clearInterval(autoTimers[reqId]);delete autoTimers[reqId];rejectAction(reqId,uid);}
-window.approveAction=async(reqId,uid,action)=>{const newStatus=action==='start'?'شغال':'متوقف';await updateDoc(doc(db,"users",uid),{botStatus:newStatus,botControlEnabled:action==='start',botRequestedAction:null});await updateDoc(doc(db,"bot_action_requests",reqId),{status:'approved',approvedAt:serverTimestamp()});showToast(action==='start'?'🟢 تم تشغيل البوت':'🔴 تم إيقاف البوت');}
-window.rejectAction=async(reqId,uid)=>{const userSnap=await getDoc(doc(db,"users",uid));const current=userSnap.data()||{};const currentStatus=current.botStatus==='بانتظار الموافقة'? (current.botControlEnabled?'شغال':'متوقف') : (current.botStatus||'متوقف');await updateDoc(doc(db,"users",uid),{botStatus:currentStatus,botRequestedAction:null});await updateDoc(doc(db,"bot_action_requests",reqId),{status:'rejected',rejectedAt:serverTimestamp()});showToast('❌ تم رفض الطلب');}
-
-function loadTransferRequests(){
-  onSnapshot(query(collection(db,"bot_transfer_requests"),where("status","==","pending")), async (snap)=>{
-    document.getElementById('transferBadge').style.display = snap.size > 0? 'flex' : 'none';
-    document.getElementById('transferBadge').innerText = snap.size;
-    if(snap.size > 0) showToast(`🔔 ${snap.size} طلب نقل جديد`);
-
-    let html='<h2>🔄 طلبات نقل البوت</h2>';
-    for(const d of snap.docs){const r=d.data();
-      html+=`<div class="card" style="display:flex;justify-content:space-between"><div><p><b>المستخدم:</b> ${r.username}</p><p><b>كود الغرفه:</b> ${r.roomCode}</p></div><div><button class="btn green" onclick="approveTransfer('${d.id}','${r.uid}','${r.roomCode}')">✅ موافقة</button><button class="btn red" onclick="rejectTransfer('${d.id}')">❌ رفض</button></div></div>`;
-    }
-    document.getElementById('transferReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveTransfer=async(reqId,uid,roomCode)=>{await updateDoc(doc(db,"users",uid),{roomCode:roomCode,botStatus:'متوقف'});await updateDoc(doc(db,"bot_transfer_requests",reqId),{status:'approved'});showToast('تمت الموافقة');}
-window.rejectTransfer=async(reqId)=>{await updateDoc(doc(db,"bot_transfer_requests",reqId),{status:'rejected'});showToast('تم الرفض');}
-
-function loadRatings(){
-  onSnapshot(query(collection(db,"ratings"),orderBy("time","desc")),(snap)=>{
-    document.getElementById('ratingCount').innerText=snap.size;
-    let html='<h2>⭐ تقييمات المستخدمين</h2>';
-    snap.forEach(d=>{const r=d.data();
-      let stars = '⭐'.repeat(r.rating);
-      let emoji = {1:'😢',2:'😕',3:'🙂',4:'😄',5:'🥳'}[r.rating];
-      html+=`<div class="card rating-card"><div><p><b>${r.username}</b></p><p style="color:#aaa;font-size:14px">${new Date(r.time?.toDate()).toLocaleString('ar-EG')}</p></div><div><span class="stars">${stars}</span> ${emoji}</div></div>`;
+  function loadBot(){
+    onSnapshot(doc(db,"users",currentUser.uid), snap => {
+      if(!snap.exists()) return;
+      const data = snap.data();
+      const botSection = document.getElementById('botSection');
+      if(data.botCode){
+        const status = data.botStatus || 'متوقف';
+        const statusClass = status === 'شغال'? 'on' : status === 'بانتظار الموافقة'? 'pending' : 'off';
+        const isRunning = status === 'شغال';
+        botSection.innerHTML = `<code style="background:#03040a;padding:14px;border-radius:12px;display:block;margin:12px 0;white-space:pre-wrap">${data.botCode}</code><p><b>الحالة:</b> <span class="status-badge ${statusClass}">${status}</span> <span id="autoTimer" style="color:orange"></span></p><div class="bot-controls"><button class="btn success" id="startBtn" onclick="requestBotAction('start')" ${isRunning?'disabled':''}>${isRunning?'✅ البوت شغال':'🚀 تشغيل'}</button><button class="btn danger" id="stopBtn" onclick="requestBotAction('stop')" ${!isRunning?'disabled':''}>⏹️ ايقاف</button></div><div class="transfer-box"><h4>🔄 نقل البوت لغرفه اخرى</h4><input id="roomCodeInput" placeholder="الصق كود الغرفه هنا"><button class="btn" onclick="requestTransferBot()">ارسال طلب النقل</button></div>`;
+      } else { botSection.innerHTML = `<p style="color:#aaa">لسه مفيش بوت. استنى الادمن يبعتهولك</p>`; }
     });
-    document.getElementById('ratings').innerHTML=html||'<p>لا توجد تقييمات</p>';
-  });
-}
+  }
 
-function loadUpdates(){
-  onSnapshot(query(collection(db,"updates"),orderBy("time","desc")),(snap)=>{
-    document.getElementById('updateCount').innerText=snap.size;
-    let html='<h2>📢 ارسال تحديث</h2><div class="card"><input id="updateText" placeholder="نص التحديث"><input type="file" id="updateImageFile" accept="image/*"><img id="imagePreview" class="preview-img" style="display:none"><button class="btn purple" onclick="sendUpdate()">نشر</button></div><h2>السابقة</h2>';
-    snap.forEach(d=>{const u=d.data();html+=`<div class="card"><button class="delete-update-btn" onclick="deleteUpdate('${d.id}')">مسح</button><p><b>${u.username}:</b> ${u.text}</p>${u.image?`<img src="${u.image}" style="max-width:300px;border-radius:12px">`:''}</div>`;});
-    document.getElementById('updates').innerHTML=html;
-    const fileInput=document.getElementById('updateImageFile');if(fileInput){fileInput.onchange=(e)=>{const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=(e)=>{document.getElementById('imagePreview').src=e.target.result;document.getElementById('imagePreview').style.display='block'};reader.readAsDataURL(file);}}}
-  });
-}
-window.sendUpdate=async()=>{const text=document.getElementById('updateText').value.trim();const file=document.getElementById('updateImageFile').files[0];if(!text&&!file)return showToast('لازم نص او صوره');let imageData=null;if(file){imageData=await toBase64(file);}await addDoc(collection(db,"updates"),{username:"الادارة",text:text,image:imageData||null,reactions:{},time:serverTimestamp()});document.getElementById('updateText').value='';document.getElementById('updateImageFile').value='';document.getElementById('imagePreview').style.display='none';showToast('تم النشر');}
-function toBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.readAsDataURL(file);reader.onload=()=>resolve(reader.result);reader.onerror=error=>reject(error);})}
-window.deleteUpdate=async(id)=>{if(confirm('متأكد؟')){await deleteDoc(doc(db,"updates",id));showToast('تم المسح');}}
+  function startAutoApproveCheck(){
+    clearInterval(autoCheckInterval);
+    autoCheckInterval = setInterval(async () => {
+      if(!currentUser) return;
+      const q = query(collection(db,"bot_action_requests"), where("uid","==",currentUser.uid), where("status","==","pending"));
+      const snap = await getDocs(q);
+      if(snap.empty) {document.getElementById('autoTimer') && (document.getElementById('autoTimer').innerText = '');return;}
+      snap.forEach(async d => {
+        const r = d.data();
+        const requestTime = r.createdAt?.toMillis() || r.time?.toMillis() || Date.now();
+        const elapsed = Math.floor((Date.now() - requestTime) / 1000);
+        const remaining = 30 - elapsed;
+        if(document.getElementById('autoTimer')){document.getElementById('autoTimer').innerText = remaining > 0? `| القبول بعد ${remaining}ث` : '| جاري القبول...';}
+        if(remaining <= 0){
+          const newStatus = r.action === 'start'? 'شغال' : 'متوقف';
+          await updateDoc(doc(db,"users",r.uid),{botStatus: newStatus,botControlEnabled: r.action === 'start'});
+          await updateDoc(doc(db,"bot_action_requests",d.id),{status: 'approved',approvedAt: serverTimestamp(),autoApproved: true});
+          toast('✅ تم القبول التلقائي');
+        }
+      });
+    }, 3000);
+  }
 
-window.showTab=(t,btn)=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['users','bots','actionReq','transferReq','updates','ratings'].forEach(id=>document.getElementById(id).style.display=id==t?'block':'none');}
-window.adminLogin=async()=>{try{await signInWithEmailAndPassword(auth,document.getElementById('adminEmail').value,document.getElementById('adminPass').value);showToast('تم الدخول');}catch(e){showToast('بيانات خاطئة');hideLoading();}}
-window.logout=()=>signOut(auth);
+  function loadCommands(){onSnapshot(doc(db,"users",currentUser.uid), snap => {const data = snap.data();const commands = data.botCommands || [];const box = document.getElementById('commandsBox');const list = document.getElementById('commandsList');if(commands.length > 0){box.style.display = 'block';list.innerHTML = '';commands.forEach((cmd) => {const parts = cmd.split(' - ');const commandCode = parts[0];const commandDesc = parts[1] || '';list.innerHTML += `<div class="command-item"><div class="command-info"><span class="command-code">${commandCode}</span><span class="command-desc">${commandDesc}</span></div><button class="copy-btn" onclick="copyCommand('${commandCode}')">نسخ</button></div>`;});} else { box.style.display = 'none'; } });}
+  window.copyCommand = (text) => {navigator.clipboard.writeText(text);toast('📋 تم نسخ الامر: ' + text);if(!localStorage.getItem('hasRated')){document.getElementById('ratingModal').style.display='flex';}}
+  window.requestBotAction = async (action) => {if(action === 'start' && document.getElementById('startBtn')?.disabled){return toast('البوت شغال بالفعل');}await addDoc(collection(db,"bot_action_requests"),{uid: currentUser.uid,username: userData.username,action: action,status: 'pending',createdAt: serverTimestamp(),time: serverTimestamp()});await setDoc(doc(db,"users",currentUser.uid), {botStatus: 'بانتظار الموافقة'}, {merge:true});toast('✅ تم ارسال الطلب انتظر. هيتقبل تلقائي بعد 30 ثانية');}
+  window.requestTransferBot = async () => {const roomCode = document.getElementById('roomCodeInput').value.trim();if(!roomCode) return toast('حط كود الغرفه');await addDoc(collection(db,"bot_transfer_requests"),{uid: currentUser.uid, username: userData.username, roomCode: roomCode, status: 'pending', time: serverTimestamp()});document.getElementById('roomCodeInput').value = '';toast('📨 تم ارسال طلب النقل');}
+  function loadUpdates(){const q = query(collection(db,"updates"), orderBy("time","desc"));onSnapshot(q, snap => {const updatesBox = document.getElementById('updatesBox');let firstLoad = lastUpdateTime === 0;updatesBox.innerHTML = '';snap.forEach(d => {const m = d.data(); const id = d.id; const reactions = m.reactions || {};const updateTime = m.time?.toMillis() || 0;if(!firstLoad && updateTime > lastUpdateTime){document.getElementById('notifDot').style.display='block';toast('📢 تحديث جديد من الادارة');}if(updateTime > lastUpdateTime) lastUpdateTime = updateTime;let reactionsHtml = `<div class="update-reactions">`;['👍','❤️','🔥','😂'].forEach(e => {const count = reactions[e]? reactions[e].length : 0;const active = reactions[e] && reactions[e].includes(currentUser.uid)? 'active' : '';reactionsHtml += `<div class="reaction-btn ${active}" onclick="addReaction('${id}','${e}')">${e} ${count}</div>`;});reactionsHtml += `</div>`;const msgDiv = document.createElement('div');msgDiv.className = 'update-msg';msgDiv.innerHTML = `<div>📢 ${m.username}</div><div>${m.text}</div>${m.image?`<img src="${m.image}">`:''}${reactionsHtml}`;let pressTimer;msgDiv.addEventListener('mousedown', (e) => { pressTimer = setTimeout(() => showEmojiPicker(e, id), 500); });msgDiv.addEventListener('mouseup', () => clearTimeout(pressTimer));msgDiv.addEventListener('touchstart', (e) => { pressTimer = setTimeout(() => showEmojiPicker(e, id), 500); });msgDiv.addEventListener('touchend', () => clearTimeout(pressTimer));updatesBox.appendChild(msgDiv);});});}
+  function showEmojiPicker(e, msgId){const picker = document.getElementById('emojiPicker');picker.innerHTML = '';['👍','❤️','🔥','😂'].forEach(emoji => {const btn = document.createElement('div'); btn.innerText = emoji; btn.style.fontSize = '24px'; btn.style.cursor = 'pointer';btn.onclick = () => {addReaction(msgId, emoji); picker.classList.remove('show')};picker.appendChild(btn);});picker.style.top = e.touches? e.touches[0].pageY + 'px' : e.pageY + 'px';picker.style.left = e.touches? e.touches[0].pageX + 'px' : e.pageX + 'px';picker.classList.add('show');}
+  window.addReaction = async (msgId, emoji) => {const msgRef = doc(db,"updates",msgId);const msgSnap = await getDoc(msgRef);let reactions = msgSnap.data().reactions || {};if(!reactions[emoji]) reactions[emoji] = [];if(reactions[emoji].includes(currentUser.uid)){ reactions[emoji] = reactions[emoji].filter(uid => uid!== currentUser.uid); }else { reactions[emoji].push(currentUser.uid); }await updateDoc(msgRef, {reactions: reactions});document.getElementById('emojiPicker').classList.remove('show');}
+  async function signIn(){ const email = document.getElementById('loginEmail').value; const password = document.getElementById('loginPassword').value; if(!email ||!password) return toast('املا كل الحقول'); showLoading(); try{ await signInWithEmailAndPassword(auth,email,password); }catch(e){ toast('خطأ: ' + e.message); hideLoading(); } }
+  async function signUp(){const username = document.getElementById('signupUsername').value.trim();const email = document.getElementById('signupEmail').value.trim();const password = document.getElementById('signupPassword').value;const confirm = document.getElementById('signupConfirmPassword').value;if(!username ||!email ||!password) return toast('املا كل الحقول');if(password!== confirm) return toast('كلمة السر مش مطابقة');showLoading();try{const res = await createUserWithEmailAndPassword(auth,email,password);await setDoc(doc(db,"users",res.user.uid),{username,email,createdAt:serverTimestamp(),banned:false,isAdmin:false,botCode:"",botStatus:"متوقف",botCommands:[]});toast('✅ تم انشاء الحساب');}catch(e){if(e.code === 'auth/email-already-in-use'){toast('⚠️ الحساب موجود غير البريد');} else if(e.code === 'auth/weak-password'){toast('⚠️ كلمة السر ضعيفة لازم 6 حروف');} else if(e.code === 'auth/invalid-email'){toast('⚠️ البريد الالكتروني غير صحيح');} else {toast('خطأ: ' + e.message);}hideLoading();}}
 </script>
 </body>
 </html>
