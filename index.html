@@ -1,217 +1,316 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><title>Highrise ULTRA | لوحة التحكم</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Highrise Bot | TORKY</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#03040a;--card:#0a0f1a;--border:#1a2333;--text:#f0f4ff;--primary:#5b8def;--success:#10b981;--danger:#f43f5e;--purple:#a855f7}
-*{box-sizing:border-box;font-family:'Cairo',sans-serif}
-body{background:radial-gradient(1200px 600px at 80% -10%,#1a2a4a 0%,transparent 60%),linear-gradient(180deg,#03040a,#050812);color:var(--text);margin:0}
-.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#03040a;display:flex;justify-content:center;align-items:center;z-index:10000}
-.loader{width:70px;height:70px;border:5px solid var(--border);border-top:5px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.header{position:sticky;top:0;background:rgba(3,4,10,.8);backdrop-filter:blur(20px);padding:20px 35px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;z-index:100}
-.container{padding:30px;max-width:1700px;margin:0 auto}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-bottom:35px}
-.stat-card{background:rgba(10,15,26,.6);padding:28px;border-radius:22px;border:1px solid var(--border)}
-.stat-card p{margin:15px 0 0;font-size:42px;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tabs{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap;background:rgba(10,15,26,.6);padding:12px;border-radius:18px;border:1px solid var(--border)}
-.tabs button{padding:14px 28px;background:transparent;border:none;color:#94a3b8;cursor:pointer;border-radius:14px;font-weight:900;font-size:15px;position:relative}
-.tabs button.active{background:linear-gradient(135deg,var(--primary),#3b82f6);color:white}
-.notification-badge{position:absolute;top:8px;right:8px;background:var(--danger);color:#fff;border-radius:50%;width:20px;height:20px;font-size:12px;display:none;align-items:center;justify-content:center}
-.card{background:rgba(10,15,26,.6);border:1px solid var(--border);padding:24px;margin:16px 0;border-radius:20px}
-.btn{padding:13px 22px;border:none;border-radius:14px;cursor:pointer;margin:5px;font-weight:900}
-.btn.green{background:linear-gradient(135deg,var(--success),#059669);color:#000}.btn.red{background:linear-gradient(135deg,var(--danger),#e11d48);color:white}.btn.blue{background:linear-gradient(135deg,var(--primary),#3b82f6);color:white}.btn.purple{background:linear-gradient(135deg,var(--purple),#9333ea);color:white}.btn.orange{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000}
-input,textarea,select{width:100%;padding:15px;border-radius:14px;border:1px solid var(--border);background:#03040a;color:white;margin:12px 0;font-size:16px}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:10000}
-.modal-box{background:rgba(10,15,26,.9);border:1px solid var(--primary);padding:32px;border-radius:26px;width:90%;max-width:580px}
-.toast{position:fixed;bottom:30px;right:30px;background:linear-gradient(90deg,var(--success),#059669);color:#000;padding:16px 24px;border-radius:16px;display:none;font-weight:900;z-index:9999}
-.command-admin{display:flex;gap:10px;margin:8px 0}
-.command-admin input{flex:1;margin:0}
-.delete-cmd{background:var(--danger);border:none;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer}
-.preview-img{max-width:300px;border-radius:12px;margin-top:10px}
-.delete-update-btn{float:left;background:var(--danger);color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer}
-.rating-card{display:flex;justify-content:space-between;align-items:center}
-.stars{color:#fbbf24;font-size:20px}
-.bot-control-row{display:flex;gap:12px;align-items:center;justify-content:space-between}
-.badges-admin{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.badge{padding:6px 10px;border-radius:16px;background:rgba(91,141,239,.3);font-size:12px}
+  :root{
+    --bg:#03040a; --card:#0a0f1a; --border:#1a2333; --text:#f0f4ff;
+    --primary:#5b8def; --success:#10b981; --danger:#f43f5e; --admin:#a855f7;
+    --glow:0 0 20px rgba(91,141,239,.4);
+  }
+  [data-theme="light"]{
+    --bg:#f8fafc; --card:#ffffff; --border:#e2e8f0; --text:#0f172a;
+    --primary:#2563eb; --glow:0 0 20px rgba(37,99,235,.2);
+  }
+  [data-theme="blue"]{
+    --bg:#0c1120; --card:#131b30; --border:#1e293b; --text:#e0f2fe;
+    --primary:#38bdf8; --glow:0 0 20px rgba(56,189,248,.4);
+  }
+
+  *{box-sizing:border-box;font-family:'Cairo',sans-serif}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,rgba(91,141,239,.15) 0%,transparent 60%),linear-gradient(180deg,var(--bg),#000);color:var(--text);transition:.3s}
+
+ .container{max-width:1100px;margin:0 auto;padding:20px;animation:fadeIn.6s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+ .card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:30px;margin-bottom:24px;box-shadow:var(--glow);transition:.3s}
+ .card:hover{transform:translateY(-5px)}
+
+  input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--border);background:var(--bg);color:var(--text);margin:10px 0;font-size:16px;transition:.2s}
+  input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(91,141,239,.2)}
+
+ .btn{padding:14px 28px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;font-weight:900;cursor:pointer;transition:.3s;font-size:15px}
+ .btn:hover{transform:translateY(-3px);box-shadow:var(--glow)}
+ .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+ .btn.success{background:linear-gradient(135deg,var(--success),#059669)}
+ .btn.danger{background:linear-gradient(135deg,var(--danger),#e11d48)}
+ .btn.ghost{background:transparent;border:2px solid var(--border);color:var(--text)}
+ .btn.orange{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000}
+
+ .actions{display:flex;gap:12px}
+ .page{display:none}.page.active{display:block}
+
+ .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--success),#059669);color:#000;padding:16px 28px;border-radius:16px;z-index:999;font-weight:900;display:none;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+
+ .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding:20px 25px;background:var(--card);border-radius:20px;border:1px solid var(--border);box-shadow:var(--glow)}
+ .buy-btn{background:linear-gradient(135deg,var(--admin),#9333ea);padding:12px 22px;border-radius:14px;text-decoration:none;color:#fff;font-weight:900;transition:.3s}
+ .buy-btn:hover{transform:scale(1.05)}
+
+ .theme-switcher{display:flex;gap:8px}
+ .theme-btn{width:35px;height:35px;border-radius:10px;border:2px solid var(--border);cursor:pointer;transition:.2s}
+ .theme-btn.active{border-color:var(--primary);transform:scale(1.1)}
+ .theme-dark{background:#03040a}
+ .theme-light{background:#f8fafc}
+ .theme-blue{background:#38bdf8}
+
+ .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+ .header-actions{display:flex;gap:12px;align-items:center;position:relative}
+ .icon-btn{width:48px;height:48px;border-radius:50%;background:var(--card);border:2px solid var(--border);display:flex;justify-content:center;align-items:center;font-size:22px;cursor:pointer;position:relative;transition:.3s}
+ .icon-btn:hover{border-color:var(--primary);transform:rotate(15deg)}
+ .notification-dot{position:absolute;top:8px;right:8px;width:12px;height:12px;background:var(--danger);border-radius:50%;border:2px solid var(--card);display:none}
+
+ .settings-menu{position:absolute;top:60px;left:0;background:var(--card);backdrop-filter:blur(20px);border:2px solid var(--primary);padding:20px;border-radius:20px;width:300px;display:none;z-index:100;text-align:right;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+ .settings-menu.show{display:block}
+
+ .bot-controls{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+ .status-badge{padding:10px 18px;border-radius:25px;font-weight:900;font-size:14px;display:inline-block}
+ .status-badge.on{background:rgba(16,185,129,.2);color:var(--success);border:2px solid var(--success)}
+ .status-badge.off{background:rgba(244,63,94,.2);color:var(--danger);border:2px solid var(--danger)}
+ .status-badge.pending{background:rgba(245,158,11,.2);color:#f59e0b;border:2px solid #f59e0b}
+
+ .transfer-box{background:rgba(168,85,247,.1);border:2px dashed var(--admin);padding:20px;border-radius:18px;margin-top:20px}
+ .commands-box{background:rgba(91,141,239,.1);border:2px solid var(--primary);padding:25px;border-radius:20px;margin-top:25px}
+ .command-item{display:flex;justify-content:space-between;align-items:center;background:var(--bg);padding:16px;border-radius:14px;margin:12px 0;border:1px solid var(--border);transition:.2s}
+ .command-item:hover{border-color:var(--primary)}
+ .command-code{background:var(--primary);padding:6px 14px;border-radius:10px;font-weight:900;color:#000;display:inline-block}
+ .copy-btn{background:var(--success);padding:12px 18px;border-radius:12px;border:none;color:#000;font-weight:900;cursor:pointer}
+
+ .updates-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);backdrop-filter:blur(10px);display:none;justify-content:center;align-items:center;z-index:9999}
+ .updates-modal.show{display:flex}
+ .updates-content{background:var(--card);border:2px solid var(--primary);border-radius:28px;width:90%;max-width:600px;height:80vh;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+ .updates-header{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+ .updates-box{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px}
+ .update-msg{background:linear-gradient(135deg,var(--admin),#9333ea);width:100%;text-align:center;border-radius:18px;padding:20px;position:relative;font-size:16px}
+ .update-msg img{max-width:100%;border-radius:14px;margin-top:12px}
+
+ .loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;z-index:10000}
+ .loader{width:80px;height:80px;border:6px solid var(--border);border-top:6px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+  @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+ .profile-pic{width:90px;height:90px;border-radius:50%;object-fit:cover;margin:10px auto;display:block;border:4px solid var(--primary);box-shadow:var(--glow)}
+ .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+ .badge{padding:8px 14px;border-radius:25px;font-size:13px;font-weight:900;background:rgba(91,141,239,.2);border:2px solid var(--primary)}
+ .warning-box{background:rgba(244,63,94,.15);border:2px solid var(--danger);padding:15px;border-radius:14px;margin:15px 0;color:var(--danger);font-weight:700}
+  h2,h3{font-weight:900}
+  hr{border:none;border-top:1px solid var(--border);margin:20px 0}
 </style>
 </head>
 <body>
-<div class="loading-screen" id="loadingScreen"><div class="loader"></div></div>
-<div id="app"></div>
-<div class="toast" id="toast"></div>
-<div class="modal" id="modal"><div class="modal-box" id="modalContent"></div></div>
+  <div id="loadingScreen" class="loading-screen"><div class="loader"></div></div>
+  <div class="toast" id="toast"></div>
+
+<div class="container">
+  <div class="top-bar">
+    <h2 style="margin:0">🚀 Highrise TORKY</h2>
+    <div style="display:flex;gap:15px;align-items:center">
+      <div class="theme-switcher">
+        <div class="theme-btn theme-dark active" onclick="setTheme('dark')"></div>
+        <div class="theme-btn theme-light" onclick="setTheme('light')"></div>
+        <div class="theme-btn theme-blue" onclick="setTheme('blue')"></div>
+      </div>
+      <a href="https://high.rs/user?name=c203" target="_blank" class="buy-btn">TORKY - لشراء بوت</a>
+    </div>
+  </div>
+
+  <div id="loginPage" class="page active">
+    <div class="card" style="max-width:480px;margin:60px auto">
+      <h2 style="text-align:center;margin-bottom:25px">تسجيل الدخول</h2>
+      <input id="loginEmail" type="email" placeholder="البريد الالكتروني">
+      <input id="loginPassword" type="password" placeholder="كلمة السر">
+      <div class="actions"><button class="btn" id="loginBtn" style="flex:1">دخول</button><button class="btn ghost" id="goToSignupBtn" style="flex:1">انشاء حساب</button></div>
+    </div>
+  </div>
+
+  <div id="signupPage" class="page">
+    <div class="card" style="max-width:480px;margin:60px auto">
+      <h2 style="text-align:center;margin-bottom:25px">انشاء حساب جديد</h2>
+      <input id="signupUsername" type="text" placeholder="اسم المستخدم">
+      <input id="signupEmail" type="email" placeholder="البريد الالكتروني">
+      <input id="signupPassword" type="password" placeholder="كلمة السر">
+      <input id="signupConfirmPassword" type="password" placeholder="تأكيد كلمة السر">
+      <div class="actions"><button class="btn" id="signupBtn" style="flex:1">انشاء</button><button class="btn ghost" id="goToLoginBtn" style="flex:1">رجوع</button></div>
+    </div>
+  </div>
+
+  <div id="dashboardPage" class="page">
+    <div class="card">
+      <div class="header">
+        <h2>لوحة التحكم الرئيسية</h2>
+        <div class="header-actions">
+          <div class="icon-btn" id="updatesBtn">📢<span class="notification-dot" id="notifDot"></span></div>
+          <div class="icon-btn" id="settingsBtn">⚙️</div>
+          <div class="settings-menu" id="settingsMenu">
+            <img id="profilePic" class="profile-pic" src="https://i.imgur.com/8Km9tLL.png">
+            <input type="file" id="picUpload" accept="image/*">
+            <p><b>مرحبا</b><br><span id="userName" style="font-size:18px"></span></p>
+            <div class="badges" id="userBadges"></div>
+            <p style="font-size:13px;color:#aaa"><b>الايميل:</b><br><span id="userEmail"></span></p>
+            <input id="newUsername" placeholder="اسم مستخدم جديد">
+            <button class="btn orange" onclick="updateProfile()">تحديث الاسم</button>
+            <hr>
+            <p><b>🔒 تغيير كلمة السر</b></p>
+            <input id="oldPassword" type="password" placeholder="كلمة السر القديمة">
+            <input id="newPassword" type="password" placeholder="كلمة سر جديدة">
+            <input id="confirmNewPassword" type="password" placeholder="تأكيد كلمة السر الجديدة">
+            <button class="btn orange" onclick="updatePassword()">تغيير الباسورد</button>
+            <button class="btn ghost" id="logoutBtn" style="width:100%;margin-top:15px">تسجيل خروج</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="warningSection"></div>
+
+      <div class="card" style="background:rgba(91,141,239,.05)">
+        <h3>🤖 البوت الخاص بك</h3>
+        <div id="botSection"><p style="color:#aaa">لسه مفيش بوت. استنى الادمن يبعتهولك</p></div>
+        <div class="commands-box" id="commandsBox" style="display:none">
+          <h3>📜 اوامر البوت</h3>
+          <div id="commandsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="updates-modal" id="updatesModal">
+  <div class="updates-content">
+    <div class="updates-header"><h3 style="margin:0">📢 مركز التحديثات</h3><button class="btn ghost" id="closeUpdatesBtn">اغلاق</button></div>
+    <div class="updates-box" id="updatesBox"></div>
+  </div>
+</div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDoc, serverTimestamp, addDoc, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword as fbUpdatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
-const app=initializeApp(firebaseConfig); const db=getFirestore(app); const auth=getAuth(app);
-const ADMIN_EMAIL = "alaaahmedsayd16@gmail.com";
+  const firebaseConfig = {apiKey: "AIzaSyC7nexX-dwj_IhYC5EaS-DU_YQeE6-acDw",authDomain: "game-af286.firebaseapp.com",projectId: "game-af286"};
+  const app = initializeApp(firebaseConfig);const auth = getAuth();const db = getFirestore();
+  let currentUser = null; let userData = {}; let lastUpdateTime = 0;
 
-const hideLoading = () => document.getElementById('loadingScreen').style.display='none';
-function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3500)}
-function showModal(icon,title,content,actions){document.getElementById('modalContent').innerHTML=`<h3>${icon} ${title}</h3>${content}<div style="display:flex;gap:12px;justify-content:flex-end;margin-top:22px">${actions}</div>`;document.getElementById('modal').style.display='flex'}
-function closeModal(){document.getElementById('modal').style.display='none'}
-
-onAuthStateChanged(auth, user => {
-  if(!user) {
-    document.getElementById('app').innerHTML = `<div style="padding:45px;text-align:center;max-width:460px;margin:100px auto;background:rgba(10,15,26,.7);border-radius:26px"><h1 style="color:var(--primary)">🔐 Highrise ULTRA</h1><input type="email" id="adminEmail" value="${ADMIN_EMAIL}"><input type="password" id="adminPass" placeholder="كلمة السر"><button class="btn blue" style="width:100%" onclick="adminLogin()">دخول</button></div>`;
-    hideLoading();
-    return;
+  // Theme
+  window.setTheme = (theme) => {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector(`.theme-${theme}`).classList.add('active');
   }
-  if(user.email!== ADMIN_EMAIL){
-    document.getElementById('app').innerHTML = `<div style="padding:45px;text-align:center"><h1>⛔ غير مصرح</h1><button class="btn red" onclick="logout()">خروج</button></div>`;
+  setTheme(localStorage.getItem('theme') || 'dark');
+
+  const hideLoading = () => document.getElementById('loadingScreen').style.display='none';
+  const showLoading = () => document.getElementById('loadingScreen').style.display='flex';
+  const toast = (msg) => {const t=document.getElementById('toast');t.innerText=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3500)}
+  const showPage = (id) => {document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+  document.getElementById('goToSignupBtn').onclick = () => showPage('signupPage');
+  document.getElementById('goToLoginBtn').onclick = () => showPage('loginPage');
+  document.getElementById('loginBtn').onclick = signIn;
+  document.getElementById('signupBtn').onclick = signUp;
+  document.getElementById('logoutBtn').onclick = () => signOut(auth);
+  document.getElementById('settingsBtn').onclick = (e) => {e.stopPropagation(); document.getElementById('settingsMenu').classList.toggle('show')};
+  document.getElementById('updatesBtn').onclick = () => {document.getElementById('updatesModal').classList.add('show'); document.getElementById('notifDot').style.display='none'};
+  document.getElementById('closeUpdatesBtn').onclick = () => document.getElementById('updatesModal').classList.remove('show');
+  document.getElementById('picUpload').onchange = uploadPic;
+
+  onAuthStateChanged(auth, async user => {
+    if(user){
+      const userDoc = await getDoc(doc(db,"users",user.uid));
+      if(!userDoc.exists()){ await signOut(auth); hideLoading(); return; }
+      if(userDoc.data().banned){ document.body.innerHTML=`<div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column"><h1>⛔ تم حظرك</h1><p>${userDoc.data().banReason||''}</p></div>`; hideLoading(); return; }
+      currentUser = user; userData = userDoc.data();
+      document.getElementById('userName').innerText = userData.username;
+      document.getElementById('userEmail').innerText = userData.email;
+      document.getElementById('profilePic').src = userData.photoURL || 'https://i.imgur.com/8Km9tLL.png';
+      loadBadges(userData.badges || []);
+      if(userData.warning){document.getElementById('warningSection').innerHTML = `<div class="warning-box">⚠️ تحذير من الادارة: ${userData.warning}</div>`}
+      showPage('dashboardPage');
+      loadBot(); loadCommands(); loadUpdates();
+    } else { showPage('loginPage'); }
     hideLoading();
-    return;
+  });
+
+  function loadBadges(badges){
+    const names = {daily:'🔥 دخول يومي', deal:'💎 تعامل', active:'🚀 تحسينات', mod:'🛡 مشرف'};
+    document.getElementById('userBadges').innerHTML = badges.map(b=>`<span class="badge">${names[b]||b}</span>`).join('');
   }
-  loadAdminPanel();
-  hideLoading();
-});
 
-function loadAdminPanel(){
-  document.getElementById('app').innerHTML = `
-  <div class="header"><h1>Highrise ULTRA</h1><button class="btn red" onclick="logout()">خروج</button></div>
-  <div class="container">
-  <div class="stats"><div class="stat-card"><h3>👥 الحسابات</h3><p id="userCount">0</p></div><div class="stat-card"><h3>🤖 البوتات</h3><p id="botCount">0</p></div><div class="stat-card"><h3>📢 التحديثات</h3><p id="updateCount">0</p></div><div class="stat-card"><h3>⭐ التقييمات</h3><p id="ratingCount">0</p></div></div>
-  <div class="tabs">
-    <button class="active" onclick="showTab('users',this)">👥 المستخدمين</button>
-    <button onclick="showTab('bots',this)">🤖 البوتات</button>
-    <button onclick="showTab('actionReq',this)">⚡ طلبات التشغيل <span class="notification-badge" id="actionBadge"></span></button>
-    <button onclick="showTab('transferReq',this)">🔄 طلبات النقل <span class="notification-badge" id="transferBadge"></span></button>
-    <button onclick="showTab('updates',this)">📢 التحديثات</button>
-    <button onclick="showTab('ratings',this)">⭐ التقييمات</button>
-  </div>
-  <div id="users"></div><div id="bots" style="display:none"></div><div id="actionReq" style="display:none"></div><div id="transferReq" style="display:none"></div><div id="updates" style="display:none"></div><div id="ratings" style="display:none"></div></div>`;
-  loadUsers(); loadBots(); loadActionRequests(); loadTransferRequests(); loadUpdates(); loadRatings();
-}
+  async function uploadPic(e){
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      await updateDoc(doc(db,"users",currentUser.uid),{photoURL: ev.target.result});
+      document.getElementById('profilePic').src = ev.target.result;
+      toast('✅ تم تحديث الصورة');
+    }
+    reader.readAsDataURL(file);
+  }
+  window.updateProfile = async () => {
+    const name = document.getElementById('newUsername').value.trim();
+    if(!name) return toast('حط اسم جديد');
+    await updateDoc(doc(db,"users",currentUser.uid),{username:name});
+    toast('✅ تم تحديث الاسم');
+  }
+  window.updatePassword = async () => {
+    const oldPass = document.getElementById('oldPassword').value;
+    const newPass = document.getElementById('newPassword').value;
+    const confirmPass = document.getElementById('confirmNewPassword').value;
+    if(!oldPass ||!newPass ||!confirmPass) return toast('املا كل الخانات');
+    if(newPass!== confirmPass) return toast('كلمة السر الجديدة مش مطابقة');
+    if(newPass.length < 6) return toast('الباسورد الجديد لازم 6 حروف على الاقل');
+    showLoading();
+    try {
+        const credential = EmailAuthProvider.credential(currentUser.email, oldPass);
+        await reauthenticateWithCredential(currentUser, credential);
+        await fbUpdatePassword(currentUser, newPass);
+        document.getElementById('oldPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmNewPassword').value = '';
+        toast('✅ تم تغيير الباسورد بنجاح');
+    } catch(e) {
+        if(e.code === 'auth/wrong-password'){ toast('⚠️ كلمة السر القديمة غلط'); }
+        else { toast('خطأ: ' + e.message); }
+    }
+    hideLoading();
+  }
 
-function loadUsers(){
-  onSnapshot(collection(db,"users"),(snap)=>{
-    document.getElementById('userCount').innerText=snap.size;
-    let botCount = 0;
-    let html='<h2>👥 ادارة المستخدمين</h2>';
-    snap.forEach(d=>{const u=d.data(); if(u.botCode) botCount++;
-      let badgesHtml = `<div class="badges-admin">`;
-      (u.badges||[]).forEach(b=>{badgesHtml+=`<span class="badge">${b}</span>`});
-      badgesHtml+=`</div>`;
-      html+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap"><div><p><b>الاسم:</b> ${u.username}</p><p><b>الايميل:</b> ${u.email}</p><p><b>حالة البوت:</b> ${u.botStatus || 'متوقف'}</p>${badgesHtml}</div><div><button class="btn blue" onclick="openBotControlModal('${d.id}','${u.username}')">🤖 ارسال بوت</button><button class="btn purple" onclick="openBadgesModal('${d.id}','${u.username}')">🏅 شارات</button><button class="btn orange" onclick="openWarningModal('${d.id}','${u.username}')">⚠️ تحذير</button>${!u.banned?`<button class="btn orange" onclick="openBanModal('${d.id}','${u.email}')">🚫 حظر</button>`:`<button class="btn green" onclick="unbanUser('${d.id}')">✅ فك حظر</button>`}<button class="btn red" onclick="deleteUser('${d.id}')">🗑️ حذف</button></div></div></div>`;});
-    document.getElementById('users').innerHTML=html;
-    document.getElementById('botCount').innerText=botCount;
-  });
-}
-
-function loadBots(){
-  onSnapshot(collection(db,"users"),(snap)=>{
-    let html='<h2>🤖 البوتات الشغالة والمتوقفة</h2>';
-    snap.forEach(d=>{const u=d.data(); if(u.botCode){
-      html+=`<div class="card"><div class="bot-control-row"><div><p><b>${u.username}</b></p><p><b>الحالة:</b> <span style="color:${u.botStatus==='شغال'?'var(--success)':'var(--danger)'}">${u.botStatus || 'متوقف'}</span></p></div><div>`;
-      if(u.botStatus==='شغال'){html+=`<button class="btn red" onclick="adminForceStop('${d.id}')">⏹ ايقاف</button>`}else{html+=`<button class="btn green" onclick="adminForceStart('${d.id}')">▶ تشغيل</button>`}
-      html+=`</div></div></div>`;
-    }});
-    document.getElementById('bots').innerHTML=html||'<p>لا توجد بوتات</p>';
-  });
-}
-
-window.adminForceStart=async(uid)=>{await updateDoc(doc(db,"users",uid),{botStatus:'شغال',botControlEnabled:true});showToast('🟢 تم تشغيل البوت');}
-window.adminForceStop=async(uid)=>{await updateDoc(doc(db,"users",uid),{botStatus:'متوقف',botControlEnabled:false});showToast('🔴 تم ايقاف البوت');}
-
-window.openBotControlModal=async(uid,username)=>{
-  const snap = await getDoc(doc(db,"users",uid));
-  const data = snap.data();
-  const commands = data.botCommands || [];
-  let commandsHtml = `<h4>📜 اوامر البوت</h4><div id="cmdList">`;
-  commands.forEach((c,i)=>{commandsHtml += `<div class="command-admin"><input value="${c}" id="cmd${i}"><button class="delete-cmd" onclick="deleteCommand('${uid}',${i})">🗑️</button></div>`});
-  commandsHtml += `</div><div style="display:flex;gap:10px"><input id="newCommand" placeholder="الامر - الشرح"><button class="btn green" onclick="addCommand('${uid}')">اضافة</button></div>`;
-  showModal('🤖',`تحكم في بوت ${username}`,`<p><b>كود البوت:</b></p><textarea id="botCodeEdit" style="min-height:200px">${data.botCode || ''}</textarea>${commandsHtml}`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn blue" onclick="saveBotCode('${uid}')">💾 ارسال البوت</button>`);
-}
-
-window.saveBotCode=async(uid)=>{const code=document.getElementById('botCodeEdit').value.trim();if(!code)return showToast('حط الكود');await setDoc(doc(db,"users",uid),{botCode:code,botAssigned:true,botStatus:'متوقف',botControlEnabled:false,botOnline:false},{merge:true});closeModal();showToast('✅ تم ارسال البوت')}
-window.addCommand=async(uid)=>{const cmd=document.getElementById('newCommand').value.trim();if(!cmd)return showToast('حط الامر');const snap=await getDoc(doc(db,"users",uid));let cmds=snap.data().botCommands||[];cmds.push(cmd);await updateDoc(doc(db,"users",uid),{botCommands:cmds});document.getElementById('newCommand').value='';showToast('تم اضافة الامر');}
-window.deleteCommand=async(uid,index)=>{const snap=await getDoc(doc(db,"users",uid));let cmds=snap.data().botCommands||[];cmds.splice(index,1);await updateDoc(doc(db,"users",uid),{botCommands:cmds});showToast('تم مسح الامر');}
-window.openBadgesModal=async(uid,username)=>{
-  showModal('🏅',`ادارة الشارات - ${username}`,`<p>اختار الشارة:</p><select id="badgeSelect"><option value="daily">🔥 دخول يومي</option><option value="deal">💎 تعامل</option><option value="active">🚀 تحسينات</option><option value="mod">🛡 مشرف</option></select>`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn purple" onclick="addBadge('${uid}')">اضافة شارة</button>`);
-}
-window.addBadge=async(uid)=>{
-  const badge = document.getElementById('badgeSelect').value;
-  const snap = await getDoc(doc(db,"users",uid));
-  let badges = snap.data().badges || [];
-  if(!badges.includes(badge)) badges.push(badge);
-  await updateDoc(doc(db,"users",uid),{badges});
-  closeModal(); showToast('تم اضافة الشارة');
-}
-window.openWarningModal=(uid,username)=>{showModal('⚠️',`ارسال تحذير لـ ${username}`,`<textarea id="warningText" placeholder="اكتب التحذير هنا"></textarea>`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn orange" onclick="sendWarning('${uid}')">ارسال</button>`);}
-window.sendWarning=async(uid)=>{const text=document.getElementById('warningText').value;await updateDoc(doc(db,"users",uid),{warning:text});closeModal();showToast('تم ارسال التحذير');}
-window.openBanModal=(uid,email)=>{showModal('🚫',`حظر: ${email}`,`<textarea id="banReason" placeholder="سبب الحظر"></textarea>`,`<button class="btn ghost" onclick="closeModal()">الغاء</button><button class="btn red" onclick="doBan('${uid}')">تأكيد</button>`);}
-window.doBan=async(uid)=>{await updateDoc(doc(db,"users",uid),{banned:true,banReason:document.getElementById('banReason').value});closeModal();showToast('تم الحظر');}
-window.unbanUser=async(uid)=>{await updateDoc(doc(db,"users",uid),{banned:false,banReason:null});showToast('تم فك الحظر');}
-window.deleteUser=async(uid)=>{if(confirm('متأكد؟')){await deleteDoc(doc(db,"users",uid));showToast('تم الحذف')}}
-
-function loadActionRequests(){
-  onSnapshot(query(collection(db,"bot_action_requests"),where("status","==","pending")), async (snap)=>{
-    document.getElementById('actionBadge').style.display = snap.size > 0? 'flex' : 'none';
-    document.getElementById('actionBadge').innerText = snap.size;
-    if(snap.size > 0) showToast(`🔔 ${snap.size} طلب تشغيل جديد`);
-
-    let html='<h2>⚡ طلبات التشغيل/الايقاف - موافقة يدوية</h2>';
-    snap.forEach(d=>{const r=d.data();
-      html+=`<div class="card" style="display:flex;justify-content:space-between"><div><p><b>المستخدم:</b> ${r.username}</p><p><b>الطلب:</b> ${r.action==='start'?'تشغيل':'ايقاف'}</p></div><div><button class="btn green" onclick="approveAction('${d.id}','${r.uid}','${r.action}')">✅ موافقة</button><button class="btn red" onclick="rejectAction('${d.id}','${r.uid}')">❌ رفض</button></div></div>`;
+  function loadBot(){
+    onSnapshot(doc(db,"users",currentUser.uid), snap => {
+      if(!snap.exists()) return;
+      const data = snap.data();
+      const botSection = document.getElementById('botSection');
+      if(data.botCode){
+        const status = data.botStatus || 'متوقف';
+        const statusClass = status === 'شغال'? 'on' : status === 'بانتظار الموافقة'? 'pending' : 'off';
+        const isRunning = status === 'شغال';
+        botSection.innerHTML = `<code style="background:var(--bg);padding:16px;border-radius:14px;display:block;margin:15px 0;white-space:pre-wrap;border:1px solid var(--border)">${data.botCode}</code><p><b>الحالة:</b> <span class="status-badge ${statusClass}">${status}</span></p><div class="bot-controls"><button class="btn success" id="startBtn" onclick="requestBotAction('start')" ${isRunning?'disabled':''}>${isRunning?'✅ البوت شغال':'🚀 تشغيل البوت'}</button><button class="btn danger" id="stopBtn" onclick="requestBotAction('stop')" ${!isRunning?'disabled':''}>⏹️ ايقاف البوت</button></div><div class="transfer-box"><h4>🔄 نقل البوت لغرفه اخرى</h4><input id="roomCodeInput" placeholder="الصق كود الغرفه هنا"><button class="btn" onclick="requestTransferBot()">ارسال طلب النقل</button></div>`;
+      } else { botSection.innerHTML = `<p style="color:#aaa">لسه مفيش بوت. استنى الادمن يبعتهولك</p>`; }
     });
-    document.getElementById('actionReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveAction=async(reqId,uid,action)=>{const newStatus=action==='start'?'شغال':'متوقف';await updateDoc(doc(db,"users",uid),{botStatus:newStatus,botControlEnabled:action==='start'});await updateDoc(doc(db,"bot_action_requests",reqId),{status:'approved',approvedAt:serverTimestamp()});showToast(action==='start'?'🟢 تم تشغيل البوت':'🔴 تم إيقاف البوت');}
-window.rejectAction=async(reqId,uid)=>{const userSnap=await getDoc(doc(db,"users",uid));const currentStatus=userSnap.data().botControlEnabled?'شغال':'متوقف';await updateDoc(doc(db,"users",uid),{botStatus:currentStatus});await updateDoc(doc(db,"bot_action_requests",reqId),{status:'rejected',rejectedAt:serverTimestamp()});showToast('❌ تم رفض الطلب');}
+  }
 
-function loadTransferRequests(){
-  onSnapshot(query(collection(db,"bot_transfer_requests"),where("status","==","pending")), async (snap)=>{
-    document.getElementById('transferBadge').style.display = snap.size > 0? 'flex' : 'none';
-    document.getElementById('transferBadge').innerText = snap.size;
-    if(snap.size > 0) showToast(`🔔 ${snap.size} طلب نقل جديد`);
+  function loadCommands(){onSnapshot(doc(db,"users",currentUser.uid), snap => {const data = snap.data();const commands = data.botCommands || [];const box = document.getElementById('commandsBox');const list = document.getElementById('commandsList');if(commands.length > 0){box.style.display = 'block';list.innerHTML = '';commands.forEach((cmd) => {const parts = cmd.split(' - ');const commandCode = parts[0];const commandDesc = parts[1] || '';list.innerHTML += `<div class="command-item"><div><span class="command-code">${commandCode}</span><p style="margin:8px 0 0;color:#aaa">${commandDesc}</p></div><button class="copy-btn" onclick="copyCommand('${commandCode}')">نسخ</button></div>`;});} else { box.style.display = 'none'; } });}
+  window.copyCommand = (text) => {navigator.clipboard.writeText(text);toast('📋 تم نسخ الامر: ' + text);}
+  window.requestBotAction = async (action) => {if(action === 'start' && document.getElementById('startBtn')?.disabled){return toast('البوت شغال بالفعل');}await addDoc(collection(db,"bot_action_requests"),{uid: currentUser.uid,username: userData.username,action: action,status: 'pending',createdAt: serverTimestamp()});await setDoc(doc(db,"users",currentUser.uid), {botStatus: 'بانتظار الموافقة'}, {merge:true});toast('✅ تم ارسال الطلب للادمن');}
+  window.requestTransferBot = async () => {const roomCode = document.getElementById('roomCodeInput').value.trim();if(!roomCode) return toast('حط كود الغرفه');await addDoc(collection(db,"bot_transfer_requests"),{uid: currentUser.uid, username: userData.username, roomCode: roomCode, status: 'pending', time: serverTimestamp()});document.getElementById('roomCodeInput').value = '';toast('📨 تم ارسال طلب النقل');}
+  function loadUpdates(){const q = query(collection(db,"updates"), orderBy("time","desc"));onSnapshot(q, snap => {const updatesBox = document.getElementById('updatesBox');let firstLoad = lastUpdateTime === 0;updatesBox.innerHTML = '';snap.forEach(d => {const m = d.data(); const updateTime = m.time?.toMillis() || 0;if(!firstLoad && updateTime > lastUpdateTime){document.getElementById('notifDot').style.display='block';toast('📢 تحديث جديد من الادارة');}if(updateTime > lastUpdateTime) lastUpdateTime = updateTime;const adminBadge = m.username === 'الادارة'? ' 🛡' : '';const msgDiv = document.createElement('div');msgDiv.className = 'update-msg';msgDiv.innerHTML = `<div style="font-weight:900">📢 ${m.username}${adminBadge}</div><div style="margin-top:10px">${m.text}</div>${m.image?`<img src="${m.image}">`:''}`;updatesBox.appendChild(msgDiv);});});}
 
-    let html='<h2>🔄 طلبات نقل البوت</h2>';
-    snap.forEach(d=>{const r=d.data();
-      html+=`<div class="card" style="display:flex;justify-content:space-between"><div><p><b>المستخدم:</b> ${r.username}</p><p><b>كود الغرفه:</b> ${r.roomCode}</p></div><div><button class="btn green" onclick="approveTransfer('${d.id}','${r.uid}','${r.roomCode}')">✅ موافقة</button><button class="btn red" onclick="rejectTransfer('${d.id}')">❌ رفض</button></div></div>`;
-    });
-    document.getElementById('transferReq').innerHTML=html||'<p>لا توجد طلبات</p>';
-  });
-}
-window.approveTransfer=async(reqId,uid,roomCode)=>{await updateDoc(doc(db,"users",uid),{roomCode:roomCode,botStatus:'متوقف'});await updateDoc(doc(db,"bot_transfer_requests",reqId),{status:'approved'});showToast('تمت الموافقة');}
-window.rejectTransfer=async(reqId)=>{await updateDoc(doc(db,"bot_transfer_requests",reqId),{status:'rejected'});showToast('تم الرفض');}
+  async function signIn(){
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    if(!email ||!password) return toast('املا كل الحقول');
+    showLoading();
+    try{ await signInWithEmailAndPassword(auth,email,password); }
+    catch(e){
+      if(e.code === 'auth/invalid-credential'){ toast('⚠️ الايميل او كلمة السر غلط') }
+      else if(e.code === 'auth/user-not-found'){ toast('⚠️ الحساب ده مش موجود') }
+      else { toast('خطأ: ' + e.message); }
+      hideLoading();
+    }
+  }
 
-function loadRatings(){
-  onSnapshot(query(collection(db,"ratings"),orderBy("time","desc")),(snap)=>{
-    document.getElementById('ratingCount').innerText=snap.size;
-    let html='<h2>⭐ تقييمات المستخدمين</h2>';
-    snap.forEach(d=>{const r=d.data();
-      let stars = '⭐'.repeat(r.rating);
-      let emoji = {1:'😢',2:'😕',3:'🙂',4:'😄',5:'🥳'}[r.rating];
-      html+=`<div class="card rating-card"><div><p><b>${r.username}</b></p><p style="color:#aaa;font-size:14px">${new Date(r.time?.toDate()).toLocaleString('ar-EG')}</p></div><div><span class="stars">${stars}</span> ${emoji}</div></div>`;
-    });
-    document.getElementById('ratings').innerHTML=html||'<p>لا توجد تقييمات</p>';
-  });
-}
-
-function loadUpdates(){
-  onSnapshot(query(collection(db,"updates"),orderBy("time","desc")),(snap)=>{
-    document.getElementById('updateCount').innerText=snap.size;
-    let html='<h2>📢 ارسال تحديث</h2><div class="card"><input id="updateText" placeholder="نص التحديث"><input type="file" id="updateImageFile" accept="image/*"><img id="imagePreview" class="preview-img" style="display:none"><button class="btn purple" onclick="sendUpdate()">نشر</button></div><h2>السابقة</h2>';
-    snap.forEach(d=>{const u=d.data();html+=`<div class="card"><button class="delete-update-btn" onclick="deleteUpdate('${d.id}')">مسح</button><p><b>${u.username} 🛡:</b> ${u.text}</p>${u.image?`<img src="${u.image}" style="max-width:300px;border-radius:12px">`:''}</div>`;});
-    document.getElementById('updates').innerHTML=html;
-    const fileInput=document.getElementById('updateImageFile');if(fileInput){fileInput.onchange=(e)=>{const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=(e)=>{document.getElementById('imagePreview').src=e.target.result;document.getElementById('imagePreview').style.display='block'};reader.readAsDataURL(file);}}}
-  });
-}
-window.sendUpdate=async()=>{const text=document.getElementById('updateText').value.trim();const file=document.getElementById('updateImageFile').files[0];if(!text&&!file)return showToast('لازم نص او صوره');let imageData=null;if(file){imageData=await toBase64(file);}await addDoc(collection(db,"updates"),{username:"الادارة",text:text,image:imageData||null,reactions:{},time:serverTimestamp()});document.getElementById('updateText').value='';document.getElementById('updateImageFile').value='';document.getElementById('imagePreview').style.display='none';showToast('تم النشر');}
-function toBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.readAsDataURL(file);reader.onload=()=>resolve(reader.result);reader.onerror=error=>reject(error);})}
-window.deleteUpdate=async(id)=>{if(confirm('متأكد؟')){await deleteDoc(doc(db,"updates",id));showToast('تم المسح');}}
-
-window.showTab=(t,btn)=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['users','bots','actionReq','transferReq','updates','ratings'].forEach(id=>document.getElementById(id).style.display=id==t?'block':'none');}
-window.adminLogin=async()=>{try{await signInWithEmailAndPassword(auth,document.getElementById('adminEmail').value,document.getElementById('adminPass').value);showToast('تم الدخول');}catch(e){showToast('بيانات خاطئة');hideLoading();}}
-window.logout=()=>signOut(auth);
+  async function signUp(){const username = document.getElementById('signupUsername').value.trim();const email = document.getElementById('signupEmail').value.trim();const password = document.getElementById('signupPassword').value;const confirm = document.getElementById('signupConfirmPassword').value;if(!username ||!email ||!password) return toast('املا كل الحقول');if(password!== confirm) return toast('كلمة السر مش مطابقة');showLoading();try{const res = await createUserWithEmailAndPassword(auth,email,password);await setDoc(doc(db,"users",res.user.uid),{username,email,createdAt:serverTimestamp(),banned:false,isAdmin:false,botCode:"",botStatus:"متوقف",botCommands:[],photoURL:"",badges:[]});toast('✅ تم انشاء الحساب');}catch(e){toast('خطأ: ' + e.message);hideLoading();}}
 </script>
 </body>
 </html>
